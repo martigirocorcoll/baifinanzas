@@ -1,0 +1,25 @@
+
+<%= simple_form_for(@balance) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <div class="form-inputs">
+    <%= f.association :user %>
+    <%= f.input :valor_inmuebles %>
+    <%= f.input :dinero_cuenta_corriente %>
+    <%= f.input :dinero_cuenta_ahorro_depos %>
+    <%= f.input :dinero_inversiones_f %>
+    <%= f.input :dinero_planes_pensiones %>
+    <%= f.input :valor_coches_vehiculos %>
+    <%= f.input :valor_otros_activos %>
+    <%= f.input :hipoteca_inmuebles %>
+    <%= f.input :deuda_tarjeta_credito %>
+    <%= f.input :prestamos_personales %>
+    <%= f.input :prestamos_coches %>
+    <%= f.input :otras_deudas %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>

@@ -1,0 +1,16 @@
+<p style="color: green"><%= notice %></p>
+
+<% content_for :title, "Influencers" %>
+
+<h1>Influencers</h1>
+
+<div id="influencers">
+  <% @influencers.each do |influencer| %>
+    <%= render influencer %>
+    <p>
+      <%= link_to "Show this influencer", influencer %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New influencer", new_influencer_path %>

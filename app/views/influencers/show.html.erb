@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @influencer %>
+
+<div>
+  <%= link_to "Edit this influencer", edit_influencer_path(@influencer) %> |
+  <%= link_to "Back to influencers", influencers_path %>
+
+  <%= button_to "Destroy this influencer", @influencer, method: :delete %>
+</div>

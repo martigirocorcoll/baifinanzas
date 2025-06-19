@@ -1,0 +1,26 @@
+
+<%= simple_form_for(@pyg) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <div class="form-inputs">
+    <%= f.association :user %>
+    <%= f.input :ingresos_mensual %>
+    <%= f.input :gasto_compra %>
+    <%= f.input :alquiler_hipoteca %>
+    <%= f.input :gastos_utilities %>
+    <%= f.input :gastos_seguros %>
+    <%= f.input :gastos_transporte %>
+    <%= f.input :restaurantes_y_ocio %>
+    <%= f.input :cuota_hipoteca %>
+    <%= f.input :cuota_coche %>
+    <%= f.input :otras_cuotas %>
+    <%= f.input :suscripciones %>
+    <%= f.input :cuidado_personal %>
+    <%= f.input :otros_gastos %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>

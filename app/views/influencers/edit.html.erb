@@ -1,0 +1,12 @@
+<% content_for :title, "Editing influencer" %>
+
+<h1>Editing influencer</h1>
+
+<%= render "form", influencer: @influencer %>
+
+<br>
+
+<div>
+  <%= link_to "Show this influencer", @influencer %> |
+  <%= link_to "Back to influencers", influencers_path %>
+</div>

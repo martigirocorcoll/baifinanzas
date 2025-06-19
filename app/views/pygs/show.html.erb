@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @pyg %>
+
+<div>
+  <%= link_to "Edit this pyg", edit_pyg_path(@pyg) %> |
+  <%= link_to "Back to pygs", pygs_path %>
+
+  <%= button_to "Destroy this pyg", @pyg, method: :delete %>
+</div>
