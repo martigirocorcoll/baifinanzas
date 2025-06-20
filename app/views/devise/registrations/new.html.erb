@@ -1,25 +1,76 @@
-<h2>Sign up</h2>
+<div class="container py-5">
+  <h2 class="mb-4 text-center">Registro</h2>
 
-<%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-  <%= f.error_notification %>
+  <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name),
+        html: { class: "mx-auto", style: "max-width: 500px;" }) do |f| %>
+    <%= f.error_notification %>
 
-  <div class="form-inputs">
-    <%= f.input :email,
-                required: true,
-                autofocus: true,
-                input_html: { autocomplete: "email" }%>
-    <%= f.input :password,
-                required: true,
-                hint: ("#{@minimum_password_length} characters minimum" if @minimum_password_length),
-                input_html: { autocomplete: "new-password" } %>
-    <%= f.input :password_confirmation,
-                required: true,
-                input_html: { autocomplete: "new-password" } %>
+    <div class="mb-3">
+      <%= f.input :email,
+            required: true,
+            autofocus: true,
+            label: "Correo",
+            input_html: { class: "form-control", autocomplete: "email", placeholder: "usuario@ejemplo.com" },
+            label_html: { class: "form-label" },
+            wrapper: false %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.input :password,
+            required: true,
+            hint: ("Mínimo #{@minimum_password_length} caracteres" if @minimum_password_length),
+            label: "Contraseña",
+            input_html: { class: "form-control", autocomplete: "new-password"},
+            label_html: { class: "form-label" },
+            wrapper: false %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.input :password_confirmation,
+            required: true,
+            label: "Confirma contraseña",
+            input_html: { class: "form-control", autocomplete: "new-password" },
+            label_html: { class: "form-label" },
+            wrapper: false %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.input :phone,
+            label: "Teléfono",
+            input_html: { class: "form-control", placeholder: "+34 600 123 456" },
+            label_html: { class: "form-label" },
+            wrapper: false %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.input :country,
+            label: "País",
+            as: :string,
+            input_html: { class: "form-control", placeholder: "España, México, ..." },
+            label_html: { class: "form-label" },
+            wrapper: false %>
+    </div>
+
+    <div class="mb-4">
+      <%= f.input :risk_profile,
+            label: "Perfil de riesgo",
+            as: :select,
+            collection: [["Conservador", 0], ["Moderado", 1], ["Agresivo", 2]],
+            input_html: { class: "form-select" },
+            label_html: { class: "form-label" },
+            wrapper: false %>
+    </div>
+
+    <%= f.input :influencer_id,
+          as: :hidden,
+          input_html: { value: session[:influencer_id] } %>
+
+    <div class="d-grid">
+      <%= f.button :submit, "Regístrate", class: "btn btn-primary btn-lg" %>
+    </div>
+  <% end %>
+
+  <div class="mt-4 text-center">
+    <%= render "devise/shared/links" %>
   </div>
-
-  <div class="form-actions">
-    <%= f.button :submit, "Sign up" %>
-  </div>
-<% end %>
-
-<%= render "devise/shared/links" %>
+</div>
