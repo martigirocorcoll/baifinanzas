@@ -1,26 +1,89 @@
+<%= simple_form_for @pyg,
+      url: pyg_path,
+      html: { method: @pyg.new_record? ? :post : :patch, class: "container py-5" } do |f| %>
 
-<%= simple_form_for(@pyg) do |f| %>
-  <%= f.error_notification %>
-  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+  <h2 class="mb-4">Calcula tu estado de perdidas y ganancias mensual</h2>
+  <p class="text-secondary mb-5">
+    Si nunca has hecho un presupuesto, este formulario es un buen punto de partida.
+    Introduce tus datos y obtén una visión clara de tus finanzas mensuales.
+  </p>
 
-  <div class="form-inputs">
-    <%= f.association :user %>
-    <%= f.input :ingresos_mensual %>
-    <%= f.input :gasto_compra %>
-    <%= f.input :alquiler_hipoteca %>
-    <%= f.input :gastos_utilities %>
-    <%= f.input :gastos_seguros %>
-    <%= f.input :gastos_transporte %>
-    <%= f.input :restaurantes_y_ocio %>
-    <%= f.input :cuota_hipoteca %>
-    <%= f.input :cuota_coche %>
-    <%= f.input :otras_cuotas %>
-    <%= f.input :suscripciones %>
-    <%= f.input :cuidado_personal %>
-    <%= f.input :otros_gastos %>
+  <!-- INGRESO MENSUAL -->
+  <div class="mb-4 row align-items-center">
+    <label class="col-sm-4 col-form-label fw-bold">Ingresos mensuales</label>
+    <div class="col-sm-4">
+      <div class="input-group">
+        <span class="input-group-text">€</span>
+        <%= f.input_field :ingresos_mensual,
+              type: :number,
+              class: "form-control text-end",
+              placeholder: "0",
+              min: 0 %>
+      </div>
+    </div>
   </div>
 
-  <div class="form-actions">
-    <%= f.button :submit %>
+  <hr class="my-4">
+
+  <!-- GASTOS DETALLADOS -->
+  <h3 class="h5 mb-3">Gastos</h3>
+  <div class="row gx-2 gy-3">
+    <% expenses = {
+      gasto_compra:          ["Compras", "primary"],
+      alquiler_hipoteca:     ["Alquiler / Hipoteca", "success"],
+      gastos_utilities:      ["Utilities", "warning"],
+      gastos_seguros:        ["Seguros", "danger"],
+      gastos_transporte:     ["Transporte", "info"],
+      restaurantes_y_ocio:   ["Restaurantes y Ocio", "secondary"],
+      cuota_hipoteca:        ["Cuota Hipoteca", "primary"],
+      cuota_coche:           ["Cuota Coche", "dark"],
+      otras_cuotas:          ["Otras Cuotas", "muted"],
+      suscripciones:         ["Suscripciones", "info"],
+      cuidado_personal:      ["Cuidado Personal", "secondary"],
+      otros_gastos:          ["Otros Gastos", "dark"]
+    } %>
+
+    <% expenses.each do |field, (label, color)| %>
+      <div class="col-12 col-md-6">
+        <div class="row align-items-center">
+          <div class="col-6 d-flex align-items-center">
+            <span class="badge bg-<%= color %> me-2"
+                  style="width:12px; height:12px; border-radius:50%;"></span>
+            <label for="pyg_<%= field %>" class="mb-0"><%= label %></label>
+          </div>
+          <div class="col-6">
+            <div class="input-group">
+              <span class="input-group-text">€</span>
+              <%= f.input_field field,
+                    type: :number,
+                    class: "form-control text-end",
+                    placeholder: "0",
+                    min: 0 %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <hr class="my-4">
+
+  <!-- DIFERENCIA -->
+  <div class="row mb-4">
+    <div class="col-6">
+      <p class="fw-bold">Diferencia</p>
+    </div>
+    <div class="col-6 text-end">
+      <% total_expenses = expenses.keys.sum { |fld| @pyg.send(fld).to_i } %>
+      <% diff = @pyg.ingresos_mensual.to_i - total_expenses %>
+      <p class="h4"><%= number_to_currency(diff, unit: "€", delimiter: ".") %></p>
+    </div>
+  </div>
+
+  <!-- BOTÓN -->
+  <div class="text-center">
+    <%= f.button :submit,
+          @pyg.new_record? ? "Calcular presupuesto" : "Actualizar presupuesto",
+          class: "btn btn-lg btn-primary px-5" %>
   </div>
 <% end %>

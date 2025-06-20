@@ -1,18 +1,58 @@
+<%= simple_form_for @objective,
+      url: @objective.persisted? ? objective_path(@objective) : objectives_path,
+      html: { method: @objective.new_record? ? :post : :patch, class: "container py-5" } do |f| %>
 
-<%= simple_form_for(@objective) do |f| %>
-  <%= f.error_notification %>
-  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+  <%= f.input :user_id,
+        as: :hidden,
+        input_html: { value: current_user.id } %>
 
-  <div class="form-inputs">
-    <%= f.association :user %>
-    <%= f.input :title %>
-    <%= f.input :description %>
-    <%= f.input :target_amount %>
-    <%= f.input :target_date %>
-    <%= f.input :status %>
+  <h2 class="mb-4"><%= @objective.new_record? ? "Nuevo Objetivo" : "Editar Objetivo" %></h2>
+
+  <div class="row gx-3">
+    <div class="col-12 col-md-6 mb-3">
+      <%= f.input :title,
+            label: "Título",
+            input_html: { class: "form-control", placeholder: "Ej. Ahorrar carrera" },
+            wrapper: false %>
+    </div>
+
+    <div class="col-12 col-md-6 mb-3">
+      <%= f.input :target_amount,
+            label: "Importe objetivo (€)",
+            input_html: { class: "form-control text-end", type: "number", min: 0, placeholder: "0" },
+            wrapper: false %>
+    </div>
   </div>
 
-  <div class="form-actions">
-    <%= f.button :submit %>
+  <div class="row gx-3 mb-3">
+    <div class="col-12 col-md-6">
+      <%= f.input :target_date,
+            label: "Fecha meta",
+            input_html: { class: "form-control", type: "date" },
+            wrapper: false %>
+    </div>
+    <div class="col-12 col-md-6">
+      <%= f.input :status,
+            label: "Estado",
+            as: :select,
+            collection: %w[pending active completed cancelled],
+            input_html: { class: "form-select" },
+            include_blank: false,
+            wrapper: false %>
+    </div>
+  </div>
+
+  <div class="mb-4">
+    <%= f.input :description,
+          label: "Descripción",
+          as: :text,
+          input_html: { class: "form-control", rows: 4, placeholder: "Detalles del objetivo..." },
+          wrapper: false %>
+  </div>
+
+  <div class="text-center">
+    <%= f.button :submit,
+          @objective.new_record? ? "Crear Objetivo" : "Actualizar Objetivo",
+          class: "btn btn-primary btn-lg px-5" %>
   </div>
 <% end %>

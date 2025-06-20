@@ -1,10 +1,15 @@
 Rails.application.routes.draw do
+  get "dashboard/index"
   # Devise
   devise_for :users
 
   # Página pública
-  root to: "pages#home"
-
+  authenticated :user do
+    root to: "dashboard#index", as: :authenticated_root
+  end
+  unauthenticated do
+    root to: "pages#home",       as: :unauthenticated_root
+  end
   # Health check y PWA
   get  "up",             to: "rails/health#show",       as: :rails_health_check
   get  "service-worker", to: "rails/pwa#service_worker", as: :pwa_service_worker
@@ -15,7 +20,7 @@ Rails.application.routes.draw do
 
   # Recursos financieros del usuario (1:1)
   resource  :pyg,     only: %i[show new create edit update]
-  resource  :balance, only: %i[show new create edit update]
+  resource  :balance, only: %i[index show new create edit update]
 
   # Objetivos (1:N)
   resources :objectives

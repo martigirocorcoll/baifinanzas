@@ -1,25 +1,129 @@
+<%= simple_form_for @balance,
+      url: balance_path,
+      html: { method: @balance.new_record? ? :post : :patch, class: "container py-5" } do |f| %>
 
-<%= simple_form_for(@balance) do |f| %>
-  <%= f.error_notification %>
-  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+  <h2 class="mb-4">Net Worth Calculator</h2>
+  <p class="text-secondary mb-5">
+    En este formulario verás el total de tus activos y pasivos. Rellena cada campo y obtén tu patrimonio neto al instante.
+  </p>
 
-  <div class="form-inputs">
-    <%= f.association :user %>
-    <%= f.input :valor_inmuebles %>
-    <%= f.input :dinero_cuenta_corriente %>
-    <%= f.input :dinero_cuenta_ahorro_depos %>
-    <%= f.input :dinero_inversiones_f %>
-    <%= f.input :dinero_planes_pensiones %>
-    <%= f.input :valor_coches_vehiculos %>
-    <%= f.input :valor_otros_activos %>
-    <%= f.input :hipoteca_inmuebles %>
-    <%= f.input :deuda_tarjeta_credito %>
-    <%= f.input :prestamos_personales %>
-    <%= f.input :prestamos_coches %>
-    <%= f.input :otras_deudas %>
+  <%#-- Totales arriba --%>
+  <% total_assets = @balance.valor_inmuebles.to_i +
+                    @balance.dinero_cuenta_corriente.to_i +
+                    @balance.dinero_cuenta_ahorro_depos.to_i +
+                    @balance.dinero_inversiones_f.to_i +
+                    @balance.dinero_planes_pensiones.to_i +
+                    @balance.valor_coches_vehiculos.to_i +
+                    @balance.valor_otros_activos.to_i %>
+
+  <% total_liabilities = @balance.hipoteca_inmuebles.to_i +
+                         @balance.deuda_tarjeta_credito.to_i +
+                         @balance.prestamos_personales.to_i +
+                         @balance.prestamos_coches.to_i +
+                         @balance.otras_deudas.to_i %>
+
+  <div class="row mb-4">
+    <div class="col text-start">
+      <h5>Assets: <span class="text-success"><%= number_to_currency(total_assets, unit: "€", delimiter: ".") %></span></h5>
+    </div>
+    <div class="col text-end">
+      <h5>Liabilities: <span class="text-danger"><%= number_to_currency(total_liabilities, unit: "€", delimiter: ".") %></span></h5>
+    </div>
   </div>
 
-  <div class="form-actions">
-    <%= f.button :submit %>
+  <hr class="my-4">
+
+  <div class="row gx-4 gy-3">
+    <% assets = {
+      valor_inmuebles:            ["Real Estate", "¿Valor estimado de tus inmuebles?", "success"],
+      dinero_cuenta_corriente:    ["Checking Accounts", "¿Dinero en cuenta corriente?", "info"],
+      dinero_cuenta_ahorro_depos: ["Savings Accounts", "¿Dinero en cuenta de ahorro o depósito?", "info"],
+      dinero_inversiones_f:       ["Investments", "¿Dinero en inversiones financieras?", "primary"],
+      dinero_planes_pensiones:    ["Retirement Plans", "¿Dinero en planes de pensiones/jubilación?", "warning"],
+      valor_coches_vehiculos:     ["Cars", "¿Valor actual de tus vehículos?", "secondary"],
+      valor_otros_activos:        ["Other Assets", "¿Valor de otros activos (joyas, acciones, etc.)?", "dark"]
+    } %>
+
+    <% liabilities = {
+      hipoteca_inmuebles:    ["Real Estate Loans", "¿Deuda pendiente de tu hipoteca?", "danger"],
+      deuda_tarjeta_credito: ["Credit Card Debt", "¿Cuánto debes en tarjetas de crédito?", "danger"],
+      prestamos_personales:  ["Personal Loans", "¿Préstamos personales (familia, payday)?", "warning"],
+      prestamos_coches:      ["Car Loans", "¿Préstamo de coche pendiente?", "dark"],
+      otras_deudas:          ["Other Debt", "¿Otras deudas (médicas, negocios, HELOC)?", "muted"]
+    } %>
+
+    <%#-- First column: Assets --%>
+    <div class="col-12 col-lg-6">
+      <h4 class="mb-3">Assets</h4>
+      <% assets.each do |field,(label, hint, color)| %>
+        <div class="mb-3 row align-items-center">
+          <label class="col-sm-8 col-form-label">
+            <span class="badge bg-<%= color %> me-2" style="width:10px;height:10px;border-radius:50%;"></span>
+            <%= label %>
+            <i class="bi bi-info-circle text-muted ms-1" data-bs-toggle="tooltip" title="<%= hint %>"></i>
+          </label>
+          <div class="col-sm-4">
+            <div class="input-group">
+              <span class="input-group-text">€</span>
+              <%= f.input_field field,
+                    type: :number,
+                    class: "form-control text-end",
+                    placeholder: "0",
+                    min: 0 %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <%#-- Second column: Liabilities --%>
+    <div class="col-12 col-lg-6">
+      <h4 class="mb-3">Liabilities</h4>
+      <% liabilities.each do |field,(label, hint, color)| %>
+        <div class="mb-3 row align-items-center">
+          <label class="col-sm-8 col-form-label">
+            <span class="badge bg-<%= color %> me-2" style="width:10px;height:10px;border-radius:50%;"></span>
+            <%= label %>
+            <i class="bi bi-info-circle text-muted ms-1" data-bs-toggle="tooltip" title="<%= hint %>"></i>
+          </label>
+          <div class="col-sm-4">
+            <div class="input-group">
+              <span class="input-group-text">€</span>
+              <%= f.input_field field,
+                    type: :number,
+                    class: "form-control text-end",
+                    placeholder: "0",
+                    min: 0 %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
   </div>
+
+  <hr class="my-4">
+
+  <% net_worth = total_assets - total_liabilities %>
+  <div class="row mb-4">
+    <div class="col text-start">
+      <p class="fw-bold">Net Worth</p>
+    </div>
+    <div class="col text-end">
+      <p class="h4"><%= number_to_currency(net_worth, unit: "€", delimiter: ".") %></p>
+    </div>
+  </div>
+
+  <div class="text-center">
+    <%= f.button :submit,
+          @balance.new_record? ? "Calculate Net Worth" : "Update Net Worth",
+          class: "btn btn-lg btn-primary px-5" %>
+  </div>
+
 <% end %>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function(){
+    const tooltipTriggerList = [...document.querySelectorAll('[data-bs-toggle="tooltip"]')];
+    tooltipTriggerList.forEach(el => new bootstrap.Tooltip(el));
+  });
+</script>
