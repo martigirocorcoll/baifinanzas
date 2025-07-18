@@ -1,0 +1,143 @@
+      <!-- How it works -->
+      <section class="position-relative bg-secondary py-5">
+        <div class="container mt-3 pt-md-2 pt-lg-4 pb-2 pb-md-4 pb-lg-5">
+          <h2 class="h1 text-center pb-2 pb-md-0 mb-4 mb-md-5">¿Cómo funciona?</h2>
+          
+          <!-- Steps -->
+          <div class="row g-4 g-lg-5" id="steps-container">
+            <!-- Step 1 -->
+            <div class="col-md-6 col-lg-3">
+              <div class="text-center step-item" data-step="1">
+                <div class="bg-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-3 position-relative" style="width: 80px; height: 80px;">
+                  <span class="text-white fw-bold fs-3">1</span>
+                  <div class="position-absolute top-0 start-0 w-100 h-100 bg-primary rounded-circle opacity-25 animate-pulse"></div>
+                </div>
+                <div class="bg-white rounded-4 p-4 shadow-sm">
+                  <div class="text-primary mb-3">
+                    <i class="bi bi-clipboard-data fs-1"></i>
+                  </div>
+                  <h3 class="h5 mb-3">Completa tu P&L</h3>
+                  <p class="text-muted mb-0">Detalla tus ingresos, gastos fijos y variables para obtener una fotografía real de tu situación financiera actual.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="col-md-6 col-lg-3">
+              <div class="text-center step-item" data-step="2">
+                <div class="bg-success rounded-circle d-inline-flex align-items-center justify-content-center mb-3 position-relative" style="width: 80px; height: 80px;">
+                  <span class="text-white fw-bold fs-3">2</span>
+                  <div class="position-absolute top-0 start-0 w-100 h-100 bg-success rounded-circle opacity-25 animate-pulse"></div>
+                </div>
+                <div class="bg-white rounded-4 p-4 shadow-sm">
+                  <div class="text-success mb-3">
+                    <i class="bi bi-building fs-1"></i>
+                  </div>
+                  <h3 class="h5 mb-3">Añade tu Balance</h3>
+                  <p class="text-muted mb-0">Incluye tus activos (ahorros, inversiones, propiedades) y pasivos (deudas, hipoteca) para calcular tu patrimonio neto real.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="col-md-6 col-lg-3">
+              <div class="text-center step-item" data-step="3">
+                <div class="bg-warning rounded-circle d-inline-flex align-items-center justify-content-center mb-3 position-relative" style="width: 80px; height: 80px;">
+                  <span class="text-white fw-bold fs-3">3</span>
+                  <div class="position-absolute top-0 start-0 w-100 h-100 bg-warning rounded-circle opacity-25 animate-pulse"></div>
+                </div>
+                <div class="bg-white rounded-4 p-4 shadow-sm">
+                  <div class="text-warning mb-3">
+                    <i class="bi bi-bullseye fs-1"></i>
+                  </div>
+                  <h3 class="h5 mb-3">Define tus objetivos financieros</h3>
+                  <p class="text-muted mb-0">Establece metas claras como comprar una casa, jubilación, educación de hijos, o cualquier objetivo que quieras alcanzar.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="col-md-6 col-lg-3">
+              <div class="text-center step-item" data-step="4">
+                <div class="bg-info rounded-circle d-inline-flex align-items-center justify-content-center mb-3 position-relative" style="width: 80px; height: 80px;">
+                  <span class="text-white fw-bold fs-3">4</span>
+                  <div class="position-absolute top-0 start-0 w-100 h-100 bg-info rounded-circle opacity-25 animate-pulse"></div>
+                </div>
+                <div class="bg-white rounded-4 p-4 shadow-sm">
+                  <div class="text-info mb-3">
+                    <i class="bi bi-graph-up-arrow fs-1"></i>
+                  </div>
+                  <h3 class="h5 mb-3">Recibe tu plan personalizado</h3>
+                  <p class="text-muted mb-0">Obtén tu nivel de salud financiera, recomendaciones de inversión y un plan detallado para alcanzar tus objetivos.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CTA Button -->
+          <div class="text-center pt-5 mt-4">
+            <%= link_to new_user_registration_path, class: "btn btn-primary btn-lg px-5 py-3 shadow-lg" do %>
+              <i class="bi bi-rocket-takeoff me-2"></i>Empezar mi plan ahora
+            <% end %>
+          </div>
+        </div>
+
+        <style>
+          .animate-pulse {
+            animation: pulse 2s infinite;
+          }
+          
+          @keyframes pulse {
+            0% {
+              transform: scale(1);
+              opacity: 0.25;
+            }
+            50% {
+              transform: scale(1.1);
+              opacity: 0.1;
+            }
+            100% {
+              transform: scale(1);
+              opacity: 0.25;
+            }
+          }
+
+          .step-item {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease-out;
+          }
+          
+          .step-item.animate {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        </style>
+
+        <script>
+          document.addEventListener('DOMContentLoaded', function() {
+            const stepsContainer = document.getElementById('steps-container');
+            const steps = document.querySelectorAll('.step-item');
+            
+            const observer = new IntersectionObserver((entries) => {
+              entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                  // Animar cada paso con delay progresivo
+                  steps.forEach((step, index) => {
+                    setTimeout(() => {
+                      step.classList.add('animate');
+                    }, index * 300); // 300ms delay entre cada paso
+                  });
+                  
+                  // Dejar de observar una vez animado
+                  observer.unobserve(stepsContainer);
+                }
+              });
+            }, {
+              threshold: 0.2
+            });
+            
+            observer.observe(stepsContainer);
+          });
+        </script>
+      </section>

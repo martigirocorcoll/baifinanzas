@@ -1,2 +1,33 @@
-<h1>Pages#home</h1>
-<p>Find me in app/views/pages/home.html.erb</p>
+
+  <!-- Body -->
+
+
+    <!-- Page wrapper for sticky footer -->
+    <!-- Wraps everything except footer to push footer to the bottom of the page if there is little content -->
+    <main class="page-wrapper">
+
+
+
+    <%= render "pages/hero" %>
+    <%= render "pages/brands" %>
+    <%= render "pages/features" %>
+    <%= render "pages/function" %>
+    <%= render "pages/fetures" %>
+    <%= render "pages/testimonial" %>
+    <%= render "pages/faq" %>
+    <%= render "pages/cta" %>
+
+
+    <!-- Back to top button -->
+    <a href="#top" class="btn-scroll-top" data-scroll>
+      <span class="btn-scroll-top-tooltip text-muted fs-sm me-2">Top</span>
+      <i class="btn-scroll-top-icon bx bx-chevron-up"></i>
+    </a>
+
+
+    <!-- Vendor Scripts -->
+    <script src="assets/vendor/rellax/rellax.min.js"></script>
+    <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+
+    <!-- Main Theme Script -->
+    <script src="assets/js/theme.min.js"></script>

@@ -1,0 +1,193 @@
+      <!-- Features -->
+      <section id="features" class="container pt-lg-2 pt-xl-3 pb-3 pb-xl-5 mt-n2 mt-sm-0 mb-2 mb-md-4 mb-lg-5">
+        <div class="row pb-xl-3 align-items-center">
+
+          <!-- Financial graphics -->
+          <div class="col-lg-5 d-none d-lg-block d-flex align-items-center">
+            <div class="position-relative text-center mx-auto" style="max-width: 400px;">
+              <div class="bg-light rounded-4 p-4 shadow-sm dashboard-container" id="dashboard">
+                <div class="row g-3">
+                  <div class="col-12">
+                    <div class="bg-success bg-opacity-10 rounded-3 p-3 text-center dashboard-card" data-delay="0">
+                      <h5 class="text-success mb-2"><i class="bi bi-heart-pulse me-2"></i>Salud Financiera</h5>
+                      <div class="progress mb-2" style="height: 8px;">
+                        <div class="progress-bar bg-success progress-bar-animated" data-width="75" style="width: 0%;"></div>
+                      </div>
+                      <small class="text-muted">Nivel: Invirtiendo en Objetivos</small>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="bg-primary bg-opacity-10 rounded-3 p-3 text-center dashboard-card" data-delay="200">
+                      <h6 class="text-primary mb-1"><i class="bi bi-graph-up me-2"></i>P&L</h6>
+                      <div class="h5 text-success mb-0">+€2,150</div>
+                      <small class="text-muted">mensual</small>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="bg-warning bg-opacity-10 rounded-3 p-3 text-center dashboard-card" data-delay="400">
+                      <h6 class="text-warning mb-1"><i class="bi bi-wallet2 me-2"></i>Balance</h6>
+                      <div class="h5 text-success mb-0">€45,300</div>
+                      <small class="text-muted">patrimonio</small>
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <div class="bg-info bg-opacity-10 rounded-3 p-3 text-center dashboard-card" data-delay="600">
+                      <h6 class="text-info mb-2"><i class="bi bi-house me-2"></i>Objetivo: Casa</h6>
+                      <div class="progress mb-2" style="height: 6px;">
+                        <div class="progress-bar bg-info progress-bar-animated" data-width="45" style="width: 0%;"></div>
+                      </div>
+                      <small class="text-muted">€68,000 / €150,000</small>
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <button class="btn btn-primary btn-sm w-100 dashboard-card" data-delay="800">
+                      <i class="bi bi-file-earmark-text me-2"></i>Ver Plan Completo
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <style>
+            .dashboard-container {
+              opacity: 0;
+              transform: translateY(50px);
+              transition: all 0.5s ease-out;
+            }
+            
+            .dashboard-container.animate {
+              opacity: 1;
+              transform: translateY(0);
+            }
+            
+            .dashboard-card {
+              opacity: 0;
+              transform: translateY(20px) scale(0.9);
+              transition: all 0.4s ease-out;
+            }
+            
+            .dashboard-card.animate {
+              opacity: 1;
+              transform: translateY(0) scale(1);
+            }
+            
+            .progress-bar-animated {
+              transition: width 1.2s ease-in-out;
+            }
+          </style>
+
+          <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              const dashboard = document.getElementById('dashboard');
+              
+              const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                  if (entry.isIntersecting) {
+                    // Animar el dashboard principal
+                    dashboard.classList.add('animate');
+                    
+                    // Animar cada card con delay
+                    const cards = dashboard.querySelectorAll('.dashboard-card');
+                    cards.forEach(card => {
+                      const delay = parseInt(card.getAttribute('data-delay')) || 0;
+                      setTimeout(() => {
+                        card.classList.add('animate');
+                      }, delay);
+                    });
+                    
+                    // Animar las barras de progreso
+                    setTimeout(() => {
+                      const progressBars = dashboard.querySelectorAll('.progress-bar-animated');
+                      progressBars.forEach(bar => {
+                        const width = bar.getAttribute('data-width');
+                        bar.style.width = width + '%';
+                      });
+                    }, 1000);
+                    
+                    // Dejar de observar una vez animado
+                    observer.unobserve(dashboard);
+                  }
+                });
+              }, {
+                threshold: 0.3 // Se activa cuando el 30% del elemento es visible
+              });
+              
+              observer.observe(dashboard);
+            });
+          </script>
+
+          <!-- Feature list -->
+          <div class="col-lg-7">
+            <h2 class="h1 text-center text-md-start mb-4">¿Cómo adapto las finanzas a mi situación?</h2>
+            <p class="fs-lg text-muted text-center text-md-start mb-4 mb-xl-5">Es la pregunta que más nos hacéis. Con esta app queremos daros la solución.</p>
+            <div class="row row-cols-1 row-cols-sm-2 pt-2 pt-sm-3 pt-xl-2">
+
+              <!-- Paso 1 -->
+              <div class="col pb-2 pb-xl-0 mb-4 mb-xl-5">
+                <div class="d-flex align-items-start pe-xl-3">
+                  <div class="d-table bg-success rounded-3 flex-shrink-0 p-3 mb-3">
+                    <i class="bi bi-heart-pulse text-white fs-4"></i>
+                  </div>
+                  <div class="ps-4 ps-sm-3 ps-md-4">
+                    <h3 class="h5 pb-1 mb-2">Te ayudamos a conocer tu salud financiera</h3>
+                    <p class="mb-0">Analizamos tu P&L y Balance para calcular tu nivel de salud financiera actual y saber desde dónde partes.</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Paso 2 -->
+              <div class="col pb-2 pb-xl-0 mb-4 mb-xl-5">
+                <div class="d-flex align-items-start ps-xl-3">
+                  <div class="d-table bg-primary rounded-3 flex-shrink-0 p-3 mb-3">
+                    <i class="bi bi-graph-up text-white fs-4"></i>
+                  </div>
+                  <div class="ps-4 ps-sm-3 ps-md-4">
+                    <h3 class="h5 pb-1 mb-2">Obten un plan financiero personalizado</h3>
+                    <p class="mb-0">Basado en tus objetivos específicos, calculamos tu plan de inversión con interés compuesto y recomendaciones adaptadas a ti.</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Paso 3 -->
+              <div class="col pb-2 pb-xl-0 mb-4 mb-xl-5">
+                <div class="d-flex align-items-start pe-xl-3">
+                  <div class="d-table bg-warning rounded-3 flex-shrink-0 p-3 mb-3">
+                    <i class="bi bi-tools text-white fs-4"></i>
+                  </div>
+                  <div class="ps-4 ps-sm-3 ps-md-4">
+                    <h3 class="h5 pb-1 mb-2">Accede a herramientas que simplifican tus decisiones</h3>
+                    <p class="mb-0">Calculadoras de cuota hipotecaria, simuladores de inversión y herramientas prácticas para tomar decisiones financieras informadas.</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Extra: Datos Seguros -->
+              <div class="col pb-2 pb-xl-0 mb-4 mb-xl-5">
+                <div class="d-flex align-items-start ps-xl-3">
+                  <div class="d-table bg-secondary rounded-3 flex-shrink-0 p-3 mb-3">
+                    <i class="bi bi-shield-lock text-white fs-4"></i>
+                  </div>
+                  <div class="ps-4 ps-sm-3 ps-md-4">
+                    <h3 class="h5 pb-1 mb-2">Datos Seguros</h3>
+                    <p class="mb-0">Tu información financiera está protegida con los más altos estándares de seguridad y nunca se comparte con terceros.</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Extra: 100% Móvil -->
+              <div class="col pb-2 pb-xl-0 mb-4 mb-xl-5">
+                <div class="d-flex align-items-start pe-xl-3">
+                  <div class="d-table bg-info rounded-3 flex-shrink-0 p-3 mb-3">
+                    <i class="bi bi-phone text-white fs-4"></i>
+                  </div>
+                  <div class="ps-4 ps-sm-3 ps-md-4">
+                    <h3 class="h5 pb-1 mb-2">100% Móvil</h3>
+                    <p class="mb-0">Accede a tu plan financiero desde cualquier dispositivo, optimizado para móviles.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>

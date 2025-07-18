@@ -9,17 +9,15 @@
   </p>
 
   <!-- INGRESO MENSUAL -->
-  <div class="mb-4 row align-items-center">
-    <label class="col-sm-4 col-form-label fw-bold">Ingresos mensuales</label>
-    <div class="col-sm-4">
-      <div class="input-group">
-        <span class="input-group-text">€</span>
-        <%= f.input_field :ingresos_mensual,
-              type: :number,
-              class: "form-control text-end",
-              placeholder: "0",
-              min: 0 %>
-      </div>
+  <div class="mb-4">
+    <label class="form-label fw-bold">Ingresos mensuales</label>
+    <div class="input-group">
+      <span class="input-group-text">€</span>
+      <%= f.input_field :ingresos_mensual,
+            type: :number,
+            class: "form-control text-end",
+            placeholder: "0",
+            min: 0 %>
     </div>
   </div>
 
@@ -44,23 +42,19 @@
     } %>
 
     <% expenses.each do |field, (label, color)| %>
-      <div class="col-12 col-md-6">
-        <div class="row align-items-center">
-          <div class="col-6 d-flex align-items-center">
-            <span class="badge bg-<%= color %> me-2"
-                  style="width:12px; height:12px; border-radius:50%;"></span>
-            <label for="pyg_<%= field %>" class="mb-0"><%= label %></label>
-          </div>
-          <div class="col-6">
-            <div class="input-group">
-              <span class="input-group-text">€</span>
-              <%= f.input_field field,
-                    type: :number,
-                    class: "form-control text-end",
-                    placeholder: "0",
-                    min: 0 %>
-            </div>
-          </div>
+      <div class="col-12 col-md-6 mb-3">
+        <label for="pyg_<%= field %>" class="form-label d-flex align-items-center">
+          <span class="badge bg-<%= color %> me-2"
+                style="width:12px; height:12px; border-radius:50%;"></span>
+          <%= label %>
+        </label>
+        <div class="input-group">
+          <span class="input-group-text">€</span>
+          <%= f.input_field field,
+                type: :number,
+                class: "form-control text-end",
+                placeholder: "0",
+                min: 0 %>
         </div>
       </div>
     <% end %>
@@ -69,14 +63,14 @@
   <hr class="my-4">
 
   <!-- DIFERENCIA -->
-  <div class="row mb-4">
-    <div class="col-6">
-      <p class="fw-bold">Diferencia</p>
-    </div>
-    <div class="col-6 text-end">
+  <div class="d-flex justify-content-between align-items-center mb-4 p-3 bg-light rounded">
+    <p class="fw-bold mb-0">Diferencia mensual</p>
+    <div class="text-end">
       <% total_expenses = expenses.keys.sum { |fld| @pyg.send(fld).to_i } %>
       <% diff = @pyg.ingresos_mensual.to_i - total_expenses %>
-      <p class="h4"><%= number_to_currency(diff, unit: "€", delimiter: ".") %></p>
+      <p class="h4 mb-0 <%= diff >= 0 ? 'text-success' : 'text-danger' %>">
+        <%= number_to_currency(diff, unit: "€", delimiter: ".") %>
+      </p>
     </div>
   </div>
 

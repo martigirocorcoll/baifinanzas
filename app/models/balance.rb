@@ -11,7 +11,7 @@ class Balance < ApplicationRecord
             :valor_otros_activos, :hipoteca_inmuebles,
             :deuda_tarjeta_credito, :prestamos_personales,
             :prestamos_coches, :otras_deudas,
-            numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+            numericality: { only_integer: true, greater_than_or_equal_to: 0, message: "Los valores no pueden ser negativos" }
 
   private
 

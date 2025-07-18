@@ -8,7 +8,7 @@ Rails.application.routes.draw do
     root to: "dashboard#index", as: :authenticated_root
   end
   unauthenticated do
-    root to: "pages#home",       as: :unauthenticated_root
+    root to: "pages#home", as: :unauthenticated_root
   end
   # Health check y PWA
   get  "up",             to: "rails/health#show",       as: :rails_health_check

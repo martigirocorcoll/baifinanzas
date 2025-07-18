@@ -1,7 +1,13 @@
-<% content_for :title, "Editing balance" %>
+<% content_for :title, "Editar Balance" %>
 
-<h1>Editing balance</h1>
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <%= link_to authenticated_root_path, class: "btn btn-outline-secondary" do %>
+      <i class="bi bi-arrow-left"></i> Dashboard
+    <% end %>
+    <h1 class="h3 mb-0">Editar Balance</h1>
+    <div></div>
+  </div>
+</div>
 
 <%= render "form", balance: @balance %>
-
-<br>
