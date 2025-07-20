@@ -53,14 +53,22 @@ class User < ApplicationRecord
   end
 
   def net_worth
-    total_assets - total_debts
+    total_assets - total_debt
+  end
+
+  def total_debt
+    total_debts
+  end
+
+  def annual_income
+    monthly_income * 12
   end
 
   def is_debt_free?
-    return true if total_debts == 0
+    return true if total_debt == 0
     
-    debt_to_assets_ratio = total_debts.to_f / total_assets * 100
-    debt_to_income_ratio = total_debts.to_f / annual_income
+    debt_to_assets_ratio = total_debt.to_f / total_assets * 100
+    debt_to_income_ratio = total_debt.to_f / annual_income
     
     debt_to_assets_ratio <= 15 || debt_to_income_ratio <= 2
   end
@@ -165,23 +173,19 @@ class User < ApplicationRecord
   end
 
 
-  private
-
-  def build_default_financials
-    create_pyg
-    create_balance
-  end
-
-  def annual_income
-    monthly_income * 12
-  end
-
   def total_assets
     return 0 unless balance
     balance.valor_inmuebles + balance.dinero_cuenta_corriente + 
     balance.dinero_cuenta_ahorro_depos + balance.dinero_inversiones_f +
     balance.dinero_planes_pensiones + balance.valor_coches_vehiculos + 
     balance.valor_otros_activos
+  end
+
+  private
+
+  def build_default_financials
+    create_pyg
+    create_balance
   end
 
   def total_debts

@@ -1,0 +1,369 @@
+<!-- ESTADO 3: USUARIO COMPLETO -->
+<!-- Nivel de salud financiera -->
+<div class="financial-health-display">
+  <h2><i class="bi bi-heart-pulse me-3"></i><%= @financial_health_level %></h2>
+  <p class="lead mb-0">Tu nivel actual de salud financiera</p>
+</div>
+  
+<!-- Gráficos lado a lado -->
+<div class="row mb-5">
+  <!-- Gráfico P&L -->
+  <div class="col-lg-6 mb-4">
+    <div class="dashboard-card">
+      <div class="card-body p-4">
+        <h4 class="card-title mb-3">
+          <i class="bi bi-graph-up me-2 text-primary"></i>
+          Flujo de Caja Mensual
+        </h4>
+          <div class="chart-container">
+            <canvas id="pylChart"></canvas>
+          </div>
+        <div class="text-center mt-3">
+          <span class="<%= @monthly_cash_flow > 0 ? 'status-positive' : 'status-negative' %>">
+            <strong><%= number_with_delimiter(@monthly_cash_flow, delimiter: ".") %> € / mes</strong>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Gráfico Balance -->
+  <div class="col-lg-6 mb-4">
+    <div class="dashboard-card">
+      <div class="card-body p-4">
+        <h4 class="card-title mb-3">
+          <i class="bi bi-pie-chart me-2 text-success"></i>
+          Patrimonio Neto
+        </h4>
+          <div class="chart-container">
+            <canvas id="balanceChart"></canvas>
+          </div>
+        <div class="text-center mt-3">
+          <span class="<%= @net_worth > 0 ? 'status-positive' : 'status-negative' %>">
+            <strong><%= number_with_delimiter(@net_worth, delimiter: ".") %> €</strong>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+<!-- Progreso hacia siguiente nivel -->
+<% if @next_level_progress[:target] %>
+  <div class="dashboard-card">
+    <div class="card-body p-4">
+      <h4 class="card-title mb-4">
+        <i class="bi bi-ladder me-2 text-warning"></i>
+        Progreso hacia "<%= @next_level_progress[:target] %>"
+      </h4>
+      <% @next_level_progress[:requirements].each do |req| %>
+        <div class="progress-indicator">
+          <div class="progress-icon <%= req[:completed] ? 'completed' : 'pending' %>">
+            <i class="bi bi-<%= req[:completed] ? 'check' : 'clock' %>"></i>
+          </div>
+          <div class="flex-grow-1">
+            <h6 class="mb-1"><%= req[:name] %></h6>
+            <% if req[:completed] %>
+              <span class="status-positive">✅ Completado</span>
+            <% else %>
+              <span class="text-muted">
+                <%= number_with_delimiter(req[:current], delimiter: ".") %> € de <%= number_with_delimiter(req[:target], delimiter: ".") %> € necesarios
+              </span>
+              <div class="progress mt-2" style="height: 8px;">
+                <div class="progress-bar bg-warning" role="progressbar" 
+                     style="width: <%= [((req[:current] / req[:target]) * 100), 100].min %>%"></div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+  
+<!-- Objetivos con recomendaciones -->
+<% if @objectives_with_recommendations && @objectives_with_recommendations.any? %>
+  <h3 class="mb-4">
+    <i class="bi bi-target me-2 text-info"></i>
+    Tus Objetivos Financieros
+  </h3>
+  
+  <% @objectives_with_recommendations.each do |obj_data| %>
+    <div class="objective-item">
+            <div class="row align-items-center">
+              <div class="col-lg-6">
+                <h5 class="mb-2">
+                  <i class="bi bi-<%= get_objective_icon(obj_data[:objective].categoria) %> me-2"></i>
+                  <%= obj_data[:objective].nombre %>
+                </h5>
+                <p class="text-muted mb-2">
+                  <strong><%= number_with_delimiter(obj_data[:objective].cantidad_objetivo, delimiter: ".") %> €</strong>
+                  para <%= obj_data[:objective].target_date.strftime("%B %Y") %>
+                </p>
+                <p class="mb-0">
+                  Necesitas ahorrar: <strong><%= number_with_delimiter(obj_data[:monthly_needed], delimiter: ".") %> € / mes</strong>
+                </p>
+              <p class="<%= obj_data[:can_afford] ? 'status-positive' : 'status-negative' %> mb-0">
+                <i class="bi bi-<%= obj_data[:can_afford] ? 'check-circle' : 'exclamation-circle' %> me-1"></i>
+                <%= obj_data[:can_afford] ? 'Puedes permitírtelo' : 'Supera tu capacidad actual' %>
+              </p>
+            </div>
+            
+            <div class="col-lg-6">
+              <% if obj_data[:recommendation] %>
+                <div class="recommendation-tag">
+                  <i class="bi bi-lightbulb me-2"></i>
+                  Recomendado: <%= obj_data[:recommendation][:product] %>
+                </div>
+                <p class="mb-2 small">
+                  <%= obj_data[:recommendation][:description] %>
+                </p>
+                <% if obj_data[:recommendation][:url] %>
+                  <a href="<%= obj_data[:recommendation][:url] %>" 
+                     target="_blank" 
+                     class="btn btn-outline-primary btn-sm">
+                    <i class="bi bi-external-link me-1"></i>
+                    Ver producto
+                  </a>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+  
+<!-- Botón para añadir objetivos si el nivel lo permite -->
+<% if financial_health_allows_objectives? %>
+  <div class="text-center mb-4">
+    <%= link_to new_objective_path, class: "btn btn-baifinanzas btn-lg" do %>
+      <i class="bi bi-plus-circle me-2"></i>
+      Añadir Nuevo Objetivo
+    <% end %>
+  </div>
+<% end %>
+
+<!-- Acciones rápidas -->
+<div class="row">
+  <div class="col-md-4 mb-3">
+    <%= link_to edit_pyg_path, class: "btn btn-outline-primary w-100" do %>
+      <i class="bi bi-pencil me-2"></i>
+      Editar P&L
+    <% end %>
+  </div>
+  <div class="col-md-4 mb-3">
+    <%= link_to edit_balance_path, class: "btn btn-outline-primary w-100" do %>
+      <i class="bi bi-pencil me-2"></i>
+      Editar Balance
+    <% end %>
+  </div>
+  <div class="col-md-4 mb-3">
+    <%= link_to objectives_path, class: "btn btn-outline-primary w-100" do %>
+      <i class="bi bi-list me-2"></i>
+      Ver Todos los Objetivos
+    <% end %>
+  </div>
+</div>
+
+<!-- Scripts para los gráficos -->
+<script>
+function initDashboardCharts() {
+  // Gráfico P&L - Barras apiladas ingresos vs gastos por categoría
+  const pylElement = document.getElementById('pylChart');
+  if (!pylElement) return; // Exit if charts don't exist
+  
+  const pylCtx = pylElement.getContext('2d');
+  
+  const income = <%= @income_data[:ingresos_mensual] || 0 %>;
+  const expenses = {
+    vivienda: <%= @expense_data[:vivienda] || 0 %>,
+    utilities: <%= @expense_data[:utilities] || 0 %>,
+    alimentacion: <%= @expense_data[:alimentacion] || 0 %>,
+    transporte: <%= @expense_data[:transporte] || 0 %>,
+    ocio: <%= @expense_data[:ocio] || 0 %>,
+    seguros: <%= @expense_data[:seguros] || 0 %>,
+    cuota_hipoteca: <%= @expense_data[:cuota_hipoteca] || 0 %>,
+    cuota_coche: <%= @expense_data[:cuota_coche] || 0 %>,
+    otras_cuotas: <%= @expense_data[:otras_cuotas] || 0 %>,
+    suscripciones: <%= @expense_data[:suscripciones] || 0 %>,
+    cuidado_personal: <%= @expense_data[:cuidado_personal] || 0 %>,
+    otros: <%= @expense_data[:otros] || 0 %>
+  };
+
+  // Filtrar gastos con valor > 0
+  const activeExpenses = Object.entries(expenses).filter(([key, value]) => value > 0);
+  
+  // Paleta de azules monocromáticos
+  const blueShades = [
+    '#0D6EFD', '#1B75FF', '#2E7DFF', '#4285FF', '#558DFF',
+    '#6995FF', '#7C9DFF', '#90A5FF', '#A3ADFF', '#B7B5FF'
+  ];
+  
+  new Chart(pylCtx, {
+    type: 'bar',
+    data: {
+      labels: ['Ingresos', 'Gastos'],
+      datasets: [
+        // Dataset para ingresos
+        {
+          label: 'Ingresos',
+          data: [income, 0],
+          backgroundColor: '#0D6EFD',
+          borderColor: '#0D6EFD',
+          borderWidth: 1
+        },
+        // Datasets para cada categoría de gasto
+        ...activeExpenses.map(([category, amount], index) => ({
+          label: {
+            vivienda: 'Vivienda',
+            utilities: 'Servicios',
+            alimentacion: 'Alimentación',
+            transporte: 'Transporte',
+            ocio: 'Ocio',
+            seguros: 'Seguros',
+            cuota_hipoteca: 'Hipoteca',
+            cuota_coche: 'Coche',
+            otras_cuotas: 'Otras cuotas',
+            suscripciones: 'Suscripciones',
+            cuidado_personal: 'Cuidado personal',
+            otros: 'Otros'
+          }[category] || category,
+          data: [0, amount],
+          backgroundColor: blueShades[index % blueShades.length],
+          borderColor: blueShades[index % blueShades.length],
+          borderWidth: 1
+        }))
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              return `${context.dataset.label}: ${context.parsed.y.toLocaleString('es-ES')} €`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          stacked: true,
+          ticks: { maxRotation: 0 }
+        },
+        y: {
+          stacked: true,
+          beginAtZero: true,
+          ticks: {
+            callback: function(value) {
+              return value.toLocaleString('es-ES') + ' €';
+            }
+          }
+        }
+      },
+      animation: {
+        duration: 1500,
+        easing: 'easeInOutQuart'
+      }
+    }
+  });
+  
+  // Gráfico Balance - Barras apiladas activos vs deudas por categoría
+  const balanceElement = document.getElementById('balanceChart');
+  if (!balanceElement) return; // Exit if balance chart doesn't exist
+  
+  const balanceCtx = balanceElement.getContext('2d');
+  
+  const balanceData = <%= raw @balance_data.to_json %>;
+  
+  // Filtrar activos y deudas con valor > 0
+  const activeAssets = Object.entries(balanceData.assets || {}).filter(([key, value]) => value > 0);
+  const activeDebts = Object.entries(balanceData.debts || {}).filter(([key, value]) => value > 0);
+  
+  // Paleta de azules monocromáticos para activos (tonos más claros)
+  const assetColors = ['#0D6EFD', '#1B75FF', '#2E7DFF', '#4285FF', '#558DFF', '#6995FF'];
+  // Paleta de azules monocromáticos para deudas (tonos más oscuros)
+  const debtColors = ['#7C9DFF', '#90A5FF', '#A3ADFF', '#B7B5FF', '#D1D9FF'];
+  
+  new Chart(balanceCtx, {
+    type: 'bar',
+    data: {
+      labels: ['Activos', 'Deudas'],
+      datasets: [
+        // Datasets para cada categoría de activo
+        ...activeAssets.map(([category, amount], index) => ({
+          label: {
+            inmuebles: 'Inmuebles',
+            cuentas: 'Cuentas corrientes',
+            ahorros: 'Depósitos/Ahorro',
+            inversiones: 'Inversiones',
+            pensiones: 'Planes pensiones',
+            vehiculos: 'Vehículos',
+            otros: 'Otros activos'
+          }[category] || category,
+          data: [amount, 0],
+          backgroundColor: assetColors[index % assetColors.length],
+          borderColor: assetColors[index % assetColors.length],
+          borderWidth: 1
+        })),
+        // Datasets para cada categoría de deuda
+        ...activeDebts.map(([category, amount], index) => ({
+          label: {
+            hipoteca: 'Hipoteca',
+            tarjetas: 'Tarjetas crédito',
+            prestamos: 'Préstamos personales',
+            coches: 'Préstamos coches',
+            otras: 'Otras deudas'
+          }[category] || category,
+          data: [0, amount],
+          backgroundColor: debtColors[index % debtColors.length],
+          borderColor: debtColors[index % debtColors.length],
+          borderWidth: 1
+        }))
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              return `${context.dataset.label}: ${context.parsed.y.toLocaleString('es-ES')} €`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          stacked: true,
+          ticks: { maxRotation: 0 }
+        },
+        y: {
+          stacked: true,
+          beginAtZero: true,
+          ticks: {
+            callback: function(value) {
+              return value.toLocaleString('es-ES') + ' €';
+            }
+          }
+        }
+      },
+      animation: {
+        duration: 1500,
+        easing: 'easeInOutQuart'
+      }
+    }
+  });
+}
+
+// Inicializar en DOMContentLoaded y turbo:load
+document.addEventListener('DOMContentLoaded', initDashboardCharts);
+document.addEventListener('turbo:load', initDashboardCharts);
+</script>
+

@@ -1,0 +1,370 @@
+<!-- ESTADO 2: USUARIO CON P&L -->
+<div class="text-center mb-4">
+  <h1 class="display-4">¡Excelente trabajo!</h1>
+  <div class="ranking-display">
+    <i class="bi bi-trophy me-2"></i>
+    <%= @savings_ranking %>
+  </div>
+</div>
+  
+<!-- Gráfico cascada de flujo de caja -->
+<div class="dashboard-card">
+  <div class="card-body p-4">
+    <h3 class="card-title mb-4">
+      <i class="bi bi-graph-up me-2 text-primary"></i>
+      Tu Flujo de Caja Mensual
+    </h3>
+          <div class="chart-container">
+            <canvas id="waterfallChart"></canvas>
+          </div>
+          
+    <div class="row text-center mt-4">
+      <div class="col-md-4">
+        <div class="stats-card">
+          <div class="stats-icon bg-success">
+            <i class="bi bi-arrow-up"></i>
+          </div>
+          <h5 class="text-success">Ingresos</h5>
+          <p class="h4 mb-0"><%= number_with_delimiter(@income_data[:ingresos_mensual] || 0, delimiter: ".") %> €</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="stats-card">
+          <div class="stats-icon" style="background: #FD1015;">
+            <i class="bi bi-arrow-down"></i>
+          </div>
+          <h5 style="color: #FD1015;">Gastos</h5>
+          <p class="h4 mb-0"><%= number_with_delimiter(@expense_data.values.sum, delimiter: ".") %> €</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="stats-card">
+          <div class="stats-icon <%= @monthly_cash_flow > 0 ? 'bg-success' : '' %>" style="<%= @monthly_cash_flow <= 0 ? 'background: #FD1015;' : '' %>">
+            <i class="bi bi-piggy-bank"></i>
+          </div>
+          <h5 class="<%= @monthly_cash_flow > 0 ? 'text-success' : '' %>" style="<%= @monthly_cash_flow <= 0 ? 'color: #FD1015;' : '' %>">Ahorro</h5>
+          <p class="h4 mb-0"><%= number_with_delimiter(@monthly_cash_flow, delimiter: ".") %> €</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+<!-- Análisis y recomendaciones -->
+<div class="row mb-5">
+  <div class="col-lg-6">
+    <div class="dashboard-card">
+      <div class="card-body p-4">
+        <h4 class="card-title mb-3">
+          <i class="bi bi-lightbulb me-2 text-warning"></i>
+          Recomendaciones para ti
+        </h4>
+          <% @basic_recommendations.each_with_index do |recommendation, index| %>
+            <div class="d-flex align-items-center mb-3">
+              <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" 
+                   style="width: 30px; height: 30px; font-size: 0.8rem;">
+                <%= index + 1 %>
+              </div>
+              <span><%= recommendation %></span>
+            </div>
+          <% end %>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-lg-6">
+    <div class="dashboard-card">
+      <div class="card-body p-4">
+        <h4 class="card-title mb-3">
+          <i class="bi bi-bar-chart me-2 text-info"></i>
+          Tu situación actual
+        </h4>
+          <div class="mb-3">
+            <strong>Capacidad de ahorro:</strong>
+            <span class="<%= @monthly_cash_flow > 0 ? 'text-success' : 'text-danger' %>">
+              <%= number_with_delimiter(@monthly_cash_flow, delimiter: ".") %> € al mes
+            </span>
+          </div>
+          
+        <% if @monthly_cash_flow > 0 %>
+          <div class="progress-indicator" style="background: rgba(30, 221, 136, 0.1);">
+            <div class="progress-icon completed">
+              <i class="bi bi-check-circle"></i>
+            </div>
+            <div>
+              <strong>¡Genial! Flujo de caja positivo</strong><br>
+              <small class="text-muted">Esto te permite planificar objetivos financieros</small>
+            </div>
+          </div>
+        <% else %>
+          <div class="progress-indicator" style="background: rgba(253, 16, 21, 0.1);">
+            <div class="progress-icon" style="background: #FD1015;">
+              <i class="bi bi-exclamation-triangle"></i>
+            </div>
+            <div>
+              <strong>Flujo de caja negativo</strong><br>
+              <small class="text-muted">Considera revisar tus gastos para crear capacidad de ahorro</small>
+            </div>
+          </div>
+        <% end %>
+          
+          <div class="mt-3">
+            <small class="text-muted">
+              <i class="bi bi-info-circle me-1"></i>
+              Completa tu balance para obtener un análisis más detallado de tu salud financiera.
+            </small>
+          </div>
+          
+        <div class="mt-3">
+          <%= link_to edit_pyg_path, class: "btn btn-outline-primary btn-sm" do %>
+            <i class="bi bi-pencil me-1"></i>
+            Editar P&L
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+<!-- Sección de motivación para completar balance -->
+<div class="welcome-hero mt-5">
+  <h2>🚀 Desbloquea tu Análisis Completo</h2>
+  <p class="lead mb-4">
+    Descubre tu nivel exacto de salud financiera y obtén recomendaciones de productos específicos
+  </p>
+</div>
+
+<div class="form-section">
+  <h3 class="text-center mb-4">
+    <i class="bi bi-bank text-primary me-2"></i>
+    Completa tu Balance Patrimonial
+  </h3>
+              
+              <%= form_with model: @balance, local: true, class: "row g-3" do |f| %>
+                <div class="col-12">
+                  <h5 class="text-success mb-3">
+                    <i class="bi bi-plus-circle me-2"></i>
+                    Activos (Lo que tienes)
+                  </h5>
+                </div>
+                
+                <div class="col-md-4">
+                  <label for="balance_valor_inmuebles" class="form-label">
+                    <i class="bi bi-house me-1"></i>
+                    Valor inmuebles
+                  </label>
+                  <%= f.number_field :valor_inmuebles, class: "form-control", step: 0.01, placeholder: "Ej: 200000" %>
+                </div>
+                
+                <div class="col-md-4">
+                  <label for="balance_dinero_cuenta_corriente" class="form-label">
+                    <i class="bi bi-bank me-1"></i>
+                    Dinero en cuentas
+                  </label>
+                  <%= f.number_field :dinero_cuenta_corriente, class: "form-control", step: 0.01, placeholder: "Ej: 15000" %>
+                </div>
+                
+                <div class="col-md-4">
+                  <label for="balance_dinero_inversiones_f" class="form-label">
+                    <i class="bi bi-graph-up me-1"></i>
+                    Inversiones
+                  </label>
+                  <%= f.number_field :dinero_inversiones_f, class: "form-control", step: 0.01, placeholder: "Ej: 25000" %>
+                </div>
+                
+                <div class="col-md-4">
+                  <label for="balance_dinero_cuenta_ahorro_depos" class="form-label">
+                    <i class="bi bi-piggy-bank me-1"></i>
+                    Depósitos/Ahorro
+                  </label>
+                  <%= f.number_field :dinero_cuenta_ahorro_depos, class: "form-control", step: 0.01, placeholder: "Ej: 8000" %>
+                </div>
+                
+                <div class="col-md-4">
+                  <label for="balance_dinero_planes_pensiones" class="form-label">
+                    <i class="bi bi-shield-check me-1"></i>
+                    Planes de pensiones
+                  </label>
+                  <%= f.number_field :dinero_planes_pensiones, class: "form-control", step: 0.01, placeholder: "Ej: 10000" %>
+                </div>
+                
+                <div class="col-md-6">
+                  <label for="balance_valor_coches_vehiculos" class="form-label">
+                    <i class="bi bi-car-front me-1"></i>
+                    Coches/Vehículos
+                  </label>
+                  <%= f.number_field :valor_coches_vehiculos, class: "form-control", step: 0.01, placeholder: "Ej: 15000" %>
+                </div>
+                
+                <div class="col-md-6">
+                  <label for="balance_valor_otros_activos" class="form-label">
+                    <i class="bi bi-gem me-1"></i>
+                    Otros activos
+                  </label>
+                  <%= f.number_field :valor_otros_activos, class: "form-control", step: 0.01, placeholder: "Ej: 5000" %>
+                </div>
+                
+                <div class="col-12 mt-4">
+                  <h5 class="text-danger mb-3">
+                    <i class="bi bi-dash-circle me-2"></i>
+                    Pasivos (Lo que debes)
+                  </h5>
+                </div>
+                
+                <div class="col-md-4">
+                  <label for="balance_hipoteca_inmuebles" class="form-label">
+                    <i class="bi bi-house-door me-1"></i>
+                    Hipoteca
+                  </label>
+                  <%= f.number_field :hipoteca_inmuebles, class: "form-control", step: 0.01, placeholder: "Ej: 150000" %>
+                </div>
+                
+                <div class="col-md-4">
+                  <label for="balance_deuda_tarjeta_credito" class="form-label">
+                    <i class="bi bi-credit-card me-1"></i>
+                    Deuda tarjetas
+                  </label>
+                  <%= f.number_field :deuda_tarjeta_credito, class: "form-control", step: 0.01, placeholder: "Ej: 3000" %>
+                </div>
+                
+                <div class="col-md-4">
+                  <label for="balance_prestamos_personales" class="form-label">
+                    <i class="bi bi-person-badge me-1"></i>
+                    Préstamos personales
+                  </label>
+                  <%= f.number_field :prestamos_personales, class: "form-control", step: 0.01, placeholder: "Ej: 8000" %>
+                </div>
+                
+                <div class="col-md-6">
+                  <label for="balance_prestamos_coches" class="form-label">
+                    <i class="bi bi-car-front me-1"></i>
+                    Préstamos coches
+                  </label>
+                  <%= f.number_field :prestamos_coches, class: "form-control", step: 0.01, placeholder: "Ej: 12000" %>
+                </div>
+                
+                <div class="col-md-6">
+                  <label for="balance_otras_deudas" class="form-label">
+                    <i class="bi bi-exclamation-triangle me-1"></i>
+                    Otras deudas
+                  </label>
+                  <%= f.number_field :otras_deudas, class: "form-control", step: 0.01, placeholder: "Ej: 2000" %>
+                </div>
+                
+  <div class="col-12 text-center mt-4">
+    <%= f.submit "✨ Completar mi Análisis Financiero", 
+        class: "btn btn-baifinanzas-success btn-lg px-5 py-3" %>
+  </div>
+  <% end %>
+</div>
+
+<!-- Script para el gráfico cascada -->
+<script>
+function initWaterfallChart() {
+  const chartElement = document.getElementById('waterfallChart');
+  if (!chartElement) return; // Exit if chart element doesn't exist
+  
+  const ctx = chartElement.getContext('2d');
+  
+  // Datos del servidor para gráfico apilado
+  const income = <%= @income_data[:ingresos_mensual] || 0 %>;
+  const expenses = {
+    vivienda: <%= @expense_data[:vivienda] || 0 %>,
+    utilities: <%= @expense_data[:utilities] || 0 %>,
+    alimentacion: <%= @expense_data[:alimentacion] || 0 %>,
+    transporte: <%= @expense_data[:transporte] || 0 %>,
+    ocio: <%= @expense_data[:ocio] || 0 %>,
+    seguros: <%= @expense_data[:seguros] || 0 %>,
+    cuota_hipoteca: <%= @expense_data[:cuota_hipoteca] || 0 %>,
+    cuota_coche: <%= @expense_data[:cuota_coche] || 0 %>,
+    otras_cuotas: <%= @expense_data[:otras_cuotas] || 0 %>,
+    suscripciones: <%= @expense_data[:suscripciones] || 0 %>,
+    cuidado_personal: <%= @expense_data[:cuidado_personal] || 0 %>,
+    otros: <%= @expense_data[:otros] || 0 %>
+  };
+
+  // Filtrar gastos con valor > 0
+  const activeExpenses = Object.entries(expenses).filter(([key, value]) => value > 0);
+  
+  // Paleta de azules monocromáticos
+  const blueShades = [
+    '#0D6EFD', '#1B75FF', '#2E7DFF', '#4285FF', '#558DFF',
+    '#6995FF', '#7C9DFF', '#90A5FF', '#A3ADFF', '#B7B5FF'
+  ];
+  
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Ingresos', 'Gastos'],
+      datasets: [
+        // Dataset para ingresos
+        {
+          label: 'Ingresos',
+          data: [income, 0],
+          backgroundColor: '#0D6EFD',
+          borderColor: '#0D6EFD',
+          borderWidth: 1
+        },
+        // Datasets para cada categoría de gasto
+        ...activeExpenses.map(([category, amount], index) => ({
+          label: {
+            vivienda: 'Vivienda',
+            utilities: 'Servicios',
+            alimentacion: 'Alimentación',
+            transporte: 'Transporte',
+            ocio: 'Ocio',
+            seguros: 'Seguros',
+            cuota_hipoteca: 'Hipoteca',
+            cuota_coche: 'Coche',
+            otras_cuotas: 'Otras cuotas',
+            suscripciones: 'Suscripciones',
+            cuidado_personal: 'Cuidado personal',
+            otros: 'Otros'
+          }[category] || category,
+          data: [0, amount],
+          backgroundColor: blueShades[index % blueShades.length],
+          borderColor: blueShades[index % blueShades.length],
+          borderWidth: 1
+        }))
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              return `${context.dataset.label}: ${context.parsed.y.toLocaleString('es-ES')} €`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          stacked: true,
+          ticks: { maxRotation: 0 }
+        },
+        y: {
+          stacked: true,
+          beginAtZero: true,
+          ticks: {
+            callback: function(value) {
+              return value.toLocaleString('es-ES') + ' €';
+            }
+          }
+        }
+      },
+      animation: {
+        duration: 1500,
+        easing: 'easeInOutQuart'
+      }
+    }
+  });
+}
+
+// Inicializar en DOMContentLoaded y turbo:load
+document.addEventListener('DOMContentLoaded', initWaterfallChart);
+document.addEventListener('turbo:load', initWaterfallChart);
+</script>

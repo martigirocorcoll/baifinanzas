@@ -1,0 +1,157 @@
+<!-- ESTADO 1: USUARIO NUEVO -->
+<div class="welcome-hero">
+  <h1>¡Hola, <%= current_user.email.split('@').first.capitalize %>!</h1>
+  <p class="lead mb-4">Descubre tu salud financiera en solo 2 minutos</p>
+</div>
+
+<div class="benefit-grid">
+  <div class="benefit-card">
+    <div class="benefit-icon">
+      <i class="bi bi-graph-up"></i>
+    </div>
+    <h5 class="text-success mb-2">Análisis de flujo de caja</h5>
+    <p class="small mb-0 text-muted">Ve exactamente dónde va tu dinero</p>
+  </div>
+  
+  <div class="benefit-card">
+    <div class="benefit-icon">
+      <i class="bi bi-trophy"></i>
+    </div>
+    <h5 class="text-success mb-2">Ranking personalizado</h5>
+    <p class="small mb-0 text-muted">Compárate con otros ahorradores</p>
+  </div>
+  
+  <div class="benefit-card">
+    <div class="benefit-icon">
+      <i class="bi bi-lightbulb"></i>
+    </div>
+    <h5 class="text-success mb-2">Recomendaciones</h5>
+    <p class="small mb-0 text-muted">Productos financieros ideales para ti</p>
+  </div>
+</div>
+<div class="form-section">
+  <h3 class="text-center mb-4">
+    <i class="bi bi-clipboard-data text-primary me-2"></i>
+    Completa tu Análisis de Ingresos y Gastos
+  </h3>
+        
+        <%= form_with model: @pyg, local: true, class: "row g-3" do |f| %>
+          <div class="col-md-6">
+            <label for="pyg_ingresos_mensual" class="form-label">
+              <i class="bi bi-cash-coin text-success me-1"></i>
+              Ingresos mensuales *
+            </label>
+            <%= f.number_field :ingresos_mensual, class: "form-control", step: 0.01, required: true, placeholder: "Ej: 2500" %>
+          </div>
+          
+          
+          <div class="col-12">
+            <hr class="my-4">
+            <h5 class="text-center mb-3">
+              <i class="bi bi-cart text-danger me-2"></i>
+              Gastos Mensuales
+            </h5>
+          </div>
+          
+          <div class="col-md-6">
+            <label for="pyg_alquiler_hipoteca" class="form-label">
+              <i class="bi bi-house me-1"></i>
+              Alquiler/Hipoteca
+            </label>
+            <%= f.number_field :alquiler_hipoteca, class: "form-control", step: 0.01, placeholder: "Ej: 800" %>
+          </div>
+          
+          <div class="col-md-6">
+            <label for="pyg_gastos_utilities" class="form-label">
+              <i class="bi bi-lightning me-1"></i>
+              Servicios (luz, agua, gas, internet)
+            </label>
+            <%= f.number_field :gastos_utilities, class: "form-control", step: 0.01, placeholder: "Ej: 150" %>
+          </div>
+          
+          <div class="col-md-6">
+            <label for="pyg_gasto_compra" class="form-label">
+              <i class="bi bi-basket me-1"></i>
+              Alimentación y compras
+            </label>
+            <%= f.number_field :gasto_compra, class: "form-control", step: 0.01, placeholder: "Ej: 400" %>
+          </div>
+          
+          <div class="col-md-6">
+            <label for="pyg_gastos_transporte" class="form-label">
+              <i class="bi bi-car-front me-1"></i>
+              Transporte
+            </label>
+            <%= f.number_field :gastos_transporte, class: "form-control", step: 0.01, placeholder: "Ej: 200" %>
+          </div>
+          
+          <div class="col-md-6">
+            <label for="pyg_restaurantes_y_ocio" class="form-label">
+              <i class="bi bi-controller me-1"></i>
+              Restaurantes y ocio
+            </label>
+            <%= f.number_field :restaurantes_y_ocio, class: "form-control", step: 0.01, placeholder: "Ej: 300" %>
+          </div>
+          
+          <div class="col-md-6">
+            <label for="pyg_gastos_seguros" class="form-label">
+              <i class="bi bi-shield-check me-1"></i>
+              Seguros
+            </label>
+            <%= f.number_field :gastos_seguros, class: "form-control", step: 0.01, placeholder: "Ej: 150" %>
+          </div>
+          
+          <div class="col-md-6">
+            <label for="pyg_cuota_hipoteca" class="form-label">
+              <i class="bi bi-house-door me-1"></i>
+              Cuota hipoteca
+            </label>
+            <%= f.number_field :cuota_hipoteca, class: "form-control", step: 0.01, placeholder: "Ej: 600" %>
+          </div>
+          
+          <div class="col-md-6">
+            <label for="pyg_cuota_coche" class="form-label">
+              <i class="bi bi-car-front-fill me-1"></i>
+              Cuota coche
+            </label>
+            <%= f.number_field :cuota_coche, class: "form-control", step: 0.01, placeholder: "Ej: 250" %>
+          </div>
+          
+          <div class="col-md-6">
+            <label for="pyg_otras_cuotas" class="form-label">
+              <i class="bi bi-credit-card me-1"></i>
+              Otras cuotas/préstamos
+            </label>
+            <%= f.number_field :otras_cuotas, class: "form-control", step: 0.01, placeholder: "Ej: 100" %>
+          </div>
+          
+          <div class="col-md-6">
+            <label for="pyg_suscripciones" class="form-label">
+              <i class="bi bi-play-circle me-1"></i>
+              Suscripciones (Netflix, Spotify, etc.)
+            </label>
+            <%= f.number_field :suscripciones, class: "form-control", step: 0.01, placeholder: "Ej: 50" %>
+          </div>
+          
+          <div class="col-md-6">
+            <label for="pyg_cuidado_personal" class="form-label">
+              <i class="bi bi-heart me-1"></i>
+              Cuidado personal
+            </label>
+            <%= f.number_field :cuidado_personal, class: "form-control", step: 0.01, placeholder: "Ej: 80" %>
+          </div>
+          
+          <div class="col-md-6">
+            <label for="pyg_otros_gastos" class="form-label">
+              <i class="bi bi-three-dots me-1"></i>
+              Otros gastos
+            </label>
+            <%= f.number_field :otros_gastos, class: "form-control", step: 0.01, placeholder: "Ej: 200" %>
+          </div>
+          
+          <div class="col-12 text-center mt-4">
+            <%= f.submit "🚀 Descubrir mi Salud Financiera", 
+                class: "btn btn-baifinanzas btn-lg px-5 py-3" %>
+          </div>
+        <% end %>
+</div>
