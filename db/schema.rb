@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_06_19_155744) do
+ActiveRecord::Schema[7.2].define(version: 2025_07_23_090739) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -43,6 +43,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_06_19_155744) do
     t.string "ac_jubil"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "ac_fiscal"
     t.index ["ac_compte"], name: "index_influencers_on_ac_compte"
   end
 
@@ -52,7 +53,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_06_19_155744) do
     t.text "description"
     t.integer "target_amount"
     t.date "target_date"
-    t.string "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_objectives_on_user_id"
@@ -76,6 +76,20 @@ ActiveRecord::Schema[7.2].define(version: 2025_06_19_155744) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_pygs_on_user_id", unique: true
+  end
+
+  create_table "recommendations", force: :cascade do |t|
+    t.string "slug"
+    t.string "title"
+    t.text "description"
+    t.text "content"
+    t.string "video_url"
+    t.string "image_url"
+    t.string "category"
+    t.boolean "active"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["slug"], name: "index_recommendations_on_slug", unique: true
   end
 
   create_table "users", force: :cascade do |t|

@@ -31,15 +31,6 @@
             input_html: { class: "form-control", type: "date" },
             wrapper: false %>
     </div>
-    <div class="col-12 col-md-6">
-      <%= f.input :status,
-            label: "Estado",
-            as: :select,
-            collection: %w[pending active completed cancelled],
-            input_html: { class: "form-select" },
-            include_blank: false,
-            wrapper: false %>
-    </div>
   </div>
 
   <div class="mb-4">

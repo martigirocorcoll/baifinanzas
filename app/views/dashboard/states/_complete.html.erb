@@ -1,27 +1,254 @@
-<!-- ESTADO 3: USUARIO COMPLETO -->
-<!-- Nivel de salud financiera -->
-<div class="financial-health-display">
-  <h2><i class="bi bi-heart-pulse me-3"></i><%= @financial_health_level %></h2>
-  <p class="lead mb-0">Tu nivel actual de salud financiera</p>
-</div>
+<!-- ESTADO 3: DASHBOARD COMPLETO -->
+
+<!-- TU ESCALADA FINANCIERA (arriba del todo, sin fondo) -->
+<div class="text-center py-4 mt-4">
+  <h3 class="mb-4">
+    <i class="bi bi-map text-info me-2"></i>
+    Tu Escalada Financiera
+  </h3>
   
-<!-- Gráficos lado a lado -->
-<div class="row mb-5">
-  <!-- Gráfico P&L -->
+  <div class="mountain-progress-bar">
+    <% @mountain_progress.each_with_index do |state, index| %>
+      <div class="progress-step <%= state[:status] %>">
+        <div class="step-icon">
+          <i class="<%= state[:bootstrap_icon] %> step-bootstrap-icon"></i>
+        </div>
+        <div class="step-content">
+          <div class="step-name"><%= state[:name] %></div>
+          <% if state[:status] == "current" %>
+            <div class="step-badge current-badge">Actual</div>
+          <% elsif state[:status] == "completed" %>
+            <div class="step-badge completed-badge"><i class="bi bi-check"></i></div>
+          <% end %>
+        </div>
+        <% unless index == @mountain_progress.length - 1 %>
+          <div class="step-connector <%= state[:status] == 'completed' ? 'completed' : '' %>"></div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<!-- 1. ESTADO + EXPLICACIÓN -->
+<div class="dashboard-card mb-4">
+  <div class="card-body p-4">
+    <div class="row align-items-center">
+      <div class="col-md-3 text-center">
+        <div style="font-size: 4rem;">
+          <i class="<%= @mountain_state[:bootstrap_icon] %> text-primary"></i>
+        </div>
+      </div>
+      <div class="col-md-9">
+        <h2 class="mb-3 text-primary">
+          <strong><%= @mountain_state[:name] %></strong>
+        </h2>
+        <p class="mb-4" style="line-height: 1.6;">
+          <%= @mountain_state[:description] %>
+        </p>
+        
+        <div class="mt-4 p-4 rounded" style="background: linear-gradient(135deg, rgba(13, 110, 253, 0.08) 0%, rgba(13, 110, 253, 0.12) 100%); border-left: 4px solid #0d6efd;">
+          <h5 class="text-primary mb-3">
+            <i class="bi bi-arrow-right-circle me-2"></i>
+            Próximo Paso
+          </h5>
+          <p class="mb-0" style="line-height: 1.6;">
+            <%= @mountain_state[:next_step] %>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Formulario crear objetivo (solo para estados que pueden invertir) -->
+<% if current_user.can_invest_in_objectives? %>
+  <div class="text-center py-4 mt-4">
+    <div class="bg-light p-4 rounded mx-auto" style="max-width: 800px;">
+      <h4 class="mb-3 text-center">
+        <i class="bi bi-plus-circle text-success me-2"></i>
+        Crear Nuevo Objetivo
+      </h4>
+      <p class="text-muted text-center mb-4">
+        Define un objetivo financiero y obtén inmediatamente la recomendación específica para alcanzarlo.
+      </p>
+      
+      <%= form_with model: @new_objective, local: true, class: "row g-3 justify-content-center" do |f| %>
+        <%= f.hidden_field :user_id, value: current_user.id %>
+        <div class="col-md-4">
+          <label for="objective_title" class="form-label">¿Qué quieres lograr?</label>
+          <%= f.text_field :title, class: "form-control", placeholder: "Ej: Comprar coche, Casa vacaciones..." %>
+        </div>
+        <div class="col-md-4">
+          <label for="objective_target_amount" class="form-label">¿Cuánto necesitas? (€)</label>
+          <%= f.number_field :target_amount, class: "form-control", placeholder: "Ej: 25000" %>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">¿Para cuándo?</label>
+          <div class="row g-2">
+            <div class="col-7">
+              <%= f.select :target_date_month, 
+                  options_for_select([
+                    ['Enero', 1], ['Febrero', 2], ['Marzo', 3], ['Abril', 4],
+                    ['Mayo', 5], ['Junio', 6], ['Julio', 7], ['Agosto', 8],
+                    ['Septiembre', 9], ['Octubre', 10], ['Noviembre', 11], ['Diciembre', 12]
+                  ], Date.current.month), 
+                  { prompt: 'Mes' }, 
+                  { class: "form-select form-select-sm" } %>
+            </div>
+            <div class="col-5">
+              <%= f.select :target_date_year,
+                  options_for_select((Date.current.year..(Date.current.year + 45)).map { |y| [y, y] }, Date.current.year + 1),
+                  { prompt: 'Año' },
+                  { class: "form-select form-select-sm" } %>
+            </div>
+          </div>
+          <small class="text-muted">Selecciona el mes y año objetivo</small>
+        </div>
+        <div class="col-12 text-center mt-4">
+          <button type="submit" class="btn btn-success btn-lg">
+            <i class="bi bi-target me-2"></i>
+            Crear Objetivo y Ver Recomendación
+          </button>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+
+<!-- Flecha indicadora hacia las recomendaciones -->
+<div class="current-state-arrow">
+  <i class="bi bi-arrow-down text-primary"></i>
+</div>
+
+<!-- 3. RECOMENDACIONES Y OBJETIVOS UNIFICADOS -->
+<div class="text-center py-4 mt-4">
+  <h2 class="mb-2">
+    <i class="bi bi-arrow-up-right-circle text-success me-2"></i>
+    Próximos Pasos
+  </h2>
+  <p class="text-muted mb-4">
+    Acciones específicas para mejorar tu situación financiera actual
+  </p>
+  
+  <div class="row justify-content-center">
+    <!-- Recomendaciones base según estado financiero -->
+    <% @all_recommendations.each_with_index do |rec, index| %>
+      <div class="col-md-6 mb-3">
+        <div class="border rounded p-3 h-100 d-flex flex-column bg-white">
+          <div class="d-flex align-items-start mb-3">
+            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" 
+                 style="width: 40px; height: 40px; flex-shrink: 0;">
+              <i class="<%= rec[:icon] %>" style="font-size: 1.1rem;"></i>
+            </div>
+            <div class="flex-grow-1">
+              <h6 class="mb-2 fw-bold"><%= rec[:title] %></h6>
+              <p class="text-muted small mb-0 lh-sm"><%= rec[:description] %></p>
+            </div>
+          </div>
+          <div class="mt-auto">
+            <!-- Generar slug simple para recomendaciones base -->
+            <% rec_slug = rec[:product].parameterize %>
+            <%= link_to recommendation_path(rec_slug), class: "btn btn-success btn-sm w-100" do %>
+              <i class="bi bi-arrow-right me-1"></i>
+              <%= rec[:cta] %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+    
+    <!-- Recomendaciones de objetivos (con nombres de objetivos) -->
+    <% @objectives_with_recommendations.each_with_index do |obj_rec, index| %>
+      <div class="col-md-6 mb-3">
+        <div class="border rounded p-3 h-100 d-flex flex-column position-relative bg-white" style="border-color: #198754 !important;">
+          <!-- Etiqueta "Según tu objetivo" -->
+          <div class="position-absolute" style="top: -8px; left: 16px;">
+            <span class="badge bg-success px-3 py-1 small">Según tu objetivo</span>
+          </div>
+          
+          <!-- Botón eliminar en esquina superior derecha -->
+          <%= link_to obj_rec[:objective], 
+                      class: "btn btn-outline-danger btn-sm position-absolute", 
+                      style: "top: 8px; right: 8px; width: 30px; height: 30px; padding: 0; border-radius: 50%; line-height: 1;",
+                      data: { 
+                        turbo_method: :delete,
+                        turbo_confirm: "¿Estás seguro de que quieres eliminar el objetivo '#{obj_rec[:objective].title}'?"
+                      },
+                      title: "Eliminar objetivo" do %>
+            <i class="bi bi-x" style="font-size: 1rem;"></i>
+          <% end %>
+          
+          <div class="d-flex align-items-start mb-3 mt-3">
+            <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-3" 
+                 style="width: 40px; height: 40px; flex-shrink: 0;">
+              <i class="bi bi-bullseye" style="font-size: 1.1rem;"></i>
+            </div>
+            <div class="flex-grow-1" style="padding-right: 40px;">
+              <h6 class="mb-2 text-success fw-bold"><%= obj_rec[:objective].title %></h6>
+              <p class="text-muted small mb-1 lh-sm">
+                Meta: <strong>€<%= number_with_delimiter(obj_rec[:objective].target_amount, delimiter: ".") %></strong>
+                en <%= distance_of_time_in_words(Date.current, obj_rec[:objective].target_date) %>
+              </p>
+              <p class="text-info small mb-0 lh-sm">
+                Ahorro mensual: €<%= number_with_delimiter(obj_rec[:monthly_needed], delimiter: ".") %>
+              </p>
+            </div>
+          </div>
+          <div class="mt-auto">
+            <%= link_to recommendation_path(obj_rec[:recommendation_type], objetivo_id: obj_rec[:objective].id), 
+                class: "btn btn-success btn-sm w-100" do %>
+              <i class="bi bi-arrow-right me-1"></i>
+              Ver Inversión
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<!-- 4. GRÁFICOS PyG + BALANCE -->
+<div class="text-center py-4 mt-4">
+  <h3 class="mb-3">
+    <i class="bi bi-graph-up text-success me-2"></i>
+    Análisis Detallado
+  </h3>
+  <p class="text-muted mb-4">
+    Visualiza tu situación financiera actual con gráficos interactivos de tus ingresos, gastos y patrimonio neto.
+  </p>
+</div>
+
+<div class="row mb-4">
+  <!-- Gráfico PyG -->
   <div class="col-lg-6 mb-4">
     <div class="dashboard-card">
       <div class="card-body p-4">
         <h4 class="card-title mb-3">
           <i class="bi bi-graph-up me-2 text-primary"></i>
-          Flujo de Caja Mensual
+          Análisis PyG
         </h4>
-          <div class="chart-container">
-            <canvas id="pylChart"></canvas>
+        <div class="chart-container" style="height: 300px;">
+          <canvas id="pygChart"></canvas>
+        </div>
+        <div class="row text-center mt-3">
+          <div class="col-4">
+            <div class="text-success">
+              <strong>Ingresos</strong><br>
+              <span class="h6">€<%= number_with_delimiter(@pyg_chart_data[:income] || 0, delimiter: ".") %></span>
+            </div>
           </div>
-        <div class="text-center mt-3">
-          <span class="<%= @monthly_cash_flow > 0 ? 'status-positive' : 'status-negative' %>">
-            <strong><%= number_with_delimiter(@monthly_cash_flow, delimiter: ".") %> € / mes</strong>
-          </span>
+          <div class="col-4">
+            <div class="text-danger">
+              <strong>Gastos</strong><br>
+              <span class="h6">€<%= number_with_delimiter(@pyg_chart_data[:expenses] || 0, delimiter: ".") %></span>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="<%= @pyg_chart_data[:cash_flow] > 0 ? 'text-success' : 'text-danger' %>">
+              <strong>Capacidad</strong><br>
+              <span class="h6">€<%= number_with_delimiter(@pyg_chart_data[:cash_flow] || 0, delimiter: ".") %></span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -33,337 +260,162 @@
       <div class="card-body p-4">
         <h4 class="card-title mb-3">
           <i class="bi bi-pie-chart me-2 text-success"></i>
-          Patrimonio Neto
+          Balance Patrimonial
         </h4>
-          <div class="chart-container">
-            <canvas id="balanceChart"></canvas>
+        <div class="chart-container" style="height: 300px;">
+          <canvas id="balanceChart"></canvas>
+        </div>
+        <div class="row text-center mt-3">
+          <div class="col-4">
+            <div class="text-success">
+              <strong>Activos</strong><br>
+              <span class="h6">€<%= number_with_delimiter(@balance_chart_data[:assets] || 0, delimiter: ".") %></span>
+            </div>
           </div>
-        <div class="text-center mt-3">
-          <span class="<%= @net_worth > 0 ? 'status-positive' : 'status-negative' %>">
-            <strong><%= number_with_delimiter(@net_worth, delimiter: ".") %> €</strong>
-          </span>
+          <div class="col-4">
+            <div class="text-danger">
+              <strong>Deudas</strong><br>
+              <span class="h6">€<%= number_with_delimiter(@balance_chart_data[:debt] || 0, delimiter: ".") %></span>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="<%= @balance_chart_data[:net_worth] > 0 ? 'text-success' : 'text-danger' %>">
+              <strong>Patrimonio</strong><br>
+              <span class="h6">€<%= number_with_delimiter(@balance_chart_data[:net_worth] || 0, delimiter: ".") %></span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
-  
-<!-- Progreso hacia siguiente nivel -->
-<% if @next_level_progress[:target] %>
-  <div class="dashboard-card">
-    <div class="card-body p-4">
-      <h4 class="card-title mb-4">
-        <i class="bi bi-ladder me-2 text-warning"></i>
-        Progreso hacia "<%= @next_level_progress[:target] %>"
-      </h4>
-      <% @next_level_progress[:requirements].each do |req| %>
-        <div class="progress-indicator">
-          <div class="progress-icon <%= req[:completed] ? 'completed' : 'pending' %>">
-            <i class="bi bi-<%= req[:completed] ? 'check' : 'clock' %>"></i>
-          </div>
-          <div class="flex-grow-1">
-            <h6 class="mb-1"><%= req[:name] %></h6>
-            <% if req[:completed] %>
-              <span class="status-positive">✅ Completado</span>
-            <% else %>
-              <span class="text-muted">
-                <%= number_with_delimiter(req[:current], delimiter: ".") %> € de <%= number_with_delimiter(req[:target], delimiter: ".") %> € necesarios
-              </span>
-              <div class="progress mt-2" style="height: 8px;">
-                <div class="progress-bar bg-warning" role="progressbar" 
-                     style="width: <%= [((req[:current] / req[:target]) * 100), 100].min %>%"></div>
-              </div>
-            <% end %>
-          </div>
-        </div>
-      <% end %>
-    </div>
-  </div>
-<% end %>
-  
-<!-- Objetivos con recomendaciones -->
-<% if @objectives_with_recommendations && @objectives_with_recommendations.any? %>
-  <h3 class="mb-4">
-    <i class="bi bi-target me-2 text-info"></i>
-    Tus Objetivos Financieros
-  </h3>
-  
-  <% @objectives_with_recommendations.each do |obj_data| %>
-    <div class="objective-item">
-            <div class="row align-items-center">
-              <div class="col-lg-6">
-                <h5 class="mb-2">
-                  <i class="bi bi-<%= get_objective_icon(obj_data[:objective].categoria) %> me-2"></i>
-                  <%= obj_data[:objective].nombre %>
-                </h5>
-                <p class="text-muted mb-2">
-                  <strong><%= number_with_delimiter(obj_data[:objective].cantidad_objetivo, delimiter: ".") %> €</strong>
-                  para <%= obj_data[:objective].target_date.strftime("%B %Y") %>
-                </p>
-                <p class="mb-0">
-                  Necesitas ahorrar: <strong><%= number_with_delimiter(obj_data[:monthly_needed], delimiter: ".") %> € / mes</strong>
-                </p>
-              <p class="<%= obj_data[:can_afford] ? 'status-positive' : 'status-negative' %> mb-0">
-                <i class="bi bi-<%= obj_data[:can_afford] ? 'check-circle' : 'exclamation-circle' %> me-1"></i>
-                <%= obj_data[:can_afford] ? 'Puedes permitírtelo' : 'Supera tu capacidad actual' %>
-              </p>
-            </div>
-            
-            <div class="col-lg-6">
-              <% if obj_data[:recommendation] %>
-                <div class="recommendation-tag">
-                  <i class="bi bi-lightbulb me-2"></i>
-                  Recomendado: <%= obj_data[:recommendation][:product] %>
-                </div>
-                <p class="mb-2 small">
-                  <%= obj_data[:recommendation][:description] %>
-                </p>
-                <% if obj_data[:recommendation][:url] %>
-                  <a href="<%= obj_data[:recommendation][:url] %>" 
-                     target="_blank" 
-                     class="btn btn-outline-primary btn-sm">
-                    <i class="bi bi-external-link me-1"></i>
-                    Ver producto
-                  </a>
-                <% end %>
-              <% end %>
-            </div>
-          </div>
-        </div>
-      <% end %>
-    </div>
-  </div>
-<% end %>
-  
-<!-- Botón para añadir objetivos si el nivel lo permite -->
-<% if financial_health_allows_objectives? %>
-  <div class="text-center mb-4">
-    <%= link_to new_objective_path, class: "btn btn-baifinanzas btn-lg" do %>
-      <i class="bi bi-plus-circle me-2"></i>
-      Añadir Nuevo Objetivo
-    <% end %>
-  </div>
-<% end %>
 
-<!-- Acciones rápidas -->
-<div class="row">
-  <div class="col-md-4 mb-3">
+<!-- Enlaces de Edición -->
+<div class="row mb-4">
+  <div class="col-md-6 mb-2">
     <%= link_to edit_pyg_path, class: "btn btn-outline-primary w-100" do %>
       <i class="bi bi-pencil me-2"></i>
-      Editar P&L
+      Editar Ingresos y Gastos
     <% end %>
   </div>
-  <div class="col-md-4 mb-3">
+  <div class="col-md-6 mb-2">
     <%= link_to edit_balance_path, class: "btn btn-outline-primary w-100" do %>
       <i class="bi bi-pencil me-2"></i>
-      Editar Balance
-    <% end %>
-  </div>
-  <div class="col-md-4 mb-3">
-    <%= link_to objectives_path, class: "btn btn-outline-primary w-100" do %>
-      <i class="bi bi-list me-2"></i>
-      Ver Todos los Objetivos
+      Editar Activos y Deudas
     <% end %>
   </div>
 </div>
 
-<!-- Scripts para los gráficos -->
+<!-- Scripts para los gráficos simplificados -->
 <script>
-function initDashboardCharts() {
-  // Gráfico P&L - Barras apiladas ingresos vs gastos por categoría
-  const pylElement = document.getElementById('pylChart');
-  if (!pylElement) return; // Exit if charts don't exist
-  
-  const pylCtx = pylElement.getContext('2d');
-  
-  const income = <%= @income_data[:ingresos_mensual] || 0 %>;
-  const expenses = {
-    vivienda: <%= @expense_data[:vivienda] || 0 %>,
-    utilities: <%= @expense_data[:utilities] || 0 %>,
-    alimentacion: <%= @expense_data[:alimentacion] || 0 %>,
-    transporte: <%= @expense_data[:transporte] || 0 %>,
-    ocio: <%= @expense_data[:ocio] || 0 %>,
-    seguros: <%= @expense_data[:seguros] || 0 %>,
-    cuota_hipoteca: <%= @expense_data[:cuota_hipoteca] || 0 %>,
-    cuota_coche: <%= @expense_data[:cuota_coche] || 0 %>,
-    otras_cuotas: <%= @expense_data[:otras_cuotas] || 0 %>,
-    suscripciones: <%= @expense_data[:suscripciones] || 0 %>,
-    cuidado_personal: <%= @expense_data[:cuidado_personal] || 0 %>,
-    otros: <%= @expense_data[:otros] || 0 %>
-  };
-
-  // Filtrar gastos con valor > 0
-  const activeExpenses = Object.entries(expenses).filter(([key, value]) => value > 0);
-  
-  // Paleta de azules monocromáticos
-  const blueShades = [
-    '#0D6EFD', '#1B75FF', '#2E7DFF', '#4285FF', '#558DFF',
-    '#6995FF', '#7C9DFF', '#90A5FF', '#A3ADFF', '#B7B5FF'
-  ];
-  
-  new Chart(pylCtx, {
-    type: 'bar',
-    data: {
-      labels: ['Ingresos', 'Gastos'],
-      datasets: [
-        // Dataset para ingresos
-        {
-          label: 'Ingresos',
-          data: [income, 0],
-          backgroundColor: '#0D6EFD',
-          borderColor: '#0D6EFD',
+function initSimplifiedCharts() {
+  // Gráfico PyG simple
+  const pygElement = document.getElementById('pygChart');
+  if (pygElement) {
+    const pygCtx = pygElement.getContext('2d');
+    const pygData = <%= raw @pyg_chart_data.to_json %>;
+    
+    new Chart(pygCtx, {
+      type: 'bar',
+      data: {
+        labels: ['Ingresos', 'Gastos', 'Capacidad'],
+        datasets: [{
+          data: [pygData.income || 0, pygData.expenses || 0, Math.max(pygData.cash_flow || 0, 0)],
+          backgroundColor: ['#28a745', '#dc3545', pygData.cash_flow > 0 ? '#17a2b8' : '#6c757d'],
+          borderColor: ['#28a745', '#dc3545', pygData.cash_flow > 0 ? '#17a2b8' : '#6c757d'],
           borderWidth: 1
-        },
-        // Datasets para cada categoría de gasto
-        ...activeExpenses.map(([category, amount], index) => ({
-          label: {
-            vivienda: 'Vivienda',
-            utilities: 'Servicios',
-            alimentacion: 'Alimentación',
-            transporte: 'Transporte',
-            ocio: 'Ocio',
-            seguros: 'Seguros',
-            cuota_hipoteca: 'Hipoteca',
-            cuota_coche: 'Coche',
-            otras_cuotas: 'Otras cuotas',
-            suscripciones: 'Suscripciones',
-            cuidado_personal: 'Cuidado personal',
-            otros: 'Otros'
-          }[category] || category,
-          data: [0, amount],
-          backgroundColor: blueShades[index % blueShades.length],
-          borderColor: blueShades[index % blueShades.length],
-          borderWidth: 1
-        }))
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          callbacks: {
-            label: function(context) {
-              return `${context.dataset.label}: ${context.parsed.y.toLocaleString('es-ES')} €`;
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              callback: function(value) {
+                return '€' + value.toLocaleString('es-ES');
+              }
             }
           }
         }
-      },
-      scales: {
-        x: {
-          stacked: true,
-          ticks: { maxRotation: 0 }
-        },
-        y: {
-          stacked: true,
-          beginAtZero: true,
-          ticks: {
-            callback: function(value) {
-              return value.toLocaleString('es-ES') + ' €';
-            }
-          }
-        }
-      },
-      animation: {
-        duration: 1500,
-        easing: 'easeInOutQuart'
       }
-    }
-  });
+    });
+  }
   
-  // Gráfico Balance - Barras apiladas activos vs deudas por categoría
+  // Gráfico Balance simple
   const balanceElement = document.getElementById('balanceChart');
-  if (!balanceElement) return; // Exit if balance chart doesn't exist
-  
-  const balanceCtx = balanceElement.getContext('2d');
-  
-  const balanceData = <%= raw @balance_data.to_json %>;
-  
-  // Filtrar activos y deudas con valor > 0
-  const activeAssets = Object.entries(balanceData.assets || {}).filter(([key, value]) => value > 0);
-  const activeDebts = Object.entries(balanceData.debts || {}).filter(([key, value]) => value > 0);
-  
-  // Paleta de azules monocromáticos para activos (tonos más claros)
-  const assetColors = ['#0D6EFD', '#1B75FF', '#2E7DFF', '#4285FF', '#558DFF', '#6995FF'];
-  // Paleta de azules monocromáticos para deudas (tonos más oscuros)
-  const debtColors = ['#7C9DFF', '#90A5FF', '#A3ADFF', '#B7B5FF', '#D1D9FF'];
-  
-  new Chart(balanceCtx, {
-    type: 'bar',
-    data: {
-      labels: ['Activos', 'Deudas'],
-      datasets: [
-        // Datasets para cada categoría de activo
-        ...activeAssets.map(([category, amount], index) => ({
-          label: {
-            inmuebles: 'Inmuebles',
-            cuentas: 'Cuentas corrientes',
-            ahorros: 'Depósitos/Ahorro',
-            inversiones: 'Inversiones',
-            pensiones: 'Planes pensiones',
-            vehiculos: 'Vehículos',
-            otros: 'Otros activos'
-          }[category] || category,
-          data: [amount, 0],
-          backgroundColor: assetColors[index % assetColors.length],
-          borderColor: assetColors[index % assetColors.length],
+  if (balanceElement) {
+    const balanceCtx = balanceElement.getContext('2d');
+    const balanceData = <%= raw @balance_chart_data.to_json %>;
+    
+    new Chart(balanceCtx, {
+      type: 'bar',
+      data: {
+        labels: ['Activos', 'Deudas', 'Patrimonio'],
+        datasets: [{
+          data: [balanceData.assets || 0, balanceData.debt || 0, Math.max(balanceData.net_worth || 0, 0)],
+          backgroundColor: ['#28a745', '#dc3545', balanceData.net_worth > 0 ? '#17a2b8' : '#6c757d'],
+          borderColor: ['#28a745', '#dc3545', balanceData.net_worth > 0 ? '#17a2b8' : '#6c757d'],
           borderWidth: 1
-        })),
-        // Datasets para cada categoría de deuda
-        ...activeDebts.map(([category, amount], index) => ({
-          label: {
-            hipoteca: 'Hipoteca',
-            tarjetas: 'Tarjetas crédito',
-            prestamos: 'Préstamos personales',
-            coches: 'Préstamos coches',
-            otras: 'Otras deudas'
-          }[category] || category,
-          data: [0, amount],
-          backgroundColor: debtColors[index % debtColors.length],
-          borderColor: debtColors[index % debtColors.length],
-          borderWidth: 1
-        }))
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          callbacks: {
-            label: function(context) {
-              return `${context.dataset.label}: ${context.parsed.y.toLocaleString('es-ES')} €`;
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              callback: function(value) {
+                return '€' + value.toLocaleString('es-ES');
+              }
             }
           }
         }
-      },
-      scales: {
-        x: {
-          stacked: true,
-          ticks: { maxRotation: 0 }
-        },
-        y: {
-          stacked: true,
-          beginAtZero: true,
-          ticks: {
-            callback: function(value) {
-              return value.toLocaleString('es-ES') + ' €';
-            }
-          }
-        }
-      },
-      animation: {
-        duration: 1500,
-        easing: 'easeInOutQuart'
       }
-    }
-  });
+    });
+  }
 }
 
-// Inicializar en DOMContentLoaded y turbo:load
-document.addEventListener('DOMContentLoaded', initDashboardCharts);
-document.addEventListener('turbo:load', initDashboardCharts);
+// Inicializar gráficos
+document.addEventListener('DOMContentLoaded', initSimplifiedCharts);
+document.addEventListener('turbo:load', initSimplifiedCharts);
 </script>
 
+<!-- Estilos para los iconos de Bootstrap en la escalada -->
+<style>
+.step-bootstrap-icon {
+  font-size: 1.5rem;
+  color: #6c757d;
+}
+
+.progress-step.current .step-bootstrap-icon {
+  color: #ffffff;
+}
+
+.progress-step.completed .step-bootstrap-icon {
+  color: #198754;
+}
+
+.current-state-arrow {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 1.5rem;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+</style>

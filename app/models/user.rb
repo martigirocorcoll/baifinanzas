@@ -14,20 +14,20 @@ class User < ApplicationRecord
   after_create :build_default_financials
 
   def financial_health_level
-    return "Iniciando" unless balance && pyg
+    return "Valle Profundo" unless balance && pyg
     
     if libertad_financiera?
-      "Libertad Financiera"
+      "Cima Conquistada"
     elsif acomodado?
-      "Acomodado"
+      "Alta Montaña"
     elsif invirtiendo_en_objetivos?
-      "Invirtiendo en Objetivos"
+      "Cresta Estable"
     elsif liberandose_de_deudas?
-      "Liberándose de Deudas"
+      "Pared Vertical"
     elsif construyendo_base?
-      "Construyendo Base"
+      "Campo Base"
     else
-      "Iniciando"
+      "Valle Profundo"
     end
   end
 
@@ -36,11 +36,15 @@ class User < ApplicationRecord
   end
 
   def emergency_fund_target
-    monthly_expenses * 3
+    monthly_expenses * 4
   end
 
   def has_emergency_fund?
     liquid_assets >= emergency_fund_target
+  end
+
+  def has_partial_emergency_fund?
+    liquid_assets >= (monthly_expenses * 2)
   end
 
   def expensive_debt
@@ -50,6 +54,11 @@ class User < ApplicationRecord
 
   def has_expensive_debt?
     expensive_debt > 0
+  end
+
+  def expensive_debt_ratio
+    return 0 if net_worth <= 0
+    expensive_debt.to_f / net_worth
   end
 
   def net_worth
@@ -76,15 +85,18 @@ class User < ApplicationRecord
   def investment_income_monthly
     return 0 unless balance
     
-    high_yield_assets = balance.dinero_cuenta_corriente + 
-                       balance.dinero_cuenta_ahorro_depos +
-                       balance.dinero_inversiones_f + 
-                       balance.dinero_planes_pensiones
+    # Efectivo y ahorro: 0.5% anual
+    cash_assets = balance.dinero_cuenta_corriente + balance.dinero_cuenta_ahorro_depos
+    cash_income = cash_assets * 0.005 / 12
     
+    # Inversiones y pensiones: 4% anual  
+    investment_assets = balance.dinero_inversiones_f + balance.dinero_planes_pensiones
+    investment_income = investment_assets * 0.04 / 12
+    
+    # Inmuebles: 1.5% anual
     real_estate_income = balance.valor_inmuebles * 0.015 / 12
-    other_investments_income = high_yield_assets * 0.035 / 12
     
-    (real_estate_income + other_investments_income).round(2)
+    (cash_income + investment_income + real_estate_income).round(2)
   end
 
   def has_financial_freedom?
@@ -103,15 +115,17 @@ class User < ApplicationRecord
   end
 
   def objective_recommendations
-    objectives.where(status: 'active').map(&:investment_recommendation).uniq
+    objectives.select(&:valid_for_display?).map(&:investment_recommendation).uniq
   end
 
   def get_affiliate_link(product_type)
     return nil unless influencer
     
     case product_type
-    when "better_bank_account", "emergency_account", "investment_account", "debt_repayment_account"
+    when "better_bank_account"
       influencer.ac_compte
+    when "emergency_deposit"
+      influencer.ac_cdiposit
     when "ac_diposit"
       influencer.ac_cdiposit
     when "ac_curt"
@@ -122,6 +136,12 @@ class User < ApplicationRecord
       influencer.ac_jubil
     when "debt_review", "debt_optimization", "mortgage_optimization"
       influencer.ac_deute
+    when "portfolio_optimization"
+      influencer.ac_llarg  # Portfolio avanzada usa inversión a largo plazo
+    when "saving_advice"
+      influencer.ac_compte  # Asesoramiento de ahorro relacionado con cuentas
+    when "tax_advisory"
+      influencer.ac_fiscal
     else
       nil
     end
@@ -137,7 +157,7 @@ class User < ApplicationRecord
   end
 
   def can_invest_in_objectives?
-    ["Invirtiendo en Objetivos", "Acomodado", "Libertad Financiera"].include?(financial_health_level)
+    ["Cresta Estable", "Alta Montaña", "Cima Conquistada"].include?(financial_health_level)
   end
 
   def monthly_income
@@ -154,22 +174,31 @@ class User < ApplicationRecord
   end
 
   def base_financial_recommendations
+    recommendations = []
+    
     case financial_health_level
-    when "Iniciando"
-      ["saving_advice", "debt_review", "better_bank_account"]
-    when "Construyendo Base"
-      ["emergency_account", "debt_review"]
-    when "Liberándose de Deudas"
-      ["debt_repayment_account", "debt_optimization"]
-    when "Invirtiendo en Objetivos"
-      ["investment_account", "mortgage_optimization", "investment_plan"]
-    when "Acomodado"
-      ["investment_account", "mortgage_optimization", "investment_plan", "portfolio_optimization"]
-    when "Libertad Financiera"
-      ["comprehensive_review"]
+    when "Valle Profundo"
+      recommendations = ["saving_advice", "better_bank_account"]
+      recommendations << "debt_review" if total_debt > 0
+    when "Campo Base"
+      recommendations = ["emergency_deposit", "better_bank_account"]
+      recommendations << "debt_review" if total_debt > 0
+    when "Pared Vertical"
+      recommendations = ["emergency_deposit", "debt_optimization", "better_bank_account"]
+    when "Cresta Estable"
+      recommendations = ["better_bank_account", "emergency_deposit"]
+      recommendations << "mortgage_optimization" if has_mortgage?
+    when "Alta Montaña"
+      recommendations = ["better_bank_account", "emergency_deposit", "portfolio_optimization"]
+      recommendations << "mortgage_optimization" if has_mortgage?
+    when "Cima Conquistada"
+      recommendations = ["better_bank_account", "emergency_deposit", "portfolio_optimization", "tax_advisory"]
+      recommendations << "mortgage_optimization" if has_mortgage?
     else
-      []
+      recommendations = []
     end
+    
+    recommendations
   end
 
 
@@ -179,6 +208,18 @@ class User < ApplicationRecord
     balance.dinero_cuenta_ahorro_depos + balance.dinero_inversiones_f +
     balance.dinero_planes_pensiones + balance.valor_coches_vehiculos + 
     balance.valor_otros_activos
+  end
+
+  def liquid_assets
+    return 0 unless balance
+    balance.dinero_cuenta_corriente + 
+    balance.dinero_cuenta_ahorro_depos + 
+    balance.dinero_inversiones_f
+  end
+
+  def has_mortgage?
+    return false unless balance
+    (balance.hipoteca_inmuebles || 0) > 0
   end
 
   private
@@ -194,28 +235,25 @@ class User < ApplicationRecord
     balance.prestamos_personales + balance.prestamos_coches + balance.otras_deudas
   end
 
-  def liquid_assets
-    return 0 unless balance
-    balance.dinero_cuenta_corriente + balance.dinero_cuenta_ahorro_depos
-  end
-
   def libertad_financiera?
     has_financial_freedom?
   end
 
   def acomodado?
-    net_worth >= 250000 && is_debt_free?
+    has_emergency_fund? && 
+    monthly_cash_flow > 0 && 
+    net_worth >= (annual_income * 2)
   end
 
   def invirtiendo_en_objetivos?
-    has_emergency_fund? && !has_expensive_debt? && monthly_cash_flow > 0
+    has_emergency_fund? && monthly_cash_flow > 0 && expensive_debt_ratio < 0.4
   end
 
   def liberandose_de_deudas?
-    has_emergency_fund? && has_expensive_debt?
+    monthly_cash_flow > 0 && has_partial_emergency_fund? && has_expensive_debt?
   end
 
   def construyendo_base?
-    monthly_cash_flow > 0 && !has_emergency_fund?
+    monthly_cash_flow > 0
   end
 end

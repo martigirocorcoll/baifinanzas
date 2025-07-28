@@ -30,10 +30,14 @@
   </div>
 </div>
 <div class="form-section">
-  <h3 class="text-center mb-4">
+  <h3 class="text-center mb-3">
     <i class="bi bi-clipboard-data text-primary me-2"></i>
     Completa tu Análisis de Ingresos y Gastos
   </h3>
+  <p class="text-center mb-4 text-muted">
+    El primer paso para obtener un plan financiero personalizado es conocer tu realidad financiera. 
+    <br><small><i class="bi bi-shield-lock text-success me-1"></i><strong>Tus datos son privados y no los compartimos con nadie.</strong></small>
+  </p>
         
         <%= form_with model: @pyg, local: true, class: "row g-3" do |f| %>
           <div class="col-md-6">
@@ -150,8 +154,10 @@
           </div>
           
           <div class="col-12 text-center mt-4">
-            <%= f.submit "🚀 Descubrir mi Salud Financiera", 
-                class: "btn btn-baifinanzas btn-lg px-5 py-3" %>
+            <button type="submit" class="btn btn-baifinanzas btn-lg px-5 py-3">
+              <i class="bi bi-rocket-takeoff me-2"></i>
+              Descubrir mi Salud Financiera
+            </button>
           </div>
         <% end %>
 </div>

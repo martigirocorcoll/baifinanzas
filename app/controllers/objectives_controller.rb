@@ -21,11 +21,21 @@ class ObjectivesController < ApplicationController
 
   # POST /objectives or /objectives.json
   def create
-    @objective = Objective.new(objective_params)
+    # Extraer parámetros de fecha antes de crear el objetivo
+    objective_attrs = objective_params.except(:target_date_month, :target_date_year)
+    
+    # Convertir mes y año en fecha si están presentes
+    if params[:objective][:target_date_month].present? && params[:objective][:target_date_year].present?
+      month = params[:objective][:target_date_month].to_i
+      year = params[:objective][:target_date_year].to_i
+      objective_attrs[:target_date] = Date.new(year, month, 1).end_of_month
+    end
+    
+    @objective = Objective.new(objective_attrs)
 
     respond_to do |format|
       if @objective.save
-        format.html { redirect_to @objective, notice: "Objective was successfully created." }
+        format.html { redirect_to dashboard_index_path, notice: "Objetivo creado correctamente. Ya puedes ver tu recomendación personalizada." }
         format.json { render :show, status: :created, location: @objective }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -52,7 +62,7 @@ class ObjectivesController < ApplicationController
     @objective.destroy!
 
     respond_to do |format|
-      format.html { redirect_to objectives_path, status: :see_other, notice: "Objective was successfully destroyed." }
+      format.html { redirect_to dashboard_index_path, status: :see_other, notice: "Objetivo eliminado correctamente." }
       format.json { head :no_content }
     end
   end
@@ -65,6 +75,6 @@ class ObjectivesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def objective_params
-      params.require(:objective).permit(:user_id, :title, :description, :target_amount, :target_date, :status)
+      params.require(:objective).permit(:user_id, :title, :description, :target_amount, :target_date, :target_date_month, :target_date_year)
     end
 end

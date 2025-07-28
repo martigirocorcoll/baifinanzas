@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  # Recomendaciones ampliadas
+  resources :recommendations, only: [:show], param: :slug
   get "dashboard/index"
   # Devise
   devise_for :users

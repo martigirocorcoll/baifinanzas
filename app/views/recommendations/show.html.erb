@@ -1,0 +1,368 @@
+<!-- Navegación breadcrumb y botón volver -->
+<div class="container-fluid py-3" style="padding-top: 100px !important;">
+  <div class="d-flex justify-content-between align-items-center">
+    <div class="d-flex align-items-center">
+      <%= link_to dashboard_index_path, class: "text-decoration-none text-muted" do %>
+        <i class="bi bi-speedometer2 me-1"></i>Dashboard
+      <% end %>
+      <span class="mx-2 text-muted">&gt;</span>
+      <span class="text-primary"><%= @contextual_title %></span>
+    </div>
+    
+    <a href="<%= dashboard_index_path %>" class="btn btn-outline-secondary btn-sm">
+      <i class="bi bi-arrow-left me-1"></i>
+      Volver
+    </a>
+  </div>
+</div>
+
+<!-- Contenido principal -->
+<div class="container-fluid py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-10">
+      
+      <!-- Header de la recomendación -->
+      <div class="text-center mb-5">
+        <h1 class="display-5 fw-bold mb-3"><%= @contextual_title %></h1>
+        <p class="lead text-muted mb-4">La mejor opción para tu situación financiera actual</p>
+        
+        <!-- Información del objetivo si existe -->
+        <% if @objective.present? %>
+          <div class="row justify-content-center mb-4">
+            <div class="col-md-10">
+              <div class="bg-light rounded p-4">
+                <div class="row text-center">
+                  <div class="col-4">
+                    <div class="text-success">
+                      <i class="bi bi-currency-euro fs-4"></i>
+                      <p class="mb-1 fw-bold">€<%= number_with_delimiter(@objective.target_amount, delimiter: ".") %></p>
+                      <small class="text-muted">Objetivo</small>
+                    </div>
+                  </div>
+                  <div class="col-4">
+                    <div class="text-primary">
+                      <i class="bi bi-calendar fs-4"></i>
+                      <p class="mb-1 fw-bold"><%= distance_of_time_in_words(Date.current, @objective.target_date) %></p>
+                      <small class="text-muted">Tiempo restante</small>
+                    </div>
+                  </div>
+                  <div class="col-4">
+                    <div class="text-warning">
+                      <i class="bi bi-piggy-bank fs-4"></i>
+                      <p class="mb-1 fw-bold">€<%= number_with_delimiter(@objective.monthly_savings_needed, delimiter: ".") %></p>
+                      <small class="text-muted">Ahorro mensual</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+      
+      <!-- Botón CTA principal superior -->
+      <div class="text-center mb-5">
+        <% if @affiliate_link.present? %>
+          <a href="<%= @affiliate_link %>" target="_blank" class="btn btn-success btn-lg px-5 py-3">
+            <i class="bi bi-external-link me-2"></i>
+            <% if @objective.present? %>
+              Contratar para "<%= @objective.title %>"
+            <% else %>
+              Contratar Ahora
+            <% end %>
+          </a>
+        <% else %>
+          <button class="btn btn-outline-secondary btn-lg px-5 py-3" disabled>
+            <i class="bi bi-clock me-2"></i>
+            Próximamente disponible
+          </button>
+        <% end %>
+      </div>
+      
+      <!-- Gráfico de evolución de la inversión (solo para objetivos) -->
+      <% if @objective.present? && @investment_evolution_data.present? %>
+        <div class="mb-5">
+          <h3 class="mb-4">
+            <i class="bi bi-graph-up text-success me-2"></i>
+            Evolución de tu Inversión
+          </h3>
+          
+          <!-- Métricas clave -->
+          <div class="row mb-4">
+            <div class="col-md-3 text-center mb-3">
+              <div class="bg-light rounded p-3">
+                <i class="bi bi-piggy-bank text-primary fs-4"></i>
+                <p class="mb-1 fw-bold">€<%= number_with_delimiter(@investment_evolution_data[:monthly_savings], delimiter: ".") %></p>
+                <small class="text-muted">Ahorro mensual</small>
+              </div>
+            </div>
+            <div class="col-md-3 text-center mb-3">
+              <div class="bg-light rounded p-3">
+                <i class="bi bi-currency-euro text-warning fs-4"></i>
+                <p class="mb-1 fw-bold">€<%= number_with_delimiter(@investment_evolution_data[:total_invested], delimiter: ".") %></p>
+                <small class="text-muted">Total invertido</small>
+              </div>
+            </div>
+            <div class="col-md-3 text-center mb-3">
+              <div class="bg-light rounded p-3">
+                <i class="bi bi-trophy text-success fs-4"></i>
+                <p class="mb-1 fw-bold">€<%= number_with_delimiter(@investment_evolution_data[:final_values].last, delimiter: ".") %></p>
+                <small class="text-muted">Valor final</small>
+              </div>
+            </div>
+            <div class="col-md-3 text-center mb-3">
+              <div class="bg-success text-white rounded p-3">
+                <i class="bi bi-graph-up fs-4"></i>
+                <p class="mb-1 fw-bold">€<%= number_with_delimiter(@investment_evolution_data[:total_benefit], delimiter: ".") %></p>
+                <small>Beneficio obtenido</small>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Gráfico -->
+          <div class="chart-container mb-3" style="height: 400px;">
+            <canvas id="investmentEvolutionChart"></canvas>
+          </div>
+          
+          <div class="text-center">
+            <small class="text-muted">
+              Simulación basada en rentabilidad estimada del <%= @investment_evolution_data[:annual_return] %>% anual
+            </small>
+          </div>
+        </div>
+      <% end %>
+      
+      <!-- Video explicativo -->
+      <div class="mb-5">
+        <h3 class="mb-3">
+          <i class="bi bi-play-circle text-danger me-2"></i>
+          Explicación detallada
+        </h3>
+        <div class="row justify-content-center">
+          <div class="col-lg-8">
+            <div class="ratio ratio-16x9">
+              <% if @recommendation.video_url.present? %>
+                <iframe src="<%= @recommendation.video_url %>" allowfullscreen class="rounded"></iframe>
+              <% else %>
+                <!-- Video placeholder -->
+                <div class="d-flex align-items-center justify-content-center bg-light rounded">
+                  <div class="text-center">
+                    <i class="bi bi-play-circle text-muted" style="font-size: 4rem;"></i>
+                    <p class="text-muted mt-3 mb-1 h5">Video explicativo</p>
+                    <small class="text-muted">Disponible próximamente</small>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+        
+        <!-- CTA después del video -->
+        <div class="text-center mt-4">
+          <% if @affiliate_link.present? %>
+            <a href="<%= @affiliate_link %>" target="_blank" class="btn btn-success btn-lg px-4 py-2">
+              <i class="bi bi-external-link me-2"></i>
+              <% if @objective.present? %>
+                Contratar para "<%= @objective.title %>"
+              <% else %>
+                Contratar Ahora
+              <% end %>
+            </a>
+          <% else %>
+            <button class="btn btn-outline-secondary btn-lg px-4 py-2" disabled>
+              <i class="bi bi-clock me-2"></i>
+              Próximamente disponible
+            </button>
+          <% end %>
+        </div>
+      </div>
+      
+      <!-- Contenido educativo -->
+      <div class="mb-5">
+        <h3 class="mb-4">
+          <i class="bi bi-check-circle text-success me-2"></i>
+          Nuestra mejor recomendación para ti
+        </h3>
+        
+        <div class="row">
+          <div class="col-lg-8 mx-auto">
+            <div class="mb-4">
+              <%= simple_format(@recommendation.content) if @recommendation.content.present? %>
+              
+              <!-- Contenido por defecto si no hay contenido específico -->
+              <% unless @recommendation.content.present? %>
+                <p class="lead mb-4">Este es el producto que mejor se adapta a tu situación financiera actual.</p>
+                
+                <div class="row">
+                  <div class="col-md-6 mb-4">
+                    <h5><i class="bi bi-star text-warning me-2"></i>Ventajas clave</h5>
+                    <ul class="list-unstyled">
+                      <li class="mb-2"><i class="bi bi-check text-success me-2"></i>Adaptado a tu nivel financiero</li>
+                      <li class="mb-2"><i class="bi bi-check text-success me-2"></i>Optimizado para tu capacidad de ahorro</li>
+                      <% if @objective.present? %>
+                        <li class="mb-2"><i class="bi bi-check text-success me-2"></i>Plazo ideal para tu objetivo</li>
+                        <li class="mb-2"><i class="bi bi-check text-success me-2"></i>Rentabilidad estimada adecuada</li>
+                      <% end %>
+                      <li class="mb-2"><i class="bi bi-check text-success me-2"></i>Riesgo controlado</li>
+                    </ul>
+                  </div>
+                  <div class="col-md-6 mb-4">
+                    <h5><i class="bi bi-lightbulb text-primary me-2"></i>Por qué es ideal</h5>
+                    <p>Nuestro algoritmo ha analizado tu perfil y determinado que este producto maximiza tus oportunidades de éxito financiero.</p>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Botón CTA final -->
+      <div class="text-center mb-5">
+        <div class="bg-light rounded p-5">
+          <h4 class="mb-3">¿Listo para dar el siguiente paso?</h4>
+          <% if @affiliate_link.present? %>
+            <a href="<%= @affiliate_link %>" target="_blank" class="btn btn-success btn-lg px-5 py-3">
+              <i class="bi bi-external-link me-2"></i>
+              <% if @objective.present? %>
+                Contratar para "<%= @objective.title %>"
+              <% else %>
+                Contratar Ahora
+              <% end %>
+            </a>
+          <% else %>
+            <button class="btn btn-outline-secondary btn-lg px-5 py-3" disabled>
+              <i class="bi bi-clock me-2"></i>
+              Próximamente disponible
+            </button>
+          <% end %>
+          <p class="text-muted mt-3 mb-0">Proceso 100% online y seguro</p>
+        </div>
+      </div>
+      
+      <!-- Información adicional -->
+      <div class="mb-4">
+        <div class="alert alert-success border-0">
+          <div class="d-flex">
+            <i class="bi bi-shield-check fs-5 me-3 text-success"></i>
+            <div>
+              <h6 class="alert-heading mb-2">Recomendación personalizada</h6>
+              <p class="mb-0">
+                Esta es nuestra mejor recomendación basada en tu análisis financiero completo. 
+                <% if @objective.present? %>
+                  Para alcanzar tu objetivo, necesitas ahorrar €<%= number_with_delimiter(@objective.monthly_savings_needed, delimiter: ".") %> 
+                  mensualmente. Este producto te ayudará a maximizar el crecimiento de tus ahorros.
+                <% end %>
+                Seleccionado específicamente para optimizar tu situación financiera.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+<!-- Script para el gráfico de evolución de la inversión -->
+<% if @objective.present? && @investment_evolution_data.present? %>
+<script>
+function initInvestmentEvolutionChart() {
+  const ctx = document.getElementById('investmentEvolutionChart');
+  if (!ctx) return;
+  
+  const chartData = <%= raw @investment_evolution_data.to_json %>;
+  
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: chartData.labels,
+      datasets: [
+        {
+          label: 'Total Invertido',
+          data: chartData.invested_amounts,
+          borderColor: '#6c757d',
+          backgroundColor: 'rgba(108, 117, 125, 0.1)',
+          borderWidth: 2,
+          fill: false,
+          tension: 0.1
+        },
+        {
+          label: 'Valor de la Inversión',
+          data: chartData.final_values,
+          borderColor: '#28a745',
+          backgroundColor: 'rgba(40, 167, 69, 0.1)',
+          borderWidth: 3,
+          fill: '+1',
+          tension: 0.1
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: {
+        mode: 'index',
+        intersect: false,
+      },
+      plugins: {
+        title: {
+          display: true,
+          text: 'Evolución de tu Inversión a lo largo del tiempo'
+        },
+        legend: {
+          display: true,
+          position: 'top'
+        },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              const value = context.parsed.y;
+              const label = context.dataset.label;
+              return label + ': €' + value.toLocaleString('es-ES', { 
+                minimumFractionDigits: 0, 
+                maximumFractionDigits: 0 
+              });
+            },
+            afterBody: function(tooltipItems) {
+              if (tooltipItems.length >= 2) {
+                const invested = tooltipItems[0].parsed.y;
+                const finalValue = tooltipItems[1].parsed.y;
+                const benefit = finalValue - invested;
+                if (benefit > 0) {
+                  return 'Beneficio: €' + benefit.toLocaleString('es-ES', { 
+                    minimumFractionDigits: 0, 
+                    maximumFractionDigits: 0 
+                  });
+                }
+              }
+              return '';
+            }
+          }
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            callback: function(value) {
+              return '€' + value.toLocaleString('es-ES');
+            }
+          }
+        },
+        x: {
+          title: {
+            display: true,
+            text: 'Tiempo'
+          }
+        }
+      }
+    }
+  });
+}
+
+// Inicializar el gráfico
+document.addEventListener('DOMContentLoaded', initInvestmentEvolutionChart);
+document.addEventListener('turbo:load', initInvestmentEvolutionChart);
+</script>
+<% end %>
