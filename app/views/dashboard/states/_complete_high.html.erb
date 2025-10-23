@@ -118,41 +118,53 @@
                   <% is_create_objective = action[:type] == 'create_objective' %>
                   <% is_first_uncompleted = @current_task && action[:position] == @current_task[:position] %>
 
-                  <div class="step-item <%= 'completed' if action[:completed] %> <%= 'is-objective' if is_create_objective %> <%= 'is-next' if is_first_uncompleted %>"
-                       data-step-id="<%= action[:position] %>"
-                       data-step-type="<%= action[:type] %>"
-                       onclick="selectStep(<%= action[:position] %>)">
-
-                    <!-- Icon con funcionalidad de click para completar/descompletar -->
-                    <div class="step-icon"
-                         <% if action[:type] == 'recommendation' %>
-                           onclick="event.stopPropagation(); toggleAction('<%= action[:key] %>', 'recommendation', <%= action[:completed] ? 'true' : 'false' %>);"
-                           style="cursor: pointer;"
-                           title="<%= action[:completed] ? 'Desmarcar' : 'Marcar como completada' %>"
-                         <% end %>>
-                      <% if action[:completed] %>
-                        <i class="bi bi-check-circle-fill text-success"></i>
-                      <% elsif is_first_uncompleted %>
-                        <i class="bi bi-arrow-right-circle text-primary"></i>
-                      <% else %>
-                        <i class="bi bi-circle text-muted"></i>
-                      <% end %>
+                  <% if is_create_objective %>
+                    <!-- Botón especial para crear objetivo -->
+                    <div class="create-objective-button"
+                         data-step-id="<%= action[:position] %>"
+                         data-step-type="<%= action[:type] %>"
+                         onclick="selectStep(<%= action[:position] %>)">
+                      <i class="bi bi-plus-circle me-2"></i>
+                      <%= action[:title] %>
                     </div>
+                  <% else %>
+                    <!-- Step item normal -->
+                    <div class="step-item <%= 'completed' if action[:completed] %> <%= 'is-next' if is_first_uncompleted %>"
+                         data-step-id="<%= action[:position] %>"
+                         data-step-type="<%= action[:type] %>"
+                         onclick="selectStep(<%= action[:position] %>)">
 
-                    <!-- Content -->
-                    <div class="step-content">
-                      <div class="step-title <%= 'text-muted' if is_create_objective %>">
-                        <%= action[:title] %>
-                      </div>
-                      <small class="step-meta text-muted">
-                        <% if action[:type] == 'recommendation' %>
-                          <i class="bi bi-clock"></i> <%= action[:time_minutes] %> min
-                        <% elsif action[:type] == 'objective' && action[:objective] %>
-                          <i class="bi bi-calendar"></i> <%= action[:time_months] %> meses
+                      <!-- Icon con funcionalidad de click para completar/descompletar -->
+                      <div class="step-icon"
+                           <% if action[:type] == 'recommendation' %>
+                             onclick="event.stopPropagation(); toggleAction('<%= action[:key] %>', 'recommendation', <%= action[:completed] ? 'true' : 'false' %>);"
+                             style="cursor: pointer;"
+                             title="<%= action[:completed] ? 'Desmarcar' : 'Marcar como completada' %>"
+                           <% end %>>
+                        <% if action[:completed] %>
+                          <i class="bi bi-check-circle-fill text-success"></i>
+                        <% elsif is_first_uncompleted %>
+                          <i class="bi bi-arrow-right-circle text-primary"></i>
+                        <% else %>
+                          <i class="bi bi-circle text-muted"></i>
                         <% end %>
-                      </small>
+                      </div>
+
+                      <!-- Content -->
+                      <div class="step-content">
+                        <div class="step-title">
+                          <%= action[:title] %>
+                        </div>
+                        <small class="step-meta text-muted">
+                          <% if action[:type] == 'recommendation' %>
+                            <i class="bi bi-clock"></i> <%= action[:time_minutes] %> min
+                          <% elsif action[:type] == 'objective' && action[:objective] %>
+                            <i class="bi bi-calendar"></i> <%= action[:time_months] %> meses
+                          <% end %>
+                        </small>
+                      </div>
                     </div>
-                  </div>
+                  <% end %>
                 <% end %>
               </div>
             </div>
@@ -587,6 +599,9 @@ function selectStep(stepId) {
   document.querySelectorAll('.step-item').forEach(item => {
     item.classList.remove('active');
   });
+  document.querySelectorAll('.create-objective-button').forEach(item => {
+    item.classList.remove('active');
+  });
   document.querySelector(`[data-step-id="${stepId}"]`)?.classList.add('active');
 
   // Actualizar contenido del display
@@ -614,6 +629,9 @@ function showCreateObjectiveForm() {
 
   // Marcar como activo en lista
   document.querySelectorAll('.step-item').forEach(item => {
+    item.classList.remove('active');
+  });
+  document.querySelectorAll('.create-objective-button').forEach(item => {
     item.classList.remove('active');
   });
   document.querySelector('[data-step-type="create_objective"]')?.classList.add('active');
@@ -1022,13 +1040,32 @@ document.addEventListener('turbo:load', function() {
   background: #f8f9fa;
 }
 
-.step-item.is-objective {
-  background: #fafafa;
-  border-color: #e0e0e0;
+/* Botón especial para crear objetivo */
+.create-objective-button {
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 2px dashed #6c757d;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: #f8f9fa;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #6c757d;
 }
 
-.step-item.is-objective .step-title {
-  color: #868e96;
+.create-objective-button:hover {
+  background: #e9ecef;
+  border-color: #495057;
+  color: #495057;
+  transform: translateY(-2px);
+}
+
+.create-objective-button.active {
+  border-color: #0d6efd;
+  background: #e7f1ff;
+  color: #0d6efd;
+  border-style: solid;
 }
 
 .step-item.is-next {
