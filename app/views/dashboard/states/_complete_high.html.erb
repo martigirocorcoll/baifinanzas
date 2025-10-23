@@ -137,19 +137,13 @@
                     <!-- Content -->
                     <div class="step-content">
                       <div class="step-title <%= 'text-muted' if is_objective %>">
-                        <% if action[:type] == 'recommendation' && action[:recommendation] %>
-                          <%= action[:recommendation].title %>
-                        <% elsif action[:type] == 'objective' %>
-                          <i class="bi bi-bullseye me-1"></i>
-                          <%= action[:title] %>
-                        <% elsif action[:type] == 'create_objective' %>
-                          <i class="bi bi-plus-circle me-1"></i>
-                          <%= action[:title] %>
-                        <% end %>
+                        <%= action[:title] %>
                       </div>
                       <small class="step-meta text-muted">
                         <% if action[:type] == 'recommendation' %>
                           <i class="bi bi-clock"></i> <%= action[:time_minutes] %> min
+                        <% elsif action[:type] == 'objective' && action[:objective] %>
+                          <i class="bi bi-calendar"></i> <%= action[:time_months] %> meses
                         <% end %>
                       </small>
                     </div>
@@ -563,15 +557,128 @@ function hideCreateObjectiveForm() {
   }
 }
 
-// Actualizar contenido del display (implementación simplificada - el contenido ya está en HTML)
+// Actualizar contenido del display
 function updateStepDisplay(step) {
-  // Por ahora, simplemente marcamos el activo visualmente
-  // En una implementación más compleja, aquí cargaríamos dinámicamente el contenido via AJAX
-  console.log('Step selected:', step);
+  const displayContainer = document.getElementById('step-display');
+
+  let html = '<div class="step-display-content">';
+
+  // Header con badge
+  html += `
+    <div class="text-center mb-4">
+      <span class="badge bg-primary mb-2">Paso ${step.position}</span>
+      <h2 class="fw-bold mb-3">${step.title}</h2>
+    </div>
+  `;
+
+  // Alert con beneficio
+  html += `
+    <div class="alert alert-success mb-4">
+      <i class="bi bi-check-circle-fill me-2"></i>
+      <strong>${step.benefit_text}</strong>
+    </div>
+  `;
+
+  // Contenido específico según el tipo
+  if (step.type === 'recommendation') {
+    // Descripción si existe
+    if (step.recommendation && step.recommendation.description) {
+      html += `
+        <div class="mb-4">
+          <p class="text-muted">${step.recommendation.description}</p>
+        </div>
+      `;
+    }
+
+    // Tiempo estimado
+    html += `
+      <div class="mb-4 text-center">
+        <p class="text-muted mb-3">
+          <i class="bi bi-clock text-primary"></i>
+          Tiempo estimado: <strong>${step.time_minutes} minutos</strong>
+        </p>
+      </div>
+    `;
+
+    // Botones de acción
+    html += '<div class="d-grid gap-2">';
+    html += `
+      <a href="/recommendations/${step.slug}" class="btn btn-primary btn-lg">
+        <i class="bi bi-arrow-right-circle me-2"></i>
+        Ver cómo hacerlo
+      </a>
+    `;
+
+    if (!step.completed) {
+      html += `
+        <form action="/dashboard/complete_action" method="post" data-turbo="false">
+          <input type="hidden" name="authenticity_token" value="${document.querySelector('meta[name="csrf-token"]').content}">
+          <input type="hidden" name="action_type" value="recommendation">
+          <input type="hidden" name="action_key" value="${step.key}">
+          <button type="submit" class="btn btn-outline-success btn-lg w-100">
+            <i class="bi bi-check-circle me-2"></i>
+            Marcar como completada
+          </button>
+        </form>
+      `;
+    } else {
+      html += `
+        <div class="alert alert-success mb-0">
+          <i class="bi bi-check-circle-fill me-2"></i>
+          ¡Ya completaste esta acción!
+        </div>
+      `;
+    }
+
+    html += '</div>';
+
+  } else if (step.type === 'objective') {
+    // Información del objetivo
+    html += `
+      <div class="mb-4">
+        <p class="text-muted">
+          Meta: <strong>€${step.objective.target_amount.toLocaleString('es-ES')}</strong>
+        </p>
+        <p class="text-info">
+          <i class="bi bi-piggy-bank me-2"></i>
+          Ahorro mensual necesario: <strong>€${step.objective.monthly_savings_needed.toLocaleString('es-ES')}</strong>
+        </p>
+      </div>
+    `;
+
+    // Botón ver plan
+    html += `
+      <div class="d-grid">
+        <a href="/recommendations/${step.objective.investment_recommendation}?objetivo_id=${step.objective.id}"
+           class="btn btn-primary btn-lg">
+          <i class="bi bi-arrow-right-circle me-2"></i>
+          Ver plan de inversión
+        </a>
+      </div>
+    `;
+  }
+
+  html += '</div>';
+
+  // Actualizar el contenido
+  displayContainer.innerHTML = html;
 }
 
 // Marcar el primer paso como activo al cargar
 document.addEventListener('turbo:load', function() {
+  console.log('=== PLAN FINANCIERO DEBUG ===');
+  console.log('Action plan data:', actionPlanData);
+  console.log('Current step ID:', currentStepId);
+  console.log('Total steps:', actionPlanData.length);
+
+  if (currentStepId) {
+    document.querySelector(`[data-step-id="${currentStepId}"]`)?.classList.add('active');
+  }
+});
+
+// También ejecutar al cargar directamente (no solo con turbo)
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('=== DOM LOADED ===');
   if (currentStepId) {
     document.querySelector(`[data-step-id="${currentStepId}"]`)?.classList.add('active');
   }
