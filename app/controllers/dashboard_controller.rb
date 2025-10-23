@@ -20,7 +20,29 @@ class DashboardController < ApplicationController
       load_complete_data
     end
   end
-  
+
+  # Marcar una acción/recomendación como completada
+  def complete_action
+    action_type = params[:action_type] # 'recommendation' or 'objective'
+    action_key = params[:action_key]   # rec_key o objective_id
+
+    if action_type.blank? || action_key.blank?
+      redirect_to dashboard_index_path, alert: "Parámetros inválidos" and return
+    end
+
+    # Marcar como completada
+    if action_type == 'recommendation'
+      current_user.complete_recommendation!(action_key)
+      flash[:success] = "¡Acción completada! Sigue así 🎉"
+    elsif action_type == 'objective'
+      current_user.complete_objective!(action_key)
+      flash[:success] = "¡Objetivo completado! 🎯"
+    end
+
+    # Redirigir de vuelta al dashboard
+    redirect_to dashboard_index_path
+  end
+
   private
   
   def determine_user_state

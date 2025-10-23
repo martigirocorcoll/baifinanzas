@@ -237,6 +237,22 @@
             </button>
           <% end %>
           <p class="text-muted mt-3 mb-0">Proceso 100% online y seguro</p>
+
+          <!-- Botón para marcar como completada -->
+          <div class="mt-4">
+            <%= form_with url: complete_action_path, method: :post, local: true, class: "d-inline" do |f| %>
+              <%= f.hidden_field :action_type, value: 'recommendation' %>
+              <%= f.hidden_field :action_key, value: @recommendation.slug.underscore.gsub('-', '_') %>
+              <button type="submit" class="btn btn-outline-success">
+                <i class="bi bi-check-circle me-2"></i>
+                Ya he completado esta acción
+              </button>
+            <% end %>
+            <p class="text-muted small mt-2 mb-0">
+              <i class="bi bi-info-circle me-1"></i>
+              Marca esta acción como completada para seguir tu progreso
+            </p>
+          </div>
         </div>
       </div>
       

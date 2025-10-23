@@ -1,7 +1,10 @@
 Rails.application.routes.draw do
   # Recomendaciones ampliadas
   resources :recommendations, only: [:show], param: :slug
+
+  # Dashboard
   get "dashboard/index"
+  post "dashboard/complete_action", to: "dashboard#complete_action", as: :complete_action
 
   # Onboarding flow
   get "onboarding/welcome", to: "onboarding#welcome", as: :onboarding_welcome
