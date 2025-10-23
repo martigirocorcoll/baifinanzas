@@ -293,31 +293,29 @@ class User < ApplicationRecord
     if can_invest_in_objectives?
       valid_objectives = objectives.select(&:valid_for_display?)
 
-      if valid_objectives.any?
-        # Usuario ya tiene objetivos creados
-        valid_objectives.each do |obj|
-          actions << {
-            position: actions.length + 1,
-            type: 'objective',
-            title: obj.title,
-            benefit_text: "Alcanza tu meta de #{ActionController::Base.helpers.number_to_currency(obj.target_amount, unit: '€', precision: 0)}",
-            icon: "🎯",
-            time_months: obj.months_to_target,
-            completed: false, # Los objetivos no se marcan como completados en el action plan
-            objective: obj
-          }
-        end
-      else
-        # Usuario puede crear objetivos pero aún no tiene ninguno
+      # Añadir objetivos existentes
+      valid_objectives.each do |obj|
         actions << {
           position: actions.length + 1,
-          type: 'create_objective',
-          title: 'Define tu primer objetivo',
-          benefit_text: "Planifica tu futuro financiero",
+          type: 'objective',
+          title: obj.title,
+          benefit_text: "Alcanza tu meta de #{ActionController::Base.helpers.number_to_currency(obj.target_amount, unit: '€', precision: 0)}",
           icon: "🎯",
-          completed: false
+          time_months: obj.months_to_target,
+          completed: false, # Los objetivos no se marcan como completados en el action plan
+          objective: obj
         }
       end
+
+      # Siempre añadir la opción de crear un nuevo objetivo (puede haber múltiples objetivos)
+      actions << {
+        position: actions.length + 1,
+        type: 'create_objective',
+        title: valid_objectives.any? ? 'Crear nuevo objetivo' : 'Define tu primer objetivo',
+        benefit_text: "Planifica tu futuro financiero",
+        icon: "🎯",
+        completed: false
+      }
     end
 
     actions
