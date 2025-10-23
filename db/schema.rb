@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_07_23_090739) do
+ActiveRecord::Schema[7.2].define(version: 2025_10_23_143351) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -44,7 +44,26 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_23_090739) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "ac_fiscal"
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.string "code"
+    t.string "video_compte"
+    t.string "video_cdiposit"
+    t.string "video_curt"
+    t.string "video_llarg"
+    t.string "video_deute"
+    t.string "video_jubil"
+    t.string "video_fiscal"
+    t.string "video_portfolio"
+    t.boolean "default", default: false, null: false
     t.index ["ac_compte"], name: "index_influencers_on_ac_compte"
+    t.index ["code"], name: "index_influencers_on_code", unique: true
+    t.index ["default"], name: "index_influencers_on_default"
+    t.index ["email"], name: "index_influencers_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_influencers_on_reset_password_token", unique: true
   end
 
   create_table "objectives", force: :cascade do |t|
@@ -92,6 +111,16 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_23_090739) do
     t.index ["slug"], name: "index_recommendations_on_slug", unique: true
   end
 
+  create_table "user_actions", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "action_type"
+    t.string "action_key"
+    t.datetime "completed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_user_actions_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -106,6 +135,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_23_090739) do
     t.bigint "influencer_id"
     t.bigint "pyg_id"
     t.bigint "balance_id"
+    t.boolean "admin", default: false, null: false
     t.index ["balance_id"], name: "index_users_on_balance_id", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["influencer_id"], name: "index_users_on_influencer_id"
@@ -116,6 +146,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_23_090739) do
   add_foreign_key "balances", "users"
   add_foreign_key "objectives", "users"
   add_foreign_key "pygs", "users"
+  add_foreign_key "user_actions", "users"
   add_foreign_key "users", "balances"
   add_foreign_key "users", "influencers"
   add_foreign_key "users", "pygs"
