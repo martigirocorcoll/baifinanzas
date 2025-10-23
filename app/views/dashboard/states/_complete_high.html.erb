@@ -124,7 +124,13 @@
                        onclick="selectStep(<%= action[:position] %>)">
 
                     <!-- Icon -->
-                    <div class="step-icon">
+                    <!-- Icon con funcionalidad de click para completar -->
+                    <div class="step-icon"
+                         <% if action[:type] == 'recommendation' && !action[:completed] %>
+                           onclick="event.stopPropagation(); completeAction('<%= action[:key] %>', 'recommendation');"
+                           style="cursor: pointer;"
+                           title="Marcar como completada"
+                         <% end %>>
                       <% if action[:completed] %>
                         <i class="bi bi-check-circle-fill text-success"></i>
                       <% elsif is_first_uncompleted %>
@@ -154,7 +160,7 @@
           </div>
 
           <!-- B. Zona display principal -->
-          <div class="col-lg-8 order-lg-2 order-1">
+          <div class="col-lg-8 order-lg-2 order-1" style="border-left: 1px solid #dee2e6;">
             <div id="step-display" class="step-display">
 
               <!-- Por defecto: siguiente paso o mensaje de completado -->
@@ -513,6 +519,42 @@
 // Variables globales para el plan de acción
 let actionPlanData = <%= raw @action_plan.to_json %>;
 let currentStepId = <%= @current_task ? @current_task[:position] : 'null' %>;
+
+// Función para completar una acción (desde el círculo)
+function completeAction(actionKey, actionType) {
+  console.log('Completing action:', actionKey, actionType);
+
+  // Crear formulario y enviarlo
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = '/dashboard/complete_action';
+
+  // CSRF token
+  const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+  const csrfInput = document.createElement('input');
+  csrfInput.type = 'hidden';
+  csrfInput.name = 'authenticity_token';
+  csrfInput.value = csrfToken;
+  form.appendChild(csrfInput);
+
+  // Action type
+  const typeInput = document.createElement('input');
+  typeInput.type = 'hidden';
+  typeInput.name = 'action_type';
+  typeInput.value = actionType;
+  form.appendChild(typeInput);
+
+  // Action key
+  const keyInput = document.createElement('input');
+  keyInput.type = 'hidden';
+  keyInput.name = 'action_key';
+  keyInput.value = actionKey;
+  form.appendChild(keyInput);
+
+  // Añadir al DOM y enviar
+  document.body.appendChild(form);
+  form.submit();
+}
 
 // Función para seleccionar un paso
 function selectStep(stepId) {
@@ -1024,7 +1066,6 @@ document.addEventListener('turbo:load', function() {
 .step-display {
   min-height: 500px;
   padding-left: 2rem;
-  border-left: 3px solid #dee2e6;
 }
 
 .step-display-content {
@@ -1040,12 +1081,15 @@ document.addEventListener('turbo:load', function() {
 /* RESPONSIVE */
 /* ========================================= */
 @media (max-width: 991px) {
-  .step-display {
-    border-left: none;
-    border-top: 3px solid #dee2e6;
-    padding-left: 0;
+  .col-lg-8[style*="border-left"] {
+    border-left: none !important;
+    border-top: 1px solid #dee2e6 !important;
     padding-top: 2rem;
     margin-top: 2rem;
+  }
+
+  .step-display {
+    padding-left: 0;
   }
 
   .steps-sidebar {
