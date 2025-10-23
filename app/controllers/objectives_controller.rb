@@ -35,7 +35,7 @@ class ObjectivesController < ApplicationController
 
     respond_to do |format|
       if @objective.save
-        format.html { redirect_to dashboard_index_path, notice: "Objetivo creado correctamente. Ya puedes ver tu recomendación personalizada." }
+        format.html { redirect_to dashboard_index_path(show_objective: @objective.id), notice: "Objetivo creado correctamente. Ya puedes ver tu recomendación personalizada." }
         format.json { render :show, status: :created, location: @objective }
       else
         format.html { render :new, status: :unprocessable_entity }

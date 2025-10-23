@@ -813,7 +813,32 @@ document.addEventListener('turbo:load', function() {
   console.log('Current step ID:', currentStepId);
   console.log('Total steps:', actionPlanData.length);
 
-  if (currentStepId) {
+  // Verificar si hay un objetivo recién creado que mostrar
+  const urlParams = new URLSearchParams(window.location.search);
+  const showObjectiveId = urlParams.get('show_objective');
+
+  if (showObjectiveId) {
+    console.log('Showing newly created objective:', showObjectiveId);
+    // Buscar el objetivo en el action plan
+    const objectiveStep = actionPlanData.find(step =>
+      step.type === 'objective' &&
+      step.objective &&
+      step.objective.id.toString() === showObjectiveId
+    );
+
+    if (objectiveStep) {
+      console.log('Found objective step:', objectiveStep);
+      // Seleccionar automáticamente este paso
+      setTimeout(() => {
+        selectStep(objectiveStep.position);
+        // Scroll suave hacia la sección del plan financiero
+        const planSection = document.querySelector('#step-display');
+        if (planSection) {
+          planSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 300);
+    }
+  } else if (currentStepId) {
     document.querySelector(`[data-step-id="${currentStepId}"]`)?.classList.add('active');
   }
 });
@@ -821,7 +846,33 @@ document.addEventListener('turbo:load', function() {
 // También ejecutar al cargar directamente (no solo con turbo)
 document.addEventListener('DOMContentLoaded', function() {
   console.log('=== DOM LOADED ===');
-  if (currentStepId) {
+
+  // Verificar si hay un objetivo recién creado que mostrar
+  const urlParams = new URLSearchParams(window.location.search);
+  const showObjectiveId = urlParams.get('show_objective');
+
+  if (showObjectiveId) {
+    console.log('Showing newly created objective:', showObjectiveId);
+    // Buscar el objetivo en el action plan
+    const objectiveStep = actionPlanData.find(step =>
+      step.type === 'objective' &&
+      step.objective &&
+      step.objective.id.toString() === showObjectiveId
+    );
+
+    if (objectiveStep) {
+      console.log('Found objective step:', objectiveStep);
+      // Seleccionar automáticamente este paso
+      setTimeout(() => {
+        selectStep(objectiveStep.position);
+        // Scroll suave hacia la sección del plan financiero
+        const planSection = document.querySelector('#step-display');
+        if (planSection) {
+          planSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 300);
+    }
+  } else if (currentStepId) {
     document.querySelector(`[data-step-id="${currentStepId}"]`)?.classList.add('active');
   }
 });
