@@ -291,17 +291,19 @@ class User < ApplicationRecord
 
     # 2. Insertar objetivos en posición correcta (si el usuario puede tenerlos)
     if can_invest_in_objectives?
-      if objectives.any?
+      valid_objectives = objectives.select(&:valid_for_display?)
+
+      if valid_objectives.any?
         # Usuario ya tiene objetivos creados
-        objectives.active.each do |obj|
+        valid_objectives.each do |obj|
           actions << {
             position: actions.length + 1,
             type: 'objective',
             title: obj.title,
             benefit_text: "Alcanza tu meta de #{ActionController::Base.helpers.number_to_currency(obj.target_amount, unit: '€', precision: 0)}",
             icon: "🎯",
-            time_months: obj.months_remaining,
-            completed: obj.completed?,
+            time_months: obj.months_to_target,
+            completed: false, # Los objetivos no se marcan como completados en el action plan
             objective: obj
           }
         end
