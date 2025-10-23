@@ -303,7 +303,14 @@ class User < ApplicationRecord
           icon: "🎯",
           time_months: obj.months_to_target,
           completed: false, # Los objetivos no se marcan como completados en el action plan
-          objective: obj
+          objective: {
+            id: obj.id,
+            title: obj.title,
+            target_amount: obj.target_amount,
+            target_date: obj.target_date,
+            monthly_savings_needed: obj.monthly_savings_needed,
+            investment_recommendation: obj.investment_recommendation
+          }
         }
       end
 
