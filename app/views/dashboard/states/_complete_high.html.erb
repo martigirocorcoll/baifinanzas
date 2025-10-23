@@ -253,11 +253,20 @@
                         Ahorro mensual necesario: <strong>€<%= number_with_delimiter(@current_task[:objective].monthly_savings_needed, delimiter: ".") %></strong>
                       </p>
                     </div>
-                    <div class="d-grid">
+                    <div class="d-grid gap-2">
                       <%= link_to recommendation_path(@current_task[:objective].investment_recommendation, objetivo_id: @current_task[:objective].id),
                           class: "btn btn-primary btn-lg" do %>
                         <i class="bi bi-arrow-right-circle me-2"></i>
                         Ver plan de inversión
+                      <% end %>
+                      <%= button_to objective_path(@current_task[:objective]),
+                          method: :delete,
+                          class: "btn btn-outline-danger",
+                          data: {
+                            turbo_confirm: "¿Estás seguro de que quieres eliminar este objetivo? Esta acción no se puede deshacer."
+                          } do %>
+                        <i class="bi bi-trash me-2"></i>
+                        Eliminar objetivo
                       <% end %>
                     </div>
                   <% end %>
@@ -753,14 +762,23 @@ function updateStepDisplay(step) {
       </div>
     `;
 
-    // Botón ver plan
+    // Botones: Ver plan + Eliminar
     html += `
-      <div class="d-grid">
+      <div class="d-grid gap-2">
         <a href="/recommendations/${step.objective.investment_recommendation}?objetivo_id=${step.objective.id}"
            class="btn btn-primary btn-lg">
           <i class="bi bi-arrow-right-circle me-2"></i>
           Ver plan de inversión
         </a>
+        <form action="/objectives/${step.objective.id}" method="post" data-turbo="false"
+              onsubmit="return confirm('¿Estás seguro de que quieres eliminar este objetivo? Esta acción no se puede deshacer.');">
+          <input type="hidden" name="_method" value="delete">
+          <input type="hidden" name="authenticity_token" value="${document.querySelector('meta[name="csrf-token"]').content}">
+          <button type="submit" class="btn btn-outline-danger w-100">
+            <i class="bi bi-trash me-2"></i>
+            Eliminar objetivo
+          </button>
+        </form>
       </div>
     `;
   } else if (step.type === 'create_objective') {
