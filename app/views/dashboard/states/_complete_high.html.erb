@@ -115,21 +115,20 @@
 
               <div class="steps-list">
                 <% @action_plan.each_with_index do |action, index| %>
-                  <% is_objective = action[:type] == 'objective' || action[:type] == 'create_objective' %>
+                  <% is_create_objective = action[:type] == 'create_objective' %>
                   <% is_first_uncompleted = @current_task && action[:position] == @current_task[:position] %>
 
-                  <div class="step-item <%= 'completed' if action[:completed] %> <%= 'is-objective' if is_objective %> <%= 'is-next' if is_first_uncompleted %>"
+                  <div class="step-item <%= 'completed' if action[:completed] %> <%= 'is-objective' if is_create_objective %> <%= 'is-next' if is_first_uncompleted %>"
                        data-step-id="<%= action[:position] %>"
                        data-step-type="<%= action[:type] %>"
                        onclick="selectStep(<%= action[:position] %>)">
 
-                    <!-- Icon -->
-                    <!-- Icon con funcionalidad de click para completar -->
+                    <!-- Icon con funcionalidad de click para completar/descompletar -->
                     <div class="step-icon"
-                         <% if action[:type] == 'recommendation' && !action[:completed] %>
-                           onclick="event.stopPropagation(); completeAction('<%= action[:key] %>', 'recommendation');"
+                         <% if action[:type] == 'recommendation' %>
+                           onclick="event.stopPropagation(); toggleAction('<%= action[:key] %>', 'recommendation', <%= action[:completed] ? 'true' : 'false' %>);"
                            style="cursor: pointer;"
-                           title="Marcar como completada"
+                           title="<%= action[:completed] ? 'Desmarcar' : 'Marcar como completada' %>"
                          <% end %>>
                       <% if action[:completed] %>
                         <i class="bi bi-check-circle-fill text-success"></i>
@@ -142,7 +141,7 @@
 
                     <!-- Content -->
                     <div class="step-content">
-                      <div class="step-title <%= 'text-muted' if is_objective %>">
+                      <div class="step-title <%= 'text-muted' if is_create_objective %>">
                         <%= action[:title] %>
                       </div>
                       <small class="step-meta text-muted">
@@ -520,14 +519,17 @@
 let actionPlanData = <%= raw @action_plan.to_json %>;
 let currentStepId = <%= @current_task ? @current_task[:position] : 'null' %>;
 
-// Función para completar una acción (desde el círculo)
-function completeAction(actionKey, actionType) {
-  console.log('Completing action:', actionKey, actionType);
+// Función para toggle (completar/descompletar) una acción
+function toggleAction(actionKey, actionType, isCompleted) {
+  const action = isCompleted ? 'uncomplete' : 'complete';
+  const url = isCompleted ? '/dashboard/uncomplete_action' : '/dashboard/complete_action';
+
+  console.log(`${action} action:`, actionKey, actionType);
 
   // Crear formulario y enviarlo
   const form = document.createElement('form');
   form.method = 'POST';
-  form.action = '/dashboard/complete_action';
+  form.action = url;
 
   // CSRF token
   const csrfToken = document.querySelector('meta[name="csrf-token"]').content;

@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   # Dashboard
   get "dashboard/index"
   post "dashboard/complete_action", to: "dashboard#complete_action", as: :complete_action
+  post "dashboard/uncomplete_action", to: "dashboard#uncomplete_action", as: :uncomplete_action
 
   # Onboarding flow
   get "onboarding/welcome", to: "onboarding#welcome", as: :onboarding_welcome

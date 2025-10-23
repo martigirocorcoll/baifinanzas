@@ -43,6 +43,27 @@ class DashboardController < ApplicationController
     redirect_to dashboard_index_path
   end
 
+  # Desmarcar una acción/recomendación como completada
+  def uncomplete_action
+    action_type = params[:action_type]
+    action_key = params[:action_key]
+
+    if action_type.blank? || action_key.blank?
+      redirect_to dashboard_index_path, alert: "Parámetros inválidos" and return
+    end
+
+    # Desmarcar
+    if action_type == 'recommendation'
+      current_user.uncomplete_recommendation!(action_key)
+      flash[:success] = "Acción desmarcada"
+    elsif action_type == 'objective'
+      current_user.uncomplete_objective!(action_key)
+      flash[:success] = "Objetivo desmarcado"
+    end
+
+    redirect_to dashboard_index_path
+  end
+
   private
   
   def determine_user_state

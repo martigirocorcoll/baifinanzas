@@ -343,11 +343,27 @@ class User < ApplicationRecord
     ).mark_completed!
   end
 
+  def uncomplete_recommendation!(rec_key)
+    action = user_actions.find_by(
+      action_type: 'recommendation',
+      action_key: rec_key
+    )
+    action&.destroy
+  end
+
   def complete_objective!(objective_id)
     user_actions.find_or_create_by(
       action_type: 'objective',
       action_key: objective_id.to_s
     ).mark_completed!
+  end
+
+  def uncomplete_objective!(objective_id)
+    action = user_actions.find_by(
+      action_type: 'objective',
+      action_key: objective_id.to_s
+    )
+    action&.destroy
   end
 
   def recommendation_title(rec_key)
