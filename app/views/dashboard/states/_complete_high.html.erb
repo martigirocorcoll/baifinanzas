@@ -512,7 +512,18 @@ let currentStepId = <%= @current_task ? @current_task[:position] : 'null' %>;
 // Función para seleccionar un paso
 function selectStep(stepId) {
   const step = actionPlanData.find(s => s.position === stepId);
-  if (!step) return;
+  if (!step) {
+    console.error('Step not found:', stepId);
+    return;
+  }
+
+  console.log('Selecting step:', step);
+
+  // Ocultar contenido inicial si existe
+  const initialContent = document.querySelector('#step-display .step-display-content');
+  if (initialContent && !initialContent.id.includes('js-generated')) {
+    initialContent.style.display = 'none';
+  }
 
   // Ocultar formulario de crear objetivo si está visible
   document.getElementById('create-objective-form-container').style.display = 'none';
@@ -527,7 +538,7 @@ function selectStep(stepId) {
   document.querySelectorAll('.step-item').forEach(item => {
     item.classList.remove('active');
   });
-  document.querySelector(`[data-step-id="${stepId}"]`).classList.add('active');
+  document.querySelector(`[data-step-id="${stepId}"]`)?.classList.add('active');
 
   // Actualizar contenido del display
   updateStepDisplay(step);
@@ -535,6 +546,21 @@ function selectStep(stepId) {
 
 // Mostrar formulario de crear objetivo
 function showCreateObjectiveForm() {
+  console.log('Showing create objective form');
+
+  // Ocultar contenido inicial si existe
+  const initialContent = document.querySelector('#step-display .step-display-content');
+  if (initialContent && !initialContent.id.includes('js-generated')) {
+    initialContent.style.display = 'none';
+  }
+
+  // Ocultar contenido generado por JS si existe
+  const jsGenerated = document.getElementById('js-generated-content');
+  if (jsGenerated) {
+    jsGenerated.remove();
+  }
+
+  // Mostrar formulario
   document.getElementById('create-objective-form-container').style.display = 'block';
 
   // Marcar como activo en lista
@@ -559,9 +585,23 @@ function hideCreateObjectiveForm() {
 
 // Actualizar contenido del display
 function updateStepDisplay(step) {
+  console.log('Updating display with step:', step);
+
   const displayContainer = document.getElementById('step-display');
 
-  let html = '<div class="step-display-content">';
+  // Remover cualquier contenido generado previamente
+  const oldGenerated = document.getElementById('js-generated-content');
+  if (oldGenerated) {
+    oldGenerated.remove();
+  }
+
+  // Ocultar contenido inicial
+  const initialContent = displayContainer.querySelector('.step-display-content');
+  if (initialContent && !initialContent.id) {
+    initialContent.style.display = 'none';
+  }
+
+  let html = '<div class="step-display-content" id="js-generated-content">';
 
   // Header con badge
   html += `
@@ -632,7 +672,7 @@ function updateStepDisplay(step) {
 
     html += '</div>';
 
-  } else if (step.type === 'objective') {
+  } else if (step.type === 'objective' && step.objective) {
     // Información del objetivo
     html += `
       <div class="mb-4">
@@ -656,12 +696,29 @@ function updateStepDisplay(step) {
         </a>
       </div>
     `;
+  } else if (step.type === 'create_objective') {
+    // Caso especial: mostrar mensaje y botón para crear
+    html += `
+      <div class="text-center mb-4">
+        <i class="bi bi-bullseye" style="font-size: 4rem; color: #6c757d;"></i>
+        <p class="text-muted mt-3">
+          Has alcanzado un nivel donde puedes crear objetivos personalizados
+          para hacer crecer tu patrimonio.
+        </p>
+      </div>
+      <div class="d-grid">
+        <button class="btn btn-primary btn-lg" onclick="showCreateObjectiveForm()">
+          <i class="bi bi-plus-circle me-2"></i>
+          Crear mi primer objetivo
+        </button>
+      </div>
+    `;
   }
 
   html += '</div>';
 
-  // Actualizar el contenido
-  displayContainer.innerHTML = html;
+  // Insertar el nuevo contenido
+  displayContainer.insertAdjacentHTML('beforeend', html);
 }
 
 // Marcar el primer paso como activo al cargar
