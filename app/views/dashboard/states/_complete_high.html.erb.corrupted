@@ -1,0 +1,556 @@
+<!-- DASHBOARD HIGH LEVEL: Situación Estable, Crecimiento Patrimonial, Libertad Financiera -->
+
+<!-- MARGEN SUPERIOR -->
+<div class="mt-4"></div>
+
+<!-- 0. CARD NIVEL ACTUAL (COMPACTA) -->
+<div class="dashboard-card mb-3" style="background: linear-gradient(135deg, rgba(30, 221, 136, 0.08) 0%, rgba(13, 110, 253, 0.05) 100%); border: 2px solid #1EDD88;">
+  <div class="card-body p-3">
+    <div class="d-flex align-items-center justify-content-between flex-wrap">
+      <div class="d-flex align-items-center">
+        <i class="<%= @mountain_state[:bootstrap_icon] %> me-2 text-success" style="font-size: 2rem;"></i>
+        <div>
+          <h4 class="mb-0">
+            <strong><%= @mountain_state[:name] %></strong>
+            <span class="badge bg-success text-white ms-2" style="font-size: 0.85rem;">
+              Nivel <%= current_user.financial_health_level_number %>/6
+            </span>
+            <% if @financial_health_level == "Libertad Financiera" %>
+              <span class="badge bg-warning text-dark ms-1">
+                <i class="bi bi-trophy-fill"></i> ¡Máximo!
+              </span>
+            <% end %>
+          </h4>
+          <p class="text-muted small mb-0"><%= @mountain_state[:description].truncate(120) %></p>
+        </div>
+      </div>
+      <button type="button" class="btn btn-sm btn-outline-primary mt-2 mt-md-0" data-bs-toggle="modal" data-bs-target="#levelGuideModal">
+        <i class="bi bi-info-circle me-1"></i>
+        Guía de niveles
+      </button>
+    </div>
+  </div>
+</div>
+
+<% theoretical_capacity = @monthly_cash_flow %>
+<% committed_capacity = @active_objectives.sum { |obj| obj.monthly_savings_needed } %>
+<% available_capacity = theoretical_capacity - committed_capacity %>
+<% utilization_rate = theoretical_capacity > 0 ? (committed_capacity.to_f / theoretical_capacity * 100).round(0) : 0 %>
+
+<!-- 1. WIDGET CAPACIDAD DE AHORRO (Importante para objetivos) -->
+<div class="dashboard-card mb-4">
+  <div class="card-body p-3">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <h5 class="mb-0">
+        <i class="bi bi-wallet2 me-2"></i>
+        Tu Capacidad de Ahorro
+      </h5>
+      <% if utilization_rate < 70 %>
+        <span class="badge bg-success">Saludable</span>
+      <% elsif utilization_rate < 90 %>
+        <span class="badge bg-warning text-dark">Alto uso</span>
+      <% else %>
+        <span class="badge bg-danger">Excedida</span>
+      <% end %>
+    </div>
+
+    <!-- Barra de progreso -->
+    <div class="mb-3">
+      <div class="d-flex justify-content-between align-items-center mb-1">
+        <span class="small text-muted">Uso de capacidad</span>
+        <span class="small fw-bold"><%= utilization_rate %>% utilizado</span>
+      </div>
+      <div class="progress" style="height: 16px;">
+        <% bar_color = utilization_rate < 70 ? 'bg-success' : (utilization_rate < 90 ? 'bg-warning' : 'bg-danger') %>
+        <div class="progress-bar <%= bar_color %>"
+             role="progressbar"
+             style="width: <%= [utilization_rate, 100].min %>%"
+             aria-valuenow="<%= utilization_rate %>"
+             aria-valuemin="0"
+             aria-valuemax="100">
+        </div>
+      </div>
+    </div>
+
+    <!-- Detalles capacidad -->
+    <div class="row text-center g-2">
+      <div class="col-4">
+        <div class="text-primary">
+          <small class="d-block text-muted">Flujo de caja</small>
+          <strong class="h6">€<%= number_with_delimiter(theoretical_capacity, delimiter: ".") %></strong>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="<%= committed_capacity > 0 ? 'text-info' : 'text-muted' %>">
+          <small class="d-block text-muted">Comprometido</small>
+          <strong class="h6">€<%= number_with_delimiter(committed_capacity, delimiter: ".") %></strong>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="<%= available_capacity > 0 ? 'text-success' : 'text-danger' %>">
+          <small class="d-block text-muted">Disponible</small>
+          <strong class="h6">€<%= number_with_delimiter(available_capacity, delimiter: ".") %></strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mensajes según estado -->
+    <% if utilization_rate >= 100 %>
+      <div class="alert alert-danger mt-2 mb-0 py-2">
+        <small>
+          <i class="bi bi-exclamation-triangle me-1"></i>
+          Tus objetivos requieren €<%= number_with_delimiter(committed_capacity - theoretical_capacity, delimiter: ".") %>/mes más de lo disponible.
+        </small>
+      </div>
+    <% elsif utilization_rate >= 70 %>
+      <div class="alert alert-warning mt-2 mb-0 py-2">
+        <small>
+          <i class="bi bi-info-circle me-1"></i>
+          Usando <%= utilization_rate %>% de tu capacidad. Deja margen para imprevistos.
+        </small>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<!-- 2. TUS OBJETIVOS FINANCIEROS (MAIN FOCUS) -->
+<div class="mt-4">
+  <h2 class="mb-3">
+    <i class="bi bi-bullseye text-success me-2"></i>
+    Tus Objetivos Financieros
+  </h2>
+  <p class="text-muted mb-3">
+    Planifica y alcanza tus metas con recomendaciones de inversión personalizadas
+  </p>
+
+  <% if @objectives_with_recommendations.any? %>
+    <div class="row">
+      <% @objectives_with_recommendations.each_with_index do |obj_rec, index| %>
+        <div class="col-md-6 mb-3">
+          <div class="border rounded p-3 bg-white shadow-sm h-100 d-flex flex-column position-relative"
+               style="border-color: #198754 !important; border-width: 2px;">
+
+            <!-- Botón eliminar -->
+            <%= link_to obj_rec[:objective],
+                        class: "btn btn-outline-danger btn-sm position-absolute",
+                        style: "top: 8px; right: 8px; width: 28px; height: 28px; padding: 0; border-radius: 50%; line-height: 1;",
+                        data: {
+                          turbo_method: :delete,
+                          turbo_confirm: "¿Eliminar este objetivo?"
+                        },
+                        title: "Eliminar objetivo" do %>
+              <i class="bi bi-x" style="font-size: 0.9rem;"></i>
+            <% end %>
+
+            <div class="d-flex align-items-start mb-3 mt-2">
+              <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-3"
+                   style="width: 48px; height: 48px; flex-shrink: 0;">
+                <i class="bi bi-bullseye" style="font-size: 1.2rem;"></i>
+              </div>
+              <div class="flex-grow-1" style="padding-right: 35px;">
+                <h5 class="mb-1 text-success fw-bold"><%= obj_rec[:objective].title %></h5>
+                <p class="text-muted small mb-1 lh-sm">
+                  Meta: <strong>€<%= number_with_delimiter(obj_rec[:objective].target_amount, delimiter: ".") %></strong>
+                  en <%= distance_of_time_in_words(Date.current, obj_rec[:objective].target_date) %>
+                </p>
+                <p class="text-info small mb-0 lh-sm">
+                  <i class="bi bi-piggy-bank me-1"></i>
+                  <strong>€<%= number_with_delimiter(obj_rec[:monthly_needed], delimiter: ".") %>/mes</strong>
+                </p>
+              </div>
+            </div>
+
+            <div class="mt-auto">
+              <%= link_to recommendation_path(obj_rec[:recommendation_type], objetivo_id: obj_rec[:objective].id),
+                  class: "btn btn-success w-100" do %>
+                <i class="bi bi-arrow-right-circle me-1"></i>
+                Ver Plan de Inversión
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="alert alert-info">
+      <i class="bi bi-info-circle me-2"></i>
+      Aún no has creado ningún objetivo. ¡Crea tu primer objetivo abajo!
+    </div>
+  <% end %>
+</div>
+
+<!-- 3. CREAR NUEVO OBJETIVO -->
+<div class="mt-4 mb-4">
+  <div class="bg-light p-4 rounded">
+    <h4 class="mb-3">
+      <i class="bi bi-plus-circle text-success me-2"></i>
+      Crear Nuevo Objetivo
+    </h4>
+    <p class="text-muted mb-3">
+      Define un objetivo financiero y obtén la recomendación específica para alcanzarlo.
+    </p>
+
+    <%= form_with model: @new_objective, local: true, class: "row g-3" do |f| %>
+      <%= f.hidden_field :user_id, value: current_user.id %>
+      <div class="col-md-4">
+        <label class="form-label small fw-bold">¿Qué quieres lograr?</label>
+        <%= f.text_field :title, class: "form-control", placeholder: "Ej: Comprar coche" %>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label small fw-bold">¿Cuánto necesitas? (€)</label>
+        <%= f.number_field :target_amount, class: "form-control", placeholder: "Ej: 25000" %>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label small fw-bold">¿Para cuándo?</label>
+        <div class="row g-2">
+          <div class="col-7">
+            <%= f.select :target_date_month,
+                options_for_select([
+                  ['Enero', 1], ['Febrero', 2], ['Marzo', 3], ['Abril', 4],
+                  ['Mayo', 5], ['Junio', 6], ['Julio', 7], ['Agosto', 8],
+                  ['Septiembre', 9], ['Octubre', 10], ['Noviembre', 11], ['Diciembre', 12]
+                ], Date.current.month),
+                { prompt: 'Mes' },
+                { class: "form-select form-select-sm" } %>
+          </div>
+          <div class="col-5">
+            <%= f.select :target_date_year,
+                options_for_select((Date.current.year..(Date.current.year + 45)).map { |y| [y, y] }, Date.current.year + 1),
+                { prompt: 'Año' },
+                { class: "form-select form-select-sm" } %>
+          </div>
+        </div>
+      </div>
+      <div class="col-12">
+        <button type="submit" class="btn btn-success">
+          <i class="bi bi-target me-2"></i>
+          Crear Objetivo
+        </button>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<!-- 4. RECOMENDACIONES BASE (Colapsable, secundario) -->
+<div class="accordion mb-4" id="baseRecommendationsAccordion">
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="baseRecsHeading">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#baseRecsCollapse">
+        <i class="bi bi-shield-check me-2 text-primary"></i>
+        <strong>Mantén tu Estabilidad</strong>
+        <span class="badge bg-light text-dark ms-2"><%= @all_recommendations.count %> recomendaciones</span>
+      </button>
+    </h2>
+    <div id="baseRecsCollapse" class="accordion-collapse collapse" aria-labelledby="baseRecsHeading">
+      <div class="accordion-body">
+        <p class="text-muted small mb-3">
+          Estas recomendaciones te ayudan a mantener tu estabilidad financiera actual.
+        </p>
+
+        <!-- Progress counter -->
+        <div class="mb-4 p-3 bg-light rounded">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="fw-bold">Progreso de acciones</span>
+            <span id="progress-counter-high" class="text-primary fw-bold">0/<%= @all_recommendations.count %> completadas</span>
+          </div>
+          <div class="progress" style="height: 12px;">
+            <div id="progress-bar-high" class="progress-bar bg-success" role="progressbar" style="width: 0%"></div>
+          </div>
+          <div id="social-proof-high" class="mt-2 text-center" style="display: none;">
+            <small class="text-muted">
+              <i class="bi bi-people-fill me-1"></i>
+              <span id="social-text-high"></span>
+            </small>
+          </div>
+        </div>
+
+        <div class="row">
+          <% @all_recommendations.each_with_index do |rec, index| %>
+            <%
+              rec_slug = rec[:product].parameterize
+
+              # Social proof data per recommendation type
+              social_data = case rec_slug
+              when "consejos-para-ahorrar-mas"
+                { users: 1247, saving: 320, time: 25, category: "saving" }
+              when "optimiza-tu-cuenta-bancaria"
+                { users: 892, saving: 156, time: 15, category: "bank" }
+              when "revisa-tus-deudas"
+                { users: 534, saving: 450, time: 30, category: "debt" }
+              when "deposito-fondo-de-emergencia"
+                { users: 723, saving: 280, time: 20, category: "saving" }
+              when "optimiza-tus-deudas"
+                { users: 456, saving: 380, time: 35, category: "debt" }
+              when "optimiza-tu-hipoteca"
+                { users: 289, saving: 420, time: 45, category: "mortgage" }
+              when "optimiza-tu-cartera-de-inversion"
+                { users: 412, saving: 340, time: 30, category: "saving" }
+              when "asesoria-fiscal"
+                { users: 367, saving: 290, time: 40, category: "saving" }
+              else
+                { users: 500, saving: 250, time: 25, category: "saving" }
+              end
+
+              # Category-based icon configuration
+              icon_config = case social_data[:category]
+              when "saving"
+                { icon: "bi-piggy-bank-fill", color: "#1EDD88", bg: "rgba(30, 221, 136, 0.1)" }
+              when "bank"
+                { icon: "bi-bank2", color: "#0D6EFD", bg: "rgba(13, 110, 253, 0.1)" }
+              when "debt"
+                { icon: "bi-credit-card-2-back-fill", color: "#fd7e14", bg: "rgba(253, 126, 20, 0.1)" }
+              when "mortgage"
+                { icon: "bi-house-door-fill", color: "#6f42c1", bg: "rgba(111, 66, 193, 0.1)" }
+              else
+                { icon: "bi-star-fill", color: "#0D6EFD", bg: "rgba(13, 110, 253, 0.1)" }
+              end
+
+              is_first = index == 0
+            %>
+
+            <div class="<%= is_first ? 'col-12' : 'col-md-6' %> mb-3">
+              <div class="recommendation-card border rounded p-3 bg-white h-100 position-relative <%= is_first ? 'border-success' : '' %>"
+                   style="<%= is_first ? 'border-width: 2px !important;' : '' %>"
+                   data-recommendation-id="<%= rec_slug %>">
+
+                <!-- Priority badge -->
+                <span class="position-absolute badge <%= is_first ? 'bg-success' : 'bg-secondary' %> rounded-circle d-flex align-items-center justify-content-center"
+                      style="top: 12px; right: 12px; width: 28px; height: 28px; font-size: 0.85rem; font-weight: 700;">
+                  <%= index + 1 %>
+                </span>
+
+                <!-- Checkbox -->
+                <div class="form-check mb-2">
+                  <input class="form-check-input recommendation-checkbox-high"
+                         type="checkbox"
+                         id="rec-high-<%= rec_slug %>"
+                         data-rec-id="<%= rec_slug %>">
+                  <label class="form-check-label small text-muted" for="rec-high-<%= rec_slug %>">
+                    Marcar como completada
+                  </label>
+                </div>
+
+                <div class="d-flex align-items-start mb-3 recommendation-content-high">
+                  <!-- Category icon -->
+                  <div class="rounded-circle d-flex align-items-center justify-content-center me-3"
+                       style="width: <%= is_first ? '56px' : '48px' %>; height: <%= is_first ? '56px' : '48px' %>; flex-shrink: 0; background: <%= icon_config[:bg] %>;">
+                    <i class="<%= icon_config[:icon] %>" style="font-size: <%= is_first ? '1.5rem' : '1.3rem' %>; color: <%= icon_config[:color] %>;"></i>
+                  </div>
+
+                  <div class="flex-grow-1" style="padding-right: 35px;">
+                    <% if is_first %>
+                      <h4 class="mb-2 fw-bold" style="color: #212529;">
+                        <%= rec[:title] %>
+                      </h4>
+                    <% else %>
+                      <h5 class="mb-2 fw-bold" style="color: #212529;">
+                        <%= rec[:title] %>
+                      </h5>
+                    <% end %>
+                    <p class="text-muted mb-2 lh-sm" style="font-size: 0.9rem;">
+                      <%= rec[:description] %>
+                    </p>
+
+                    <!-- Social proof data -->
+                    <div class="d-flex flex-wrap gap-2 mb-2">
+                      <small class="text-muted">
+                        <i class="bi bi-people-fill me-1"></i>
+                        <strong><%= number_with_delimiter(social_data[:users], delimiter: ".") %></strong> usuarios este mes
+                      </small>
+                      <small class="text-success">
+                        <i class="bi bi-piggy-bank-fill me-1"></i>
+                        Ahorro medio: <strong>€<%= social_data[:saving] %>/año</strong>
+                      </small>
+                      <small class="text-muted">
+                        <i class="bi bi-clock-fill me-1"></i>
+                        <strong><%= social_data[:time] %> min</strong>
+                      </small>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mt-auto">
+                  <%= link_to recommendation_path(rec_slug), class: "btn btn-outline-success w-100 <%= is_first ? 'btn-lg' : '' %>" do %>
+                    <i class="bi bi-arrow-right-circle me-1"></i>
+                    <%= rec[:cta] %>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 5. PRÓXIMO NIVEL (Colapsable) -->
+<% if @next_level_progress[:target].present? %>
+  <div class="accordion mb-4" id="nextLevelAccordion">
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="nextLevelHeading">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#nextLevelCollapse">
+          <i class="bi bi-flag-fill me-2 text-primary"></i>
+          <strong>Próximo Nivel: <%= @next_level_progress[:target] %></strong>
+          <span class="badge bg-light text-dark ms-2">
+            <%= @next_level_progress[:requirements].count { |r| r[:completed] } %>/<%= @next_level_progress[:requirements].count %> requisitos
+          </span>
+        </button>
+      </h2>
+      <div id="nextLevelCollapse" class="accordion-collapse collapse" aria-labelledby="nextLevelHeading">
+        <div class="accordion-body">
+          <% @next_level_progress[:requirements].each do |req| %>
+            <div class="d-flex align-items-start mb-2">
+              <i class="<%= req[:completed] ? 'bi bi-check-circle-fill text-success' : 'bi bi-circle text-muted' %> me-2" style="font-size: 1.3rem;"></i>
+              <div>
+                <strong><%= req[:name] %></strong>
+                <% if req[:completed] %>
+                  <span class="badge bg-success ms-2">✓</span>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% elsif @financial_health_level == "Libertad Financiera" %>
+  <div class="alert alert-success text-center mb-4">
+    <i class="bi bi-stars me-2" style="font-size: 1.5rem;"></i>
+    <strong>¡Has alcanzado la Libertad Financiera!</strong>
+    <br>
+    <small>Mantén y optimiza tu patrimonio mientras disfrutas de tu independencia financiera.</small>
+  </div>
+<% end %>
+
+<!-- Include Level Guide Modal -->
+<%= render 'dashboard/level_guide_modal' %>
+
+<script>
+// Sistema de checkboxes y progreso para recomendaciones base
+document.addEventListener('turbo:load', function() {
+  const STORAGE_KEY = 'baifinanzas_completed_recommendations_high';
+  const progressCounter = document.getElementById('progress-counter-high');
+  const progressBar = document.getElementById('progress-bar-high');
+  const socialProof = document.getElementById('social-proof-high');
+  const socialText = document.getElementById('social-text-high');
+  const checkboxes = document.querySelectorAll('.recommendation-checkbox-high');
+  const totalRecs = checkboxes.length;
+
+  if (totalRecs === 0) return;
+
+  function loadCompletedRecommendations() {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    return stored ? JSON.parse(stored) : [];
+  }
+
+  function saveCompletedRecommendations(completed) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(completed));
+  }
+
+  function applyCompletedStyle(card, isCompleted) {
+    const content = card.querySelector('.recommendation-content-high');
+    if (content) {
+      if (isCompleted) {
+        content.style.opacity = '0.6';
+        content.style.textDecoration = 'line-through';
+        card.style.backgroundColor = '#f8f9fa';
+      } else {
+        content.style.opacity = '1';
+        content.style.textDecoration = 'none';
+        card.style.backgroundColor = '#ffffff';
+      }
+    }
+  }
+
+  function updateProgress() {
+    const completed = loadCompletedRecommendations();
+    const completedCount = completed.length;
+    const percentage = Math.round((completedCount / totalRecs) * 100);
+
+    if (progressCounter) {
+      progressCounter.textContent = `${completedCount}/${totalRecs} completadas`;
+    }
+
+    if (progressBar) {
+      progressBar.style.width = `${percentage}%`;
+    }
+
+    if (completedCount > 0) {
+      if (socialProof && socialText) {
+        socialProof.style.display = 'block';
+        if (completedCount >= 2) {
+          socialText.textContent = '¡Increíble! Estás en el top 33% de usuarios más activos 🎉';
+        } else {
+          socialText.textContent = '¡Buen inicio! El 67% de usuarios completaron al menos 2 acciones';
+        }
+      }
+    } else {
+      if (socialProof) {
+        socialProof.style.display = 'none';
+      }
+    }
+  }
+
+  // Initialize checkboxes state
+  const completedRecs = loadCompletedRecommendations();
+  checkboxes.forEach(checkbox => {
+    const recId = checkbox.dataset.recId;
+    const card = checkbox.closest('.recommendation-card');
+
+    if (completedRecs.includes(recId)) {
+      checkbox.checked = true;
+      applyCompletedStyle(card, true);
+    }
+
+    checkbox.addEventListener('change', function() {
+      let completed = loadCompletedRecommendations();
+
+      if (this.checked) {
+        if (!completed.includes(recId)) {
+          completed.push(recId);
+        }
+        applyCompletedStyle(card, true);
+      } else {
+        completed = completed.filter(id => id !== recId);
+        applyCompletedStyle(card, false);
+      }
+
+      saveCompletedRecommendations(completed);
+      updateProgress();
+    });
+  });
+
+  // Initial progress update
+  updateProgress();
+});
+</script>
+
+<!-- Include Level Guide Modal -->
+<%= render 'dashboard/level_guide_modal' %>
+
+<style>
+.recommendation-card {
+  transition: all 0.3s ease;
+}
+
+.recommendation-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.recommendation-content,
+.recommendation-content-high {
+  transition: all 0.3s ease;
+}
+
+.form-check-input:checked {
+  background-color: #1EDD88;
+  border-color: #1EDD88;
+}
+
+.accordion-button:not(.collapsed) {
+  background-color: #f8f9fa;
+  color: #0D6EFD;
+}
+</style>

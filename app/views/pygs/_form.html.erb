@@ -1,83 +1,287 @@
-<%= simple_form_for @pyg,
-      url: pyg_path,
-      html: { method: @pyg.new_record? ? :post : :patch, class: "container py-5" } do |f| %>
-
-  <h2 class="mb-4">Calcula tu estado de perdidas y ganancias mensual</h2>
-  <p class="text-secondary mb-5">
-    Si nunca has hecho un presupuesto, este formulario es un buen punto de partida.
-    Introduce tus datos y obtén una visión clara de tus finanzas mensuales.
-  </p>
-
-  <!-- INGRESO MENSUAL -->
-  <div class="mb-4">
-    <label class="form-label fw-bold">Ingresos mensuales</label>
-    <div class="input-group">
-      <span class="input-group-text">€</span>
-      <%= f.input_field :ingresos_mensual,
-            type: :number,
-            class: "form-control text-end",
-            placeholder: "0",
-            min: 0 %>
-    </div>
+<div class="container py-5">
+  <!-- Indicador de Progreso -->
+  <div class="text-center mb-4">
+    <span class="badge bg-primary px-4 py-2 fs-6">
+      <i class="bi bi-list-check me-2"></i>Paso 1 de 2
+    </span>
   </div>
 
-  <hr class="my-4">
+  <!-- Card Principal -->
+  <div class="card shadow-lg border-0 mx-auto" style="max-width: 900px;">
+    <div class="card-body p-4 p-md-5">
 
-  <!-- GASTOS DETALLADOS -->
-  <h3 class="h5 mb-3">Gastos</h3>
-  <div class="row gx-2 gy-3">
-    <% expenses = {
-      gasto_compra:          ["Compras", "primary"],
-      alquiler_hipoteca:     ["Alquiler / Hipoteca", "success"],
-      gastos_utilities:      ["Utilities", "warning"],
-      gastos_seguros:        ["Seguros", "danger"],
-      gastos_transporte:     ["Transporte", "info"],
-      restaurantes_y_ocio:   ["Restaurantes y Ocio", "secondary"],
-      cuota_hipoteca:        ["Cuota Hipoteca", "primary"],
-      cuota_coche:           ["Cuota Coche", "dark"],
-      otras_cuotas:          ["Otras Cuotas", "muted"],
-      suscripciones:         ["Suscripciones", "info"],
-      cuidado_personal:      ["Cuidado Personal", "secondary"],
-      otros_gastos:          ["Otros Gastos", "dark"]
-    } %>
+      <%= simple_form_for @pyg,
+            url: pyg_path,
+            html: { method: @pyg.new_record? ? :post : :patch } do |f| %>
 
-    <% expenses.each do |field, (label, color)| %>
-      <div class="col-12 col-md-6 mb-3">
-        <label for="pyg_<%= field %>" class="form-label d-flex align-items-center">
-          <span class="badge bg-<%= color %> me-2"
-                style="width:12px; height:12px; border-radius:50%;"></span>
-          <%= label %>
-        </label>
-        <div class="input-group">
-          <span class="input-group-text">€</span>
-          <%= f.input_field field,
-                type: :number,
-                class: "form-control text-end",
-                placeholder: "0",
-                min: 0 %>
+        <!-- Título y Descripción -->
+        <div class="text-center mb-4">
+          <h2 class="mb-3 text-primary fw-bold">Calcula tu estado de pérdidas y ganancias mensual</h2>
+          <p class="text-muted">
+            Si nunca has hecho un presupuesto, este formulario es un buen punto de partida.
+            Introduce tus datos y obtén una visión clara de tus finanzas mensuales.
+            <strong>Si no tienes algún gasto, déjalo en 0.</strong>
+          </p>
         </div>
-      </div>
-    <% end %>
-  </div>
 
-  <hr class="my-4">
+        <!-- Sección INGRESOS con background -->
+        <div class="card bg-success bg-opacity-10 border-success border-2 mb-4">
+          <div class="card-body p-4">
+            <h3 class="h5 mb-3 text-success fw-bold">
+              <i class="bi bi-cash-coin me-2"></i>Ingresos Mensuales
+            </h3>
+            <div class="row">
+              <div class="col-12">
+                <label class="form-label fw-semibold">Ingresos mensuales totales</label>
+                <div class="input-group input-group-lg">
+                  <%= f.input_field :ingresos_mensual,
+                        type: "text",
+                        class: "form-control text-end euro-input",
+                        placeholder: "0",
+                        data: { field: "ingresos_mensual" } %>
+                  <span class="input-group-text bg-success text-white fw-bold">€</span>
+                </div>
+                <small class="text-muted">Incluye salario, rentas, pensiones, etc.</small>
+              </div>
+            </div>
+          </div>
+        </div>
 
-  <!-- DIFERENCIA -->
-  <div class="d-flex justify-content-between align-items-center mb-4 p-3 bg-light rounded">
-    <p class="fw-bold mb-0">Diferencia mensual</p>
-    <div class="text-end">
-      <% total_expenses = expenses.keys.sum { |fld| @pyg.send(fld).to_i } %>
-      <% diff = @pyg.ingresos_mensual.to_i - total_expenses %>
-      <p class="h4 mb-0 <%= diff >= 0 ? 'text-success' : 'text-danger' %>">
-        <%= number_to_currency(diff, unit: "€", delimiter: ".") %>
-      </p>
+        <!-- Sección GASTOS con background -->
+        <div class="card bg-danger bg-opacity-10 border-danger border-2 mb-4">
+          <div class="card-body p-4">
+            <h3 class="h5 mb-3 text-danger fw-bold">
+              <i class="bi bi-cart3 me-2"></i>Gastos Mensuales
+            </h3>
+            <div class="row gx-3 gy-3">
+              <% expenses = {
+                gasto_compra:          ["Compras (mensual)", "primary"],
+                alquiler_hipoteca:     ["Alquiler (mensual)", "success"],
+                gastos_utilities:      ["Servicios - luz, agua, gas (mensual)", "warning"],
+                gastos_seguros:        ["Seguros (mensual)", "danger"],
+                gastos_transporte:     ["Transporte (mensual)", "info"],
+                restaurantes_y_ocio:   ["Restaurantes y Ocio (mensual)", "secondary"],
+                cuota_hipoteca:        ["Cuota Hipoteca (mensual)", "primary"],
+                cuota_coche:           ["Cuota Coche (mensual)", "dark"],
+                otras_cuotas:          ["Otras Cuotas (mensual)", "muted"],
+                suscripciones:         ["Suscripciones (mensual)", "info"],
+                cuidado_personal:      ["Cuidado Personal (mensual)", "secondary"],
+                otros_gastos:          ["Otros Gastos (mensual)", "dark"]
+              } %>
+
+              <% expenses.each do |field, (label, color)| %>
+                <div class="col-12 col-md-6">
+                  <label for="pyg_<%= field %>" class="form-label d-flex align-items-center fw-semibold">
+                    <span class="badge bg-<%= color %> me-2"
+                          style="width:10px; height:10px; border-radius:50%;"></span>
+                    <%= label %>
+                  </label>
+                  <div class="input-group">
+                    <%= f.input_field field,
+                          type: "text",
+                          class: "form-control text-end euro-input",
+                          placeholder: "0",
+                          data: { field: field } %>
+                    <span class="input-group-text bg-danger text-white">€</span>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+
+        <!-- RESUMEN - Diferencia (Calculado en tiempo real) -->
+        <div class="card bg-light border-0 mb-4">
+          <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <p class="text-muted mb-1">Balance mensual</p>
+                <p class="fw-bold mb-0 fs-5">Diferencia entre ingresos y gastos</p>
+              </div>
+              <div class="text-end">
+                <p class="h3 mb-0 fw-bold text-success" id="balance-amount">
+                  €0
+                </p>
+                <small class="text-muted" id="balance-label">
+                  Completa los campos para ver tu balance
+                </small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- BOTÓN -->
+        <div class="text-center">
+          <%= f.button :submit, class: "btn btn-lg btn-success px-5 shadow" do %>
+            <i class="bi bi-arrow-right-circle me-2"></i>
+            <%= @pyg.new_record? ? "Continuar al siguiente paso" : "Actualizar presupuesto" %>
+          <% end %>
+        </div>
+
+      <% end %>
     </div>
   </div>
+</div>
 
-  <!-- BOTÓN -->
-  <div class="text-center">
-    <%= f.button :submit,
-          @pyg.new_record? ? "Calcular presupuesto" : "Actualizar presupuesto",
-          class: "btn btn-lg btn-primary px-5" %>
-  </div>
-<% end %>
+<script>
+document.addEventListener('turbo:load', function() {
+  const euroInputs = document.querySelectorAll('.euro-input');
+  const balanceAmount = document.getElementById('balance-amount');
+  const balanceLabel = document.getElementById('balance-label');
+  const ingresosInput = document.querySelector('[data-field="ingresos_mensual"]');
+
+  // Formatear número con separadores europeos (1.234,56)
+  function formatNumber(value) {
+    if (!value || value === '0') return '0';
+
+    // Eliminar todo excepto números y coma
+    let num = value.replace(/[^\d,]/g, '');
+
+    // Separar parte entera y decimal
+    let parts = num.split(',');
+    let integerPart = parts[0];
+    let decimalPart = parts[1] || '';
+
+    // Añadir puntos como separador de miles
+    integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+    // Retornar formateado
+    return decimalPart ? `${integerPart},${decimalPart}` : integerPart;
+  }
+
+  // Convertir formato europeo a número para cálculos
+  function parseEuroNumber(value) {
+    if (!value || value === '0' || value === '') return 0;
+    // Quitar puntos (separador de miles) y reemplazar coma por punto (decimal)
+    const num = parseFloat(value.replace(/\./g, '').replace(',', '.'));
+    return isNaN(num) ? 0 : num;
+  }
+
+  // Convertir formato europeo a número para enviar al servidor
+  function unformatNumber(value) {
+    if (!value || value === '0') return '0';
+    // Quitar puntos (separador de miles) y reemplazar coma por punto (decimal)
+    return value.replace(/\./g, '').replace(',', '.');
+  }
+
+  // Calcular balance mensual en tiempo real
+  function updateBalance() {
+    // Obtener ingresos
+    const ingresos = parseEuroNumber(ingresosInput.value);
+
+    // Obtener todos los gastos
+    const expenseFields = [
+      'gasto_compra', 'alquiler_hipoteca', 'gastos_utilities', 'gastos_seguros',
+      'gastos_transporte', 'restaurantes_y_ocio', 'cuota_hipoteca', 'cuota_coche',
+      'otras_cuotas', 'suscripciones', 'cuidado_personal', 'otros_gastos'
+    ];
+
+    let totalGastos = 0;
+    expenseFields.forEach(fieldName => {
+      const input = document.querySelector(`[data-field="${fieldName}"]`);
+      if (input) {
+        totalGastos += parseEuroNumber(input.value);
+      }
+    });
+
+    // Calcular diferencia
+    const diferencia = ingresos - totalGastos;
+
+    // Actualizar display
+    const formattedAmount = new Intl.NumberFormat('es-ES', {
+      style: 'currency',
+      currency: 'EUR',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2
+    }).format(Math.abs(diferencia));
+
+    balanceAmount.textContent = formattedAmount;
+
+    // Actualizar color y label
+    if (diferencia > 0) {
+      balanceAmount.className = 'h3 mb-0 fw-bold text-success';
+      balanceLabel.textContent = 'Ahorro mensual';
+    } else if (diferencia < 0) {
+      balanceAmount.className = 'h3 mb-0 fw-bold text-danger';
+      balanceLabel.textContent = 'Déficit mensual';
+    } else {
+      balanceAmount.className = 'h3 mb-0 fw-bold text-muted';
+      balanceLabel.textContent = 'Balance equilibrado';
+    }
+  }
+
+  // Aplicar formato a cada input
+  euroInputs.forEach(input => {
+    // Formatear valor inicial si existe
+    if (input.value && input.value !== '0') {
+      input.value = formatNumber(input.value);
+    }
+
+    // Formatear mientras escribe
+    input.addEventListener('input', function(e) {
+      let cursorPosition = this.selectionStart;
+      let oldValue = this.value;
+      let oldLength = oldValue.length;
+
+      // Solo permitir números y coma
+      this.value = this.value.replace(/[^\d,]/g, '');
+
+      // Limitar a una sola coma
+      let parts = this.value.split(',');
+      if (parts.length > 2) {
+        this.value = parts[0] + ',' + parts.slice(1).join('');
+      }
+
+      // Formatear
+      this.value = formatNumber(this.value);
+
+      // Ajustar posición del cursor
+      let newLength = this.value.length;
+      cursorPosition = cursorPosition + (newLength - oldLength);
+      this.setSelectionRange(cursorPosition, cursorPosition);
+
+      // Actualizar balance en tiempo real
+      updateBalance();
+    });
+
+    // Al hacer blur, asegurar formato correcto
+    input.addEventListener('blur', function() {
+      if (!this.value || this.value === '') {
+        this.value = '0';
+      }
+      updateBalance();
+    });
+  });
+
+  // Calcular balance inicial si hay valores
+  updateBalance();
+
+  // Antes de enviar el formulario, convertir a formato numérico
+  const form = document.querySelector('form');
+  form.addEventListener('submit', function(e) {
+    euroInputs.forEach(input => {
+      // Crear un input hidden con el valor sin formato
+      const hiddenInput = document.createElement('input');
+      hiddenInput.type = 'hidden';
+      hiddenInput.name = input.name;
+      hiddenInput.value = unformatNumber(input.value);
+
+      // Deshabilitar el input visible y añadir el hidden
+      input.disabled = true;
+      this.appendChild(hiddenInput);
+    });
+  });
+});
+</script>
+
+<style>
+  /* Quitar las flechas de los inputs numéricos */
+  .euro-input {
+    -moz-appearance: textfield;
+  }
+  .euro-input::-webkit-outer-spin-button,
+  .euro-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+</style>

@@ -1,12 +1,80 @@
-<% content_for :title, "Editing influencer" %>
+<!-- app/views/influencers/edit.html.erb -->
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <!-- Header -->
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Editar Enlaces y Videos</h2>
+        <%= link_to "← Volver al dashboard", influencer_path(@influencer), class: "btn btn-outline-secondary" %>
+      </div>
 
-<h1>Editing influencer</h1>
+      <!-- Edit Form Card -->
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0">Configuración de Enlaces y Videos</h5>
+        </div>
+        <div class="card-body">
+          <%= simple_form_for @influencer, url: influencer_path(@influencer), method: :patch do |f| %>
+            <h6 class="mb-3 text-primary">Enlaces de Afiliados</h6>
 
-<%= render "form", influencer: @influencer %>
+            <div class="mb-3">
+              <%= f.input :ac_compte, label: "Cuenta bancaria", input_html: { class: "form-control", placeholder: "https://..." } %>
+            </div>
+            <div class="mb-3">
+              <%= f.input :ac_cdiposit, label: "Depósito de emergencia", input_html: { class: "form-control", placeholder: "https://..." } %>
+            </div>
+            <div class="mb-3">
+              <%= f.input :ac_curt, label: "Inversión corto plazo", input_html: { class: "form-control", placeholder: "https://..." } %>
+            </div>
+            <div class="mb-3">
+              <%= f.input :ac_llarg, label: "Inversión largo plazo", input_html: { class: "form-control", placeholder: "https://..." } %>
+            </div>
+            <div class="mb-3">
+              <%= f.input :ac_deute, label: "Optimización hipoteca", input_html: { class: "form-control", placeholder: "https://..." } %>
+            </div>
+            <div class="mb-3">
+              <%= f.input :ac_jubil, label: "Plan de jubilación", input_html: { class: "form-control", placeholder: "https://..." } %>
+            </div>
+            <div class="mb-3">
+              <%= f.input :ac_fiscal, label: "Asesoría fiscal", input_html: { class: "form-control", placeholder: "https://..." } %>
+            </div>
 
-<br>
+            <hr class="my-4">
 
-<div>
-  <%= link_to "Show this influencer", @influencer %> |
-  <%= link_to "Back to influencers", influencers_path %>
+            <h6 class="mb-3 text-primary">Videos de Recomendación (URLs de YouTube/Vimeo)</h6>
+
+            <div class="mb-3">
+              <%= f.input :video_compte, label: "Video cuenta bancaria", input_html: { class: "form-control", placeholder: "https://youtube.com/..." } %>
+            </div>
+            <div class="mb-3">
+              <%= f.input :video_cdiposit, label: "Video depósito emergencia", input_html: { class: "form-control", placeholder: "https://youtube.com/..." } %>
+            </div>
+            <div class="mb-3">
+              <%= f.input :video_curt, label: "Video inversión corto plazo", input_html: { class: "form-control", placeholder: "https://youtube.com/..." } %>
+            </div>
+            <div class="mb-3">
+              <%= f.input :video_llarg, label: "Video inversión largo plazo", input_html: { class: "form-control", placeholder: "https://youtube.com/..." } %>
+            </div>
+            <div class="mb-3">
+              <%= f.input :video_deute, label: "Video optimización hipoteca", input_html: { class: "form-control", placeholder: "https://youtube.com/..." } %>
+            </div>
+            <div class="mb-3">
+              <%= f.input :video_jubil, label: "Video plan jubilación", input_html: { class: "form-control", placeholder: "https://youtube.com/..." } %>
+            </div>
+            <div class="mb-3">
+              <%= f.input :video_fiscal, label: "Video asesoría fiscal", input_html: { class: "form-control", placeholder: "https://youtube.com/..." } %>
+            </div>
+            <div class="mb-3">
+              <%= f.input :video_portfolio, label: "Video optimización cartera", input_html: { class: "form-control", placeholder: "https://youtube.com/..." } %>
+            </div>
+
+            <div class="d-grid gap-2">
+              <%= f.button :submit, "Guardar cambios", class: "btn btn-success btn-lg" %>
+              <%= link_to "Cancelar", influencer_path(@influencer), class: "btn btn-outline-secondary btn-lg" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

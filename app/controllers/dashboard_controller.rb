@@ -123,6 +123,20 @@ class DashboardController < ApplicationController
       }
     end
     @new_objective = current_user.objectives.build
+
+    # Action Plan - Plan de acción unificado
+    @action_plan = current_user.action_plan
+    @current_task = current_user.current_task
+    @completed_count = @action_plan.count { |a| a[:completed] }
+    @total_count = @action_plan.count
+    @progress_percentage = @total_count > 0 ? ((@completed_count.to_f / @total_count) * 100).round(0) : 0
+
+    # Datos de capacidad de ahorro (para HIGH levels)
+    @monthly_cash_flow_data = {
+      theoretical: @monthly_cash_flow,
+      committed: @active_objectives.sum { |obj| obj.monthly_savings_needed },
+      available: @monthly_cash_flow - @active_objectives.sum { |obj| obj.monthly_savings_needed }
+    }
   end
   
   def calculate_spain_comparison
@@ -211,61 +225,68 @@ class DashboardController < ApplicationController
   def get_mountain_state_info
     state = @financial_health_level
     case state
-    when "Valle Profundo"
+    when "Situación Crítica"
       {
-        icon: "🏔️",
-        bootstrap_icon: "bi bi-geo-alt",
-        name: "Valle Profundo",
-        description: "Te encuentras en el punto de partida de tu escalada financiera. En este momento, tus gastos igualan o superan tus ingresos, lo que significa que no tienes capacidad de ahorro consistente. Esta situación es muy común y es el primer paso para tomar control de tus finanzas. Desde aquí, cada pequeña mejora en tus hábitos financieros te acercará al siguiente nivel. No te preocupes, muchas personas exitosas financieramente han comenzado exactamente donde estás ahora.",
-        next_step: "Tu prioridad es crear un flujo de caja positivo reduciendo gastos o aumentando ingresos. Revisa tus recomendaciones personalizadas para encontrar las mejores oportunidades de ahorro y productos que te ayuden a optimizar tus finanzas."
+        icon: "🔴",
+        bootstrap_icon: "bi bi-exclamation-circle",
+        name: "Situación Crítica",
+        level_number: 1,
+        description: "Actualmente tus gastos igualan o superan tus ingresos, lo que significa que no tienes capacidad de ahorro consistente. Esta situación es más común de lo que piensas y es el primer paso para tomar control de tus finanzas. Cada pequeña mejora en tus hábitos financieros te acercará al siguiente nivel.",
+        next_step: "Tu prioridad es crear un flujo de caja positivo reduciendo gastos o aumentando ingresos. Revisa tus recomendaciones personalizadas para encontrar las mejores oportunidades de ahorro."
       }
-    when "Campo Base"
+    when "Creando Fondo de Emergencia"
       {
-        icon: "🏕️",
-        bootstrap_icon: "bi bi-house",
-        name: "Campo Base", 
-        description: "¡Excelente progreso! Has logrado algo fundamental: tener capacidad de ahorro mensual consistente. Esto significa que tus ingresos superan tus gastos y puedes destinar dinero cada mes para mejorar tu situación financiera. Estás en el 30% de españoles que logran ahorrar regularmente. Sin embargo, aún no tienes un colchón de seguridad que te proteja ante imprevistos. Tu siguiente objetivo es crear estabilidad financiera para poder avanzar con confianza hacia objetivos más ambiciosos.",
-        next_step: "Es momento de construir tu fondo de emergencia de al menos 2 meses de gastos. Este colchón te dará la tranquilidad necesaria para tomar mejores decisiones financieras. Consulta tus recomendaciones personalizadas para encontrar las mejores cuentas de ahorro y productos de emergencia."
+        icon: "🟡",
+        bootstrap_icon: "bi bi-shield-plus",
+        name: "Creando Fondo de Emergencia",
+        level_number: 2,
+        description: "¡Excelente progreso! Has logrado tener capacidad de ahorro mensual consistente. Tus ingresos superan tus gastos y puedes destinar dinero cada mes para mejorar tu situación. Ahora necesitas crear un colchón de seguridad que te proteja ante imprevistos.",
+        next_step: "Construye tu fondo de emergencia de al menos 4 meses de gastos. Este colchón te dará tranquilidad para tomar mejores decisiones financieras."
       }
-    when "Pared Vertical"
+    when "Eliminando Deudas Caras"
       {
-        icon: "🧗‍♂️",
-        bootstrap_icon: "bi bi-arrow-up-circle",
-        name: "Pared Vertical",
-        description: "Te encuentras en la etapa más desafiante pero también más transformadora de tu escalada financiera. Tienes capacidad de ahorro y un colchón de emergencia básico, lo cual demuestra disciplina y progreso real. Sin embargo, las deudas caras (tarjetas de crédito, préstamos personales) están limitando tu potencial de crecimiento. Esta fase requiere estrategia, disciplina y a menudo sacrificios temporales, pero es donde realmente se forja la libertad financiera. Cada euro que destines a reducir deuda cara es una inversión con retorno garantizado equivalente al interés que dejas de pagar.",
-        next_step: "Tu misión es eliminar o reducir significativamente tus deudas caras. Prioriza pagar las deudas con mayor interés primero. Tus recomendaciones personalizadas incluyen estrategias de consolidación de deuda y productos específicos para optimizar este proceso."
+        icon: "🟠",
+        bootstrap_icon: "bi bi-credit-card-2-back",
+        name: "Eliminando Deudas Caras",
+        level_number: 3,
+        description: "Tienes capacidad de ahorro y un colchón de emergencia básico, lo cual demuestra disciplina. Sin embargo, las deudas caras (tarjetas de crédito, préstamos personales) están limitando tu potencial de crecimiento. Esta es la fase más desafiante pero también la más transformadora.",
+        next_step: "Elimina o reduce significativamente tus deudas caras. Prioriza pagar las deudas con mayor interés primero. Cada euro que destines es una inversión con retorno garantizado."
       }
-    when "Cresta Estable"
+    when "Situación Estable"
       {
-        icon: "🏔️",
-        bootstrap_icon: "bi bi-graph-up",
-        name: "Cresta Estable",
-        description: "¡Enhorabuena! Has alcanzado un nivel de estabilidad financiera que solo el 15% de la población logra mantener. Tienes capacidad de ahorro consistente, un fondo de emergencia sólido y tus deudas están bajo control. Desde esta posición privilegiada, puedes permitirte pensar en grande y planificar objetivos financieros específicos como la compra de una casa, inversiones o proyectos personales. Tu base financiera es lo suficientemente sólida como para asumir riesgos calculados y aprovechar oportunidades de crecimiento. Es el momento perfecto para que tu dinero trabaje para ti.",
-        next_step: "Ahora puedes enfocarte en hacer crecer tu patrimonio. Define objetivos financieros específicos y comienza a invertir de forma inteligente. Revisa tus recomendaciones personalizadas para encontrar las mejores opciones de inversión y productos que aceleren tu crecimiento patrimonial."
+        icon: "🟢",
+        bootstrap_icon: "bi bi-check-circle",
+        name: "Situación Estable",
+        level_number: 4,
+        description: "¡Enhorabuena! Has alcanzado estabilidad financiera que solo el 15% de la población logra. Tienes capacidad de ahorro consistente, un fondo de emergencia sólido y tus deudas están bajo control. Desde aquí puedes planificar objetivos financieros específicos como una casa, inversiones o proyectos personales.",
+        next_step: "Ahora puedes enfocarte en hacer crecer tu patrimonio. Define objetivos financieros específicos y comienza a invertir de forma inteligente."
       }
-    when "Alta Montaña"
+    when "Crecimiento Patrimonial"
       {
-        icon: "⛰️",
-        bootstrap_icon: "bi bi-award",
-        name: "Alta Montaña",
-        description: "¡Extraordinario logro! Te encuentras en el 5% superior de la población en términos de salud financiera. Has acumulado un patrimonio neto equivalente a al menos 2 años de tus ingresos, mantienes tus deudas bajo control y tienes una sólida capacidad de ahorro e inversión. Desde esta privilegiada posición, puedes permitirte una perspectiva financiera a largo plazo y considerar estrategias más sofisticadas de inversión y optimización fiscal. Tu situación te permite tomar decisiones basadas en oportunidades rather than necesidades, y tienes la libertad de explorar proyectos que combinen rentabilidad con propósito personal.",
-        next_step: "Tu objetivo final está al alcance: lograr que tus inversiones generen ingresos pasivos superiores a tus gastos mensuales. Optimiza tu cartera de inversiones y considera estrategias avanzadas. Tus recomendaciones personalizadas incluyen productos de inversión premium y asesoramiento especializado para este nivel patrimonial."
+        icon: "💎",
+        bootstrap_icon: "bi bi-gem",
+        name: "Crecimiento Patrimonial",
+        level_number: 5,
+        description: "¡Extraordinario logro! Te encuentras en el 5% superior de la población. Has acumulado un patrimonio neto equivalente a al menos 2 años de ingresos, mantienes tus deudas bajo control y tienes sólida capacidad de ahorro e inversión. Puedes considerar estrategias más sofisticadas de inversión y optimización fiscal.",
+        next_step: "Tu objetivo final está al alcance: lograr que tus inversiones generen ingresos pasivos superiores a tus gastos mensuales. Optimiza tu cartera y considera estrategias avanzadas."
       }
-    when "Cima Conquistada"
+    when "Libertad Financiera"
       {
-        icon: "🏔️👑",
-        bootstrap_icon: "bi bi-trophy",
-        name: "Cima Conquistada",
-        description: "¡Felicidades por este logro excepcional! Has alcanzado la verdadera libertad financiera, un estatus que menos del 2% de la población logra. Tus inversiones y activos generan ingresos pasivos suficientes para cubrir todos tus gastos mensuales sin necesidad de trabajar. Esta independencia financiera te otorga la libertad más valiosa: la capacidad de elegir cómo invertir tu tiempo basándote en tus pasiones y valores, no en necesidades económicas. Desde esta cumbre, puedes dedicarte a proyectos que generen impacto, ayudar a otros en su escalada financiera, o simplemente disfrutar de la tranquilidad que proporciona la seguridad económica absoluta.",
-        next_step: "Con la libertad financiera conquistada, puedes enfocarte en optimizar y preservar tu patrimonio, mientras exploras oportunidades de inversión más especializadas o proyectos de impacto social. Tus recomendaciones personalizadas incluyen estrategias de preservación patrimonial y oportunidades filantrópicas."
+        icon: "👑",
+        bootstrap_icon: "bi bi-trophy-fill",
+        name: "Libertad Financiera",
+        level_number: 6,
+        description: "¡Felicidades por este logro excepcional! Has alcanzado la verdadera libertad financiera, un estatus que menos del 2% de la población logra. Tus inversiones generan ingresos pasivos suficientes para cubrir todos tus gastos mensuales. Puedes elegir cómo invertir tu tiempo basándote en tus pasiones, no en necesidades económicas.",
+        next_step: "Enfócate en optimizar y preservar tu patrimonio, mientras exploras oportunidades de inversión especializadas o proyectos de impacto social."
       }
     else
       {
         icon: "❓",
         bootstrap_icon: "bi bi-question-circle",
         name: "Estado Desconocido",
-        description: "No hemos podido determinar tu estado financiero actual. Esto puede ocurrir cuando faltan datos importantes en tu perfil financiero o cuando hay inconsistencias en la información proporcionada. Para ofrecerte el análisis más preciso y recomendaciones personalizadas, necesitamos tener una visión completa de tu situación financiera incluyendo ingresos, gastos, activos y deudas.",
-        next_step: "Completa toda la información en tu perfil financiero para obtener tu análisis detallado. Una vez completado, podrás acceder a tus recomendaciones personalizadas diseñadas específicamente para tu situación."
+        level_number: 0,
+        description: "No hemos podido determinar tu estado financiero actual. Para ofrecerte el análisis más preciso necesitamos una visión completa de tu situación financiera.",
+        next_step: "Completa toda la información en tu perfil financiero para obtener tu análisis detallado."
       }
     end
   end
@@ -300,33 +321,25 @@ class DashboardController < ApplicationController
 
   def calculate_mountain_progress
     states = [
-      { name: "Valle Profundo", icon: "🏔️", bootstrap_icon: "bi bi-geo-alt", level: 0 },
-      { name: "Campo Base", icon: "🏕️", bootstrap_icon: "bi bi-house", level: 1 },
-      { name: "Pared Vertical", icon: "🧗‍♂️", bootstrap_icon: "bi bi-arrow-up-circle", level: 2 },
-      { name: "Cresta Estable", icon: "🏔️", bootstrap_icon: "bi bi-graph-up", level: 3 },
-      { name: "Alta Montaña", icon: "⛰️", bootstrap_icon: "bi bi-award", level: 4 },
-      { name: "Cima Conquistada", icon: "🏔️👑", bootstrap_icon: "bi bi-trophy", level: 5 }
+      { name: "Situación Crítica", icon: "🔴", bootstrap_icon: "bi bi-exclamation-circle", level: 1 },
+      { name: "Creando Fondo de Emergencia", icon: "🟡", bootstrap_icon: "bi bi-shield-plus", level: 2 },
+      { name: "Eliminando Deudas Caras", icon: "🟠", bootstrap_icon: "bi bi-credit-card-2-back", level: 3 },
+      { name: "Situación Estable", icon: "🟢", bootstrap_icon: "bi bi-check-circle", level: 4 },
+      { name: "Crecimiento Patrimonial", icon: "💎", bootstrap_icon: "bi bi-gem", level: 5 },
+      { name: "Libertad Financiera", icon: "👑", bootstrap_icon: "bi bi-trophy-fill", level: 6 }
     ]
-    
-    current_level = case @financial_health_level
-                   when "Valle Profundo" then 0
-                   when "Campo Base" then 1
-                   when "Pared Vertical" then 2
-                   when "Cresta Estable" then 3
-                   when "Alta Montaña" then 4
-                   when "Cima Conquistada" then 5
-                   else 0
-                   end
-    
-    states.map.with_index do |state, index|
+
+    current_level_number = current_user.financial_health_level_number
+
+    states.map do |state|
       {
         name: state[:name],
         icon: state[:icon],
         bootstrap_icon: state[:bootstrap_icon],
         level: state[:level],
-        status: if index < current_level
+        status: if state[:level] < current_level_number
                   "completed"
-                elsif index == current_level
+                elsif state[:level] == current_level_number
                   "current"
                 else
                   "pending"
@@ -337,32 +350,32 @@ class DashboardController < ApplicationController
 
   def calculate_next_level_progress
     case @financial_health_level
-    when "Valle Profundo"
-      target = "Campo Base"
+    when "Situación Crítica"
+      target = "Creando Fondo de Emergencia"
       requirements = [
         { name: "Flujo positivo", current: @monthly_cash_flow, target: 1, completed: @monthly_cash_flow > 0 }
       ]
-    when "Campo Base"
-      target = "Pared Vertical"
+    when "Creando Fondo de Emergencia"
+      target = "Eliminando Deudas Caras"
       emergency_needed = current_user.monthly_expenses * 2
       current_emergency = current_user.liquid_assets
       requirements = [
         { name: "Colchón 2 meses", current: current_emergency, target: emergency_needed, completed: current_user.has_partial_emergency_fund? }
       ]
-    when "Pared Vertical"
-      target = "Cresta Estable"
+    when "Eliminando Deudas Caras"
+      target = "Situación Estable"
       current_ratio = current_user.expensive_debt_ratio
       requirements = [
         { name: "Deuda cara < 40% patrimonio", current: (current_ratio * 100).round(1), target: 40, completed: current_ratio < 0.4 }
       ]
-    when "Cresta Estable"
-      target = "Alta Montaña"
+    when "Situación Estable"
+      target = "Crecimiento Patrimonial"
       target_net_worth = current_user.annual_income * 2
       requirements = [
         { name: "Patrimonio ≥ 2 años ingresos", current: @net_worth, target: target_net_worth, completed: @net_worth >= target_net_worth }
       ]
-    when "Alta Montaña"
-      target = "Cima Conquistada"
+    when "Crecimiento Patrimonial"
+      target = "Libertad Financiera"
       investment_income = current_user.investment_income_monthly
       requirements = [
         { name: "Ingresos inversión ≥ gastos", current: investment_income, target: current_user.monthly_expenses, completed: current_user.has_financial_freedom? }
@@ -371,12 +384,12 @@ class DashboardController < ApplicationController
       target = nil
       requirements = []
     end
-    
+
     { target: target, requirements: requirements }
   end
-  
+
   def financial_health_allows_objectives?
-    ["Cresta Estable", "Alta Montaña", "Cima Conquistada"].include?(@financial_health_level)
+    ["Situación Estable", "Crecimiento Patrimonial", "Libertad Financiera"].include?(@financial_health_level)
   end
   
   def prepare_objectives_with_recommendations

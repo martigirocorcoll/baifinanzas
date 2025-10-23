@@ -1,125 +1,352 @@
-<%= simple_form_for @balance,
-      url: balance_path,
-      html: { method: @balance.new_record? ? :post : :patch, class: "container py-5" } do |f| %>
-
-  <h2 class="mb-4">Net Worth Calculator</h2>
-  <p class="text-secondary mb-5">
-    En este formulario verás el total de tus activos y pasivos. Rellena cada campo y obtén tu patrimonio neto al instante.
-  </p>
-
-  <%#-- Totales arriba --%>
-  <% total_assets = @balance.valor_inmuebles.to_i +
-                    @balance.dinero_cuenta_corriente.to_i +
-                    @balance.dinero_cuenta_ahorro_depos.to_i +
-                    @balance.dinero_inversiones_f.to_i +
-                    @balance.dinero_planes_pensiones.to_i +
-                    @balance.valor_coches_vehiculos.to_i +
-                    @balance.valor_otros_activos.to_i %>
-
-  <% total_liabilities = @balance.hipoteca_inmuebles.to_i +
-                         @balance.deuda_tarjeta_credito.to_i +
-                         @balance.prestamos_personales.to_i +
-                         @balance.prestamos_coches.to_i +
-                         @balance.otras_deudas.to_i %>
-
-  <div class="row mb-4">
-    <div class="col-12 col-md-6 mb-2 mb-md-0">
-      <h5>Assets: <span class="text-success"><%= number_to_currency(total_assets, unit: "€", delimiter: ".") %></span></h5>
-    </div>
-    <div class="col-12 col-md-6 text-md-end">
-      <h5>Liabilities: <span class="text-danger"><%= number_to_currency(total_liabilities, unit: "€", delimiter: ".") %></span></h5>
-    </div>
+<div class="container py-5">
+  <!-- Indicador de Progreso -->
+  <div class="text-center mb-4">
+    <span class="badge bg-primary px-4 py-2 fs-6">
+      <i class="bi bi-list-check me-2"></i>Paso 2 de 2
+    </span>
   </div>
 
-  <hr class="my-4">
+  <!-- Card Principal -->
+  <div class="card shadow-lg border-0 mx-auto" style="max-width: 1100px;">
+    <div class="card-body p-4 p-md-5">
 
-  <div class="row gx-4 gy-3">
-    <% assets = {
-      valor_inmuebles:            ["Real Estate", "¿Valor estimado de tus inmuebles?", "success"],
-      dinero_cuenta_corriente:    ["Checking Accounts", "¿Dinero en cuenta corriente?", "info"],
-      dinero_cuenta_ahorro_depos: ["Savings Accounts", "¿Dinero en cuenta de ahorro o depósito?", "info"],
-      dinero_inversiones_f:       ["Investments", "¿Dinero en inversiones financieras?", "primary"],
-      dinero_planes_pensiones:    ["Retirement Plans", "¿Dinero en planes de pensiones/jubilación?", "warning"],
-      valor_coches_vehiculos:     ["Cars", "¿Valor actual de tus vehículos?", "secondary"],
-      valor_otros_activos:        ["Other Assets", "¿Valor de otros activos (joyas, acciones, etc.)?", "dark"]
-    } %>
+      <%= simple_form_for @balance,
+            url: balance_path,
+            html: { method: @balance.new_record? ? :post : :patch } do |f| %>
 
-    <% liabilities = {
-      hipoteca_inmuebles:    ["Real Estate Loans", "¿Deuda pendiente de tu hipoteca?", "danger"],
-      deuda_tarjeta_credito: ["Credit Card Debt", "¿Cuánto debes en tarjetas de crédito?", "danger"],
-      prestamos_personales:  ["Personal Loans", "¿Préstamos personales (familia, payday)?", "warning"],
-      prestamos_coches:      ["Car Loans", "¿Préstamo de coche pendiente?", "dark"],
-      otras_deudas:          ["Other Debt", "¿Otras deudas (médicas, negocios, HELOC)?", "muted"]
-    } %>
+        <!-- Título y Descripción -->
+        <div class="text-center mb-4">
+          <h2 class="mb-3 text-primary fw-bold">Calcula tu patrimonio neto</h2>
+          <p class="text-muted">
+            Rellena tus activos y deudas para obtener una visión clara de tu patrimonio neto.
+            <strong>Si no tienes algún activo o deuda, déjalo en 0.</strong>
+          </p>
+        </div>
 
-    <%#-- First column: Assets --%>
-    <div class="col-12 col-lg-6">
-      <h4 class="mb-3">Assets</h4>
-      <% assets.each do |field,(label, hint, color)| %>
-        <div class="mb-3">
-          <label class="form-label d-flex align-items-center">
-            <span class="badge bg-<%= color %> me-2" style="width:10px;height:10px;border-radius:50%;"></span>
-            <%= label %>
-            <i class="bi bi-info-circle text-muted ms-1" data-bs-toggle="tooltip" title="<%= hint %>"></i>
-          </label>
-          <div class="input-group">
-            <span class="input-group-text">€</span>
-            <%= f.input_field field,
-                  type: :number,
-                  class: "form-control text-end",
-                  placeholder: "0",
-                  min: 0 %>
+        <% total_assets = @balance.valor_inmuebles.to_i +
+                          @balance.dinero_cuenta_corriente.to_i +
+                          @balance.dinero_cuenta_ahorro_depos.to_i +
+                          @balance.dinero_inversiones_f.to_i +
+                          @balance.dinero_planes_pensiones.to_i +
+                          @balance.valor_coches_vehiculos.to_i +
+                          @balance.valor_otros_activos.to_i %>
+
+        <% total_liabilities = @balance.hipoteca_inmuebles.to_i +
+                               @balance.deuda_tarjeta_credito.to_i +
+                               @balance.prestamos_personales.to_i +
+                               @balance.prestamos_coches.to_i +
+                               @balance.otras_deudas.to_i %>
+
+        <% assets = {
+          valor_inmuebles:            ["Inmuebles", "¿Valor estimado de tus inmuebles?", "success"],
+          dinero_cuenta_corriente:    ["Cuenta Corriente", "¿Dinero en cuenta corriente?", "info"],
+          dinero_cuenta_ahorro_depos: ["Cuentas de Ahorro/Depósitos", "¿Dinero en cuenta de ahorro o depósito?", "info"],
+          dinero_inversiones_f:       ["Inversiones Financieras", "¿Dinero en inversiones financieras?", "primary"],
+          dinero_planes_pensiones:    ["Planes de Pensiones", "¿Dinero en planes de pensiones/jubilación?", "warning"],
+          valor_coches_vehiculos:     ["Vehículos", "¿Valor actual de tus vehículos?", "secondary"],
+          valor_otros_activos:        ["Otros Activos", "¿Valor de otros activos (joyas, acciones, etc.)?", "dark"]
+        } %>
+
+        <% liabilities = {
+          hipoteca_inmuebles:    ["Hipoteca Inmuebles", "¿Deuda pendiente de tu hipoteca?", "danger"],
+          deuda_tarjeta_credito: ["Tarjetas de Crédito", "¿Cuánto debes en tarjetas de crédito?", "danger"],
+          prestamos_personales:  ["Préstamos Personales", "¿Préstamos personales pendientes?", "warning"],
+          prestamos_coches:      ["Préstamos de Coches", "¿Préstamo de coche pendiente?", "dark"],
+          otras_deudas:          ["Otras Deudas", "¿Otras deudas pendientes?", "muted"]
+        } %>
+
+        <div class="row gx-4">
+          <!-- Sección ACTIVOS con background -->
+          <div class="col-12 col-lg-6 mb-4">
+            <div class="card bg-success bg-opacity-10 border-success border-2 h-100">
+              <div class="card-body p-4">
+                <h3 class="h5 mb-3 text-success fw-bold">
+                  <i class="bi bi-wallet2 me-2"></i>Activos
+                </h3>
+                <% assets.each do |field,(label, hint, color)| %>
+                  <div class="mb-3">
+                    <label class="form-label d-flex align-items-center fw-semibold">
+                      <span class="badge bg-<%= color %> me-2" style="width:10px;height:10px;border-radius:50%;"></span>
+                      <%= label %>
+                      <i class="bi bi-info-circle text-muted ms-1" data-bs-toggle="tooltip" title="<%= hint %>"></i>
+                    </label>
+                    <div class="input-group">
+                      <%= f.input_field field,
+                            type: "text",
+                            class: "form-control text-end euro-input",
+                            placeholder: "0",
+                            data: { field: field } %>
+                      <span class="input-group-text bg-success text-white">€</span>
+                    </div>
+                  </div>
+                <% end %>
+                <div class="mt-4 p-3 bg-white rounded">
+                  <p class="text-muted mb-1 small">Total Activos</p>
+                  <p class="h5 mb-0 text-success fw-bold" id="total-assets">
+                    €0
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sección PASIVOS con background -->
+          <div class="col-12 col-lg-6 mb-4">
+            <div class="card bg-danger bg-opacity-10 border-danger border-2 h-100">
+              <div class="card-body p-4">
+                <h3 class="h5 mb-3 text-danger fw-bold">
+                  <i class="bi bi-credit-card me-2"></i>Pasivos (Deudas)
+                </h3>
+                <% liabilities.each do |field,(label, hint, color)| %>
+                  <div class="mb-3">
+                    <label class="form-label d-flex align-items-center fw-semibold">
+                      <span class="badge bg-<%= color %> me-2" style="width:10px;height:10px;border-radius:50%;"></span>
+                      <%= label %>
+                      <i class="bi bi-info-circle text-muted ms-1" data-bs-toggle="tooltip" title="<%= hint %>"></i>
+                    </label>
+                    <div class="input-group">
+                      <%= f.input_field field,
+                            type: "text",
+                            class: "form-control text-end euro-input",
+                            placeholder: "0",
+                            data: { field: field } %>
+                      <span class="input-group-text bg-danger text-white">€</span>
+                    </div>
+                  </div>
+                <% end %>
+                <div class="mt-4 p-3 bg-white rounded">
+                  <p class="text-muted mb-1 small">Total Deudas</p>
+                  <p class="h5 mb-0 text-danger fw-bold" id="total-liabilities">
+                    €0
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      <% end %>
-    </div>
 
-    <%#-- Second column: Liabilities --%>
-    <div class="col-12 col-lg-6">
-      <h4 class="mb-3">Liabilities</h4>
-      <% liabilities.each do |field,(label, hint, color)| %>
-        <div class="mb-3">
-          <label class="form-label d-flex align-items-center">
-            <span class="badge bg-<%= color %> me-2" style="width:10px;height:10px;border-radius:50%;"></span>
-            <%= label %>
-            <i class="bi bi-info-circle text-muted ms-1" data-bs-toggle="tooltip" title="<%= hint %>"></i>
-          </label>
-          <div class="input-group">
-            <span class="input-group-text">€</span>
-            <%= f.input_field field,
-                  type: :number,
-                  class: "form-control text-end",
-                  placeholder: "0",
-                  min: 0 %>
+        <!-- RESUMEN - Patrimonio Neto (Calculado en tiempo real) -->
+        <div class="card bg-light border-0 mb-4">
+          <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <p class="text-muted mb-1">Tu patrimonio neto</p>
+                <p class="fw-bold mb-0 fs-5">Activos - Deudas</p>
+              </div>
+              <div class="text-end">
+                <p class="h3 mb-0 fw-bold text-success" id="net-worth-amount">
+                  €0
+                </p>
+                <small class="text-muted" id="net-worth-label">
+                  Completa los campos para ver tu patrimonio
+                </small>
+              </div>
+            </div>
           </div>
         </div>
+
+        <!-- BOTÓN -->
+        <div class="text-center">
+          <%= f.button :submit, class: "btn btn-lg btn-success px-5 shadow" do %>
+            <i class="bi bi-arrow-right-circle me-2"></i>
+            <%= @balance.new_record? ? "Ver mi plan financiero personalizado" : "Actualizar patrimonio" %>
+          <% end %>
+        </div>
+
       <% end %>
+
+      <!-- Enlace para corregir PyG -->
+      <div class="text-center mt-3">
+        <%= link_to edit_pyg_path, class: "text-muted text-decoration-none" do %>
+          <i class="bi bi-pencil me-1"></i>
+          <small>Corregir datos de pérdidas y ganancias mensual</small>
+        <% end %>
+      </div>
+
     </div>
   </div>
-
-  <hr class="my-4">
-
-  <% net_worth = total_assets - total_liabilities %>
-  <div class="d-flex justify-content-between align-items-center mb-4 p-3 bg-light rounded">
-    <p class="fw-bold mb-0">Net Worth</p>
-    <div class="text-end">
-      <p class="h4 mb-0 <%= net_worth >= 0 ? 'text-success' : 'text-danger' %>">
-        <%= number_to_currency(net_worth, unit: "€", delimiter: ".") %>
-      </p>
-    </div>
-  </div>
-
-  <div class="text-center">
-    <%= f.button :submit,
-          @balance.new_record? ? "Calculate Net Worth" : "Update Net Worth",
-          class: "btn btn-lg btn-primary px-5" %>
-  </div>
-
-<% end %>
+</div>
 
 <script>
-  document.addEventListener("DOMContentLoaded", function(){
-    const tooltipTriggerList = [...document.querySelectorAll('[data-bs-toggle="tooltip"]')];
-    tooltipTriggerList.forEach(el => new bootstrap.Tooltip(el));
+document.addEventListener('turbo:load', function() {
+  // Tooltips
+  const tooltipTriggerList = [...document.querySelectorAll('[data-bs-toggle="tooltip"]')];
+  tooltipTriggerList.forEach(el => new bootstrap.Tooltip(el));
+
+  const euroInputs = document.querySelectorAll('.euro-input');
+  const totalAssetsEl = document.getElementById('total-assets');
+  const totalLiabilitiesEl = document.getElementById('total-liabilities');
+  const netWorthAmountEl = document.getElementById('net-worth-amount');
+  const netWorthLabelEl = document.getElementById('net-worth-label');
+
+  // Formatear número con separadores europeos (1.234,56)
+  function formatNumber(value) {
+    if (!value || value === '0') return '0';
+
+    // Eliminar todo excepto números y coma
+    let num = value.replace(/[^\d,]/g, '');
+
+    // Separar parte entera y decimal
+    let parts = num.split(',');
+    let integerPart = parts[0];
+    let decimalPart = parts[1] || '';
+
+    // Añadir puntos como separador de miles
+    integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+    // Retornar formateado
+    return decimalPart ? `${integerPart},${decimalPart}` : integerPart;
+  }
+
+  // Convertir formato europeo a número para cálculos
+  function parseEuroNumber(value) {
+    if (!value || value === '0' || value === '') return 0;
+    // Quitar puntos (separador de miles) y reemplazar coma por punto (decimal)
+    const num = parseFloat(value.replace(/\./g, '').replace(',', '.'));
+    return isNaN(num) ? 0 : num;
+  }
+
+  // Convertir formato europeo a número para enviar al servidor
+  function unformatNumber(value) {
+    if (!value || value === '0') return '0';
+    // Quitar puntos (separador de miles) y reemplazar coma por punto (decimal)
+    return value.replace(/\./g, '').replace(',', '.');
+  }
+
+  // Calcular totales y patrimonio neto en tiempo real
+  function updateBalances() {
+    // Campos de activos
+    const assetFields = [
+      'valor_inmuebles', 'dinero_cuenta_corriente', 'dinero_cuenta_ahorro_depos',
+      'dinero_inversiones_f', 'dinero_planes_pensiones', 'valor_coches_vehiculos',
+      'valor_otros_activos'
+    ];
+
+    // Campos de pasivos (deudas)
+    const liabilityFields = [
+      'hipoteca_inmuebles', 'deuda_tarjeta_credito', 'prestamos_personales',
+      'prestamos_coches', 'otras_deudas'
+    ];
+
+    // Calcular total activos
+    let totalAssets = 0;
+    assetFields.forEach(fieldName => {
+      const input = document.querySelector(`[data-field="${fieldName}"]`);
+      if (input) {
+        totalAssets += parseEuroNumber(input.value);
+      }
+    });
+
+    // Calcular total pasivos
+    let totalLiabilities = 0;
+    liabilityFields.forEach(fieldName => {
+      const input = document.querySelector(`[data-field="${fieldName}"]`);
+      if (input) {
+        totalLiabilities += parseEuroNumber(input.value);
+      }
+    });
+
+    // Calcular patrimonio neto
+    const netWorth = totalAssets - totalLiabilities;
+
+    // Formatear con Intl
+    const formatCurrency = (amount) => new Intl.NumberFormat('es-ES', {
+      style: 'currency',
+      currency: 'EUR',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2
+    }).format(Math.abs(amount));
+
+    // Actualizar displays
+    totalAssetsEl.textContent = formatCurrency(totalAssets);
+    totalLiabilitiesEl.textContent = formatCurrency(totalLiabilities);
+    netWorthAmountEl.textContent = formatCurrency(netWorth);
+
+    // Actualizar color y label del patrimonio neto
+    if (netWorth > 0) {
+      netWorthAmountEl.className = 'h3 mb-0 fw-bold text-success';
+      netWorthLabelEl.textContent = 'Patrimonio positivo';
+    } else if (netWorth < 0) {
+      netWorthAmountEl.className = 'h3 mb-0 fw-bold text-danger';
+      netWorthLabelEl.textContent = 'Patrimonio negativo';
+    } else {
+      netWorthAmountEl.className = 'h3 mb-0 fw-bold text-muted';
+      netWorthLabelEl.textContent = 'Patrimonio equilibrado';
+    }
+  }
+
+  // Aplicar formato a cada input
+  euroInputs.forEach(input => {
+    // Formatear valor inicial si existe
+    if (input.value && input.value !== '0') {
+      input.value = formatNumber(input.value);
+    }
+
+    // Formatear mientras escribe
+    input.addEventListener('input', function(e) {
+      let cursorPosition = this.selectionStart;
+      let oldValue = this.value;
+      let oldLength = oldValue.length;
+
+      // Solo permitir números y coma
+      this.value = this.value.replace(/[^\d,]/g, '');
+
+      // Limitar a una sola coma
+      let parts = this.value.split(',');
+      if (parts.length > 2) {
+        this.value = parts[0] + ',' + parts.slice(1).join('');
+      }
+
+      // Formatear
+      this.value = formatNumber(this.value);
+
+      // Ajustar posición del cursor
+      let newLength = this.value.length;
+      cursorPosition = cursorPosition + (newLength - oldLength);
+      this.setSelectionRange(cursorPosition, cursorPosition);
+
+      // Actualizar balances en tiempo real
+      updateBalances();
+    });
+
+    // Al hacer blur, asegurar formato correcto
+    input.addEventListener('blur', function() {
+      if (!this.value || this.value === '') {
+        this.value = '0';
+      }
+      updateBalances();
+    });
   });
+
+  // Calcular balance inicial si hay valores
+  updateBalances();
+
+  // Antes de enviar el formulario, convertir a formato numérico
+  const form = document.querySelector('form');
+  form.addEventListener('submit', function(e) {
+    euroInputs.forEach(input => {
+      // Crear un input hidden con el valor sin formato
+      const hiddenInput = document.createElement('input');
+      hiddenInput.type = 'hidden';
+      hiddenInput.name = input.name;
+      hiddenInput.value = unformatNumber(input.value);
+
+      // Deshabilitar el input visible y añadir el hidden
+      input.disabled = true;
+      this.appendChild(hiddenInput);
+    });
+  });
+});
 </script>
+
+<style>
+  /* Quitar las flechas de los inputs numéricos */
+  .euro-input {
+    -moz-appearance: textfield;
+  }
+  .euro-input::-webkit-outer-spin-button,
+  .euro-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+</style>

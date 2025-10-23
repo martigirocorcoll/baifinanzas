@@ -1,19 +1,66 @@
-
 <%= simple_form_for(@influencer) do |f| %>
   <%= f.error_notification %>
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 
   <div class="form-inputs">
-    <%= f.input :name %>
-    <%= f.input :ac_compte %>
-    <%= f.input :ac_cdiposit %>
-    <%= f.input :ac_curt %>
-    <%= f.input :ac_llarg %>
-    <%= f.input :ac_deute %>
-    <%= f.input :ac_jubil %>
+    <% if @influencer.new_record? %>
+      <%# Formulario para ADMIN: crear nuevo influencer %>
+      <%= f.input :name,
+                  label: "Nombre del Influencer",
+                  placeholder: "Juan Pérez",
+                  required: true %>
+
+      <%= f.input :email,
+                  label: "Email",
+                  placeholder: "influencer@example.com",
+                  required: true,
+                  input_html: { autocomplete: "email" } %>
+
+      <%= f.input :password,
+                  label: "Contraseña",
+                  required: true,
+                  input_html: { autocomplete: "new-password" },
+                  hint: "Mínimo 6 caracteres" %>
+
+      <%= f.input :password_confirmation,
+                  label: "Confirmar Contraseña",
+                  required: true,
+                  input_html: { autocomplete: "new-password" } %>
+    <% else %>
+      <%# Formulario para INFLUENCER: editar sus propios datos %>
+      <p class="text-muted">
+        <i class="bi bi-info-circle"></i>
+        Edita tus enlaces de afiliado y videos. Deja en blanco los que no tengas todavía.
+      </p>
+
+      <h6 class="mb-3 text-primary">Enlaces de Afiliados</h6>
+
+      <%= f.input :ac_compte, label: "Cuenta bancaria" %>
+      <%= f.input :ac_cdiposit, label: "Depósito de emergencia" %>
+      <%= f.input :ac_curt, label: "Inversión corto plazo" %>
+      <%= f.input :ac_llarg, label: "Inversión largo plazo" %>
+      <%= f.input :ac_deute, label: "Optimización de deudas" %>
+      <%= f.input :ac_jubil, label: "Plan de jubilación" %>
+      <%= f.input :ac_fiscal, label: "Asesoramiento fiscal" %>
+
+      <hr class="my-4">
+
+      <h6 class="mb-3 text-primary">Videos de Recomendación</h6>
+
+      <%= f.input :video_compte, label: "Video cuenta bancaria" %>
+      <%= f.input :video_cdiposit, label: "Video depósito emergencia" %>
+      <%= f.input :video_curt, label: "Video inversión corto plazo" %>
+      <%= f.input :video_llarg, label: "Video inversión largo plazo" %>
+      <%= f.input :video_deute, label: "Video optimización deudas" %>
+      <%= f.input :video_jubil, label: "Video plan jubilación" %>
+      <%= f.input :video_fiscal, label: "Video asesoramiento fiscal" %>
+      <%= f.input :video_portfolio, label: "Video portfolio general" %>
+    <% end %>
   </div>
 
   <div class="form-actions">
-    <%= f.button :submit %>
+    <%= f.button :submit,
+                 class: "btn btn-success btn-lg",
+                 data: { disable_with: "Guardando..." } %>
   </div>
 <% end %>

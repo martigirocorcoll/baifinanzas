@@ -7,9 +7,9 @@
           <div class="row pt-md-2 pt-lg-5">
             <div class="col-md-6 d-flex flex-column mt-md-4 pt-5 pb-3 pb-sm-4 py-md-5">
               <h1 class="display-4 text-center text-md-start mb-4">
-                Crea tu plan financiero personalizado
+                Crea tu plan financiero personalizado <span class="text-success">gratuito</span>
               </h1>
-              <p class="fs-lg text-center text-md-start pb-2 pb-md-3 mb-4 mb-lg-5">Imagina un futuro donde tu ahorro te aporte libertad y no frustración. Con las herramientas y plan adecuados puedes llegar a ello.</p>
+              <p class="fs-lg text-center text-md-start pb-2 pb-md-3 mb-4 mb-lg-5">Analiza tus finanzas, descubre tu nivel de salud financiera y obtén un plan concreto para alcanzar tus objetivos económicos.</p>
               <div class="d-flex flex-column flex-sm-row justify-content-center justify-content-md-start">
                 <%= link_to new_user_registration_path, class: "btn btn-success btn-lg px-4 py-3 mb-3" do %>
                   <i class="bi bi-rocket-takeoff me-2"></i>Empezar mi plan
@@ -114,7 +114,7 @@
 
       <!-- Hero Animations JavaScript -->
       <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('turbo:load', function() {
           // Create Particles
           const particlesContainer = document.querySelector('.particles-container');
           if (particlesContainer) {

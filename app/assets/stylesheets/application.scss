@@ -10,3 +10,20 @@
 // Your CSS partials
 @import "components/index";
 @import "pages/index";
+
+// Fix for navbar overlap on mobile
+// The navbar has position-absolute and overlaps content
+body {
+  // Default padding for larger screens
+  padding-top: 76px; // Navbar height
+  
+  // Adjust for mobile devices
+  @media (max-width: 767px) {
+    padding-top: 56px; // Smaller navbar height on mobile
+  }
+}
+
+// For pages that shouldn't have padding (if needed)
+body.no-navbar-padding {
+  padding-top: 0 !important;
+}

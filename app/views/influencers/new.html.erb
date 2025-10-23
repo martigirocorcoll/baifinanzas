@@ -1,11 +1,29 @@
-<% content_for :title, "New influencer" %>
+<% content_for :title, "Crear Nuevo Influencer" %>
 
-<h1>New influencer</h1>
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8">
+      <div class="card shadow-sm">
+        <div class="card-header bg-success text-white">
+          <h4 class="mb-0">
+            <i class="bi bi-person-plus-fill"></i>
+            Crear Nuevo Influencer
+          </h4>
+        </div>
+        <div class="card-body p-4">
+          <p class="text-muted mb-4">
+            <i class="bi bi-info-circle"></i>
+            Crea un nuevo influencer con sus credenciales de acceso. El influencer podrá completar sus enlaces de afiliado después de iniciar sesión.
+          </p>
 
-<%= render "form", influencer: @influencer %>
-
-<br>
-
-<div>
-  <%= link_to "Back to influencers", influencers_path %>
+          <%= render "form", influencer: @influencer %>
+        </div>
+        <div class="card-footer">
+          <%= link_to influencers_path, class: "btn btn-outline-secondary" do %>
+            <i class="bi bi-arrow-left"></i> Volver a la lista
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

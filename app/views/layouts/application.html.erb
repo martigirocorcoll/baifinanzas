@@ -19,10 +19,17 @@
   </head>
 
   <body>
-  <%= render "shared/navbar" %>
+  <%# Ocultar navbar/footer solo en páginas del CRUD de influencers %>
+  <% unless controller_path.start_with?('influencers') %>
+    <%= render "shared/navbar" %>
+  <% end %>
+
   <%= render "shared/flashes" %>
-    <%= yield %>
-  <%= render "shared/footer" %>
+  <%= yield %>
+
+  <% unless controller_path.start_with?('influencers') %>
+    <%= render "shared/footer" %>
+  <% end %>
 
   </body>
 </html>

@@ -16,7 +16,14 @@ class PygsController < ApplicationController
   def create
     @pyg = current_user.build_pyg(pyg_params)
     if @pyg.save
-      redirect_to authenticated_root_path, notice: "PYG creado correctamente."
+      # Redirect to balance if not filled yet (onboarding flow)
+      balance_has_data = current_user.balance&.has_data?
+
+      if !balance_has_data
+        redirect_to new_balance_path, notice: "¡Excelente! Paso 1 completado. Ahora vamos con tu balance patrimonial."
+      else
+        redirect_to authenticated_root_path, notice: "PYG actualizado correctamente."
+      end
     else
       render :new, status: :unprocessable_entity
     end
@@ -29,7 +36,8 @@ class PygsController < ApplicationController
   # PATCH/PUT /pyg
   def update
     if @pyg.update(pyg_params)
-      redirect_to authenticated_root_path, notice: "PYG actualizado correctamente."
+      # Always show processing screen when updating financial data
+      redirect_to onboarding_processing_path, notice: "PYG actualizado correctamente."
     else
       render :edit, status: :unprocessable_entity
     end

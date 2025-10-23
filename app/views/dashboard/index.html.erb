@@ -15,8 +15,20 @@
         <%= render 'dashboard/states/has_pyg' %>
         
       <% when :complete %>
-        <!-- ESTADO 3: USUARIO COMPLETO -->
-        <%= render 'dashboard/states/complete' %>
+        <!-- ESTADO 3: USUARIO COMPLETO - Diferenciado por nivel -->
+        <% low_levels = ["Situación Crítica", "Creando Fondo de Emergencia", "Eliminando Deudas Caras"] %>
+        <% high_levels = ["Situación Estable", "Crecimiento Patrimonial", "Libertad Financiera"] %>
+
+        <% if low_levels.include?(@financial_health_level) %>
+          <!-- LOW LEVEL: Enfoque en recomendaciones base -->
+          <%= render 'dashboard/states/complete_low' %>
+        <% elsif high_levels.include?(@financial_health_level) %>
+          <!-- HIGH LEVEL: Enfoque en objetivos personalizados -->
+          <%= render 'dashboard/states/complete_high' %>
+        <% else %>
+          <!-- Fallback: render old complete if level unknown -->
+          <%= render 'dashboard/states/complete' %>
+        <% end %>
         
       <% end %>
       

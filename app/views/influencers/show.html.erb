@@ -1,10 +1,228 @@
-<p style="color: green"><%= notice %></p>
+<!-- app/views/influencers/show.html.erb -->
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <% if notice %>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+          <%= notice %>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      <% end %>
 
-<%= render @influencer %>
+      <!-- Header -->
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Dashboard Influencer</h2>
+        <div>
+          <%= link_to "Editar enlaces", edit_influencer_path(@influencer), class: "btn btn-primary me-2" %>
+          <%= button_to "Cerrar sesión", destroy_influencer_session_path, method: :delete, class: "btn btn-outline-secondary" %>
+        </div>
+      </div>
 
-<div>
-  <%= link_to "Edit this influencer", edit_influencer_path(@influencer) %> |
-  <%= link_to "Back to influencers", influencers_path %>
+      <!-- Welcome Card -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h4 class="card-title">¡Hola, <%= @influencer.name %>!</h4>
+          <p class="card-text text-muted">Bienvenido a tu portal de influencer de BaiFinanzas</p>
+        </div>
+      </div>
 
-  <%= button_to "Destroy this influencer", @influencer, method: :delete %>
+      <!-- Statistics Card -->
+      <div class="card mb-4">
+        <div class="card-header bg-success text-white">
+          <h5 class="mb-0">📊 Estadísticas</h5>
+        </div>
+        <div class="card-body">
+          <div class="row text-center">
+            <div class="col-md-12">
+              <h2 class="display-4 text-success"><%= @referred_users_count %></h2>
+              <p class="text-muted mb-0">Usuarios referidos</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Referral Code Card -->
+      <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0">Tu Código de Referido</h5>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <label class="form-label fw-bold">Código único:</label>
+            <div class="input-group">
+              <input type="text" class="form-control" value="<%= @influencer.code %>" id="referralCode" readonly>
+              <button class="btn btn-outline-secondary" type="button" onclick="copyCode()">
+                <i class="bi bi-clipboard"></i> Copiar
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <label class="form-label fw-bold">Enlace de referido:</label>
+            <div class="input-group">
+              <input type="text" class="form-control" value="<%= @referral_link %>" id="referralLink" readonly>
+              <button class="btn btn-primary" type="button" onclick="copyLink()">
+                <i class="bi bi-link-45deg"></i> Copiar enlace
+              </button>
+            </div>
+            <small class="form-text text-muted">Comparte este enlace con tus seguidores para que se registren en BaiFinanzas</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Instructions Card -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5 class="mb-0">Cómo funciona</h5>
+        </div>
+        <div class="card-body">
+          <ol class="mb-0">
+            <li class="mb-2">Comparte tu enlace único con tus seguidores</li>
+            <li class="mb-2">Cuando se registren usando tu enlace, quedarán vinculados a ti</li>
+            <li class="mb-2">Podrás gestionar tus enlaces de afiliados en tu perfil</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- Affiliate Links Card (Read-only) -->
+      <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">Enlaces de Afiliados Configurados</h5>
+          <%= link_to "Editar", edit_influencer_path(@influencer), class: "btn btn-sm btn-primary" %>
+        </div>
+        <div class="card-body">
+          <% if @influencer.ac_compte.present? || @influencer.ac_cdiposit.present? || @influencer.ac_curt.present? || @influencer.ac_llarg.present? || @influencer.ac_deute.present? || @influencer.ac_jubil.present? || @influencer.ac_fiscal.present? %>
+            <div class="list-group list-group-flush">
+              <% if @influencer.ac_compte.present? %>
+                <div class="list-group-item">
+                  <strong>Cuenta bancaria:</strong><br>
+                  <small class="text-muted"><%= @influencer.ac_compte %></small>
+                </div>
+              <% end %>
+              <% if @influencer.ac_cdiposit.present? %>
+                <div class="list-group-item">
+                  <strong>Depósito de emergencia:</strong><br>
+                  <small class="text-muted"><%= @influencer.ac_cdiposit %></small>
+                </div>
+              <% end %>
+              <% if @influencer.ac_curt.present? %>
+                <div class="list-group-item">
+                  <strong>Inversión corto plazo:</strong><br>
+                  <small class="text-muted"><%= @influencer.ac_curt %></small>
+                </div>
+              <% end %>
+              <% if @influencer.ac_llarg.present? %>
+                <div class="list-group-item">
+                  <strong>Inversión largo plazo:</strong><br>
+                  <small class="text-muted"><%= @influencer.ac_llarg %></small>
+                </div>
+              <% end %>
+              <% if @influencer.ac_deute.present? %>
+                <div class="list-group-item">
+                  <strong>Optimización hipoteca:</strong><br>
+                  <small class="text-muted"><%= @influencer.ac_deute %></small>
+                </div>
+              <% end %>
+              <% if @influencer.ac_jubil.present? %>
+                <div class="list-group-item">
+                  <strong>Plan de jubilación:</strong><br>
+                  <small class="text-muted"><%= @influencer.ac_jubil %></small>
+                </div>
+              <% end %>
+              <% if @influencer.ac_fiscal.present? %>
+                <div class="list-group-item">
+                  <strong>Asesoría fiscal:</strong><br>
+                  <small class="text-muted"><%= @influencer.ac_fiscal %></small>
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <p class="text-muted mb-0">No has configurado ningún enlace de afiliado aún.</p>
+            <%= link_to "Configurar ahora", edit_influencer_path(@influencer), class: "btn btn-primary mt-3" %>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Videos Configured Card (Read-only) -->
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">Videos Configurados</h5>
+          <%= link_to "Editar", edit_influencer_path(@influencer), class: "btn btn-sm btn-primary" %>
+        </div>
+        <div class="card-body">
+          <% if @influencer.video_compte.present? || @influencer.video_cdiposit.present? || @influencer.video_curt.present? || @influencer.video_llarg.present? || @influencer.video_deute.present? || @influencer.video_jubil.present? || @influencer.video_fiscal.present? || @influencer.video_portfolio.present? %>
+            <div class="list-group list-group-flush">
+              <% if @influencer.video_compte.present? %>
+                <div class="list-group-item">
+                  <strong>🎥 Cuenta bancaria:</strong><br>
+                  <small class="text-muted"><%= @influencer.video_compte %></small>
+                </div>
+              <% end %>
+              <% if @influencer.video_cdiposit.present? %>
+                <div class="list-group-item">
+                  <strong>🎥 Depósito emergencia:</strong><br>
+                  <small class="text-muted"><%= @influencer.video_cdiposit %></small>
+                </div>
+              <% end %>
+              <% if @influencer.video_curt.present? %>
+                <div class="list-group-item">
+                  <strong>🎥 Inversión corto plazo:</strong><br>
+                  <small class="text-muted"><%= @influencer.video_curt %></small>
+                </div>
+              <% end %>
+              <% if @influencer.video_llarg.present? %>
+                <div class="list-group-item">
+                  <strong>🎥 Inversión largo plazo:</strong><br>
+                  <small class="text-muted"><%= @influencer.video_llarg %></small>
+                </div>
+              <% end %>
+              <% if @influencer.video_deute.present? %>
+                <div class="list-group-item">
+                  <strong>🎥 Optimización hipoteca:</strong><br>
+                  <small class="text-muted"><%= @influencer.video_deute %></small>
+                </div>
+              <% end %>
+              <% if @influencer.video_jubil.present? %>
+                <div class="list-group-item">
+                  <strong>🎥 Plan jubilación:</strong><br>
+                  <small class="text-muted"><%= @influencer.video_jubil %></small>
+                </div>
+              <% end %>
+              <% if @influencer.video_fiscal.present? %>
+                <div class="list-group-item">
+                  <strong>🎥 Asesoría fiscal:</strong><br>
+                  <small class="text-muted"><%= @influencer.video_fiscal %></small>
+                </div>
+              <% end %>
+              <% if @influencer.video_portfolio.present? %>
+                <div class="list-group-item">
+                  <strong>🎥 Optimización cartera:</strong><br>
+                  <small class="text-muted"><%= @influencer.video_portfolio %></small>
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <p class="text-muted mb-0">No has configurado ningún video aún.</p>
+            <%= link_to "Configurar ahora", edit_influencer_path(@influencer), class: "btn btn-primary mt-3" %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
+<script>
+function copyCode() {
+  const codeInput = document.getElementById('referralCode');
+  codeInput.select();
+  document.execCommand('copy');
+  alert('Código copiado al portapapeles');
+}
+
+function copyLink() {
+  const linkInput = document.getElementById('referralLink');
+  linkInput.select();
+  document.execCommand('copy');
+  alert('Enlace copiado al portapapeles');
+}
+</script>

@@ -42,21 +42,11 @@
             wrapper: false %>
     </div>
 
-    <div class="mb-3">
+    <div class="mb-4">
       <%= f.input :country,
             label: "País",
             as: :string,
             input_html: { class: "form-control", placeholder: "España, México, ..." },
-            label_html: { class: "form-label" },
-            wrapper: false %>
-    </div>
-
-    <div class="mb-4">
-      <%= f.input :risk_profile,
-            label: "Perfil de riesgo",
-            as: :select,
-            collection: [["Conservador", 0], ["Moderado", 1], ["Agresivo", 2]],
-            input_html: { class: "form-select" },
             label_html: { class: "form-label" },
             wrapper: false %>
     </div>

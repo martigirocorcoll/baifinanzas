@@ -1,4 +1,5 @@
 <!-- DASHBOARD HIGH LEVEL: Situación Estable, Crecimiento Patrimonial, Libertad Financiera -->
+<!-- ENFOQUE "CURRENT TASK" - Centrado en la siguiente acción a tomar -->
 
 <!-- MARGEN SUPERIOR -->
 <div class="mt-4"></div>
@@ -27,132 +28,89 @@
   </div>
 </div>
 
-<% theoretical_capacity = @monthly_cash_flow %>
-<% committed_capacity = @active_objectives.sum { |obj| obj.monthly_savings_needed } %>
-<% available_capacity = theoretical_capacity - committed_capacity %>
-<% utilization_rate = theoretical_capacity > 0 ? (committed_capacity.to_f / theoretical_capacity * 100).round(0) : 0 %>
+<!-- ========================================= -->
+<!-- 1. CURRENT TASK HERO CARD (70% ATENCIÓN) -->
+<!-- ========================================= -->
+<% if @current_task.present? %>
+  <div class="current-task-hero mb-4">
+    <div class="card border-success shadow-lg" style="border-width: 3px;">
+      <div class="card-body p-4">
 
-<!-- 1. WIDGET CAPACIDAD DE AHORRO -->
-<div class="dashboard-card mb-4">
-  <div class="card-body p-3">
-    <div class="d-flex justify-content-between align-items-center mb-2">
-      <h5 class="mb-0">
-        <i class="bi bi-wallet2 me-2"></i>
-        Tu Capacidad de Ahorro
-      </h5>
-      <% if utilization_rate < 70 %>
-        <span class="badge bg-success">Saludable</span>
-      <% elsif utilization_rate < 90 %>
-        <span class="badge bg-warning text-dark">Alto uso</span>
-      <% else %>
-        <span class="badge bg-danger">Excedida</span>
-      <% end %>
-    </div>
-
-    <div class="mb-3">
-      <div class="d-flex justify-content-between align-items-center mb-1">
-        <span class="small text-muted">Uso de capacidad</span>
-        <span class="small fw-bold"><%= utilization_rate %>% utilizado</span>
-      </div>
-      <div class="progress" style="height: 16px;">
-        <% bar_color = utilization_rate < 70 ? 'bg-success' : (utilization_rate < 90 ? 'bg-warning' : 'bg-danger') %>
-        <div class="progress-bar <%= bar_color %>"
-             role="progressbar"
-             style="width: <%= [utilization_rate, 100].min %>%"
-             aria-valuenow="<%= utilization_rate %>"
-             aria-valuemin="0"
-             aria-valuemax="100">
+        <!-- Badge de posición -->
+        <div class="mb-3">
+          <span class="badge bg-success" style="font-size: 0.9rem; padding: 0.5rem 1rem;">
+            Paso <%= @current_task[:position] %> de <%= @total_count %>
+          </span>
         </div>
-      </div>
-    </div>
 
-    <div class="row text-center g-2">
-      <div class="col-4">
-        <div class="text-primary">
-          <small class="d-block text-muted">Flujo de caja</small>
-          <strong class="h6">€<%= number_with_delimiter(theoretical_capacity, delimiter: ".") %></strong>
+        <!-- Título de la tarea -->
+        <h1 class="display-5 fw-bold mb-3">
+          <%= @current_task[:icon] %> <%= @current_task[:title] %>
+        </h1>
+
+        <!-- Beneficio cualitativo -->
+        <div class="task-benefit mb-3 p-3 bg-light rounded">
+          <div class="d-flex align-items-center">
+            <i class="bi bi-check-circle-fill text-success me-3" style="font-size: 1.5rem;"></i>
+            <p class="mb-0">
+              <strong style="font-size: 1.1rem; color: #198754;"><%= @current_task[:benefit_text] %></strong>
+            </p>
+          </div>
         </div>
-      </div>
-      <div class="col-4">
-        <div class="<%= committed_capacity > 0 ? 'text-info' : 'text-muted' %>">
-          <small class="d-block text-muted">Comprometido</small>
-          <strong class="h6">€<%= number_with_delimiter(committed_capacity, delimiter: ".") %></strong>
-        </div>
-      </div>
-      <div class="col-4">
-        <div class="<%= available_capacity > 0 ? 'text-success' : 'text-danger' %>">
-          <small class="d-block text-muted">Disponible</small>
-          <strong class="h6">€<%= number_with_delimiter(available_capacity, delimiter: ".") %></strong>
-        </div>
-      </div>
-    </div>
 
-    <% if utilization_rate >= 100 %>
-      <div class="alert alert-danger mt-2 mb-0 py-2">
-        <small>
-          <i class="bi bi-exclamation-triangle me-1"></i>
-          Tus objetivos requieren €<%= number_with_delimiter(committed_capacity - theoretical_capacity, delimiter: ".") %>/mes más de lo disponible.
-        </small>
+        <!-- Tiempo estimado -->
+        <% if @current_task[:type] == 'recommendation' %>
+          <div class="task-time mb-4">
+            <i class="bi bi-clock text-primary me-2"></i>
+            <span class="text-muted">Solo <strong><%= @current_task[:time_minutes] %> minutos</strong> de tu tiempo</span>
+          </div>
+        <% elsif @current_task[:type] == 'objective' %>
+          <div class="task-time mb-4">
+            <i class="bi bi-calendar-check text-primary me-2"></i>
+            <span class="text-muted">Plazo: <strong><%= @current_task[:time_months] %> meses</strong></span>
+          </div>
+        <% end %>
+
+        <!-- CTA principal -->
+        <% if @current_task[:type] == 'recommendation' && @current_task[:recommendation].present? %>
+          <%= link_to recommendation_path(@current_task[:slug]), class: "btn btn-success btn-lg w-100 fw-bold" do %>
+            <i class="bi bi-arrow-right-circle me-2"></i>
+            Ver cómo hacerlo
+          <% end %>
+        <% elsif @current_task[:type] == 'create_objective' %>
+          <a href="#create-objective-section" class="btn btn-success btn-lg w-100 fw-bold">
+            <i class="bi bi-plus-circle me-2"></i>
+            Crear tu primer objetivo
+          </a>
+        <% elsif @current_task[:type] == 'objective' %>
+          <%= link_to recommendation_path(@current_task[:objective].investment_recommendation, objetivo_id: @current_task[:objective].id), class: "btn btn-success btn-lg w-100 fw-bold" do %>
+            <i class="bi bi-arrow-right-circle me-2"></i>
+            Ver plan de inversión
+          <% end %>
+        <% end %>
+
       </div>
-    <% elsif utilization_rate >= 70 %>
-      <div class="alert alert-warning mt-2 mb-0 py-2">
-        <small>
-          <i class="bi bi-info-circle me-1"></i>
-          Usando <%= utilization_rate %>% de tu capacidad. Deja margen para imprevistos.
-        </small>
-      </div>
-    <% end %>
-  </div>
-</div>
-
-<!-- 2. TUS RECOMENDACIONES (MAIN FOCUS - AHORA PRIMERO) -->
-<div class="mt-4">
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h2 class="mb-0">
-      <i class="bi bi-list-check text-success me-2"></i>
-      Tu Plan de Acción
-    </h2>
-  </div>
-
-  <p class="text-muted mb-3">
-    Completa estas acciones prioritarias para mejorar tu situación financiera
-  </p>
-
-  <!-- Contador de progreso -->
-  <div class="mb-4 p-3 bg-light rounded">
-    <div class="d-flex justify-content-between align-items-center mb-2">
-      <span class="fw-bold">Progreso de acciones</span>
-      <span id="progress-counter" class="text-primary fw-bold">0/<%= @all_recommendations.count %> completadas</span>
-    </div>
-    <div class="progress" style="height: 12px;">
-      <div id="progress-bar" class="progress-bar bg-success" role="progressbar" style="width: 0%"></div>
-    </div>
-    <div id="social-proof" class="mt-2 text-center" style="display: none;">
-      <small class="text-muted">
-        <i class="bi bi-people-fill me-1"></i>
-        <span id="social-text"></span>
-      </small>
     </div>
   </div>
-
-  <!-- Call to action cuando todas completadas -->
-  <div id="update-data-cta" class="alert alert-success mb-4" style="display: none; border: 2px solid #1EDD88;">
+<% else %>
+  <!-- Mensaje si no hay tareas pendientes -->
+  <div class="alert alert-success mb-4 p-4" style="border: 3px solid #1EDD88;">
     <div class="d-flex align-items-start">
-      <i class="bi bi-trophy-fill me-3" style="font-size: 2rem; color: #1EDD88;"></i>
+      <i class="bi bi-trophy-fill me-3" style="font-size: 3rem; color: #1EDD88;"></i>
       <div class="flex-grow-1">
-        <h5 class="alert-heading mb-2">
-          <strong>¡Has completado todas las acciones! 🎉</strong>
-        </h5>
+        <h3 class="alert-heading mb-2">
+          <strong>¡Enhorabuena! Has completado todo tu plan 🎉</strong>
+        </h3>
         <p class="mb-3">
-          Ahora actualiza tus datos financieros para ver si has subido de nivel.
-          Tus cambios deben reflejarse en tus ingresos, gastos, activos o deudas.
+          Es momento de actualizar tus datos financieros para ver si has progresado de nivel
+          y recibir nuevas recomendaciones personalizadas.
         </p>
         <div class="d-flex gap-2 flex-wrap">
-          <%= link_to edit_pyg_path, class: "btn btn-success" do %>
+          <%= link_to edit_pyg_path, class: "btn btn-success btn-lg" do %>
             <i class="bi bi-graph-up me-1"></i>
             Actualizar Ingresos y Gastos
           <% end %>
-          <%= link_to edit_balance_path, class: "btn btn-success" do %>
+          <%= link_to edit_balance_path, class: "btn btn-success btn-lg" do %>
             <i class="bi bi-pie-chart me-1"></i>
             Actualizar Activos y Deudas
           <% end %>
@@ -160,120 +118,317 @@
       </div>
     </div>
   </div>
+<% end %>
 
-  <!-- Lista de recomendaciones -->
-  <div class="row">
-    <% @all_recommendations.each_with_index do |rec, index| %>
-      <% rec_slug = rec[:product].parameterize %>
-      <%
-        # Definir datos sociales y beneficios por tipo de recomendación
-        social_data = case rec_slug
-        when "consejos-para-ahorrar-mas"
-          { users: 1247, saving: 320, time: 25, category: "saving" }
-        when "optimiza-tu-cuenta-bancaria"
-          { users: 892, saving: 156, time: 15, category: "bank" }
-        when "optimiza-tus-deudas"
-          { users: 534, saving: 380, time: 30, category: "debt" }
-        when "optimiza-tu-hipoteca"
-          { users: 289, saving: 450, time: 45, category: "mortgage" }
-        else
-          { users: 500, saving: 250, time: 20, category: "other" }
-        end
+<!-- ========================================= -->
+<!-- 2. SECCIÓN DE PROGRESO -->
+<!-- ========================================= -->
+<div class="progress-section mb-4">
+  <div class="card">
+    <div class="card-body p-4">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="mb-0">
+          <i class="bi bi-graph-up-arrow me-2 text-success"></i>
+          Tu Progreso
+        </h5>
+        <span class="badge bg-primary" style="font-size: 1rem; padding: 0.5rem 1rem;">
+          <%= @completed_count %>/<%= @total_count %> completadas
+        </span>
+      </div>
 
-        # Iconos y colores por categoría
-        icon_config = case social_data[:category]
-        when "saving"
-          { icon: "bi-piggy-bank-fill", color: "#1EDD88", bg: "rgba(30, 221, 136, 0.1)" }
-        when "bank"
-          { icon: "bi-bank2", color: "#0D6EFD", bg: "rgba(13, 110, 253, 0.1)" }
-        when "debt"
-          { icon: "bi-credit-card-2-back-fill", color: "#fd7e14", bg: "rgba(253, 126, 20, 0.1)" }
-        when "mortgage"
-          { icon: "bi-house-door-fill", color: "#6f42c1", bg: "rgba(111, 66, 193, 0.1)" }
-        else
-          { icon: "bi-lightbulb-fill", color: "#0D6EFD", bg: "rgba(13, 110, 253, 0.1)" }
-        end
-
-        # Primera recomendación más grande
-        is_first = index == 0
-      %>
-
-      <div class="<%= is_first ? 'col-12' : 'col-md-6' %> mb-3">
-        <div class="recommendation-card border rounded p-3 bg-white shadow-sm <%= is_first ? 'border-success' : '' %>"
-             data-recommendation-id="<%= rec_slug %>"
-             style="<%= is_first ? 'border-width: 2px !important;' : '' %>">
-
-          <div class="d-flex align-items-start mb-3">
-            <!-- Número de prioridad -->
-            <div class="me-2">
-              <span class="badge <%= is_first ? 'bg-success' : 'bg-secondary' %> rounded-circle d-flex align-items-center justify-content-center"
-                    style="width: 32px; height: 32px; font-size: <%= is_first ? '1.1rem' : '0.9rem' %>; font-weight: 700;">
-                <%= index + 1 %>
-              </span>
-            </div>
-
-            <!-- Checkbox -->
-            <div class="form-check me-2 mt-1">
-              <input class="form-check-input recommendation-checkbox"
-                     type="checkbox"
-                     id="rec-<%= rec_slug %>"
-                     data-rec-id="<%= rec_slug %>">
-            </div>
-
-            <!-- Icono categoría -->
-            <div class="rounded-circle d-flex align-items-center justify-content-center me-3"
-                 style="width: <%= is_first ? '56px' : '48px' %>; height: <%= is_first ? '56px' : '48px' %>;
-                        background: <%= icon_config[:bg] %>; flex-shrink: 0;">
-              <i class="<%= icon_config[:icon] %>" style="font-size: <%= is_first ? '1.5rem' : '1.2rem' %>; color: <%= icon_config[:color] %>;"></i>
-            </div>
-
-            <!-- Contenido -->
-            <div class="flex-grow-1 recommendation-content">
-              <h<%= is_first ? '4' : '5' %> class="mb-2 fw-bold"><%= rec[:title] %></h<%= is_first ? '4' : '5' %>>
-              <p class="small mb-2" style="color: #495057; line-height: 1.5;"><%= rec[:description] %></p>
-
-              <!-- Datos sociales -->
-              <div class="mb-2">
-                <div class="d-flex flex-wrap gap-2 mb-1">
-                  <small class="text-muted">
-                    <i class="bi bi-people-fill me-1" style="color: <%= icon_config[:color] %>;"></i>
-                    <strong><%= number_with_delimiter(social_data[:users], delimiter: ".") %></strong> usuarios este mes
-                  </small>
-                  <small class="text-success">
-                    <i class="bi bi-piggy-bank me-1"></i>
-                    Ahorro medio: <strong>€<%= social_data[:saving] %>/año</strong>
-                  </small>
-                  <small class="text-muted">
-                    <i class="bi bi-clock me-1"></i>
-                    <strong><%= social_data[:time] %> min</strong>
-                  </small>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Botón de acción -->
-          <div class="mt-auto">
-            <%= link_to recommendation_path(rec_slug),
-                class: "btn btn-success w-100 #{'btn-lg' if is_first}",
-                style: is_first ? 'font-weight: 600;' : '' do %>
-              <i class="bi bi-arrow-right-circle me-2"></i>
-              <%= rec[:cta] %>
-            <% end %>
-          </div>
+      <div class="progress mb-2" style="height: 20px;">
+        <div class="progress-bar bg-success" role="progressbar"
+             style="width: <%= @progress_percentage %>%;"
+             aria-valuenow="<%= @progress_percentage %>"
+             aria-valuemin="0"
+             aria-valuemax="100">
+          <strong><%= @progress_percentage %>%</strong>
         </div>
       </div>
-    <% end %>
-  </div>
 
-  <!-- Mensaje motivacional -->
-  <div class="alert alert-info mt-3">
-    <i class="bi bi-star-fill me-2"></i>
-    <strong>💪 ¡Vas por buen camino!</strong> El 67% de usuarios en tu nivel completaron al menos 2 acciones en su primer mes.
+      <% if @completed_count > 0 && @completed_count < @total_count %>
+        <div class="text-center mt-3">
+          <small class="text-muted">
+            <i class="bi bi-people-fill me-1"></i>
+            ¡Buen trabajo! Sigue así para completar tu plan financiero
+          </small>
+        </div>
+      <% elsif @completed_count == @total_count %>
+        <div class="text-center mt-3">
+          <small class="text-success fw-bold">
+            <i class="bi bi-trophy-fill me-1"></i>
+            ¡Plan completado! Actualiza tus datos para ver tu progreso
+          </small>
+        </div>
+      <% end %>
+    </div>
   </div>
 </div>
 
-<!-- 2. PRÓXIMO NIVEL (Colapsable, secundario) -->
+<!-- ========================================= -->
+<!-- 3. PLAN COMPLETO (COLAPSABLE) -->
+<!-- ========================================= -->
+<div class="accordion mb-4" id="fullPlanAccordion">
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="fullPlanHeading">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#fullPlanCollapse" aria-expanded="false">
+        <i class="bi bi-list-ul me-2"></i>
+        <strong>Ver plan completo (<%= @total_count %> acciones)</strong>
+      </button>
+    </h2>
+    <div id="fullPlanCollapse" class="accordion-collapse collapse" aria-labelledby="fullPlanHeading" data-bs-parent="#fullPlanAccordion">
+      <div class="accordion-body p-0">
+        <div class="list-group list-group-flush">
+          <% @action_plan.each_with_index do |action, index| %>
+            <div class="list-group-item <%= action[:completed] ? 'bg-light' : '' %>">
+              <div class="d-flex align-items-center">
+                <!-- Checkbox -->
+                <div class="me-3">
+                  <% if action[:completed] %>
+                    <i class="bi bi-check-circle-fill text-success" style="font-size: 1.5rem;"></i>
+                  <% else %>
+                    <i class="bi bi-circle text-muted" style="font-size: 1.5rem;"></i>
+                  <% end %>
+                </div>
+
+                <!-- Icon -->
+                <div class="me-3" style="font-size: 1.8rem;">
+                  <%= action[:icon] %>
+                </div>
+
+                <!-- Content -->
+                <div class="flex-grow-1 <%= action[:completed] ? 'text-decoration-line-through opacity-50' : '' %>">
+                  <h6 class="mb-1 fw-bold"><%= action[:title] %></h6>
+                  <small class="text-muted"><%= action[:benefit_text] %></small>
+                  <% if action[:type] == 'recommendation' %>
+                    <small class="text-primary ms-2">
+                      <i class="bi bi-clock"></i> <%= action[:time_minutes] %> min
+                    </small>
+                  <% end %>
+                </div>
+
+                <!-- Action button -->
+                <% if !action[:completed] %>
+                  <div class="ms-3">
+                    <% if action[:type] == 'recommendation' && action[:recommendation].present? %>
+                      <%= link_to recommendation_path(action[:slug]), class: "btn btn-sm btn-outline-success" do %>
+                        <i class="bi bi-arrow-right"></i>
+                      <% end %>
+                    <% elsif action[:type] == 'objective' && action[:objective].present? %>
+                      <%= link_to recommendation_path(action[:objective].investment_recommendation, objetivo_id: action[:objective].id), class: "btn btn-sm btn-outline-success" do %>
+                        <i class="bi bi-arrow-right"></i>
+                      <% end %>
+                    <% elsif action[:type] == 'create_objective' %>
+                      <a href="#create-objective-section" class="btn btn-sm btn-outline-success">
+                        <i class="bi bi-plus-circle"></i>
+                      </a>
+                    <% end %>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========================================= -->
+<!-- 4. WIDGET CAPACIDAD DE AHORRO (si aplica) -->
+<!-- ========================================= -->
+<% if @active_objectives.any? || current_user.can_invest_in_objectives? %>
+  <%
+    theoretical_capacity = @monthly_cash_flow
+    committed_capacity = @active_objectives.sum { |obj| obj.monthly_savings_needed }
+    available_capacity = theoretical_capacity - committed_capacity
+    utilization_rate = theoretical_capacity > 0 ? (committed_capacity.to_f / theoretical_capacity * 100).round(0) : 0
+  %>
+
+  <div class="dashboard-card mb-4">
+    <div class="card-body p-3">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h5 class="mb-0">
+          <i class="bi bi-wallet2 me-2"></i>
+          Tu Capacidad de Ahorro
+        </h5>
+        <% if utilization_rate < 70 %>
+          <span class="badge bg-success">Saludable</span>
+        <% elsif utilization_rate < 90 %>
+          <span class="badge bg-warning text-dark">Alto uso</span>
+        <% else %>
+          <span class="badge bg-danger">Excedida</span>
+        <% end %>
+      </div>
+
+      <div class="mb-3">
+        <div class="d-flex justify-content-between align-items-center mb-1">
+          <span class="small text-muted">Uso de capacidad</span>
+          <span class="small fw-bold"><%= utilization_rate %>% utilizado</span>
+        </div>
+        <div class="progress" style="height: 16px;">
+          <% bar_color = utilization_rate < 70 ? 'bg-success' : (utilization_rate < 90 ? 'bg-warning' : 'bg-danger') %>
+          <div class="progress-bar <%= bar_color %>"
+               role="progressbar"
+               style="width: <%= [utilization_rate, 100].min %>%"
+               aria-valuenow="<%= utilization_rate %>"
+               aria-valuemin="0"
+               aria-valuemax="100">
+          </div>
+        </div>
+      </div>
+
+      <div class="row text-center g-2">
+        <div class="col-4">
+          <div class="text-primary">
+            <small class="d-block text-muted">Flujo de caja</small>
+            <strong class="h6">€<%= number_with_delimiter(theoretical_capacity, delimiter: ".") %></strong>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="<%= committed_capacity > 0 ? 'text-info' : 'text-muted' %>">
+            <small class="d-block text-muted">Comprometido</small>
+            <strong class="h6">€<%= number_with_delimiter(committed_capacity, delimiter: ".") %></strong>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="<%= available_capacity > 0 ? 'text-success' : 'text-danger' %>">
+            <small class="d-block text-muted">Disponible</small>
+            <strong class="h6">€<%= number_with_delimiter(available_capacity, delimiter: ".") %></strong>
+          </div>
+        </div>
+      </div>
+
+      <% if utilization_rate >= 100 %>
+        <div class="alert alert-danger mt-2 mb-0 py-2">
+          <small>
+            <i class="bi bi-exclamation-triangle me-1"></i>
+            Tus objetivos requieren €<%= number_with_delimiter(committed_capacity - theoretical_capacity, delimiter: ".") %>/mes más de lo disponible.
+          </small>
+        </div>
+      <% elsif utilization_rate >= 70 %>
+        <div class="alert alert-warning mt-2 mb-0 py-2">
+          <small>
+            <i class="bi bi-info-circle me-1"></i>
+            Usando <%= utilization_rate %>% de tu capacidad. Deja margen para imprevistos.
+          </small>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+
+<!-- ========================================= -->
+<!-- 5. TUS OBJETIVOS (si aplica) -->
+<!-- ========================================= -->
+<% if current_user.can_invest_in_objectives? %>
+  <div class="mt-4 mb-4" id="create-objective-section">
+    <h3 class="mb-3">
+      <i class="bi bi-bullseye text-success me-2"></i>
+      Tus Objetivos Financieros
+    </h3>
+
+    <% if @objectives_with_recommendations.any? %>
+      <div class="row mb-4">
+        <% @objectives_with_recommendations.each_with_index do |obj_rec, index| %>
+          <div class="col-md-6 mb-3">
+            <div class="border rounded p-3 bg-white shadow-sm h-100 d-flex flex-column position-relative"
+                 style="border-color: #198754 !important; border-width: 2px;">
+
+              <%= button_to obj_rec[:objective], method: :delete,
+                            data: { confirm: '¿Eliminar este objetivo?' },
+                            class: "btn btn-outline-danger btn-sm position-absolute",
+                            style: "top: 8px; right: 8px; width: 28px; height: 28px; padding: 0; border-radius: 50%; line-height: 1;",
+                            title: "Eliminar objetivo" do %>
+                <i class="bi bi-x" style="font-size: 0.9rem;"></i>
+              <% end %>
+
+              <div class="d-flex align-items-start mb-3 mt-2">
+                <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-3"
+                     style="width: 48px; height: 48px; flex-shrink: 0;">
+                  <i class="bi bi-bullseye" style="font-size: 1.2rem;"></i>
+                </div>
+                <div class="flex-grow-1" style="padding-right: 35px;">
+                  <h5 class="mb-1 text-success fw-bold"><%= obj_rec[:objective].title %></h5>
+                  <p class="text-muted small mb-1 lh-sm">
+                    Meta: <strong>€<%= number_with_delimiter(obj_rec[:objective].target_amount, delimiter: ".") %></strong>
+                    en <%= distance_of_time_in_words(Date.current, obj_rec[:objective].target_date) %>
+                  </p>
+                  <p class="text-info small mb-0 lh-sm">
+                    <i class="bi bi-piggy-bank me-1"></i>
+                    <strong>€<%= number_with_delimiter(obj_rec[:monthly_needed], delimiter: ".") %>/mes</strong>
+                  </p>
+                </div>
+              </div>
+
+              <div class="mt-auto">
+                <%= link_to recommendation_path(obj_rec[:recommendation_type], objetivo_id: obj_rec[:objective].id),
+                    class: "btn btn-success w-100" do %>
+                  <i class="bi bi-arrow-right-circle me-1"></i>
+                  Ver Plan de Inversión
+                <% end %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <!-- Formulario crear nuevo objetivo -->
+    <div class="bg-light p-4 rounded">
+      <h4 class="mb-3">
+        <i class="bi bi-plus-circle text-success me-2"></i>
+        <%= @objectives_with_recommendations.any? ? "Crear Otro Objetivo" : "Crear Tu Primer Objetivo" %>
+      </h4>
+      <p class="text-muted mb-3">
+        Define un objetivo financiero y obtén la recomendación específica para alcanzarlo.
+      </p>
+
+      <%= form_with model: @new_objective, local: true, class: "row g-3", id: "create-objective-form" do |f| %>
+        <%= f.hidden_field :user_id, value: current_user.id %>
+        <div class="col-md-4">
+          <label class="form-label small fw-bold">¿Qué quieres lograr?</label>
+          <%= f.text_field :title, class: "form-control", placeholder: "Ej: Comprar coche", required: true %>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label small fw-bold">¿Cuánto necesitas? (€)</label>
+          <%= f.number_field :target_amount, class: "form-control", placeholder: "Ej: 25000", required: true %>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label small fw-bold">¿Para cuándo?</label>
+          <div class="row g-2">
+            <div class="col-7">
+              <%= f.select :target_date_month,
+                  options_for_select([
+                    ['Enero', 1], ['Febrero', 2], ['Marzo', 3], ['Abril', 4],
+                    ['Mayo', 5], ['Junio', 6], ['Julio', 7], ['Agosto', 8],
+                    ['Septiembre', 9], ['Octubre', 10], ['Noviembre', 11], ['Diciembre', 12]
+                  ], Date.current.month),
+                  { prompt: 'Mes' },
+                  { class: "form-select form-select-sm", required: true } %>
+            </div>
+            <div class="col-5">
+              <%= f.select :target_date_year,
+                  options_for_select((Date.current.year..(Date.current.year + 45)).map { |y| [y, y] }, Date.current.year + 1),
+                  { prompt: 'Año' },
+                  { class: "form-select form-select-sm", required: true } %>
+            </div>
+          </div>
+        </div>
+        <div class="col-12">
+          <button type="submit" class="btn btn-success" id="create-objective-btn">
+            <i class="bi bi-target me-2"></i>
+            Crear Objetivo
+          </button>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+
+<!-- ========================================= -->
+<!-- 6. PRÓXIMO NIVEL (Colapsable) -->
+<!-- ========================================= -->
 <% if @next_level_progress[:target].present? %>
   <div class="accordion mt-4 mb-4" id="nextLevelAccordion">
     <div class="accordion-item">
@@ -326,16 +481,10 @@
   </div>
 <% end %>
 
-<!-- 3. BANNER OBJETIVOS BLOQUEADOS (Pequeño) -->
-<div class="alert alert-light border mt-4 mb-4 text-center">
-  <i class="bi bi-lock me-2"></i>
-  <strong>Objetivos Personalizados</strong> se desbloquean en nivel 4: <span class="text-success">Situación Estable</span>
-  <br>
-  <small class="text-muted">Completa tus acciones prioritarias para alcanzarlo</small>
-</div>
-
-<!-- 4. TU SITUACIÓN FINANCIERA (Análisis) -->
-<div class="mt-4">
+<!-- ========================================= -->
+<!-- 7. ANÁLISIS FINANCIERO (Colapsable) -->
+<!-- ========================================= -->
+<div class="mt-4 mb-4">
   <h3 class="mb-3">
     <i class="bi bi-graph-up text-success me-2"></i>
     Tu Situación Financiera
@@ -430,21 +579,9 @@
   </div>
 </div>
 
-<!-- Botones de actualización -->
-<div class="row mb-4 mt-4">
-  <div class="col-md-6 mb-2">
-    <%= link_to edit_pyg_path, class: "btn btn-outline-primary w-100" do %>
-      <i class="bi bi-pencil me-2"></i>
-      Actualizar Ingresos y Gastos
-    <% end %>
-  </div>
-  <div class="col-md-6 mb-2">
-    <%= link_to edit_balance_path, class: "btn btn-outline-primary w-100" do %>
-      <i class="bi bi-pencil me-2"></i>
-      Actualizar Activos y Deudas
-    <% end %>
-  </div>
-</div>
+<!-- ========================================= -->
+<!-- SCRIPTS Y MODALES -->
+<!-- ========================================= -->
 
 <!-- Scripts -->
 <script>
@@ -521,133 +658,243 @@ function initSimplifiedCharts() {
 
 document.addEventListener('turbo:load', initSimplifiedCharts);
 
-// Sistema de checkboxes y progreso
+// Animación de carga al crear objetivo
 document.addEventListener('turbo:load', function() {
-  const STORAGE_KEY = 'baifinanzas_completed_recommendations';
-  const totalRecs = <%= @all_recommendations.count %>;
+  const createObjectiveForm = document.getElementById('create-objective-form');
+  const createObjectiveBtn = document.getElementById('create-objective-btn');
 
-  function loadCompletedRecommendations() {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    return stored ? JSON.parse(stored) : [];
-  }
+  if (createObjectiveForm && createObjectiveBtn) {
+    let isSubmitting = false;
 
-  function saveCompletedRecommendations(completed) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(completed));
-  }
+    createObjectiveForm.addEventListener('submit', function(e) {
+      if (!isSubmitting && createObjectiveForm.checkValidity()) {
+        e.preventDefault();
+        isSubmitting = true;
 
-  function updateProgress() {
-    const completed = loadCompletedRecommendations();
-    const completedCount = completed.length;
-    const percentage = Math.round((completedCount / totalRecs) * 100);
+        const loadingModal = new bootstrap.Modal(document.getElementById('createObjectiveLoadingModal'));
+        loadingModal.show();
 
-    document.getElementById('progress-counter').textContent = `${completedCount}/${totalRecs} completadas`;
-    document.getElementById('progress-bar').style.width = `${percentage}%`;
+        const steps = ['objective-step-1', 'objective-step-2', 'objective-step-3'];
+        const progressBar = document.getElementById('objective-progress-bar');
+        let currentStepIndex = 0;
 
-    // Mostrar mensaje social según progreso
-    const socialProof = document.getElementById('social-proof');
-    const socialText = document.getElementById('social-text');
-    const updateDataCta = document.getElementById('update-data-cta');
+        function activateStep(index) {
+          if (index < steps.length) {
+            const stepElement = document.getElementById(steps[index]);
+            stepElement.classList.add('active');
 
-    if (completedCount === totalRecs) {
-      // TODAS COMPLETADAS: Mostrar CTA para actualizar datos
-      socialProof.style.display = 'none';
-      if (updateDataCta) {
-        updateDataCta.style.display = 'block';
-      }
-    } else if (completedCount > 0) {
-      // ALGUNAS COMPLETADAS: Mostrar mensaje social
-      socialProof.style.display = 'block';
-      if (updateDataCta) {
-        updateDataCta.style.display = 'none';
-      }
-      if (completedCount >= 2) {
-        socialText.textContent = '¡Increíble! Estás en el top 33% de usuarios más activos 🎉';
-      } else {
-        socialText.textContent = '¡Buen inicio! El 67% de usuarios completaron al menos 2 acciones';
-      }
-    } else {
-      // NINGUNA COMPLETADA
-      socialProof.style.display = 'none';
-      if (updateDataCta) {
-        updateDataCta.style.display = 'none';
-      }
-    }
-  }
+            const progress = ((index + 1) / steps.length) * 100;
+            progressBar.style.width = progress + '%';
 
-  function applyCompletedStyle(card, isCompleted) {
-    const content = card.querySelector('.recommendation-content');
-    if (isCompleted) {
-      content.style.opacity = '0.6';
-      content.style.textDecoration = 'line-through';
-      card.style.backgroundColor = '#f8f9fa';
-      card.style.borderColor = '#28a745';
-    } else {
-      content.style.opacity = '1';
-      content.style.textDecoration = 'none';
-      card.style.backgroundColor = '#ffffff';
-      card.style.borderColor = '';
-    }
-  }
-
-  const completedRecs = loadCompletedRecommendations();
-  const checkboxes = document.querySelectorAll('.recommendation-checkbox');
-
-  checkboxes.forEach(checkbox => {
-    const recId = checkbox.dataset.recId;
-    const card = checkbox.closest('.recommendation-card');
-
-    if (completedRecs.includes(recId)) {
-      checkbox.checked = true;
-      applyCompletedStyle(card, true);
-    }
-
-    checkbox.addEventListener('change', function() {
-      let completed = loadCompletedRecommendations();
-
-      if (this.checked) {
-        if (!completed.includes(recId)) {
-          completed.push(recId);
+            currentStepIndex++;
+            if (currentStepIndex < steps.length) {
+              setTimeout(() => activateStep(currentStepIndex), 650);
+            } else {
+              setTimeout(function() {
+                loadingModal.hide();
+                setTimeout(function() {
+                  createObjectiveForm.submit();
+                }, 300);
+              }, 400);
+            }
+          }
         }
-        applyCompletedStyle(card, true);
-      } else {
-        completed = completed.filter(id => id !== recId);
-        applyCompletedStyle(card, false);
+
+        setTimeout(() => activateStep(0), 300);
       }
-
-      saveCompletedRecommendations(completed);
-      updateProgress();
     });
-  });
-
-  updateProgress();
+  }
 });
 </script>
 
 <!-- Include Level Guide Modal -->
 <%= render 'dashboard/level_guide_modal' %>
 
+<!-- Modal de carga al crear objetivo -->
+<div class="modal fade" id="createObjectiveLoadingModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg">
+      <div class="modal-body text-center py-5">
+
+        <!-- Animated Icon -->
+        <div class="mb-4">
+          <div class="processing-icon-container">
+            <i class="bi bi-bullseye text-success processing-icon"></i>
+            <div class="processing-ring"></div>
+            <div class="processing-ring-2"></div>
+          </div>
+        </div>
+
+        <!-- Processing Text -->
+        <h3 class="fw-bold mb-3">
+          Creando tu objetivo
+        </h3>
+        <p class="text-muted mb-4">
+          Estamos generando tu plan personalizado...
+        </p>
+
+        <!-- Progress Steps -->
+        <div class="processing-steps mb-4">
+          <div class="processing-step" id="objective-step-1">
+            <i class="bi bi-check-circle-fill text-success"></i>
+            <span>Analizando tu capacidad de ahorro</span>
+          </div>
+          <div class="processing-step" id="objective-step-2">
+            <i class="bi bi-check-circle-fill text-success"></i>
+            <span>Calculando plazo y rentabilidad</span>
+          </div>
+          <div class="processing-step" id="objective-step-3">
+            <i class="bi bi-check-circle-fill text-success"></i>
+            <span>Seleccionando mejor producto</span>
+          </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress mx-auto" style="max-width: 350px; height: 6px;">
+          <div class="progress-bar progress-bar-animated bg-success" role="progressbar" style="width: 0%;" id="objective-progress-bar"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
 <style>
-.recommendation-card {
+/* ========================================= */
+/* ESTILOS CURRENT TASK HERO */
+/* ========================================= */
+.current-task-hero .card {
+  border-radius: 1rem;
   transition: all 0.3s ease;
-  height: 100%;
 }
 
-.recommendation-card:hover {
+.current-task-hero .card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 8px 20px rgba(25, 135, 84, 0.2);
 }
 
-.recommendation-content {
-  transition: all 0.3s ease;
+.task-benefit {
+  border-left: 4px solid #198754;
 }
 
-.form-check-input:checked {
-  background-color: #1EDD88;
-  border-color: #1EDD88;
+/* ========================================= */
+/* ESTILOS PROGRESS SECTION */
+/* ========================================= */
+.progress-section .card {
+  border-radius: 0.5rem;
+  border: 1px solid #e9ecef;
 }
 
+/* ========================================= */
+/* ESTILOS PLAN COMPLETO */
+/* ========================================= */
 .accordion-button:not(.collapsed) {
   background-color: #f8f9fa;
   color: #0D6EFD;
+}
+
+/* ========================================= */
+/* ESTILOS MODAL DE CARGA */
+/* ========================================= */
+#createObjectiveLoadingModal .modal-content {
+  border-radius: 1rem;
+}
+
+.processing-icon-container {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.processing-icon {
+  font-size: 3.5rem;
+  position: relative;
+  z-index: 2;
+  animation: pulse 2s ease-in-out infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+.processing-ring,
+.processing-ring-2 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  border: 3px solid transparent;
+  border-top-color: #22c55e;
+  border-radius: 50%;
+  animation: spin 1.5s linear infinite;
+}
+
+.processing-ring-2 {
+  border-top-color: #10b981;
+  animation: spin 2s linear infinite reverse;
+  opacity: 0.5;
+}
+
+@keyframes spin {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+.processing-steps {
+  max-width: 400px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.processing-step {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  margin-bottom: 8px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  opacity: 0.3;
+  transition: opacity 0.5s ease;
+}
+
+.processing-step i {
+  font-size: 1.2rem;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.processing-step.active {
+  opacity: 1;
+}
+
+.processing-step.active i {
+  opacity: 1;
+}
+
+.processing-step span {
+  font-weight: 500;
+  color: #6c757d;
 }
 </style>
