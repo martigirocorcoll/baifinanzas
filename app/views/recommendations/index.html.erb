@@ -1,0 +1,72 @@
+<!-- app/views/recommendations/index.html.erb -->
+<div class="container py-5">
+  <div class="row">
+    <div class="col-12">
+      <!-- Header -->
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Todas las Recomendaciones</h2>
+        <%= link_to "← Volver al dashboard", dashboard_index_path, class: "btn btn-outline-secondary" %>
+      </div>
+
+      <!-- Intro text -->
+      <div class="alert alert-info mb-4">
+        <i class="bi bi-info-circle"></i>
+        Explora todas nuestras recomendaciones financieras. Encuentra la que mejor se adapte a tu situación actual.
+      </div>
+
+      <!-- Recommendations List -->
+      <div class="list-group">
+        <% @recommendations.each do |recommendation| %>
+          <%= link_to recommendation_path(recommendation.slug), class: "list-group-item list-group-item-action hover-list-item" do %>
+            <div class="d-flex w-100 align-items-center">
+              <!-- Icon -->
+              <div class="me-3">
+                <i class="bi <%= recommendation_icon(recommendation.slug) %> fs-2 text-primary"></i>
+              </div>
+
+              <!-- Content -->
+              <div class="flex-grow-1">
+                <div class="d-flex w-100 justify-content-between align-items-start mb-1">
+                  <h5 class="mb-1"><%= recommendation.title %></h5>
+
+                  <!-- Badge -->
+                  <% if recommendation.content.present? %>
+                    <span class="badge bg-success">
+                      <i class="bi bi-check-circle"></i> Disponible
+                    </span>
+                  <% else %>
+                    <span class="badge bg-secondary">
+                      <i class="bi bi-clock"></i> Próximamente
+                    </span>
+                  <% end %>
+                </div>
+
+                <p class="mb-1 text-muted">
+                  <%= recommendation.description %>
+                </p>
+              </div>
+
+              <!-- Arrow -->
+              <div class="ms-3">
+                <i class="bi bi-chevron-right text-muted"></i>
+              </div>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Custom styles for hover effect -->
+<style>
+.hover-list-item {
+  transition: background-color 0.2s, border-left 0.2s;
+  border-left: 3px solid transparent;
+}
+
+.hover-list-item:hover {
+  background-color: #f8f9fa;
+  border-left-color: #0d6efd;
+}
+</style>

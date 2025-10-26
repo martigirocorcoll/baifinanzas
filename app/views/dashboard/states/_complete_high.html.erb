@@ -124,7 +124,7 @@
                          data-step-id="<%= action[:position] %>"
                          data-step-type="<%= action[:type] %>"
                          onclick="selectStep(<%= action[:position] %>)">
-                      <i class="bi bi-plus-circle me-2"></i>
+                      <i class="<%= action[:icon] %> me-2"></i>
                       <%= action[:title] %>
                     </div>
                   <% else %>
@@ -133,6 +133,19 @@
                          data-step-id="<%= action[:position] %>"
                          data-step-type="<%= action[:type] %>"
                          onclick="selectStep(<%= action[:position] %>)">
+
+                      <!-- Content -->
+                      <div class="step-content">
+                        <div class="step-title">
+                          <div class="d-flex align-items-center w-100">
+                            <span class="step-number-small text-muted me-2 flex-shrink-0"><%= action[:position] %></span>
+                            <div class="task-icon-circle flex-shrink-0 me-2">
+                              <i class="<%= action[:icon] %>"></i>
+                            </div>
+                            <span class="flex-grow-1"><%= action[:title] %></span>
+                          </div>
+                        </div>
+                      </div>
 
                       <!-- Icon con funcionalidad de click para completar/descompletar -->
                       <div class="step-icon"
@@ -149,20 +162,6 @@
                           <i class="bi bi-circle text-muted"></i>
                         <% end %>
                       </div>
-
-                      <!-- Content -->
-                      <div class="step-content">
-                        <div class="step-title">
-                          <%= action[:title] %>
-                        </div>
-                        <small class="step-meta text-muted">
-                          <% if action[:type] == 'recommendation' %>
-                            <i class="bi bi-clock"></i> <%= action[:time_minutes] %> min
-                          <% elsif action[:type] == 'objective' && action[:objective] %>
-                            <i class="bi bi-calendar"></i> <%= action[:time_months] %> meses
-                          <% end %>
-                        </small>
-                      </div>
                     </div>
                   <% end %>
                 <% end %>
@@ -178,53 +177,74 @@
               <% if @current_task.present? %>
                 <div class="step-display-content" id="step-content-<%= @current_task[:position] %>">
 
-                  <div class="text-center mb-4">
-                    <span class="badge bg-success mb-2">Siguiente paso</span>
-                    <h2 class="fw-bold mb-3">
-                      <% if @current_task[:type] == 'recommendation' && @current_task[:recommendation] %>
-                        <%= @current_task[:recommendation].title %>
-                      <% else %>
-                        <%= @current_task[:title] %>
+                  <!-- Header con título y link completar -->
+                  <div class="d-flex justify-content-between align-items-start mb-4">
+                    <div>
+                      <span class="badge bg-secondary mb-3">Paso <%= @current_task[:position] %></span>
+                      <h2 class="fw-bold mb-0">
+                        <i class="<%= @current_task[:icon] %> me-2 text-muted"></i>
+                        <span class="ms-2">
+                          <% if @current_task[:type] == 'recommendation' && @current_task[:recommendation] %>
+                            <%= @current_task[:recommendation].title %>
+                          <% else %>
+                            <%= @current_task[:title] %>
+                          <% end %>
+                        </span>
+                      </h2>
+                    </div>
+                    <% if @current_task[:type] == 'recommendation' %>
+                      <%= form_with url: complete_action_path, method: :post, local: true, class: "d-inline" do |f| %>
+                        <%= f.hidden_field :action_type, value: 'recommendation' %>
+                        <%= f.hidden_field :action_key, value: @current_task[:key] %>
+                        <% if @current_task[:completed] %>
+                          <button type="submit" class="btn btn-sm btn-success">
+                            <i class="bi bi-check-circle-fill me-1"></i>
+                            Completada
+                          </button>
+                        <% else %>
+                          <button type="submit" class="btn btn-sm btn-outline-secondary">
+                            <i class="bi bi-check-circle me-1"></i>
+                            Marcar completada
+                          </button>
+                        <% end %>
                       <% end %>
-                    </h2>
-                  </div>
-
-                  <div class="alert alert-success mb-4">
-                    <i class="bi bi-check-circle-fill me-2"></i>
-                    <strong><%= @current_task[:benefit_text] %></strong>
+                    <% end %>
                   </div>
 
                   <% if @current_task[:type] == 'recommendation' %>
-                    <!-- Descripción si existe -->
-                    <% if @current_task[:recommendation]&.description.present? %>
-                      <div class="mb-4">
-                        <p class="text-muted"><%= @current_task[:recommendation].description %></p>
+                    <!-- Video del influencer -->
+                    <% if @current_task[:video_url].present? %>
+                      <div class="ratio ratio-16x9 mb-4">
+                        <iframe src="<%= @current_task[:video_url] %>" allowfullscreen class="rounded"></iframe>
                       </div>
                     <% end %>
 
-                    <!-- Tiempo estimado -->
-                    <div class="mb-4 text-center">
-                      <p class="text-muted mb-3">
-                        <i class="bi bi-clock text-primary"></i>
-                        Tiempo estimado: <strong><%= @current_task[:time_minutes] %> minutos</strong>
-                      </p>
+                    <!-- Descripción -->
+                    <% if @current_task[:recommendation]&.description.present? %>
+                      <div class="mb-4">
+                        <p class="text-muted" style="font-size: 1.05rem; line-height: 1.6;">
+                          <%= @current_task[:recommendation].description %>
+                        </p>
+                      </div>
+                    <% end %>
+
+                    <!-- Botón CTA principal (PROTAGONISTA) -->
+                    <div class="d-grid mb-3">
+                      <%= link_to recommendation_path(@current_task[:slug]), class: "btn btn-primary btn-lg", style: "padding: 1rem 2rem; font-size: 1.1rem;" do %>
+                        <i class="bi bi-arrow-right-circle me-2"></i>
+                        Ver cómo hacerlo paso a paso
+                      <% end %>
                     </div>
 
-                    <!-- Botones de acción -->
-                    <div class="d-grid gap-2">
-                      <%= link_to recommendation_path(@current_task[:slug]), class: "btn btn-primary btn-lg" do %>
-                        <i class="bi bi-arrow-right-circle me-2"></i>
-                        Ver cómo hacerlo
-                      <% end %>
-
-                      <%= form_with url: complete_action_path, method: :post, local: true do |f| %>
-                        <%= f.hidden_field :action_type, value: 'recommendation' %>
-                        <%= f.hidden_field :action_key, value: @current_task[:key] %>
-                        <button type="submit" class="btn btn-outline-success btn-lg">
-                          <i class="bi bi-check-circle me-2"></i>
-                          Marcar como completada
-                        </button>
-                      <% end %>
+                    <!-- Badge de beneficio (discreto, abajo) -->
+                    <div class="border border-success-subtle rounded p-2 bg-light-subtle">
+                      <div class="d-flex align-items-center">
+                        <i class="bi bi-piggy-bank fs-5 me-3 text-success-emphasis"></i>
+                        <div>
+                          <strong class="d-block mb-0 text-success-emphasis" style="font-size: 0.95rem;"><%= @current_task[:benefit_text] %></strong>
+                          <small class="text-muted" style="font-size: 0.85rem;">Impacto en tu situación financiera</small>
+                        </div>
+                      </div>
                     </div>
 
                   <% elsif @current_task[:type] == 'create_objective' %>
@@ -297,22 +317,53 @@
               <!-- Contenedor para formulario de crear objetivo (se muestra dinámicamente) -->
               <div id="create-objective-form-container" style="display: none;">
                 <div class="step-display-content">
-                  <h4 class="mb-4">
-                    <i class="bi bi-plus-circle me-2"></i>
-                    Crear Nuevo Objetivo
-                  </h4>
+                  <!-- Header explicativo -->
+                  <div class="mb-3">
+                    <h4 class="fw-bold mb-3">
+                      <i class="bi bi-bullseye me-2 text-primary"></i>
+                      Crea tu Objetivo Financiero
+                    </h4>
+                    <p class="text-muted mb-0" style="line-height: 1.6;">
+                      Define una meta financiera concreta y te ayudaremos a alcanzarla. Te calcularemos cuánto debes ahorrar cada mes y te recomendaremos el mejor producto de inversión según tu plazo.
+                    </p>
+                  </div>
+
+                  <!-- Ejemplos de objetivos -->
+                  <div class="mb-4">
+                    <label class="form-label fw-bold small text-muted mb-2" style="opacity: 0.7;">EJEMPLOS DE OBJETIVOS</label>
+                    <div class="d-flex flex-wrap gap-2">
+                      <button type="button" class="btn btn-sm btn-outline-secondary" onclick="fillObjectiveExample('Comprar coche', 25000, 12)">
+                        <i class="bi bi-car-front me-1"></i> Comprar coche
+                      </button>
+                      <button type="button" class="btn btn-sm btn-outline-secondary" onclick="fillObjectiveExample('Entrada vivienda', 60000, 48)">
+                        <i class="bi bi-house-door me-1"></i> Entrada vivienda
+                      </button>
+                      <button type="button" class="btn btn-sm btn-outline-secondary" onclick="fillObjectiveExample('Boda', 15000, 18)">
+                        <i class="bi bi-heart me-1"></i> Boda
+                      </button>
+                      <button type="button" class="btn btn-sm btn-outline-secondary" onclick="fillObjectiveExample('Viaje', 8000, 12)">
+                        <i class="bi bi-airplane me-1"></i> Viaje
+                      </button>
+                      <button type="button" class="btn btn-sm btn-outline-secondary" onclick="fillObjectiveExample('Estudios hijos', 40000, 120)">
+                        <i class="bi bi-mortarboard me-1"></i> Estudios hijos
+                      </button>
+                      <button type="button" class="btn btn-sm btn-outline-secondary" onclick="fillObjectiveExample('Jubilación', 500000, 240)">
+                        <i class="bi bi-piggy-bank me-1"></i> Jubilación
+                      </button>
+                    </div>
+                  </div>
 
                   <%= form_with model: @new_objective, local: true, id: "create-objective-form" do |f| %>
                     <%= f.hidden_field :user_id, value: current_user.id %>
 
                     <div class="mb-3">
                       <label class="form-label fw-bold">¿Qué quieres lograr?</label>
-                      <%= f.text_field :title, class: "form-control", placeholder: "Ej: Comprar coche", required: true %>
+                      <%= f.text_field :title, class: "form-control form-control-lg", placeholder: "Ej: Comprar coche", required: true, id: "objective-title-input" %>
                     </div>
 
                     <div class="mb-3">
                       <label class="form-label fw-bold">¿Cuánto necesitas? (€)</label>
-                      <%= f.number_field :target_amount, class: "form-control", placeholder: "Ej: 25000", required: true %>
+                      <%= f.number_field :target_amount, class: "form-control form-control-lg", placeholder: "Ej: 25000", required: true, id: "objective-amount-input" %>
                     </div>
 
                     <div class="mb-3">
@@ -326,18 +377,18 @@
                                 ['Septiembre', 9], ['Octubre', 10], ['Noviembre', 11], ['Diciembre', 12]
                               ], Date.current.month),
                               { prompt: 'Mes' },
-                              { class: "form-select", required: true } %>
+                              { class: "form-select", required: true, id: "objective-month-input" } %>
                         </div>
                         <div class="col-5">
                           <%= f.select :target_date_year,
                               options_for_select((Date.current.year..(Date.current.year + 45)).map { |y| [y, y] }, Date.current.year + 1),
                               { prompt: 'Año' },
-                              { class: "form-select", required: true } %>
+                              { class: "form-select", required: true, id: "objective-year-input" } %>
                         </div>
                       </div>
                     </div>
 
-                    <div class="d-flex gap-2">
+                    <div class="d-flex gap-2 mb-3">
                       <button type="submit" class="btn btn-primary flex-grow-1">
                         <i class="bi bi-check-circle me-2"></i>
                         Crear Objetivo
@@ -345,6 +396,19 @@
                       <button type="button" class="btn btn-outline-secondary" onclick="hideCreateObjectiveForm()">
                         Cancelar
                       </button>
+                    </div>
+
+                    <!-- Info box de qué pasará después -->
+                    <div class="alert alert-info mb-0" style="background-color: #e7f3ff; border-color: #b3d9ff;">
+                      <div class="d-flex">
+                        <i class="bi bi-info-circle fs-5 me-3"></i>
+                        <div>
+                          <strong class="d-block mb-1">¿Qué pasa al crear el objetivo?</strong>
+                          <small>
+                            Se creará una recomendación nueva personalizada donde te explicamos paso a paso cómo conseguir tu objetivo, cuánto debes ahorrar mensualmente y qué producto de inversión te recomendamos.
+                          </small>
+                        </div>
+                      </div>
                     </div>
                   <% end %>
                 </div>
@@ -659,6 +723,24 @@ function hideCreateObjectiveForm() {
   }
 }
 
+// Rellenar formulario con ejemplo de objetivo
+function fillObjectiveExample(title, amount, months) {
+  // Rellenar título y cantidad
+  document.getElementById('objective-title-input').value = title;
+  document.getElementById('objective-amount-input').value = amount;
+
+  // Calcular fecha objetivo (mes y año)
+  const today = new Date();
+  const targetDate = new Date(today.getFullYear(), today.getMonth() + months, 1);
+
+  // Rellenar mes y año
+  document.getElementById('objective-month-input').value = targetDate.getMonth() + 1;
+  document.getElementById('objective-year-input').value = targetDate.getFullYear();
+
+  // Scroll suave al formulario
+  document.getElementById('create-objective-form').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
 // Actualizar contenido del display
 function updateStepDisplay(step) {
   console.log('Updating display with step:', step);
@@ -679,106 +761,229 @@ function updateStepDisplay(step) {
 
   let html = '<div class="step-display-content" id="js-generated-content">';
 
-  // Header con badge
+  // Header con título y botón completar/eliminar (NUEVO DISEÑO)
   html += `
-    <div class="text-center mb-4">
-      <span class="badge bg-primary mb-2">Paso ${step.position}</span>
-      <h2 class="fw-bold mb-3">${step.title}</h2>
-    </div>
+    <div class="d-flex justify-content-between align-items-start mb-4">
+      <div>
+        <span class="badge bg-secondary mb-3">Paso ${step.position}</span>
+        <h2 class="fw-bold mb-0">
+          <i class="${step.icon} me-2 text-muted"></i>
+          <span class="ms-2">${step.title}</span>
+        </h2>
+      </div>
   `;
 
-  // Alert con beneficio
+  // Botón marcar/desmarcar completada (solo para recommendations)
+  if (step.type === 'recommendation') {
+    html += `
+      <form action="/dashboard/complete_action" method="post" data-turbo="false" class="d-inline">
+        <input type="hidden" name="authenticity_token" value="${document.querySelector('meta[name="csrf-token"]').content}">
+        <input type="hidden" name="action_type" value="recommendation">
+        <input type="hidden" name="action_key" value="${step.key}">
+    `;
+
+    if (step.completed) {
+      html += `
+        <button type="submit" class="btn btn-sm btn-success">
+          <i class="bi bi-check-circle-fill me-1"></i>
+          Completada
+        </button>
+      `;
+    } else {
+      html += `
+        <button type="submit" class="btn btn-sm btn-outline-secondary">
+          <i class="bi bi-check-circle me-1"></i>
+          Marcar completada
+        </button>
+      `;
+    }
+
+    html += `
+      </form>
+    `;
+  }
+
+  // Botón eliminar (solo para objectives)
+  if (step.type === 'objective' && step.objective) {
+    html += `
+      <form action="/objectives/${step.objective.id}" method="post" data-turbo="false"
+            onsubmit="return confirm('¿Estás seguro de que quieres eliminar este objetivo?');" class="d-inline">
+        <input type="hidden" name="_method" value="delete">
+        <input type="hidden" name="authenticity_token" value="${document.querySelector('meta[name="csrf-token"]').content}">
+        <button type="submit" class="btn btn-sm btn-outline-danger">
+          <i class="bi bi-trash me-1"></i>
+          Eliminar objetivo
+        </button>
+      </form>
+    `;
+  }
+
   html += `
-    <div class="alert alert-success mb-4">
-      <i class="bi bi-check-circle-fill me-2"></i>
-      <strong>${step.benefit_text}</strong>
     </div>
   `;
 
   // Contenido específico según el tipo
   if (step.type === 'recommendation') {
+    // Video del influencer
+    if (step.video_url) {
+      html += `
+        <div class="ratio ratio-16x9 mb-4">
+          <iframe src="${step.video_url}" allowfullscreen class="rounded"></iframe>
+        </div>
+      `;
+    }
+
     // Descripción si existe
     if (step.recommendation && step.recommendation.description) {
       html += `
         <div class="mb-4">
-          <p class="text-muted">${step.recommendation.description}</p>
+          <p class="text-muted" style="font-size: 1.05rem; line-height: 1.6;">
+            ${step.recommendation.description}
+          </p>
         </div>
       `;
     }
 
-    // Tiempo estimado
+    // Botón CTA principal (PROTAGONISTA)
     html += `
-      <div class="mb-4 text-center">
-        <p class="text-muted mb-3">
-          <i class="bi bi-clock text-primary"></i>
-          Tiempo estimado: <strong>${step.time_minutes} minutos</strong>
-        </p>
+      <div class="d-grid mb-3">
+        <a href="/recommendations/${step.slug}" class="btn btn-primary btn-lg" style="padding: 1rem 2rem; font-size: 1.1rem;">
+          <i class="bi bi-arrow-right-circle me-2"></i>
+          Ver cómo hacerlo paso a paso
+        </a>
       </div>
     `;
 
-    // Botones de acción
-    html += '<div class="d-grid gap-2">';
+    // Badge de beneficio (discreto, abajo)
     html += `
-      <a href="/recommendations/${step.slug}" class="btn btn-primary btn-lg">
-        <i class="bi bi-arrow-right-circle me-2"></i>
-        Ver cómo hacerlo
-      </a>
-    `;
-
-    if (!step.completed) {
-      html += `
-        <form action="/dashboard/complete_action" method="post" data-turbo="false">
-          <input type="hidden" name="authenticity_token" value="${document.querySelector('meta[name="csrf-token"]').content}">
-          <input type="hidden" name="action_type" value="recommendation">
-          <input type="hidden" name="action_key" value="${step.key}">
-          <button type="submit" class="btn btn-outline-success btn-lg w-100">
-            <i class="bi bi-check-circle me-2"></i>
-            Marcar como completada
-          </button>
-        </form>
-      `;
-    } else {
-      html += `
-        <div class="alert alert-success mb-0">
-          <i class="bi bi-check-circle-fill me-2"></i>
-          ¡Ya completaste esta acción!
+      <div class="border border-success-subtle rounded p-2 bg-light-subtle">
+        <div class="d-flex align-items-center">
+          <i class="bi bi-piggy-bank fs-5 me-3 text-success-emphasis"></i>
+          <div>
+            <strong class="d-block mb-0 text-success-emphasis" style="font-size: 0.95rem;">${step.benefit_text}</strong>
+            <small class="text-muted" style="font-size: 0.85rem;">Impacto en tu situación financiera</small>
+          </div>
         </div>
-      `;
-    }
-
-    html += '</div>';
+      </div>
+    `;
 
   } else if (step.type === 'objective' && step.objective) {
-    // Información del objetivo
+    // Descripción contextual del objetivo
+    const investmentType = step.objective.investment_recommendation;
+    let productName = '';
+
+    // Determinar nombre del producto según recomendación
+    switch(investmentType) {
+      case 'ac-diposit':
+        productName = 'Depósito a corto plazo';
+        break;
+      case 'ac-curt':
+        productName = 'Renta fija a medio plazo';
+        break;
+      case 'ac-llarg':
+        productName = 'Fondos indexados a largo plazo';
+        break;
+      case 'ac-jubil':
+        productName = 'Plan de pensiones';
+        break;
+      default:
+        productName = 'Producto de inversión';
+    }
+
+    // Video del influencer (si existe)
+    if (step.video_url) {
+      html += `
+        <div class="ratio ratio-16x9 mb-4">
+          <iframe src="${step.video_url}" allowfullscreen class="rounded"></iframe>
+        </div>
+      `;
+    }
+
+    // Descripción personalizada
     html += `
       <div class="mb-4">
-        <p class="text-muted">
-          Meta: <strong>€${step.objective.target_amount.toLocaleString('es-ES')}</strong>
-        </p>
-        <p class="text-info">
-          <i class="bi bi-piggy-bank me-2"></i>
-          Ahorro mensual necesario: <strong>€${step.objective.monthly_savings_needed.toLocaleString('es-ES')}</strong>
+        <p class="text-muted" style="font-size: 1.05rem; line-height: 1.6;">
+          Para alcanzar <strong>${step.title}</strong> en ${step.time_months} meses, te recomendamos invertir en <strong>${productName}</strong>.
+          Necesitarás ahorrar <strong>€${step.objective.monthly_savings_needed.toLocaleString('es-ES')}/mes</strong> para llegar a tu meta de <strong>€${step.objective.target_amount.toLocaleString('es-ES')}</strong>.
         </p>
       </div>
     `;
 
-    // Botones: Ver plan + Eliminar
+    // Botón CTA principal
     html += `
-      <div class="d-grid gap-2">
+      <div class="d-grid mb-3">
         <a href="/recommendations/${step.objective.investment_recommendation}?objetivo_id=${step.objective.id}"
-           class="btn btn-primary btn-lg">
+           class="btn btn-primary btn-lg" style="padding: 1rem 2rem; font-size: 1.1rem;">
           <i class="bi bi-arrow-right-circle me-2"></i>
-          Ver plan de inversión
+          Ver plan de inversión completo
         </a>
-        <form action="/objectives/${step.objective.id}" method="post" data-turbo="false"
-              onsubmit="return confirm('¿Estás seguro de que quieres eliminar este objetivo? Esta acción no se puede deshacer.');">
-          <input type="hidden" name="_method" value="delete">
-          <input type="hidden" name="authenticity_token" value="${document.querySelector('meta[name="csrf-token"]').content}">
-          <button type="submit" class="btn btn-outline-danger w-100">
-            <i class="bi bi-trash me-2"></i>
-            Eliminar objetivo
-          </button>
-        </form>
+      </div>
+    `;
+
+    // Badge de beneficio con edición inline
+    html += `
+      <div class="border border-success-subtle rounded p-2 bg-light-subtle" id="objective-badge-${step.objective.id}">
+        <!-- Vista normal -->
+        <div id="objective-view-${step.objective.id}">
+          <div class="d-flex align-items-center">
+            <i class="bi bi-bullseye fs-5 me-3 text-success-emphasis"></i>
+            <div class="flex-grow-1">
+              <strong class="d-block mb-0 text-success-emphasis" style="font-size: 0.95rem;">Alcanza ${step.title}</strong>
+              <small class="text-muted" style="font-size: 0.85rem;">Meta: €${step.objective.target_amount.toLocaleString('es-ES')} | Plazo: ${step.time_months} meses</small>
+            </div>
+            <button type="button" class="btn btn-sm btn-link text-muted p-0 ms-2"
+                    onclick="toggleEditObjective(${step.objective.id})"
+                    title="Editar meta y plazo">
+              <i class="bi bi-pencil"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Formulario de edición (oculto por defecto) -->
+        <div id="objective-edit-${step.objective.id}" style="display: none;">
+          <form onsubmit="saveObjectiveEdit(event, ${step.objective.id})">
+            <div class="d-flex align-items-center mb-3">
+              <i class="bi bi-bullseye fs-5 me-3 text-success-emphasis"></i>
+              <strong class="text-success-emphasis" style="font-size: 0.95rem;">Editar: ${step.title}</strong>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-bold small">Nueva meta (€)</label>
+              <input type="number"
+                     class="form-control form-control-sm"
+                     id="edit-amount-${step.objective.id}"
+                     value="${step.objective.target_amount}"
+                     required>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-bold small">Nuevo plazo</label>
+              <div class="row g-2">
+                <div class="col-7">
+                  <select class="form-select form-select-sm" id="edit-month-${step.objective.id}" required>
+                    ${generateMonthOptions(new Date(step.objective.target_date).getMonth() + 1)}
+                  </select>
+                </div>
+                <div class="col-5">
+                  <select class="form-select form-select-sm" id="edit-year-${step.objective.id}" required>
+                    ${generateYearOptions(new Date(step.objective.target_date).getFullYear())}
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="d-flex gap-2">
+              <button type="submit" class="btn btn-sm btn-success flex-grow-1">
+                <i class="bi bi-check-circle me-1"></i>
+                Guardar
+              </button>
+              <button type="button" class="btn btn-sm btn-outline-secondary"
+                      onclick="cancelEditObjective(${step.objective.id})">
+                Cancelar
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     `;
   } else if (step.type === 'create_objective') {
@@ -804,6 +1009,106 @@ function updateStepDisplay(step) {
 
   // Insertar el nuevo contenido
   displayContainer.insertAdjacentHTML('beforeend', html);
+}
+
+// Helper: Generar opciones de meses
+function generateMonthOptions(selectedMonth) {
+  const months = [
+    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+  ];
+
+  return months.map((month, index) => {
+    const value = index + 1;
+    const selected = value === selectedMonth ? 'selected' : '';
+    return `<option value="${value}" ${selected}>${month}</option>`;
+  }).join('');
+}
+
+// Helper: Generar opciones de años
+function generateYearOptions(selectedYear) {
+  const currentYear = new Date().getFullYear();
+  const years = [];
+
+  for (let year = currentYear; year <= currentYear + 45; year++) {
+    const selected = year === selectedYear ? 'selected' : '';
+    years.push(`<option value="${year}" ${selected}>${year}</option>`);
+  }
+
+  return years.join('');
+}
+
+// Toggle edición de objetivo
+function toggleEditObjective(objectiveId) {
+  const viewDiv = document.getElementById(`objective-view-${objectiveId}`);
+  const editDiv = document.getElementById(`objective-edit-${objectiveId}`);
+
+  viewDiv.style.display = 'none';
+  editDiv.style.display = 'block';
+}
+
+// Cancelar edición de objetivo
+function cancelEditObjective(objectiveId) {
+  const viewDiv = document.getElementById(`objective-view-${objectiveId}`);
+  const editDiv = document.getElementById(`objective-edit-${objectiveId}`);
+
+  viewDiv.style.display = 'block';
+  editDiv.style.display = 'none';
+}
+
+// Guardar edición de objetivo
+function saveObjectiveEdit(event, objectiveId) {
+  event.preventDefault();
+
+  // Obtener valores del formulario
+  const amount = document.getElementById(`edit-amount-${objectiveId}`).value;
+  const month = document.getElementById(`edit-month-${objectiveId}`).value;
+  const year = document.getElementById(`edit-year-${objectiveId}`).value;
+
+  // Crear formulario y enviarlo (Turbo se encargará del modal de carga)
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = `/objectives/${objectiveId}`;
+
+  // Token CSRF
+  const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+  const csrfInput = document.createElement('input');
+  csrfInput.type = 'hidden';
+  csrfInput.name = 'authenticity_token';
+  csrfInput.value = csrfToken;
+  form.appendChild(csrfInput);
+
+  // Método PATCH
+  const methodInput = document.createElement('input');
+  methodInput.type = 'hidden';
+  methodInput.name = '_method';
+  methodInput.value = 'patch';
+  form.appendChild(methodInput);
+
+  // Amount
+  const amountInput = document.createElement('input');
+  amountInput.type = 'hidden';
+  amountInput.name = 'objective[target_amount]';
+  amountInput.value = amount;
+  form.appendChild(amountInput);
+
+  // Month
+  const monthInput = document.createElement('input');
+  monthInput.type = 'hidden';
+  monthInput.name = 'objective[target_date_month]';
+  monthInput.value = month;
+  form.appendChild(monthInput);
+
+  // Year
+  const yearInput = document.createElement('input');
+  yearInput.type = 'hidden';
+  yearInput.name = 'objective[target_date_year]';
+  yearInput.value = year;
+  form.appendChild(yearInput);
+
+  // Agregar al body y enviar
+  document.body.appendChild(form);
+  form.submit();
 }
 
 // Marcar el primer paso como activo al cargar
@@ -1083,13 +1388,15 @@ document.addEventListener('turbo:load', function() {
 .step-item {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 0.75rem;
-  padding: 0.75rem 1rem;
+  padding: 0.75rem 0.875rem;
   border-radius: 0.5rem;
   border: 2px solid #e9ecef;
   cursor: pointer;
   transition: all 0.2s;
   background: white;
+  margin-bottom: 0.5rem;
 }
 
 .step-item:hover {
@@ -1145,29 +1452,31 @@ document.addEventListener('turbo:load', function() {
 
 .step-icon {
   flex-shrink: 0;
-  font-size: 1.4rem;
-  width: 36px;
-  height: 36px;
+  font-size: 1.2rem;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
   transition: all 0.2s ease;
   position: relative;
+  margin-left: auto;
 }
 
 /* Círculos clickables tienen hover effect */
 .step-icon[onclick] {
   cursor: pointer;
+  padding: 2px;
 }
 
 .step-icon[onclick]:hover {
   background: rgba(13, 110, 253, 0.1);
-  transform: scale(1.15);
+  transform: scale(1.2);
 }
 
 .step-icon[onclick]:active {
-  transform: scale(1.05);
+  transform: scale(1.1);
 }
 
 /* Tooltip más visible */
@@ -1175,38 +1484,56 @@ document.addEventListener('turbo:load', function() {
   position: relative;
 }
 
-/* Efecto de "pulso" sutil para indicar que es clickable */
-.step-icon[onclick]:not(:hover)::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  border-radius: 50%;
-  background: rgba(13, 110, 253, 0.15);
-  animation: subtlePulse 2s ease-in-out infinite;
-  opacity: 0;
-}
-
-@keyframes subtlePulse {
-  0%, 100% { transform: scale(1); opacity: 0; }
-  50% { transform: scale(1.3); opacity: 0.4; }
-}
-
 .step-content {
-  flex-grow: 1;
+  flex: 1;
   min-width: 0;
 }
 
 .step-title {
   font-weight: 600;
   font-size: 0.9rem;
-  margin-bottom: 0.25rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  line-height: 1.4;
   color: #212529;
+}
+
+.step-number-small {
+  font-size: 0.8rem;
+  font-weight: 500;
+  opacity: 0.7;
+}
+
+.task-icon-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(13, 110, 253, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.task-icon-circle i {
+  font-size: 1.1rem;
+  color: #0d6efd;
+}
+
+.step-item:hover .task-icon-circle {
+  background: rgba(13, 110, 253, 0.15);
+  transform: scale(1.05);
+}
+
+.step-item.completed .task-icon-circle {
+  background: rgba(25, 135, 84, 0.1);
+}
+
+.step-item.completed .task-icon-circle i {
+  color: #198754;
+}
+
+.step-item.is-next .task-icon-circle {
+  background: rgba(13, 110, 253, 0.15);
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1);
 }
 
 .step-meta {
@@ -1257,7 +1584,8 @@ document.addEventListener('turbo:load', function() {
   }
 
   .step-item {
-    padding: 0.65rem 0.85rem;
+    padding: 0.65rem 0.75rem;
+    gap: 0.5rem;
   }
 
   .step-title {
@@ -1265,7 +1593,22 @@ document.addEventListener('turbo:load', function() {
   }
 
   .step-icon {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
+    width: 28px;
+    height: 28px;
+  }
+
+  .task-icon-circle {
+    width: 32px;
+    height: 32px;
+  }
+
+  .task-icon-circle i {
+    font-size: 1rem;
+  }
+
+  .step-number-small {
+    font-size: 0.75rem;
   }
 }
 

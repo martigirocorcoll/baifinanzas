@@ -21,7 +21,7 @@ class DashboardController < ApplicationController
     end
   end
 
-  # Marcar una acción/recomendación como completada
+  # Marcar/desmarcar una acción/recomendación (toggle)
   def complete_action
     action_type = params[:action_type] # 'recommendation' or 'objective'
     action_key = params[:action_key]   # rec_key o objective_id
@@ -30,13 +30,23 @@ class DashboardController < ApplicationController
       redirect_to dashboard_index_path, alert: "Parámetros inválidos" and return
     end
 
-    # Marcar como completada
+    # Toggle: marcar o desmarcar según el estado actual
     if action_type == 'recommendation'
-      current_user.complete_recommendation!(action_key)
-      flash[:success] = "¡Acción completada! Sigue así 🎉"
+      if current_user.completed_recommendations.include?(action_key)
+        current_user.uncomplete_recommendation!(action_key)
+        flash[:success] = "Acción desmarcada"
+      else
+        current_user.complete_recommendation!(action_key)
+        flash[:success] = "¡Acción completada! Sigue así 🎉"
+      end
     elsif action_type == 'objective'
-      current_user.complete_objective!(action_key)
-      flash[:success] = "¡Objetivo completado! 🎯"
+      if current_user.completed_objectives.include?(action_key.to_i)
+        current_user.uncomplete_objective!(action_key)
+        flash[:success] = "Objetivo desmarcado"
+      else
+        current_user.complete_objective!(action_key)
+        flash[:success] = "¡Objetivo completado! 🎯"
+      end
     end
 
     # Redirigir de vuelta al dashboard

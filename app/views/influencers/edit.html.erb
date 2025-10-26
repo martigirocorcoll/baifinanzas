@@ -18,25 +18,34 @@
             <h6 class="mb-3 text-primary">Enlaces de Afiliados</h6>
 
             <div class="mb-3">
-              <%= f.input :ac_compte, label: "Cuenta bancaria", input_html: { class: "form-control", placeholder: "https://..." } %>
+              <%= f.input :ac_compte, label: "Cuenta bancaria (better-bank-account)", input_html: { class: "form-control", placeholder: "https://..." } %>
             </div>
             <div class="mb-3">
-              <%= f.input :ac_cdiposit, label: "Depósito de emergencia", input_html: { class: "form-control", placeholder: "https://..." } %>
+              <%= f.input :ac_cdiposit, label: "Depósito de emergencia (emergency-deposit)", input_html: { class: "form-control", placeholder: "https://..." } %>
             </div>
             <div class="mb-3">
-              <%= f.input :ac_curt, label: "Inversión corto plazo", input_html: { class: "form-control", placeholder: "https://..." } %>
+              <%= f.input :ac_saving, label: "Consejos de ahorro (saving-advice)", input_html: { class: "form-control", placeholder: "https://..." } %>
             </div>
             <div class="mb-3">
-              <%= f.input :ac_llarg, label: "Inversión largo plazo", input_html: { class: "form-control", placeholder: "https://..." } %>
+              <%= f.input :ac_deute, label: "Optimización de deudas (debt-optimization)", input_html: { class: "form-control", placeholder: "https://..." } %>
             </div>
             <div class="mb-3">
-              <%= f.input :ac_deute, label: "Optimización hipoteca", input_html: { class: "form-control", placeholder: "https://..." } %>
+              <%= f.input :ac_mortgage, label: "Optimización de hipoteca (mortgage-optimization)", input_html: { class: "form-control", placeholder: "https://..." } %>
             </div>
             <div class="mb-3">
-              <%= f.input :ac_jubil, label: "Plan de jubilación", input_html: { class: "form-control", placeholder: "https://..." } %>
+              <%= f.input :ac_curt, label: "Inversión medio plazo (ac-curt)", input_html: { class: "form-control", placeholder: "https://..." } %>
             </div>
             <div class="mb-3">
-              <%= f.input :ac_fiscal, label: "Asesoría fiscal", input_html: { class: "form-control", placeholder: "https://..." } %>
+              <%= f.input :ac_llarg, label: "Inversión largo plazo (ac-llarg)", input_html: { class: "form-control", placeholder: "https://..." } %>
+            </div>
+            <div class="mb-3">
+              <%= f.input :ac_jubil, label: "Plan de jubilación (ac-jubil)", input_html: { class: "form-control", placeholder: "https://..." } %>
+            </div>
+            <div class="mb-3">
+              <%= f.input :ac_portfolio, label: "Optimización de portfolio (portfolio-optimization)", input_html: { class: "form-control", placeholder: "https://..." } %>
+            </div>
+            <div class="mb-3">
+              <%= f.input :ac_fiscal, label: "Asesoramiento fiscal (tax-advisory)", input_html: { class: "form-control", placeholder: "https://..." } %>
             </div>
 
             <hr class="my-4">
@@ -44,28 +53,34 @@
             <h6 class="mb-3 text-primary">Videos de Recomendación (URLs de YouTube/Vimeo)</h6>
 
             <div class="mb-3">
-              <%= f.input :video_compte, label: "Video cuenta bancaria", input_html: { class: "form-control", placeholder: "https://youtube.com/..." } %>
+              <%= f.input :video_compte, label: "Video cuenta bancaria (better-bank-account)", input_html: { class: "form-control", placeholder: "https://youtube.com/..." } %>
             </div>
             <div class="mb-3">
-              <%= f.input :video_cdiposit, label: "Video depósito emergencia", input_html: { class: "form-control", placeholder: "https://youtube.com/..." } %>
+              <%= f.input :video_cdiposit, label: "Video depósito emergencia (emergency-deposit)", input_html: { class: "form-control", placeholder: "https://youtube.com/..." } %>
             </div>
             <div class="mb-3">
-              <%= f.input :video_curt, label: "Video inversión corto plazo", input_html: { class: "form-control", placeholder: "https://youtube.com/..." } %>
+              <%= f.input :video_saving, label: "Video consejos de ahorro (saving-advice)", input_html: { class: "form-control", placeholder: "https://youtube.com/..." } %>
             </div>
             <div class="mb-3">
-              <%= f.input :video_llarg, label: "Video inversión largo plazo", input_html: { class: "form-control", placeholder: "https://youtube.com/..." } %>
+              <%= f.input :video_deute, label: "Video optimización deudas (debt-optimization)", input_html: { class: "form-control", placeholder: "https://youtube.com/..." } %>
             </div>
             <div class="mb-3">
-              <%= f.input :video_deute, label: "Video optimización hipoteca", input_html: { class: "form-control", placeholder: "https://youtube.com/..." } %>
+              <%= f.input :video_mortgage, label: "Video optimización hipoteca (mortgage-optimization)", input_html: { class: "form-control", placeholder: "https://youtube.com/..." } %>
             </div>
             <div class="mb-3">
-              <%= f.input :video_jubil, label: "Video plan jubilación", input_html: { class: "form-control", placeholder: "https://youtube.com/..." } %>
+              <%= f.input :video_curt, label: "Video inversión medio plazo (ac-curt)", input_html: { class: "form-control", placeholder: "https://youtube.com/..." } %>
             </div>
             <div class="mb-3">
-              <%= f.input :video_fiscal, label: "Video asesoría fiscal", input_html: { class: "form-control", placeholder: "https://youtube.com/..." } %>
+              <%= f.input :video_llarg, label: "Video inversión largo plazo (ac-llarg)", input_html: { class: "form-control", placeholder: "https://youtube.com/..." } %>
             </div>
             <div class="mb-3">
-              <%= f.input :video_portfolio, label: "Video optimización cartera", input_html: { class: "form-control", placeholder: "https://youtube.com/..." } %>
+              <%= f.input :video_jubil, label: "Video plan jubilación (ac-jubil)", input_html: { class: "form-control", placeholder: "https://youtube.com/..." } %>
+            </div>
+            <div class="mb-3">
+              <%= f.input :video_portfolio, label: "Video optimización portfolio (portfolio-optimization)", input_html: { class: "form-control", placeholder: "https://youtube.com/..." } %>
+            </div>
+            <div class="mb-3">
+              <%= f.input :video_fiscal, label: "Video asesoramiento fiscal (tax-advisory)", input_html: { class: "form-control", placeholder: "https://youtube.com/..." } %>
             </div>
 
             <div class="d-grid gap-2">

@@ -46,9 +46,19 @@ class ObjectivesController < ApplicationController
 
   # PATCH/PUT /objectives/1 or /objectives/1.json
   def update
+    # Extraer parámetros de fecha antes de actualizar el objetivo
+    objective_attrs = objective_params.except(:target_date_month, :target_date_year)
+
+    # Convertir mes y año en fecha si están presentes
+    if params[:objective][:target_date_month].present? && params[:objective][:target_date_year].present?
+      month = params[:objective][:target_date_month].to_i
+      year = params[:objective][:target_date_year].to_i
+      objective_attrs[:target_date] = Date.new(year, month, 1).end_of_month
+    end
+
     respond_to do |format|
-      if @objective.update(objective_params)
-        format.html { redirect_to @objective, notice: "Objective was successfully updated." }
+      if @objective.update(objective_attrs)
+        format.html { redirect_to dashboard_index_path(show_objective: @objective.id), notice: "Objetivo actualizado correctamente." }
         format.json { render :show, status: :ok, location: @objective }
       else
         format.html { render :edit, status: :unprocessable_entity }

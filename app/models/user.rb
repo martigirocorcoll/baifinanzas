@@ -144,29 +144,31 @@ class User < ApplicationRecord
   end
 
   def get_affiliate_link(product_type)
-    return nil unless influencer
-    
+    # Usar el influencer asignado o el por defecto
+    inf = influencer || Influencer.default_influencer
+    return nil unless inf
+
     case product_type
     when "better_bank_account"
-      influencer.ac_compte
-    when "emergency_deposit"
-      influencer.ac_cdiposit
-    when "ac_diposit"
-      influencer.ac_cdiposit
-    when "ac_curt"
-      influencer.ac_curt
-    when "ac_llarg"
-      influencer.ac_llarg
-    when "ac_jubil"
-      influencer.ac_jubil
-    when "debt_review", "debt_optimization", "mortgage_optimization"
-      influencer.ac_deute
-    when "portfolio_optimization"
-      influencer.ac_llarg  # Portfolio avanzada usa inversión a largo plazo
+      inf.ac_compte
+    when "emergency_deposit", "ac_diposit"
+      inf.ac_cdiposit
     when "saving_advice"
-      influencer.ac_compte  # Asesoramiento de ahorro relacionado con cuentas
+      inf.ac_saving
+    when "debt_review", "debt_optimization"
+      inf.ac_deute
+    when "mortgage_optimization"
+      inf.ac_mortgage
+    when "ac_curt"
+      inf.ac_curt
+    when "ac_llarg"
+      inf.ac_llarg
+    when "ac_jubil"
+      inf.ac_jubil
+    when "portfolio_optimization"
+      inf.ac_portfolio
     when "tax_advisory"
-      influencer.ac_fiscal
+      inf.ac_fiscal
     else
       nil
     end
@@ -205,12 +207,12 @@ class User < ApplicationRecord
     when "Situación Crítica"
       # Priority: Create cash flow, optimize bank, review debts
       recommendations = ["saving_advice", "better_bank_account"]
-      recommendations << "debt_review" if total_debt > 0
+      recommendations << "debt_optimization" if total_debt > 0
       recommendations << "mortgage_optimization" if has_mortgage?  # Hipoteca en TODOS los niveles
     when "Creando Fondo de Emergencia"
       # Priority: Build emergency fund, optimize bank
       recommendations = ["emergency_deposit", "better_bank_account"]
-      recommendations << "debt_review" if total_debt > 0
+      recommendations << "debt_optimization" if total_debt > 0
       recommendations << "mortgage_optimization" if has_mortgage?
     when "Eliminando Deudas Caras"
       # Priority: Pay off expensive debt, maintain emergency fund
@@ -262,6 +264,37 @@ class User < ApplicationRecord
     update(influencer: influencer) if influencer
   end
 
+  # Obtener URL del video según el slug de la recomendación
+  def get_video_url(slug)
+    inf = influencer || Influencer.default_influencer
+    return nil unless inf
+
+    case slug
+    when "better-bank-account"
+      inf.video_compte
+    when "emergency-deposit"
+      inf.video_cdiposit
+    when "debt-optimization"
+      inf.video_deute
+    when "saving-advice"
+      inf.video_saving
+    when "ac-llarg"
+      inf.video_llarg
+    when "ac-curt"
+      inf.video_curt
+    when "ac-jubil"
+      inf.video_jubil
+    when "tax-advisory"
+      inf.video_fiscal
+    when "portfolio-optimization"
+      inf.video_portfolio
+    when "mortgage-optimization"
+      inf.video_mortgage
+    else
+      nil
+    end
+  end
+
   # ============================================
   # ACTION PLAN - Plan de acción unificado
   # ============================================
@@ -285,6 +318,7 @@ class User < ApplicationRecord
         icon: recommendation_icon(rec_key),
         time_minutes: recommendation_time(rec_key),
         completed: completed_recommendations.include?(rec_key),
+        video_url: get_video_url(slug),
         recommendation: recommendation
       }
     end
@@ -295,14 +329,18 @@ class User < ApplicationRecord
 
       # Añadir objetivos existentes
       valid_objectives.each do |obj|
+        # Obtener slug de la recomendación de inversión
+        investment_slug = obj.investment_recommendation.dasherize
+
         actions << {
           position: actions.length + 1,
           type: 'objective',
           title: obj.title,
           benefit_text: "Alcanza tu meta de #{ActionController::Base.helpers.number_to_currency(obj.target_amount, unit: '€', precision: 0)}",
-          icon: "🎯",
+          icon: obj.objective_icon,
           time_months: obj.months_to_target,
           completed: false, # Los objetivos no se marcan como completados en el action plan
+          video_url: get_video_url(investment_slug),
           objective: {
             id: obj.id,
             title: obj.title,
@@ -320,7 +358,7 @@ class User < ApplicationRecord
         type: 'create_objective',
         title: valid_objectives.any? ? 'Crear nuevo objetivo' : 'Define tu primer objetivo',
         benefit_text: "Planifica tu futuro financiero",
-        icon: "🎯",
+        icon: "bi-plus-circle",
         completed: false
       }
     end
@@ -369,25 +407,25 @@ class User < ApplicationRecord
   def recommendation_title(rec_key)
     case rec_key
     when 'better_bank_account'
-      "Optimiza tu Cuenta Bancaria"
+      "Ten una mejor cuenta bancaria"
     when 'emergency_deposit', 'ac_cdiposit'
-      "Construye tu Fondo de Emergencia"
+      "Construye tu fondo de emergencia"
     when 'debt_optimization', 'debt_review'
-      "Optimiza tus Deudas"
+      "Reduce tus deudas"
     when 'mortgage_optimization'
-      "Optimiza tu Hipoteca"
+      "Paga menos por tu hipoteca"
     when 'portfolio_optimization'
-      "Optimiza tus Inversiones"
+      "Optimiza tus inversiones"
     when 'tax_advisory', 'ac_fiscal'
-      "Optimización Fiscal"
+      "Analiza tu fiscalidad"
     when 'saving_advice'
-      "Asesoramiento de Ahorro"
+      "Aprende a ahorrar"
     when 'ac_curt'
-      "Inversión a Medio Plazo"
+      "Invierte a medio plazo"
     when 'ac_llarg'
-      "Inversión a Largo Plazo"
+      "Invierte a largo plazo"
     when 'ac_jubil'
-      "Planifica tu Jubilación"
+      "Ahorra para tu jubilación"
     else
       rec_key.titleize
     end
@@ -423,27 +461,27 @@ class User < ApplicationRecord
   def recommendation_icon(rec_key)
     case rec_key
     when 'better_bank_account'
-      "💳"
+      "bi-bank"
     when 'emergency_deposit', 'ac_cdiposit'
-      "🛡️"
+      "bi-shield-check"
     when 'debt_optimization', 'debt_review'
-      "📉"
+      "bi-credit-card-2-back"
     when 'mortgage_optimization'
-      "🏠"
+      "bi-house-door"
     when 'portfolio_optimization'
-      "📈"
+      "bi-graph-up-arrow"
     when 'tax_advisory', 'ac_fiscal'
-      "💼"
+      "bi-calculator"
     when 'saving_advice'
-      "💡"
+      "bi-lightbulb"
     when 'ac_curt'
-      "🎯"
+      "bi-bar-chart"
     when 'ac_llarg'
-      "🚀"
+      "bi-graph-up"
     when 'ac_jubil'
-      "🏖️"
+      "bi-piggy-bank-fill"
     else
-      "✅"
+      "bi-check-circle"
     end
   end
 

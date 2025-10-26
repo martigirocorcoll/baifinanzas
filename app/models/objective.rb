@@ -70,10 +70,10 @@ class Objective < ApplicationRecord
 
   def savings_capacity_analysis
     return { sufficient: false, message: "Usuario sin datos financieros" } unless user.balance && user.pyg
-    
+
     monthly_needed = monthly_savings_needed
     available_cash_flow = user.monthly_cash_flow
-    
+
     if available_cash_flow >= monthly_needed
       {
         sufficient: true,
@@ -89,6 +89,51 @@ class Objective < ApplicationRecord
         deficit: monthly_needed - available_cash_flow
       }
     end
+  end
+
+  def objective_icon
+    return "bi-bullseye" unless title.present?
+
+    title_lower = title.downcase
+
+    # Casa / Vivienda
+    return "bi-house-heart" if title_lower.match?(/casa|vivienda|piso|apartamento|hogar/)
+
+    # Coche / Vehículo
+    return "bi-car-front" if title_lower.match?(/coche|carro|veh[ií]culo|auto|moto/)
+
+    # Educación
+    return "bi-mortarboard" if title_lower.match?(/estudio|universidad|educaci[oó]n|m[aá]ster|colegio|formaci[oó]n|carrera/)
+
+    # Jubilación / Retiro
+    return "bi-piggy-bank-fill" if title_lower.match?(/jubil|retiro|pensi[oó]n/)
+
+    # Viaje / Vacaciones
+    return "bi-airplane" if title_lower.match?(/viaje|vacacion|turismo|viajar/)
+
+    # Boda / Matrimonio
+    return "bi-heart" if title_lower.match?(/boda|casamiento|matrimonio/)
+
+    # Fondo de emergencia
+    return "bi-shield-check" if title_lower.match?(/emergencia|fondo/)
+
+    # Inversión / Ahorro
+    return "bi-graph-up-arrow" if title_lower.match?(/inversi[oó]n|ahorro|invertir/)
+
+    # Deuda
+    return "bi-credit-card-2-back" if title_lower.match?(/deuda|pr[eé]stamo|pagar/)
+
+    # Negocio / Empresa
+    return "bi-briefcase" if title_lower.match?(/negocio|empresa|emprendimiento|startup/)
+
+    # Salud
+    return "bi-heart-pulse" if title_lower.match?(/salud|m[eé]dico|tratamiento/)
+
+    # Familia / Hijos
+    return "bi-people" if title_lower.match?(/hijo|familia|beb[eé]/)
+
+    # Default
+    "bi-bullseye"
   end
 
   private

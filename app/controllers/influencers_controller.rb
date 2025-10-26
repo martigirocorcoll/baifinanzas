@@ -98,8 +98,11 @@ class InfluencersController < ApplicationController
       else
         # Influencer editing their own data: allow affiliate links and videos
         params.require(:influencer).permit(
-          :name, :ac_compte, :ac_cdiposit, :ac_curt, :ac_llarg, :ac_deute, :ac_jubil, :ac_fiscal,
-          :video_compte, :video_cdiposit, :video_curt, :video_llarg, :video_deute, :video_jubil, :video_fiscal, :video_portfolio
+          :name,
+          :ac_compte, :ac_cdiposit, :ac_saving, :ac_deute, :ac_mortgage,
+          :ac_curt, :ac_llarg, :ac_jubil, :ac_portfolio, :ac_fiscal,
+          :video_compte, :video_cdiposit, :video_saving, :video_deute, :video_mortgage,
+          :video_curt, :video_llarg, :video_jubil, :video_portfolio, :video_fiscal
         )
       end
     end

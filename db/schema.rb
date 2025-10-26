@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_10_23_143351) do
+ActiveRecord::Schema[7.2].define(version: 2025_10_24_162913) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -59,6 +59,11 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_23_143351) do
     t.string "video_fiscal"
     t.string "video_portfolio"
     t.boolean "default", default: false, null: false
+    t.string "ac_portfolio"
+    t.string "ac_saving"
+    t.string "ac_mortgage"
+    t.string "video_saving"
+    t.string "video_mortgage"
     t.index ["ac_compte"], name: "index_influencers_on_ac_compte"
     t.index ["code"], name: "index_influencers_on_code", unique: true
     t.index ["default"], name: "index_influencers_on_default"

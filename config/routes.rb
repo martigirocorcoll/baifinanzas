@@ -1,6 +1,13 @@
 Rails.application.routes.draw do
   # Recomendaciones ampliadas
-  resources :recommendations, only: [:show], param: :slug
+  resources :recommendations, only: [:index, :show], param: :slug
+
+  # API para user actions (marcar recomendaciones completadas)
+  namespace :api do
+    get  'user_actions/check', to: 'user_actions#check'
+    post 'user_actions/complete', to: 'user_actions#complete'
+    post 'user_actions/uncomplete', to: 'user_actions#uncomplete'
+  end
 
   # Dashboard
   get "dashboard/index"
