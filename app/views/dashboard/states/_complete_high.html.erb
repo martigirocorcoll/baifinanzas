@@ -1065,50 +1065,80 @@ function saveObjectiveEdit(event, objectiveId) {
   const month = document.getElementById(`edit-month-${objectiveId}`).value;
   const year = document.getElementById(`edit-year-${objectiveId}`).value;
 
-  // Crear formulario y enviarlo (Turbo se encargará del modal de carga)
-  const form = document.createElement('form');
-  form.method = 'POST';
-  form.action = `/objectives/${objectiveId}`;
+  // Mostrar modal de carga
+  const loadingModal = new bootstrap.Modal(document.getElementById('createObjectiveLoadingModal'));
+  loadingModal.show();
 
-  // Token CSRF
-  const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
-  const csrfInput = document.createElement('input');
-  csrfInput.type = 'hidden';
-  csrfInput.name = 'authenticity_token';
-  csrfInput.value = csrfToken;
-  form.appendChild(csrfInput);
+  const steps = ['objective-step-1', 'objective-step-2', 'objective-step-3'];
+  const progressBar = document.getElementById('objective-progress-bar');
+  let currentStepIndex = 0;
 
-  // Método PATCH
-  const methodInput = document.createElement('input');
-  methodInput.type = 'hidden';
-  methodInput.name = '_method';
-  methodInput.value = 'patch';
-  form.appendChild(methodInput);
+  function activateStep(index) {
+    if (index < steps.length) {
+      const stepElement = document.getElementById(steps[index]);
+      stepElement.classList.add('active');
 
-  // Amount
-  const amountInput = document.createElement('input');
-  amountInput.type = 'hidden';
-  amountInput.name = 'objective[target_amount]';
-  amountInput.value = amount;
-  form.appendChild(amountInput);
+      const progress = ((index + 1) / steps.length) * 100;
+      progressBar.style.width = progress + '%';
 
-  // Month
-  const monthInput = document.createElement('input');
-  monthInput.type = 'hidden';
-  monthInput.name = 'objective[target_date_month]';
-  monthInput.value = month;
-  form.appendChild(monthInput);
+      currentStepIndex++;
+      if (currentStepIndex < steps.length) {
+        setTimeout(() => activateStep(currentStepIndex), 650);
+      } else {
+        setTimeout(function() {
+          loadingModal.hide();
+          setTimeout(function() {
+            // Crear formulario y enviarlo
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = `/objectives/${objectiveId}`;
 
-  // Year
-  const yearInput = document.createElement('input');
-  yearInput.type = 'hidden';
-  yearInput.name = 'objective[target_date_year]';
-  yearInput.value = year;
-  form.appendChild(yearInput);
+            // Token CSRF
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+            const csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = 'authenticity_token';
+            csrfInput.value = csrfToken;
+            form.appendChild(csrfInput);
 
-  // Agregar al body y enviar
-  document.body.appendChild(form);
-  form.submit();
+            // Método PATCH
+            const methodInput = document.createElement('input');
+            methodInput.type = 'hidden';
+            methodInput.name = '_method';
+            methodInput.value = 'patch';
+            form.appendChild(methodInput);
+
+            // Amount
+            const amountInput = document.createElement('input');
+            amountInput.type = 'hidden';
+            amountInput.name = 'objective[target_amount]';
+            amountInput.value = amount;
+            form.appendChild(amountInput);
+
+            // Month
+            const monthInput = document.createElement('input');
+            monthInput.type = 'hidden';
+            monthInput.name = 'objective[target_date_month]';
+            monthInput.value = month;
+            form.appendChild(monthInput);
+
+            // Year
+            const yearInput = document.createElement('input');
+            yearInput.type = 'hidden';
+            yearInput.name = 'objective[target_date_year]';
+            yearInput.value = year;
+            form.appendChild(yearInput);
+
+            // Agregar al body y enviar
+            document.body.appendChild(form);
+            form.submit();
+          }, 300);
+        }, 400);
+      }
+    }
+  }
+
+  setTimeout(() => activateStep(0), 300);
 }
 
 // Marcar el primer paso como activo al cargar
