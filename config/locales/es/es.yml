@@ -1,0 +1,140 @@
+es:
+  # General
+  app_name: "BaiFinanzas"
+
+  # Navigation
+  navigation:
+    navbar:
+      brand: "BaiFinanzas"
+      greeting: "Hola %{email}"
+      manage_influencers: "Gestionar Influencers"
+      logout: "Cerrar sesión"
+      login: "Iniciar sesión"
+      register: "Registrarse"
+      language: "Idioma"
+      spanish: "Español"
+      english: "English"
+    footer:
+      copyright: "© %{year} BaiFinanzas. Todos los derechos reservados."
+      platform: "Plataforma Web"
+      secure: "100% Seguro"
+      terms: "Términos de Uso"
+      privacy: "Política de Privacidad"
+      legal: "Aviso Legal"
+      contact: "Contacto"
+
+  # Flash messages
+  flash:
+    invalid_params: "Parámetros inválidos"
+    action_unmarked: "Acción desmarcada"
+    action_completed: "¡Acción completada! Sigue así 🎉"
+    objective_unmarked: "Objetivo desmarcado"
+    objective_completed: "¡Objetivo completado! 🎯"
+
+  # Controllers
+  controllers:
+    dashboard:
+      invalid_params: "Parámetros inválidos"
+    objectives:
+      created: "Objetivo creado correctamente. Ya puedes ver tu recomendación personalizada."
+      updated: "Objetivo actualizado correctamente."
+      deleted: "Objetivo eliminado correctamente."
+    pygs:
+      created: "¡Excelente! Paso 1 completado. Ahora vamos con tu balance patrimonial."
+      updated: "PYG actualizado correctamente."
+    balances:
+      created: "Balance guardado correctamente."
+      updated: "Balance actualizado correctamente."
+    onboarding:
+      welcome_back: "¡Bienvenido de nuevo! Tu plan está listo."
+      complete_balance: "¡Excelente! Solo falta completar tu balance patrimonial."
+    influencers:
+      links_updated: "Enlaces y videos actualizados correctamente."
+      no_longer_default: "ya no es el influencer por defecto."
+      set_as_default: "establecido como influencer por defecto."
+      no_permission_profile: "No tienes permisos para acceder a este perfil."
+      no_permission_page: "No tienes permisos para acceder a esta página."
+    recommendations:
+      not_found: "Recomendación no encontrada"
+    api:
+      user_actions:
+        marked_complete: "Recomendación marcada como completada"
+        unmarked: "Recomendación desmarcada"
+
+  # Common
+  common:
+    save: "Guardar"
+    cancel: "Cancelar"
+    delete: "Eliminar"
+    edit: "Editar"
+    back: "Volver"
+    next: "Siguiente"
+    previous: "Anterior"
+    submit: "Enviar"
+    loading: "Cargando..."
+    confirm_delete: "¿Estás seguro de que quieres eliminar esto?"
+    yes: "Sí"
+    no: "No"
+    or: "o"
+    and: "y"
+
+  # Currencies and numbers
+  number:
+    currency:
+      format:
+        unit: "€"
+        precision: 2
+        separator: ","
+        delimiter: "."
+        format: "%n %u"
+
+  # Date and time
+  date:
+    formats:
+      default: "%d/%m/%Y"
+      short: "%d %b"
+      long: "%d de %B de %Y"
+    day_names:
+      - Domingo
+      - Lunes
+      - Martes
+      - Miércoles
+      - Jueves
+      - Viernes
+      - Sábado
+    abbr_day_names:
+      - Dom
+      - Lun
+      - Mar
+      - Mié
+      - Jue
+      - Vie
+      - Sáb
+    month_names:
+      - ~
+      - Enero
+      - Febrero
+      - Marzo
+      - Abril
+      - Mayo
+      - Junio
+      - Julio
+      - Agosto
+      - Septiembre
+      - Octubre
+      - Noviembre
+      - Diciembre
+    abbr_month_names:
+      - ~
+      - Ene
+      - Feb
+      - Mar
+      - Abr
+      - May
+      - Jun
+      - Jul
+      - Ago
+      - Sep
+      - Oct
+      - Nov
+      - Dic

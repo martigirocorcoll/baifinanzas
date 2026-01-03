@@ -1,6 +1,35 @@
 <!-- DASHBOARD HIGH LEVEL: Situación Estable, Crecimiento Patrimonial, Libertad Financiera -->
 <!-- NUEVA ESTRUCTURA: 3 SECCIONES PRINCIPALES -->
 
+<!-- I18n data for JavaScript -->
+<div id="i18n-dashboard-data" class="d-none"
+     data-locale="<%= I18n.locale %>"
+     data-step="<%= t('views.dashboard.complete.financial_plan.step', number: '%{number}') %>"
+     data-completed="<%= t('views.dashboard.complete.financial_plan.completed_button') %>"
+     data-mark-completed="<%= t('views.dashboard.complete.financial_plan.mark_completed') %>"
+     data-view-how-to="<%= t('views.dashboard.complete.financial_plan.view_how_to') %>"
+     data-financial-impact="<%= t('views.dashboard.complete.financial_plan.financial_impact') %>"
+     data-reached-level="<%= t('views.dashboard.complete.objectives.reached_level') %>"
+     data-create-first="<%= t('views.dashboard.complete.objectives.create_first') %>"
+     data-reach-goal="<%= t('views.dashboard.complete.objectives.reach_goal', title: '%{title}') %>"
+     data-edit-goal="<%= t('views.dashboard.complete.objectives.edit_goal', title: '%{title}') %>"
+     data-new-goal-amount="<%= t('views.dashboard.complete.objectives.new_goal_amount') %>"
+     data-new-deadline="<%= t('views.dashboard.complete.objectives.new_deadline') %>"
+     data-save="<%= t('views.dashboard.complete.objectives.save') %>"
+     data-cancel="<%= t('views.dashboard.complete.objectives.cancel') %>"
+     data-view-full-plan="<%= t('views.dashboard.complete.objectives.view_full_plan') %>"
+     data-delete-confirm="<%= t('views.dashboard.complete.objectives.delete_confirm') %>"
+     data-delete="<%= t('views.dashboard.complete.objectives.delete') %>"
+     data-objective-description="<%= t('views.dashboard.complete.objectives.objective_description', title: '%{title}', months: '%{months}', product: '%{product}', monthly: '%{monthly}', target: '%{target}') %>"
+     data-goal-summary="<%= t('views.dashboard.complete.objectives.goal_summary', amount: '%{amount}', months: '%{months}') %>"
+     data-edit-goal-title="<%= t('views.dashboard.complete.objectives.edit_goal_title') %>"
+     data-investment-deposit="<%= t('views.investment_types.ac_diposit') %>"
+     data-investment-medium="<%= t('views.investment_types.ac_curt') %>"
+     data-investment-long="<%= t('views.investment_types.ac_llarg') %>"
+     data-investment-pension="<%= t('views.investment_types.ac_jubil') %>"
+     data-months='<%= t('views.dashboard.months').to_json.html_safe %>'>
+</div>
+
 <!-- MARGEN SUPERIOR -->
 <div class="mt-4"></div>
 
@@ -10,7 +39,7 @@
 <div class="dashboard-section mb-4">
   <h3 class="section-title mb-3">
     <i class="bi bi-trophy-fill text-warning me-2"></i>
-    Tu Nivel Financiero
+    <%= t('views.dashboard.complete.financial_level.title') %>
   </h3>
 
   <div class="card border-0 shadow-sm">
@@ -21,12 +50,12 @@
           <i class="<%= @mountain_state[:bootstrap_icon] %> me-3 text-warning" style="font-size: 2.5rem;"></i>
           <div>
             <h4 class="mb-1 fw-bold"><%= @mountain_state[:name] %></h4>
-            <span class="badge bg-warning text-dark">Nivel <%= current_user.financial_health_level_number %>/6</span>
+            <span class="badge bg-warning text-dark"><%= t('views.dashboard.complete.financial_level.level_badge', current: current_user.financial_health_level_number) %></span>
           </div>
         </div>
         <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#levelGuideModal">
           <i class="bi bi-info-circle me-1"></i>
-          Guía de niveles
+          <%= t('views.dashboard.complete.financial_level.level_guide') %>
         </button>
       </div>
 
@@ -39,15 +68,15 @@
             <h2 class="accordion-header">
               <button class="accordion-button collapsed bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#nextLevelCollapse">
                 <i class="bi bi-flag-fill me-2 text-primary"></i>
-                <strong>Próximo nivel: <%= @next_level_progress[:target] %></strong>
+                <strong><%= t('views.dashboard.complete.financial_level.next_level', target: @next_level_progress[:target]) %></strong>
                 <span class="badge bg-light text-dark ms-2">
-                  <%= @next_level_progress[:requirements].count { |r| r[:completed] } %>/<%= @next_level_progress[:requirements].count %> requisitos
+                  <%= @next_level_progress[:requirements].count { |r| r[:completed] } %>/<%= @next_level_progress[:requirements].count %> <%= t('views.dashboard.complete.financial_level.requirements') %>
                 </span>
               </button>
             </h2>
             <div id="nextLevelCollapse" class="accordion-collapse collapse">
               <div class="accordion-body">
-                <p class="text-muted mb-3">Para alcanzarlo necesitas:</p>
+                <p class="text-muted mb-3"><%= t('views.dashboard.complete.financial_level.requirements_to_reach') %></p>
                 <% @next_level_progress[:requirements].each do |req| %>
                   <div class="d-flex align-items-start mb-2">
                     <i class="<%= req[:completed] ? 'bi bi-check-circle-fill text-success' : 'bi bi-circle text-muted' %> me-2" style="font-size: 1.2rem;"></i>
@@ -56,11 +85,11 @@
                       <% unless req[:completed] %>
                         <br>
                         <small class="text-muted">
-                          Actual: €<%= number_with_delimiter(req[:current], delimiter: ".") %> /
-                          Objetivo: €<%= number_with_delimiter(req[:target], delimiter: ".") %>
+                          <%= t('views.dashboard.complete.financial_level.current') %>: €<%= number_with_delimiter(req[:current], delimiter: ".") %> /
+                          <%= t('views.dashboard.complete.financial_level.target') %>: €<%= number_with_delimiter(req[:target], delimiter: ".") %>
                           <% deficit = req[:target] - req[:current] %>
                           <% if deficit > 0 %>
-                            <span class="text-danger">(Faltan €<%= number_with_delimiter(deficit, delimiter: ".") %>)</span>
+                            <span class="text-danger">(<%= t('views.dashboard.complete.financial_level.remaining') %> €<%= number_with_delimiter(deficit, delimiter: ".") %>)</span>
                           <% end %>
                         </small>
                       <% end %>
@@ -82,7 +111,7 @@
 <div class="dashboard-section mb-4">
   <h3 class="section-title mb-3">
     <i class="bi bi-list-check text-success me-2"></i>
-    Tu Plan Financiero
+    <%= t('views.dashboard.complete.financial_plan.title') %>
   </h3>
 
   <div class="card border-0 shadow-sm">
@@ -91,9 +120,9 @@
       <!-- A. Barra de progreso -->
       <div class="progress-header mb-4 pb-3 border-bottom">
         <div class="d-flex justify-content-between align-items-center mb-2">
-          <span class="fw-bold">Progreso general</span>
+          <span class="fw-bold"><%= t('views.dashboard.complete.financial_plan.progress') %></span>
           <span class="badge bg-primary" style="font-size: 0.9rem;">
-            <%= @completed_count %>/<%= @total_count %> completadas
+            <%= @completed_count %>/<%= @total_count %> <%= t('views.dashboard.complete.financial_plan.completed') %>
           </span>
         </div>
         <div class="progress" style="height: 20px;">
@@ -111,7 +140,7 @@
           <!-- C. Lista de pasos (sidebar en desktop, abajo en mobile) -->
           <div class="col-lg-4 order-lg-1 order-2">
             <div class="steps-sidebar">
-              <h6 class="text-muted text-uppercase small mb-3">Pasos del plan</h6>
+              <h6 class="text-muted text-uppercase small mb-3"><%= t('views.dashboard.complete.financial_plan.steps_title') %></h6>
 
               <div class="steps-list">
                 <% @action_plan.each_with_index do |action, index| %>
@@ -152,7 +181,7 @@
                            <% if action[:type] == 'recommendation' %>
                              onclick="event.stopPropagation(); toggleAction('<%= action[:key] %>', 'recommendation', <%= action[:completed] ? 'true' : 'false' %>);"
                              style="cursor: pointer;"
-                             title="<%= action[:completed] ? 'Desmarcar' : 'Marcar como completada' %>"
+                             title="<%= action[:completed] ? t('views.dashboard.complete.financial_plan.unmark') : t('views.dashboard.complete.financial_plan.mark_completed') %>"
                            <% end %>>
                         <% if action[:completed] %>
                           <i class="bi bi-check-circle-fill text-success"></i>
@@ -180,7 +209,7 @@
                   <!-- Header con título y link completar -->
                   <div class="d-flex justify-content-between align-items-start mb-4">
                     <div>
-                      <span class="badge bg-secondary mb-3">Paso <%= @current_task[:position] %></span>
+                      <span class="badge bg-secondary mb-3"><%= t('views.dashboard.complete.financial_plan.step', number: @current_task[:position]) %></span>
                       <h2 class="fw-bold mb-0">
                         <i class="<%= @current_task[:icon] %> me-2 text-muted"></i>
                         <span class="ms-2">
@@ -199,12 +228,12 @@
                         <% if @current_task[:completed] %>
                           <button type="submit" class="btn btn-sm btn-success">
                             <i class="bi bi-check-circle-fill me-1"></i>
-                            Completada
+                            <%= t('views.dashboard.complete.financial_plan.completed_button') %>
                           </button>
                         <% else %>
                           <button type="submit" class="btn btn-sm btn-outline-secondary">
                             <i class="bi bi-check-circle me-1"></i>
-                            Marcar completada
+                            <%= t('views.dashboard.complete.financial_plan.mark_completed') %>
                           </button>
                         <% end %>
                       <% end %>
@@ -232,7 +261,7 @@
                     <div class="d-grid mb-3">
                       <%= link_to recommendation_path(@current_task[:slug]), class: "btn btn-primary btn-lg", style: "padding: 1rem 2rem; font-size: 1.1rem;" do %>
                         <i class="bi bi-arrow-right-circle me-2"></i>
-                        Ver cómo hacerlo paso a paso
+                        <%= t('views.dashboard.complete.financial_plan.view_how_to') %>
                       <% end %>
                     </div>
 
@@ -242,7 +271,7 @@
                         <i class="bi bi-piggy-bank fs-5 me-3 text-success-emphasis"></i>
                         <div>
                           <strong class="d-block mb-0 text-success-emphasis" style="font-size: 0.95rem;"><%= @current_task[:benefit_text] %></strong>
-                          <small class="text-muted" style="font-size: 0.85rem;">Impacto en tu situación financiera</small>
+                          <small class="text-muted" style="font-size: 0.85rem;"><%= t('views.dashboard.complete.financial_plan.financial_impact') %></small>
                         </div>
                       </div>
                     </div>
@@ -251,42 +280,41 @@
                     <div class="text-center mb-4">
                       <i class="bi bi-bullseye" style="font-size: 4rem; color: #6c757d;"></i>
                       <p class="text-muted mt-3">
-                        Has alcanzado un nivel donde puedes crear objetivos personalizados
-                        para hacer crecer tu patrimonio.
+                        <%= t('views.dashboard.complete.objectives.reached_level') %>
                       </p>
                     </div>
                     <div class="d-grid">
                       <button class="btn btn-primary btn-lg" onclick="showCreateObjectiveForm()">
                         <i class="bi bi-plus-circle me-2"></i>
-                        Crear mi primer objetivo
+                        <%= t('views.dashboard.complete.objectives.create_first') %>
                       </button>
                     </div>
 
                   <% elsif @current_task[:type] == 'objective' %>
                     <div class="mb-4">
                       <p class="text-muted">
-                        Meta: <strong>€<%= number_with_delimiter(@current_task[:objective].target_amount, delimiter: ".") %></strong>
-                        en <%= distance_of_time_in_words(Date.current, @current_task[:objective].target_date) %>
+                        <%= t('views.dashboard.complete.objectives.goal') %>: <strong>€<%= number_with_delimiter(@current_task[:objective].target_amount, delimiter: ".") %></strong>
+                        <%= t('views.dashboard.complete.objectives.in_time', time: distance_of_time_in_words(Date.current, @current_task[:objective].target_date)) %>
                       </p>
                       <p class="text-info">
                         <i class="bi bi-piggy-bank me-2"></i>
-                        Ahorro mensual necesario: <strong>€<%= number_with_delimiter(@current_task[:objective].monthly_savings_needed, delimiter: ".") %></strong>
+                        <%= t('views.dashboard.complete.objectives.monthly_savings') %>: <strong>€<%= number_with_delimiter(@current_task[:objective].monthly_savings_needed, delimiter: ".") %></strong>
                       </p>
                     </div>
                     <div class="d-grid gap-2">
                       <%= link_to recommendation_path(@current_task[:objective].investment_recommendation, objetivo_id: @current_task[:objective].id),
                           class: "btn btn-primary btn-lg" do %>
                         <i class="bi bi-arrow-right-circle me-2"></i>
-                        Ver plan de inversión
+                        <%= t('views.dashboard.complete.objectives.view_investment_plan') %>
                       <% end %>
                       <%= button_to objective_path(@current_task[:objective]),
                           method: :delete,
                           class: "btn btn-outline-danger",
                           data: {
-                            turbo_confirm: "¿Estás seguro de que quieres eliminar este objetivo? Esta acción no se puede deshacer."
+                            turbo_confirm: t('views.dashboard.complete.objectives.delete_confirm')
                           } do %>
                         <i class="bi bi-trash me-2"></i>
-                        Eliminar objetivo
+                        <%= t('views.dashboard.complete.objectives.delete') %>
                       <% end %>
                     </div>
                   <% end %>
@@ -296,19 +324,18 @@
                 <!-- Todas las acciones completadas -->
                 <div class="text-center py-5">
                   <i class="bi bi-trophy-fill text-success" style="font-size: 5rem;"></i>
-                  <h3 class="mt-4 fw-bold">¡Felicidades! Plan completado 🎉</h3>
+                  <h3 class="mt-4 fw-bold"><%= t('views.dashboard.complete.financial_plan.all_completed_title') %></h3>
                   <p class="text-muted mb-4">
-                    Has completado todas las acciones de tu plan financiero.
-                    Actualiza tus datos para ver si has progresado de nivel.
+                    <%= t('views.dashboard.complete.financial_plan.all_completed_description') %>
                   </p>
                   <div class="d-flex gap-2 justify-content-center">
                     <%= link_to edit_pyg_path, class: "btn btn-success" do %>
                       <i class="bi bi-graph-up me-2"></i>
-                      Actualizar PyG
+                      <%= t('views.dashboard.complete.financial_plan.update_pyg') %>
                     <% end %>
                     <%= link_to edit_balance_path, class: "btn btn-success" do %>
                       <i class="bi bi-pie-chart me-2"></i>
-                      Actualizar Balance
+                      <%= t('views.dashboard.complete.financial_plan.update_balance') %>
                     <% end %>
                   </div>
                 </div>
@@ -321,34 +348,34 @@
                   <div class="mb-3">
                     <h4 class="fw-bold mb-3">
                       <i class="bi bi-bullseye me-2 text-primary"></i>
-                      Crea tu Objetivo Financiero
+                      <%= t('views.dashboard.complete.objectives.create_title') %>
                     </h4>
                     <p class="text-muted mb-0" style="line-height: 1.6;">
-                      Define una meta financiera concreta y te ayudaremos a alcanzarla. Te calcularemos cuánto debes ahorrar cada mes y te recomendaremos el mejor producto de inversión según tu plazo.
+                      <%= t('views.dashboard.complete.objectives.create_description') %>
                     </p>
                   </div>
 
                   <!-- Ejemplos de objetivos -->
                   <div class="mb-4">
-                    <label class="form-label fw-bold small text-muted mb-2" style="opacity: 0.7;">EJEMPLOS DE OBJETIVOS</label>
+                    <label class="form-label fw-bold small text-muted mb-2" style="opacity: 0.7;"><%= t('views.dashboard.complete.objectives.examples_title') %></label>
                     <div class="d-flex flex-wrap gap-2">
-                      <button type="button" class="btn btn-sm btn-outline-secondary" onclick="fillObjectiveExample('Comprar coche', 25000, 12)">
-                        <i class="bi bi-car-front me-1"></i> Comprar coche
+                      <button type="button" class="btn btn-sm btn-outline-secondary" onclick="fillObjectiveExample('<%= t('views.dashboard.complete.objectives.example_car') %>', 25000, 12)">
+                        <i class="bi bi-car-front me-1"></i> <%= t('views.dashboard.complete.objectives.example_car') %>
                       </button>
-                      <button type="button" class="btn btn-sm btn-outline-secondary" onclick="fillObjectiveExample('Entrada vivienda', 60000, 48)">
-                        <i class="bi bi-house-door me-1"></i> Entrada vivienda
+                      <button type="button" class="btn btn-sm btn-outline-secondary" onclick="fillObjectiveExample('<%= t('views.dashboard.complete.objectives.example_house') %>', 60000, 48)">
+                        <i class="bi bi-house-door me-1"></i> <%= t('views.dashboard.complete.objectives.example_house') %>
                       </button>
-                      <button type="button" class="btn btn-sm btn-outline-secondary" onclick="fillObjectiveExample('Boda', 15000, 18)">
-                        <i class="bi bi-heart me-1"></i> Boda
+                      <button type="button" class="btn btn-sm btn-outline-secondary" onclick="fillObjectiveExample('<%= t('views.dashboard.complete.objectives.example_wedding') %>', 15000, 18)">
+                        <i class="bi bi-heart me-1"></i> <%= t('views.dashboard.complete.objectives.example_wedding') %>
                       </button>
-                      <button type="button" class="btn btn-sm btn-outline-secondary" onclick="fillObjectiveExample('Viaje', 8000, 12)">
-                        <i class="bi bi-airplane me-1"></i> Viaje
+                      <button type="button" class="btn btn-sm btn-outline-secondary" onclick="fillObjectiveExample('<%= t('views.dashboard.complete.objectives.example_travel') %>', 8000, 12)">
+                        <i class="bi bi-airplane me-1"></i> <%= t('views.dashboard.complete.objectives.example_travel') %>
                       </button>
-                      <button type="button" class="btn btn-sm btn-outline-secondary" onclick="fillObjectiveExample('Estudios hijos', 40000, 120)">
-                        <i class="bi bi-mortarboard me-1"></i> Estudios hijos
+                      <button type="button" class="btn btn-sm btn-outline-secondary" onclick="fillObjectiveExample('<%= t('views.dashboard.complete.objectives.example_education') %>', 40000, 120)">
+                        <i class="bi bi-mortarboard me-1"></i> <%= t('views.dashboard.complete.objectives.example_education') %>
                       </button>
-                      <button type="button" class="btn btn-sm btn-outline-secondary" onclick="fillObjectiveExample('Jubilación', 500000, 240)">
-                        <i class="bi bi-piggy-bank me-1"></i> Jubilación
+                      <button type="button" class="btn btn-sm btn-outline-secondary" onclick="fillObjectiveExample('<%= t('views.dashboard.complete.objectives.example_retirement') %>', 500000, 240)">
+                        <i class="bi bi-piggy-bank me-1"></i> <%= t('views.dashboard.complete.objectives.example_retirement') %>
                       </button>
                     </div>
                   </div>
@@ -357,32 +384,32 @@
                     <%= f.hidden_field :user_id, value: current_user.id %>
 
                     <div class="mb-3">
-                      <label class="form-label fw-bold">¿Qué quieres lograr?</label>
-                      <%= f.text_field :title, class: "form-control form-control-lg", placeholder: "Ej: Comprar coche", required: true, id: "objective-title-input" %>
+                      <label class="form-label fw-bold"><%= t('views.dashboard.complete.objectives.field_title') %></label>
+                      <%= f.text_field :title, class: "form-control form-control-lg", placeholder: t('views.objectives_form.title_placeholder'), required: true, id: "objective-title-input" %>
                     </div>
 
                     <div class="mb-3">
-                      <label class="form-label fw-bold">¿Cuánto necesitas? (€)</label>
-                      <%= f.number_field :target_amount, class: "form-control form-control-lg", placeholder: "Ej: 25000", required: true, id: "objective-amount-input" %>
+                      <label class="form-label fw-bold"><%= t('views.dashboard.complete.objectives.field_amount') %></label>
+                      <%= f.number_field :target_amount, class: "form-control form-control-lg", placeholder: t('views.objectives_form.amount_placeholder'), required: true, id: "objective-amount-input" %>
                     </div>
 
                     <div class="mb-3">
-                      <label class="form-label fw-bold">¿Para cuándo?</label>
+                      <label class="form-label fw-bold"><%= t('views.dashboard.complete.objectives.field_date') %></label>
                       <div class="row g-2">
                         <div class="col-7">
                           <%= f.select :target_date_month,
                               options_for_select([
-                                ['Enero', 1], ['Febrero', 2], ['Marzo', 3], ['Abril', 4],
-                                ['Mayo', 5], ['Junio', 6], ['Julio', 7], ['Agosto', 8],
-                                ['Septiembre', 9], ['Octubre', 10], ['Noviembre', 11], ['Diciembre', 12]
+                                [t('views.dashboard.months.january'), 1], [t('views.dashboard.months.february'), 2], [t('views.dashboard.months.march'), 3], [t('views.dashboard.months.april'), 4],
+                                [t('views.dashboard.months.may'), 5], [t('views.dashboard.months.june'), 6], [t('views.dashboard.months.july'), 7], [t('views.dashboard.months.august'), 8],
+                                [t('views.dashboard.months.september'), 9], [t('views.dashboard.months.october'), 10], [t('views.dashboard.months.november'), 11], [t('views.dashboard.months.december'), 12]
                               ], Date.current.month),
-                              { prompt: 'Mes' },
+                              { prompt: '' },
                               { class: "form-select", required: true, id: "objective-month-input" } %>
                         </div>
                         <div class="col-5">
                           <%= f.select :target_date_year,
                               options_for_select((Date.current.year..(Date.current.year + 45)).map { |y| [y, y] }, Date.current.year + 1),
-                              { prompt: 'Año' },
+                              { prompt: '' },
                               { class: "form-select", required: true, id: "objective-year-input" } %>
                         </div>
                       </div>
@@ -391,10 +418,10 @@
                     <div class="d-flex gap-2 mb-3">
                       <button type="submit" class="btn btn-primary flex-grow-1">
                         <i class="bi bi-check-circle me-2"></i>
-                        Crear Objetivo
+                        <%= t('views.dashboard.complete.objectives.create_button') %>
                       </button>
                       <button type="button" class="btn btn-outline-secondary" onclick="hideCreateObjectiveForm()">
-                        Cancelar
+                        <%= t('views.dashboard.complete.objectives.cancel') %>
                       </button>
                     </div>
 
@@ -403,9 +430,9 @@
                       <div class="d-flex">
                         <i class="bi bi-info-circle fs-5 me-3"></i>
                         <div>
-                          <strong class="d-block mb-1">¿Qué pasa al crear el objetivo?</strong>
+                          <strong class="d-block mb-1"><%= t('views.dashboard.complete.objectives.info_title') %></strong>
                           <small>
-                            Se creará una recomendación nueva personalizada donde te explicamos paso a paso cómo conseguir tu objetivo, cuánto debes ahorrar mensualmente y qué producto de inversión te recomendamos.
+                            <%= t('views.dashboard.complete.objectives.info_description') %>
                           </small>
                         </div>
                       </div>
@@ -430,7 +457,7 @@
 <div class="dashboard-section mb-4">
   <h3 class="section-title mb-3">
     <i class="bi bi-graph-up text-primary me-2"></i>
-    Tu Situación Financiera
+    <%= t('views.dashboard.complete.financial_situation.title') %>
   </h3>
 
   <div class="card border-0 shadow-sm">
@@ -438,7 +465,7 @@
 
       <!-- Capacidad de ahorro (siempre visible) -->
       <div class="mb-4">
-        <h6 class="text-muted text-uppercase small mb-3">Capacidad de Ahorro</h6>
+        <h6 class="text-muted text-uppercase small mb-3"><%= t('views.dashboard.complete.financial_situation.savings_capacity') %></h6>
 
         <%
           theoretical_capacity = @monthly_cash_flow
@@ -450,7 +477,7 @@
         <div class="row g-3 mb-3">
           <div class="col-4">
             <div class="text-center">
-              <small class="text-muted d-block">Flujo de caja</small>
+              <small class="text-muted d-block"><%= t('views.dashboard.complete.financial_situation.cash_flow') %></small>
               <strong class="h5 <%= theoretical_capacity > 0 ? 'text-primary' : 'text-danger' %>">
                 €<%= number_with_delimiter(theoretical_capacity, delimiter: ".") %>
               </strong>
@@ -458,7 +485,7 @@
           </div>
           <div class="col-4">
             <div class="text-center">
-              <small class="text-muted d-block">Comprometido</small>
+              <small class="text-muted d-block"><%= t('views.dashboard.complete.financial_situation.committed') %></small>
               <strong class="h5 text-info">
                 €<%= number_with_delimiter(committed_capacity, delimiter: ".") %>
               </strong>
@@ -466,7 +493,7 @@
           </div>
           <div class="col-4">
             <div class="text-center">
-              <small class="text-muted d-block">Disponible</small>
+              <small class="text-muted d-block"><%= t('views.dashboard.complete.financial_situation.available') %></small>
               <strong class="h5 <%= available_capacity >= 0 ? 'text-success' : 'text-danger' %>">
                 €<%= number_with_delimiter(available_capacity, delimiter: ".") %>
               </strong>
@@ -485,19 +512,18 @@
           <% if utilization_rate >= 100 %>
             <small class="text-danger">
               <i class="bi bi-exclamation-triangle me-1"></i>
-              Tus objetivos exceden tu capacidad de ahorro
+              <%= t('views.dashboard.complete.financial_situation.exceeds_capacity') %>
             </small>
           <% elsif utilization_rate >= 70 %>
             <small class="text-warning">
               <i class="bi bi-info-circle me-1"></i>
-              Alto uso de capacidad. Deja margen para imprevistos.
+              <%= t('views.dashboard.complete.financial_situation.high_utilization') %>
             </small>
           <% end %>
         <% else %>
           <div class="alert alert-danger mb-0">
             <i class="bi bi-exclamation-triangle me-2"></i>
-            <strong>Capacidad negativa:</strong> Tus gastos superan tus ingresos.
-            Es importante revisar tu situación financiera.
+            <strong><%= t('views.dashboard.complete.financial_situation.negative_capacity') %></strong> <%= t('views.dashboard.complete.financial_situation.negative_capacity_description') %>
           </div>
         <% end %>
       </div>
@@ -510,7 +536,7 @@
           <h2 class="accordion-header">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#pygCollapse">
               <i class="bi bi-graph-up me-2 text-primary"></i>
-              <strong>Ingresos y Gastos (PyG)</strong>
+              <strong><%= t('views.dashboard.complete.financial_situation.pyg_title') %></strong>
             </button>
           </h2>
           <div id="pygCollapse" class="accordion-collapse collapse">
@@ -521,19 +547,19 @@
               <div class="row text-center">
                 <div class="col-4">
                   <div class="text-success">
-                    <strong>Ingresos</strong><br>
+                    <strong><%= t('views.dashboard.complete.financial_situation.income') %></strong><br>
                     <span class="h6">€<%= number_with_delimiter(@pyg_chart_data[:income] || 0, delimiter: ".") %></span>
                   </div>
                 </div>
                 <div class="col-4">
                   <div class="text-danger">
-                    <strong>Gastos</strong><br>
+                    <strong><%= t('views.dashboard.complete.financial_situation.expenses') %></strong><br>
                     <span class="h6">€<%= number_with_delimiter(@pyg_chart_data[:expenses] || 0, delimiter: ".") %></span>
                   </div>
                 </div>
                 <div class="col-4">
                   <div class="<%= @pyg_chart_data[:cash_flow] > 0 ? 'text-success' : 'text-danger' %>">
-                    <strong>Capacidad</strong><br>
+                    <strong><%= t('views.dashboard.complete.financial_situation.capacity') %></strong><br>
                     <span class="h6">€<%= number_with_delimiter(@pyg_chart_data[:cash_flow] || 0, delimiter: ".") %></span>
                   </div>
                 </div>
@@ -541,7 +567,7 @@
               <div class="mt-3 text-center">
                 <%= link_to edit_pyg_path, class: "btn btn-outline-primary" do %>
                   <i class="bi bi-pencil me-2"></i>
-                  Editar Ingresos y Gastos
+                  <%= t('views.dashboard.complete.financial_situation.edit_pyg') %>
                 <% end %>
               </div>
             </div>
@@ -553,7 +579,7 @@
           <h2 class="accordion-header">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#balanceCollapse">
               <i class="bi bi-pie-chart me-2 text-success"></i>
-              <strong>Activos y Deudas (Balance)</strong>
+              <strong><%= t('views.dashboard.complete.financial_situation.balance_title') %></strong>
             </button>
           </h2>
           <div id="balanceCollapse" class="accordion-collapse collapse">
@@ -564,19 +590,19 @@
               <div class="row text-center">
                 <div class="col-4">
                   <div class="text-success">
-                    <strong>Activos</strong><br>
+                    <strong><%= t('views.dashboard.complete.financial_situation.assets') %></strong><br>
                     <span class="h6">€<%= number_with_delimiter(@balance_chart_data[:assets] || 0, delimiter: ".") %></span>
                   </div>
                 </div>
                 <div class="col-4">
                   <div class="text-danger">
-                    <strong>Deudas</strong><br>
+                    <strong><%= t('views.dashboard.complete.financial_situation.debts') %></strong><br>
                     <span class="h6">€<%= number_with_delimiter(@balance_chart_data[:debt] || 0, delimiter: ".") %></span>
                   </div>
                 </div>
                 <div class="col-4">
                   <div class="<%= @balance_chart_data[:net_worth] > 0 ? 'text-success' : 'text-danger' %>">
-                    <strong>Patrimonio</strong><br>
+                    <strong><%= t('views.dashboard.complete.financial_situation.net_worth') %></strong><br>
                     <span class="h6">€<%= number_with_delimiter(@balance_chart_data[:net_worth] || 0, delimiter: ".") %></span>
                   </div>
                 </div>
@@ -584,7 +610,7 @@
               <div class="mt-3 text-center">
                 <%= link_to edit_balance_path, class: "btn btn-outline-primary" do %>
                   <i class="bi bi-pencil me-2"></i>
-                  Editar Activos y Deudas
+                  <%= t('views.dashboard.complete.financial_situation.edit_balance') %>
                 <% end %>
               </div>
             </div>
@@ -603,6 +629,10 @@
 // Variables globales para el plan de acción
 let actionPlanData = <%= raw @action_plan.to_json %>;
 let currentStepId = <%= @current_task ? @current_task[:position] : 'null' %>;
+
+// Get i18n translations from data attributes
+const i18nData = document.getElementById('i18n-dashboard-data').dataset;
+const monthsData = JSON.parse(i18nData.months);
 
 // Función para toggle (completar/descompletar) una acción
 function toggleAction(actionKey, actionType, isCompleted) {
@@ -765,7 +795,7 @@ function updateStepDisplay(step) {
   html += `
     <div class="d-flex justify-content-between align-items-start mb-4">
       <div>
-        <span class="badge bg-secondary mb-3">Paso ${step.position}</span>
+        <span class="badge bg-secondary mb-3">${i18nData.step.replace('%{number}', step.position)}</span>
         <h2 class="fw-bold mb-0">
           <i class="${step.icon} me-2 text-muted"></i>
           <span class="ms-2">${step.title}</span>
@@ -786,14 +816,14 @@ function updateStepDisplay(step) {
       html += `
         <button type="submit" class="btn btn-sm btn-success">
           <i class="bi bi-check-circle-fill me-1"></i>
-          Completada
+          ${i18nData.completed}
         </button>
       `;
     } else {
       html += `
         <button type="submit" class="btn btn-sm btn-outline-secondary">
           <i class="bi bi-check-circle me-1"></i>
-          Marcar completada
+          ${i18nData.markCompleted}
         </button>
       `;
     }
@@ -807,12 +837,12 @@ function updateStepDisplay(step) {
   if (step.type === 'objective' && step.objective) {
     html += `
       <form action="/objectives/${step.objective.id}" method="post" data-turbo="false"
-            onsubmit="return confirm('¿Estás seguro de que quieres eliminar este objetivo?');" class="d-inline">
+            onsubmit="return confirm('${i18nData.deleteConfirm}');" class="d-inline">
         <input type="hidden" name="_method" value="delete">
         <input type="hidden" name="authenticity_token" value="${document.querySelector('meta[name="csrf-token"]').content}">
         <button type="submit" class="btn btn-sm btn-outline-danger">
           <i class="bi bi-trash me-1"></i>
-          Eliminar objetivo
+          ${i18nData.delete}
         </button>
       </form>
     `;
@@ -847,9 +877,9 @@ function updateStepDisplay(step) {
     // Botón CTA principal (PROTAGONISTA)
     html += `
       <div class="d-grid mb-3">
-        <a href="/recommendations/${step.slug}" class="btn btn-primary btn-lg" style="padding: 1rem 2rem; font-size: 1.1rem;">
+        <a href="/${i18nData.locale}/recommendations/${step.slug}" class="btn btn-primary btn-lg" style="padding: 1rem 2rem; font-size: 1.1rem;">
           <i class="bi bi-arrow-right-circle me-2"></i>
-          Ver cómo hacerlo paso a paso
+          ${i18nData.viewHowTo}
         </a>
       </div>
     `;
@@ -861,7 +891,7 @@ function updateStepDisplay(step) {
           <i class="bi bi-piggy-bank fs-5 me-3 text-success-emphasis"></i>
           <div>
             <strong class="d-block mb-0 text-success-emphasis" style="font-size: 0.95rem;">${step.benefit_text}</strong>
-            <small class="text-muted" style="font-size: 0.85rem;">Impacto en tu situación financiera</small>
+            <small class="text-muted" style="font-size: 0.85rem;">${i18nData.financialImpact}</small>
           </div>
         </div>
       </div>
@@ -875,19 +905,19 @@ function updateStepDisplay(step) {
     // Determinar nombre del producto según recomendación
     switch(investmentType) {
       case 'ac-diposit':
-        productName = 'Depósito a corto plazo';
+        productName = i18nData.investmentDeposit;
         break;
       case 'ac-curt':
-        productName = 'Renta fija a medio plazo';
+        productName = i18nData.investmentMedium;
         break;
       case 'ac-llarg':
-        productName = 'Fondos indexados a largo plazo';
+        productName = i18nData.investmentLong;
         break;
       case 'ac-jubil':
-        productName = 'Plan de pensiones';
+        productName = i18nData.investmentPension;
         break;
       default:
-        productName = 'Producto de inversión';
+        productName = i18nData.investmentMedium;
     }
 
     // Video del influencer (si existe)
@@ -899,12 +929,18 @@ function updateStepDisplay(step) {
       `;
     }
 
-    // Descripción personalizada
+    // Descripción personalizada (usando template traducido)
+    const descriptionTemplate = i18nData.objectiveDescription
+      .replace('%{title}', step.title)
+      .replace('%{months}', step.time_months)
+      .replace('%{product}', productName)
+      .replace('%{monthly}', step.objective.monthly_savings_needed.toLocaleString(i18nData.locale === 'es' ? 'es-ES' : 'en-US'))
+      .replace('%{target}', step.objective.target_amount.toLocaleString(i18nData.locale === 'es' ? 'es-ES' : 'en-US'));
+
     html += `
       <div class="mb-4">
         <p class="text-muted" style="font-size: 1.05rem; line-height: 1.6;">
-          Para alcanzar <strong>${step.title}</strong> en ${step.time_months} meses, te recomendamos invertir en <strong>${productName}</strong>.
-          Necesitarás ahorrar <strong>€${step.objective.monthly_savings_needed.toLocaleString('es-ES')}/mes</strong> para llegar a tu meta de <strong>€${step.objective.target_amount.toLocaleString('es-ES')}</strong>.
+          ${descriptionTemplate}
         </p>
       </div>
     `;
@@ -912,10 +948,10 @@ function updateStepDisplay(step) {
     // Botón CTA principal
     html += `
       <div class="d-grid mb-3">
-        <a href="/recommendations/${step.objective.investment_recommendation}?objetivo_id=${step.objective.id}"
+        <a href="/${i18nData.locale}/recommendations/${step.objective.investment_recommendation}?objetivo_id=${step.objective.id}"
            class="btn btn-primary btn-lg" style="padding: 1rem 2rem; font-size: 1.1rem;">
           <i class="bi bi-arrow-right-circle me-2"></i>
-          Ver plan de inversión completo
+          ${i18nData.viewFullPlan}
         </a>
       </div>
     `;
@@ -928,12 +964,12 @@ function updateStepDisplay(step) {
           <div class="d-flex align-items-center">
             <i class="bi bi-bullseye fs-5 me-3 text-success-emphasis"></i>
             <div class="flex-grow-1">
-              <strong class="d-block mb-0 text-success-emphasis" style="font-size: 0.95rem;">Alcanza ${step.title}</strong>
-              <small class="text-muted" style="font-size: 0.85rem;">Meta: €${step.objective.target_amount.toLocaleString('es-ES')} | Plazo: ${step.time_months} meses</small>
+              <strong class="d-block mb-0 text-success-emphasis" style="font-size: 0.95rem;">${i18nData.reachGoal.replace('%{title}', step.title)}</strong>
+              <small class="text-muted" style="font-size: 0.85rem;">${i18nData.goalSummary.replace('%{amount}', step.objective.target_amount.toLocaleString(i18nData.locale === 'es' ? 'es-ES' : 'en-US')).replace('%{months}', step.time_months)}</small>
             </div>
             <button type="button" class="btn btn-sm btn-link text-muted p-0 ms-2"
                     onclick="toggleEditObjective(${step.objective.id})"
-                    title="Editar meta y plazo">
+                    title="${i18nData.editGoalTitle}">
               <i class="bi bi-pencil"></i>
             </button>
           </div>
@@ -944,11 +980,11 @@ function updateStepDisplay(step) {
           <form onsubmit="saveObjectiveEdit(event, ${step.objective.id})">
             <div class="d-flex align-items-center mb-3">
               <i class="bi bi-bullseye fs-5 me-3 text-success-emphasis"></i>
-              <strong class="text-success-emphasis" style="font-size: 0.95rem;">Editar: ${step.title}</strong>
+              <strong class="text-success-emphasis" style="font-size: 0.95rem;">${i18nData.editGoal.replace('%{title}', step.title)}</strong>
             </div>
 
             <div class="mb-3">
-              <label class="form-label fw-bold small">Nueva meta (€)</label>
+              <label class="form-label fw-bold small">${i18nData.newGoalAmount}</label>
               <input type="number"
                      class="form-control form-control-sm"
                      id="edit-amount-${step.objective.id}"
@@ -957,7 +993,7 @@ function updateStepDisplay(step) {
             </div>
 
             <div class="mb-3">
-              <label class="form-label fw-bold small">Nuevo plazo</label>
+              <label class="form-label fw-bold small">${i18nData.newDeadline}</label>
               <div class="row g-2">
                 <div class="col-7">
                   <select class="form-select form-select-sm" id="edit-month-${step.objective.id}" required>
@@ -975,11 +1011,11 @@ function updateStepDisplay(step) {
             <div class="d-flex gap-2">
               <button type="submit" class="btn btn-sm btn-success flex-grow-1">
                 <i class="bi bi-check-circle me-1"></i>
-                Guardar
+                ${i18nData.save}
               </button>
               <button type="button" class="btn btn-sm btn-outline-secondary"
                       onclick="cancelEditObjective(${step.objective.id})">
-                Cancelar
+                ${i18nData.cancel}
               </button>
             </div>
           </form>
@@ -992,14 +1028,13 @@ function updateStepDisplay(step) {
       <div class="text-center mb-4">
         <i class="bi bi-bullseye" style="font-size: 4rem; color: #6c757d;"></i>
         <p class="text-muted mt-3">
-          Has alcanzado un nivel donde puedes crear objetivos personalizados
-          para hacer crecer tu patrimonio.
+          ${i18nData.reachedLevel}
         </p>
       </div>
       <div class="d-grid">
         <button class="btn btn-primary btn-lg" onclick="showCreateObjectiveForm()">
           <i class="bi bi-plus-circle me-2"></i>
-          Crear mi primer objetivo
+          ${i18nData.createFirst}
         </button>
       </div>
     `;
@@ -1013,15 +1048,13 @@ function updateStepDisplay(step) {
 
 // Helper: Generar opciones de meses
 function generateMonthOptions(selectedMonth) {
-  const months = [
-    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
-  ];
+  const monthKeys = ['january', 'february', 'march', 'april', 'may', 'june',
+                     'july', 'august', 'september', 'october', 'november', 'december'];
 
-  return months.map((month, index) => {
+  return monthKeys.map((key, index) => {
     const value = index + 1;
     const selected = value === selectedMonth ? 'selected' : '';
-    return `<option value="${value}" ${selected}>${month}</option>`;
+    return `<option value="${value}" ${selected}>${monthsData[key]}</option>`;
   }).join('');
 }
 
@@ -1218,11 +1251,14 @@ function initSimplifiedCharts() {
   if (pygElement) {
     const pygCtx = pygElement.getContext('2d');
     const pygData = <%= raw @pyg_chart_data.to_json %>;
+    const chartLabelsIncome = '<%= t('views.dashboard.complete.financial_situation.income') %>';
+    const chartLabelsExpenses = '<%= t('views.dashboard.complete.financial_situation.expenses') %>';
+    const chartLabelsCapacity = '<%= t('views.dashboard.complete.financial_situation.capacity') %>';
 
     new Chart(pygCtx, {
       type: 'bar',
       data: {
-        labels: ['Ingresos', 'Gastos', 'Capacidad'],
+        labels: [chartLabelsIncome, chartLabelsExpenses, chartLabelsCapacity],
         datasets: [{
           data: [pygData.income || 0, pygData.expenses || 0, Math.max(pygData.cash_flow || 0, 0)],
           backgroundColor: ['#28a745', '#dc3545', pygData.cash_flow > 0 ? '#17a2b8' : '#6c757d'],
@@ -1238,7 +1274,7 @@ function initSimplifiedCharts() {
             beginAtZero: true,
             ticks: {
               callback: function(value) {
-                return '€' + value.toLocaleString('es-ES');
+                return '€' + value.toLocaleString(i18nData.locale === 'es' ? 'es-ES' : 'en-US');
               }
             }
           }
@@ -1251,11 +1287,14 @@ function initSimplifiedCharts() {
   if (balanceElement) {
     const balanceCtx = balanceElement.getContext('2d');
     const balanceData = <%= raw @balance_chart_data.to_json %>;
+    const chartLabelsAssets = '<%= t('views.dashboard.complete.financial_situation.assets') %>';
+    const chartLabelsDebts = '<%= t('views.dashboard.complete.financial_situation.debts') %>';
+    const chartLabelsNetWorth = '<%= t('views.dashboard.complete.financial_situation.net_worth') %>';
 
     new Chart(balanceCtx, {
       type: 'bar',
       data: {
-        labels: ['Activos', 'Deudas', 'Patrimonio'],
+        labels: [chartLabelsAssets, chartLabelsDebts, chartLabelsNetWorth],
         datasets: [{
           data: [balanceData.assets || 0, balanceData.debt || 0, Math.max(balanceData.net_worth || 0, 0)],
           backgroundColor: ['#28a745', '#dc3545', balanceData.net_worth > 0 ? '#17a2b8' : '#6c757d'],
@@ -1271,7 +1310,7 @@ function initSimplifiedCharts() {
             beginAtZero: true,
             ticks: {
               callback: function(value) {
-                return '€' + value.toLocaleString('es-ES');
+                return '€' + value.toLocaleString(i18nData.locale === 'es' ? 'es-ES' : 'en-US');
               }
             }
           }
@@ -1343,20 +1382,20 @@ document.addEventListener('turbo:load', function() {
             <div class="processing-ring-2"></div>
           </div>
         </div>
-        <h3 class="fw-bold mb-3">Creando tu objetivo</h3>
-        <p class="text-muted mb-4">Estamos generando tu plan personalizado...</p>
+        <h3 class="fw-bold mb-3"><%= t('views.dashboard.complete.loading_modal.title') %></h3>
+        <p class="text-muted mb-4"><%= t('views.dashboard.complete.loading_modal.description') %></p>
         <div class="processing-steps mb-4">
           <div class="processing-step" id="objective-step-1">
             <i class="bi bi-check-circle-fill text-success"></i>
-            <span>Analizando tu capacidad de ahorro</span>
+            <span><%= t('views.dashboard.complete.loading_modal.step1') %></span>
           </div>
           <div class="processing-step" id="objective-step-2">
             <i class="bi bi-check-circle-fill text-success"></i>
-            <span>Calculando plazo y rentabilidad</span>
+            <span><%= t('views.dashboard.complete.loading_modal.step2') %></span>
           </div>
           <div class="processing-step" id="objective-step-3">
             <i class="bi bi-check-circle-fill text-success"></i>
-            <span>Seleccionando mejor producto</span>
+            <span><%= t('views.dashboard.complete.loading_modal.step3') %></span>
           </div>
         </div>
         <div class="progress mx-auto" style="max-width: 350px; height: 6px;">

@@ -1,25 +1,25 @@
 <!-- ESTADO 2: USUARIO CON P&L -->
 <!-- Información de análisis inicial (sin fondo) -->
 <div class="text-center py-4 mt-4">
-  <h2>¡Hemos analizado tus ingresos y gastos!</h2>
+  <h2><%= t('views.dashboard.has_pyg.analysis_title') %></h2>
   <p class="lead mb-3">
-    Tienes <strong class="<%= @monthly_cash_flow > 0 ? 'text-success' : 'text-danger' %>">
-    <%= number_with_delimiter(@monthly_cash_flow, delimiter: ".") %> €</strong> disponibles mensualmente
+    <strong class="<%= @monthly_cash_flow > 0 ? 'text-success' : 'text-danger' %>">
+    <%= number_with_delimiter(@monthly_cash_flow, delimiter: ".") %> €</strong> <%= t('views.dashboard.has_pyg.available_monthly') %>
   </p>
-  
+
   <% if @spain_comparison.present? %>
   <div class="row justify-content-center mt-3 mb-4">
     <div class="col-md-8">
-      <div class="text-muted mb-2"><i class="bi bi-bar-chart text-primary me-2"></i><strong>Comparación con la media española:</strong></div>
+      <div class="text-muted mb-2"><i class="bi bi-bar-chart text-primary me-2"></i><strong><%= t('views.dashboard.has_pyg.spain_comparison') %></strong></div>
       <div class="small">
-        • Tus ingresos están <strong class="<%= @spain_comparison[:income_diff] > 0 ? 'text-success' : 'text-warning' %>">
-        <%= @spain_comparison[:income_diff].abs %>% por <%= @spain_comparison[:income_diff] > 0 ? 'encima' : 'debajo' %></strong> 
-        de la media (€<%= number_with_delimiter(@spain_comparison[:spain_median_income], delimiter: ".") %>)
+        • <%= t('views.dashboard.has_pyg.income_comparison') %> <strong class="<%= @spain_comparison[:income_diff] > 0 ? 'text-success' : 'text-warning' %>">
+        <%= @spain_comparison[:income_diff].abs %>% <%= @spain_comparison[:income_diff] > 0 ? t('views.dashboard.has_pyg.above') : t('views.dashboard.has_pyg.below') %></strong>
+        <%= t('views.dashboard.has_pyg.of_median') %> (€<%= number_with_delimiter(@spain_comparison[:spain_median_income], delimiter: ".") %>)
         <br>
         <% if @spain_comparison[:savings_diff] %>
-        • Tu capacidad de ahorro es <strong class="<%= @spain_comparison[:savings_diff] > 0 ? 'text-success' : 'text-warning' %>">
-        <%= @spain_comparison[:savings_diff].abs %>% <%= @spain_comparison[:savings_diff] > 0 ? 'superior' : 'inferior' %></strong> 
-        a la media (€<%= @spain_comparison[:spain_median_savings] %>)
+        • <%= t('views.dashboard.has_pyg.savings_comparison') %> <strong class="<%= @spain_comparison[:savings_diff] > 0 ? 'text-success' : 'text-warning' %>">
+        <%= @spain_comparison[:savings_diff].abs %>% <%= @spain_comparison[:savings_diff] > 0 ? t('views.dashboard.has_pyg.superior') : t('views.dashboard.has_pyg.inferior') %></strong>
+        (€<%= @spain_comparison[:spain_median_savings] %>)
         <% end %>
       </div>
     </div>
@@ -29,137 +29,136 @@
 
 <!-- Título principal con fondo (welcome-hero) -->
 <div class="welcome-hero">
-  <h1><i class="bi bi-rocket-takeoff text-primary me-2"></i>Completa tu Análisis Financiero</h1>
+  <h1><i class="bi bi-rocket-takeoff text-primary me-2"></i><%= t('views.dashboard.has_pyg.complete_analysis_title') %></h1>
   <p class="lead mb-0">
-    Para conocer tu estado en la escalada hacia la libertad financiera, 
-    necesitamos información sobre tus activos y deudas.
+    <%= t('views.dashboard.has_pyg.complete_analysis_subtitle') %>
   </p>
 </div>
 
 <div class="form-section mt-4">
   <h3 class="text-center mb-3">
     <i class="bi bi-bank text-primary me-2"></i>
-    Completa tu Balance Patrimonial
+    <%= t('views.dashboard.has_pyg.balance_form_title') %>
   </h3>
   <p class="text-center mb-4 text-muted">
-    Con esta información podremos calcular tu patrimonio neto y determinar tu estado financiero actual.
+    <%= t('views.dashboard.has_pyg.balance_form_description') %>
   </p>
-              
+
               <%= form_with model: @balance, local: true, class: "row g-3" do |f| %>
                 <div class="col-12">
                   <h5 class="text-success mb-3">
                     <i class="bi bi-plus-circle me-2"></i>
-                    Activos (Lo que tienes)
+                    <%= t('views.dashboard.has_pyg.assets_title') %>
                   </h5>
                 </div>
-                
+
                 <div class="col-md-4">
                   <label for="balance_valor_inmuebles" class="form-label">
                     <i class="bi bi-house me-1"></i>
-                    Valor inmuebles
+                    <%= t('views.dashboard.has_pyg.assets.real_estate') %>
                   </label>
                   <%= f.number_field :valor_inmuebles, class: "form-control", step: 0.01, placeholder: "Ej: 200000" %>
                 </div>
-                
+
                 <div class="col-md-4">
                   <label for="balance_dinero_cuenta_corriente" class="form-label">
                     <i class="bi bi-bank me-1"></i>
-                    Dinero en cuentas
+                    <%= t('views.dashboard.has_pyg.assets.accounts') %>
                   </label>
                   <%= f.number_field :dinero_cuenta_corriente, class: "form-control", step: 0.01, placeholder: "Ej: 15000" %>
                 </div>
-                
+
                 <div class="col-md-4">
                   <label for="balance_dinero_inversiones_f" class="form-label">
                     <i class="bi bi-graph-up me-1"></i>
-                    Inversiones
+                    <%= t('views.dashboard.has_pyg.assets.investments') %>
                   </label>
                   <%= f.number_field :dinero_inversiones_f, class: "form-control", step: 0.01, placeholder: "Ej: 25000" %>
                 </div>
-                
+
                 <div class="col-md-4">
                   <label for="balance_dinero_cuenta_ahorro_depos" class="form-label">
                     <i class="bi bi-piggy-bank me-1"></i>
-                    Depósitos/Ahorro
+                    <%= t('views.dashboard.has_pyg.assets.savings') %>
                   </label>
                   <%= f.number_field :dinero_cuenta_ahorro_depos, class: "form-control", step: 0.01, placeholder: "Ej: 8000" %>
                 </div>
-                
+
                 <div class="col-md-4">
                   <label for="balance_dinero_planes_pensiones" class="form-label">
                     <i class="bi bi-shield-check me-1"></i>
-                    Planes de pensiones
+                    <%= t('views.dashboard.has_pyg.assets.pension') %>
                   </label>
                   <%= f.number_field :dinero_planes_pensiones, class: "form-control", step: 0.01, placeholder: "Ej: 10000" %>
                 </div>
-                
+
                 <div class="col-md-6">
                   <label for="balance_valor_coches_vehiculos" class="form-label">
                     <i class="bi bi-car-front me-1"></i>
-                    Coches/Vehículos
+                    <%= t('views.dashboard.has_pyg.assets.vehicles') %>
                   </label>
                   <%= f.number_field :valor_coches_vehiculos, class: "form-control", step: 0.01, placeholder: "Ej: 15000" %>
                 </div>
-                
+
                 <div class="col-md-6">
                   <label for="balance_valor_otros_activos" class="form-label">
                     <i class="bi bi-gem me-1"></i>
-                    Otros activos
+                    <%= t('views.dashboard.has_pyg.assets.other') %>
                   </label>
                   <%= f.number_field :valor_otros_activos, class: "form-control", step: 0.01, placeholder: "Ej: 5000" %>
                 </div>
-                
+
                 <div class="col-12 mt-4">
                   <h5 class="text-danger mb-3">
                     <i class="bi bi-dash-circle me-2"></i>
-                    Pasivos (Lo que debes)
+                    <%= t('views.dashboard.has_pyg.liabilities_title') %>
                   </h5>
                 </div>
-                
+
                 <div class="col-md-4">
                   <label for="balance_hipoteca_inmuebles" class="form-label">
                     <i class="bi bi-house-door me-1"></i>
-                    Hipoteca
+                    <%= t('views.dashboard.has_pyg.liabilities.mortgage') %>
                   </label>
                   <%= f.number_field :hipoteca_inmuebles, class: "form-control", step: 0.01, placeholder: "Ej: 150000" %>
                 </div>
-                
+
                 <div class="col-md-4">
                   <label for="balance_deuda_tarjeta_credito" class="form-label">
                     <i class="bi bi-credit-card me-1"></i>
-                    Deuda tarjetas
+                    <%= t('views.dashboard.has_pyg.liabilities.credit_cards') %>
                   </label>
                   <%= f.number_field :deuda_tarjeta_credito, class: "form-control", step: 0.01, placeholder: "Ej: 3000" %>
                 </div>
-                
+
                 <div class="col-md-4">
                   <label for="balance_prestamos_personales" class="form-label">
                     <i class="bi bi-person-badge me-1"></i>
-                    Préstamos personales
+                    <%= t('views.dashboard.has_pyg.liabilities.personal_loans') %>
                   </label>
                   <%= f.number_field :prestamos_personales, class: "form-control", step: 0.01, placeholder: "Ej: 8000" %>
                 </div>
-                
+
                 <div class="col-md-6">
                   <label for="balance_prestamos_coches" class="form-label">
                     <i class="bi bi-car-front me-1"></i>
-                    Préstamos coches
+                    <%= t('views.dashboard.has_pyg.liabilities.car_loans') %>
                   </label>
                   <%= f.number_field :prestamos_coches, class: "form-control", step: 0.01, placeholder: "Ej: 12000" %>
                 </div>
-                
+
                 <div class="col-md-6">
                   <label for="balance_otras_deudas" class="form-label">
                     <i class="bi bi-exclamation-triangle me-1"></i>
-                    Otras deudas
+                    <%= t('views.dashboard.has_pyg.liabilities.other_debts') %>
                   </label>
                   <%= f.number_field :otras_deudas, class: "form-control", step: 0.01, placeholder: "Ej: 2000" %>
                 </div>
-                
+
   <div class="col-12 text-center mt-4">
     <button type="submit" class="btn btn-baifinanzas-success btn-lg px-5 py-3">
       <i class="bi bi-check-circle me-2"></i>
-      Completar mi Análisis Financiero
+      <%= t('views.dashboard.has_pyg.submit') %>
     </button>
   </div>
   <% end %>
@@ -170,7 +169,7 @@
   <div class="col-md-6 mb-2">
     <%= link_to edit_pyg_path, class: "btn btn-outline-primary w-100" do %>
       <i class="bi bi-pencil me-2"></i>
-      Editar Ingresos y Gastos
+      <%= t('views.dashboard.has_pyg.edit_pyg') %>
     <% end %>
   </div>
 </div>

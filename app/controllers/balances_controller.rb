@@ -25,7 +25,7 @@ class BalancesController < ApplicationController
   def update
     if @balance.update(balance_params)
       # Always show processing screen when updating financial data
-      redirect_to onboarding_processing_path, notice: "Balance actualizado correctamente."
+      redirect_to onboarding_processing_path, notice: t('controllers.balances.updated')
     else
       render :edit, status: :unprocessable_entity
     end

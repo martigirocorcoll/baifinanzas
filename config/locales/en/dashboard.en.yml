@@ -1,0 +1,82 @@
+en:
+  dashboard:
+    title: "Dashboard - BaiFinanzas"
+
+    sections:
+      financial_level: "Your Financial Level"
+      financial_plan: "Your Financial Plan"
+      financial_situation: "Your Financial Situation"
+      level_guide: "Level guide"
+      next_level: "Next level"
+
+    progress:
+      general: "Overall progress"
+      completed_count: "%{completed}/%{total} completed"
+      steps_title: "Plan steps"
+      requirements: "%{completed}/%{total} requirements"
+
+    actions:
+      mark_complete: "Mark as complete"
+      marked_complete: "Completed"
+      unmark: "Unmark"
+      view_details: "See step-by-step guide"
+      impact_label: "Impact on your financial situation"
+
+    objectives:
+      title: "Your Goals"
+      create_first: "Create my first goal"
+      create_new: "Create new goal"
+      define_goal: "Define your next financial goal"
+      reached_level: "You've reached a level where you can create personalized goals to grow your wealth."
+      delete_confirm: "Are you sure you want to delete this goal? This action cannot be undone."
+      monthly_savings: "Monthly savings needed"
+      target_date: "Target date"
+      target_amount: "Target amount"
+      recommended_product: "Recommended product"
+      expected_return: "Expected return"
+
+    savings_capacity:
+      title: "Savings Capacity"
+      cash_flow: "Cash flow"
+      committed: "Committed"
+      available: "Available"
+      exceeds_capacity: "Your goals exceed your savings capacity"
+      high_usage: "High capacity usage. Leave room for unexpected events."
+      negative_capacity: "Negative capacity: Your expenses exceed your income. It's important to review your financial situation."
+      healthy: "Healthy capacity"
+
+    pyg:
+      title: "Income & Expenses (P&L)"
+      income: "Income"
+      expenses: "Expenses"
+      capacity: "Capacity"
+      edit: "Edit Income & Expenses"
+      monthly_balance: "Monthly balance"
+
+    balance:
+      title: "Assets & Liabilities (Balance)"
+      assets: "Assets"
+      debts: "Liabilities"
+      net_worth: "Net Worth"
+      edit: "Edit Assets & Liabilities"
+
+    completed:
+      title: "Congratulations! Plan completed"
+      message: "You have completed all the actions in your financial plan. Update your data to see if you've progressed to the next level."
+      update_pyg: "Update P&L"
+      update_balance: "Update Balance"
+
+    new_user:
+      greeting: "Hello, %{name}!"
+      discover: "Discover your financial health in just 2 minutes"
+      step1: "Cash flow analysis"
+      step2: "Personalized ranking"
+      step3: "Recommendations"
+      start_button: "Discover my Financial Health"
+
+    loading:
+      creating_objective: "Creating your goal"
+      generating_plan: "We're generating your personalized plan..."
+      step_1: "Analyzing your savings capacity"
+      step_2: "Calculating timeline and returns"
+      step_3: "Selecting the best product"

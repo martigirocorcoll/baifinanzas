@@ -1,0 +1,82 @@
+es:
+  dashboard:
+    title: "Dashboard - BaiFinanzas"
+
+    sections:
+      financial_level: "Tu Nivel Financiero"
+      financial_plan: "Tu Plan Financiero"
+      financial_situation: "Tu Situación Financiera"
+      level_guide: "Guía de niveles"
+      next_level: "Próximo nivel"
+
+    progress:
+      general: "Progreso general"
+      completed_count: "%{completed}/%{total} completadas"
+      steps_title: "Pasos del plan"
+      requirements: "%{completed}/%{total} requisitos"
+
+    actions:
+      mark_complete: "Marcar completada"
+      marked_complete: "Completada"
+      unmark: "Desmarcar"
+      view_details: "Ver cómo hacerlo paso a paso"
+      impact_label: "Impacto en tu situación financiera"
+
+    objectives:
+      title: "Tus Objetivos"
+      create_first: "Crear mi primer objetivo"
+      create_new: "Crear nuevo objetivo"
+      define_goal: "Define tu próxima meta financiera"
+      reached_level: "Has alcanzado un nivel donde puedes crear objetivos personalizados para hacer crecer tu patrimonio."
+      delete_confirm: "¿Estás seguro de que quieres eliminar este objetivo? Esta acción no se puede deshacer."
+      monthly_savings: "Ahorro mensual necesario"
+      target_date: "Fecha objetivo"
+      target_amount: "Cantidad objetivo"
+      recommended_product: "Producto recomendado"
+      expected_return: "Rentabilidad esperada"
+
+    savings_capacity:
+      title: "Capacidad de Ahorro"
+      cash_flow: "Flujo de caja"
+      committed: "Comprometido"
+      available: "Disponible"
+      exceeds_capacity: "Tus objetivos exceden tu capacidad de ahorro"
+      high_usage: "Alto uso de capacidad. Deja margen para imprevistos."
+      negative_capacity: "Capacidad negativa: Tus gastos superan tus ingresos. Es importante revisar tu situación financiera."
+      healthy: "Capacidad saludable"
+
+    pyg:
+      title: "Ingresos y Gastos (PyG)"
+      income: "Ingresos"
+      expenses: "Gastos"
+      capacity: "Capacidad"
+      edit: "Editar Ingresos y Gastos"
+      monthly_balance: "Balance mensual"
+
+    balance:
+      title: "Activos y Deudas (Balance)"
+      assets: "Activos"
+      debts: "Deudas"
+      net_worth: "Patrimonio"
+      edit: "Editar Activos y Deudas"
+
+    completed:
+      title: "¡Felicidades! Plan completado"
+      message: "Has completado todas las acciones de tu plan financiero. Actualiza tus datos para ver si has progresado de nivel."
+      update_pyg: "Actualizar PyG"
+      update_balance: "Actualizar Balance"
+
+    new_user:
+      greeting: "¡Hola, %{name}!"
+      discover: "Descubre tu salud financiera en solo 2 minutos"
+      step1: "Análisis de flujo de caja"
+      step2: "Ranking personalizado"
+      step3: "Recomendaciones"
+      start_button: "Descubrir mi Salud Financiera"
+
+    loading:
+      creating_objective: "Creando tu objetivo"
+      generating_plan: "Estamos generando tu plan personalizado..."
+      step_1: "Analizando tu capacidad de ahorro"
+      step_2: "Calculando plazo y rentabilidad"
+      step_3: "Seleccionando mejor producto"

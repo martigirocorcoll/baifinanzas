@@ -35,7 +35,7 @@ class ObjectivesController < ApplicationController
 
     respond_to do |format|
       if @objective.save
-        format.html { redirect_to dashboard_index_path(show_objective: @objective.id), notice: "Objetivo creado correctamente. Ya puedes ver tu recomendación personalizada." }
+        format.html { redirect_to dashboard_index_path(show_objective: @objective.id), notice: t('controllers.objectives.created') }
         format.json { render :show, status: :created, location: @objective }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -58,7 +58,7 @@ class ObjectivesController < ApplicationController
 
     respond_to do |format|
       if @objective.update(objective_attrs)
-        format.html { redirect_to dashboard_index_path(show_objective: @objective.id), notice: "Objetivo actualizado correctamente." }
+        format.html { redirect_to dashboard_index_path(show_objective: @objective.id), notice: t('controllers.objectives.updated') }
         format.json { render :show, status: :ok, location: @objective }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -72,7 +72,7 @@ class ObjectivesController < ApplicationController
     @objective.destroy!
 
     respond_to do |format|
-      format.html { redirect_to dashboard_index_path, status: :see_other, notice: "Objetivo eliminado correctamente." }
+      format.html { redirect_to dashboard_index_path, status: :see_other, notice: t('controllers.objectives.deleted') }
       format.json { head :no_content }
     end
   end

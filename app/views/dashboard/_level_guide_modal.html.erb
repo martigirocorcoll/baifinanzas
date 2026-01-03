@@ -4,14 +4,13 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="levelGuideModalLabel">
-          <i class="bi bi-info-circle"></i> Guía de Niveles Financieros
+          <i class="bi bi-info-circle"></i> <%= t('views.dashboard.level_guide.title') %>
         </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <p class="text-muted mb-3" style="font-size: 0.95rem;">
-          Tu nivel financiero se calcula automáticamente según tus datos de ingresos, gastos, activos y deudas.
-          Esta guía te ayuda a entender qué significa cada nivel y por qué estás en tu nivel actual.
+          <%= t('views.dashboard.level_guide.intro') %>
         </p>
 
         <!-- Nivel 1: Situación Crítica -->
@@ -19,15 +18,14 @@
           <div class="d-flex align-items-center mb-2">
             <span class="level-number-badge bg-danger text-white me-2">1</span>
             <i class="bi bi-exclamation-triangle-fill text-danger me-2" style="font-size: 1.2rem;"></i>
-            <h6 class="mb-0 flex-grow-1"><strong>Situación Crítica</strong></h6>
+            <h6 class="mb-0 flex-grow-1"><strong><%= t('views.dashboard.level_guide.levels.critical.name') %></strong></h6>
           </div>
           <div class="level-content">
             <p class="mb-2 level-description">
-              Estás en este nivel cuando tus gastos igualan o superan tus ingresos mensuales, lo que significa que no tienes capacidad de ahorro consistente.
-              Es una situación común que muchas personas atraviesan, especialmente al inicio de su vida laboral o tras cambios importantes en sus circunstancias.
+              <%= t('views.dashboard.level_guide.levels.critical.description') %>
             </p>
             <span class="badge bg-light text-dark border">
-              <small><strong>Criterio:</strong> Flujo de caja ≤ 0</small>
+              <small><strong><%= t('views.dashboard.level_guide.criteria') %>:</strong> <%= t('views.dashboard.level_guide.levels.critical.criteria') %></small>
             </span>
           </div>
         </div>
@@ -37,16 +35,14 @@
           <div class="d-flex align-items-center mb-2">
             <span class="level-number-badge bg-warning text-dark me-2">2</span>
             <i class="bi bi-piggy-bank-fill text-warning me-2" style="font-size: 1.2rem;"></i>
-            <h6 class="mb-0 flex-grow-1"><strong>Creando Fondo de Emergencia</strong></h6>
+            <h6 class="mb-0 flex-grow-1"><strong><%= t('views.dashboard.level_guide.levels.emergency_fund.name') %></strong></h6>
           </div>
           <div class="level-content">
             <p class="mb-2 level-description">
-              Has conseguido el primer gran logro: tus ingresos superan tus gastos cada mes, lo que te permite ahorrar.
-              Estás en proceso de construir tu colchón de seguridad financiero. Aunque aún no tienes suficiente ahorrado para cubrir 4 meses de gastos imprevistos,
-              vas por buen camino.
+              <%= t('views.dashboard.level_guide.levels.emergency_fund.description') %>
             </p>
             <span class="badge bg-light text-dark border">
-              <small><strong>Criterios:</strong> Flujo positivo + Activos líquidos < 4 meses gastos</small>
+              <small><strong><%= t('views.dashboard.level_guide.criteria_plural') %>:</strong> <%= t('views.dashboard.level_guide.levels.emergency_fund.criteria') %></small>
             </span>
           </div>
         </div>
@@ -56,16 +52,14 @@
           <div class="d-flex align-items-center mb-2">
             <span class="level-number-badge text-white me-2" style="background-color: #fd7e14;">3</span>
             <i class="bi bi-credit-card-2-back-fill me-2" style="font-size: 1.2rem; color: #fd7e14;"></i>
-            <h6 class="mb-0 flex-grow-1"><strong>Eliminando Deudas Caras</strong></h6>
+            <h6 class="mb-0 flex-grow-1"><strong><%= t('views.dashboard.level_guide.levels.eliminating_debt.name') %></strong></h6>
           </div>
           <div class="level-content">
             <p class="mb-2 level-description">
-              Tienes flujo de caja positivo y un fondo de emergencia parcial (al menos 2 meses de gastos), pero aún cargas con deudas caras
-              como tarjetas de crédito o préstamos personales. Estás en una fase donde tu prioridad debería ser reducir estas deudas de alto interés
-              para liberar más capacidad de ahorro mensual.
+              <%= t('views.dashboard.level_guide.levels.eliminating_debt.description') %>
             </p>
             <span class="badge bg-light text-dark border">
-              <small><strong>Criterios:</strong> Flujo positivo + Fondo parcial (≥2 meses) + Deudas caras > 0</small>
+              <small><strong><%= t('views.dashboard.level_guide.criteria_plural') %>:</strong> <%= t('views.dashboard.level_guide.levels.eliminating_debt.criteria') %></small>
             </span>
           </div>
         </div>
@@ -75,16 +69,14 @@
           <div class="d-flex align-items-center mb-2">
             <span class="level-number-badge bg-success text-white me-2">4</span>
             <i class="bi bi-check-circle-fill text-success me-2" style="font-size: 1.2rem;"></i>
-            <h6 class="mb-0 flex-grow-1"><strong>Situación Estable</strong></h6>
+            <h6 class="mb-0 flex-grow-1"><strong><%= t('views.dashboard.level_guide.levels.stable.name') %></strong></h6>
           </div>
           <div class="level-content">
             <p class="mb-2 level-description">
-              Has alcanzado la estabilidad financiera: tienes un fondo de emergencia completo (4 meses de gastos), flujo de caja positivo,
-              y has reducido tus deudas caras a menos del 40% de tu patrimonio neto. Desde aquí, puedes empezar a pensar en objetivos de largo plazo
-              y crecimiento patrimonial sin el estrés de las emergencias financieras.
+              <%= t('views.dashboard.level_guide.levels.stable.description') %>
             </p>
             <span class="badge bg-light text-dark border">
-              <small><strong>Criterios:</strong> Fondo completo + Flujo positivo + Deudas caras < 40%</small>
+              <small><strong><%= t('views.dashboard.level_guide.criteria_plural') %>:</strong> <%= t('views.dashboard.level_guide.levels.stable.criteria') %></small>
             </span>
           </div>
         </div>
@@ -94,16 +86,14 @@
           <div class="d-flex align-items-center mb-2">
             <span class="level-number-badge bg-primary text-white me-2">5</span>
             <i class="bi bi-graph-up-arrow text-primary me-2" style="font-size: 1.2rem;"></i>
-            <h6 class="mb-0 flex-grow-1"><strong>Crecimiento Patrimonial</strong></h6>
+            <h6 class="mb-0 flex-grow-1"><strong><%= t('views.dashboard.level_guide.levels.growth.name') %></strong></h6>
           </div>
           <div class="level-content">
             <p class="mb-2 level-description">
-              No solo tienes estabilidad, sino que has construido riqueza real. Tu patrimonio neto es al menos el doble de tu ingreso anual,
-              lo que indica años de ahorro e inversión consistente. Estás en posición de hacer crecer tu patrimonio de forma significativa
-              y planificar objetivos ambiciosos de largo plazo.
+              <%= t('views.dashboard.level_guide.levels.growth.description') %>
             </p>
             <span class="badge bg-light text-dark border">
-              <small><strong>Criterios:</strong> Fondo completo + Flujo positivo + Patrimonio ≥ 2× ingreso anual</small>
+              <small><strong><%= t('views.dashboard.level_guide.criteria_plural') %>:</strong> <%= t('views.dashboard.level_guide.levels.growth.criteria') %></small>
             </span>
           </div>
         </div>
@@ -113,27 +103,25 @@
           <div class="d-flex align-items-center mb-2">
             <span class="level-number-badge text-dark me-2" style="background-color: #FFC65A;">6</span>
             <i class="bi bi-trophy-fill me-2" style="font-size: 1.2rem; color: #FFC65A;"></i>
-            <h6 class="mb-0 flex-grow-1"><strong>Libertad Financiera</strong></h6>
+            <h6 class="mb-0 flex-grow-1"><strong><%= t('views.dashboard.level_guide.levels.freedom.name') %></strong></h6>
           </div>
           <div class="level-content">
             <p class="mb-2 level-description">
-              Has alcanzado la independencia financiera total. Tus inversiones generan suficientes ingresos pasivos para cubrir todos tus gastos mensuales,
-              lo que significa que trabajar es una elección, no una necesidad. Este nivel lo alcanza menos del 2% de la población y representa
-              la cúspide de la libertad financiera.
+              <%= t('views.dashboard.level_guide.levels.freedom.description') %>
             </p>
             <span class="badge bg-light text-dark border">
-              <small><strong>Criterio:</strong> Ingresos pasivos ≥ gastos mensuales totales</small>
+              <small><strong><%= t('views.dashboard.level_guide.criteria') %>:</strong> <%= t('views.dashboard.level_guide.levels.freedom.criteria') %></small>
             </span>
           </div>
         </div>
 
         <div class="alert alert-info mt-4 mb-0 d-flex align-items-center">
           <i class="bi bi-info-circle-fill me-2" style="font-size: 1.1rem;"></i>
-          <small><strong>Nota:</strong> Tu nivel se actualiza automáticamente cuando actualizas tus datos financieros.</small>
+          <small><strong><%= t('views.dashboard.level_guide.note') %></strong></small>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><%= t('views.dashboard.level_guide.close') %></button>
       </div>
     </div>
   </div>

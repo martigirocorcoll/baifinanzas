@@ -9,30 +9,30 @@
                 <div class="row g-3">
                   <div class="col-12">
                     <div class="bg-success bg-opacity-10 rounded-3 p-3 text-center dashboard-card" data-delay="0">
-                      <h5 class="text-success mb-2"><i class="bi bi-heart-pulse me-2"></i>Salud Financiera</h5>
+                      <h5 class="text-success mb-2"><i class="bi bi-heart-pulse me-2"></i><%= t('views.landing.features.dashboard.health_title') %></h5>
                       <div class="progress mb-2" style="height: 8px;">
                         <div class="progress-bar bg-success progress-bar-animated" data-width="75" style="width: 0%;"></div>
                       </div>
-                      <small class="text-muted">Nivel: Invirtiendo en Objetivos</small>
+                      <small class="text-muted"><%= t('views.landing.features.dashboard.health_level') %></small>
                     </div>
                   </div>
                   <div class="col-6">
                     <div class="bg-primary bg-opacity-10 rounded-3 p-3 text-center dashboard-card" data-delay="200">
-                      <h6 class="text-primary mb-1"><i class="bi bi-graph-up me-2"></i>Balance Mensual</h6>
+                      <h6 class="text-primary mb-1"><i class="bi bi-graph-up me-2"></i><%= t('views.landing.features.dashboard.balance_title') %></h6>
                       <div class="h5 text-success mb-0">+€2,150</div>
-                      <small class="text-muted">mensual</small>
+                      <small class="text-muted"><%= t('views.landing.features.dashboard.monthly') %></small>
                     </div>
                   </div>
                   <div class="col-6">
                     <div class="bg-warning bg-opacity-10 rounded-3 p-3 text-center dashboard-card" data-delay="400">
-                      <h6 class="text-warning mb-1"><i class="bi bi-wallet2 me-2"></i>Patrimonio</h6>
+                      <h6 class="text-warning mb-1"><i class="bi bi-wallet2 me-2"></i><%= t('views.landing.features.dashboard.patrimony_title') %></h6>
                       <div class="h5 text-success mb-0">€45,300</div>
-                      <small class="text-muted">patrimonio</small>
+                      <small class="text-muted"><%= t('views.landing.features.dashboard.patrimony') %></small>
                     </div>
                   </div>
                   <div class="col-12">
                     <div class="bg-info bg-opacity-10 rounded-3 p-3 text-center dashboard-card" data-delay="600">
-                      <h6 class="text-info mb-2"><i class="bi bi-house me-2"></i>Objetivo: Casa</h6>
+                      <h6 class="text-info mb-2"><i class="bi bi-house me-2"></i><%= t('views.landing.features.dashboard.objective_title') %></h6>
                       <div class="progress mb-2" style="height: 6px;">
                         <div class="progress-bar bg-info progress-bar-animated" data-width="45" style="width: 0%;"></div>
                       </div>
@@ -41,7 +41,7 @@
                   </div>
                   <div class="col-12">
                     <button class="btn btn-primary btn-sm w-100 dashboard-card" data-delay="800">
-                      <i class="bi bi-file-earmark-text me-2"></i>Ver Plan Completo
+                      <i class="bi bi-file-earmark-text me-2"></i><%= t('views.landing.features.dashboard.view_plan') %>
                     </button>
                   </div>
                 </div>
@@ -119,8 +119,8 @@
 
           <!-- Feature list -->
           <div class="col-lg-7">
-            <h2 class="h1 text-center text-md-start mb-4">¿Cómo adapto las finanzas a mi situación?</h2>
-            <p class="fs-lg text-muted text-center text-md-start mb-4 mb-xl-5">Es la pregunta que más nos hacéis. Con esta app queremos daros la solución.</p>
+            <h2 class="h1 text-center text-md-start mb-4"><%= t('views.landing.features.title') %></h2>
+            <p class="fs-lg text-muted text-center text-md-start mb-4 mb-xl-5"><%= t('views.landing.features.subtitle') %></p>
             <div class="row row-cols-1 row-cols-sm-2 pt-2 pt-sm-3 pt-xl-2">
 
               <!-- Paso 1 -->
@@ -130,8 +130,8 @@
                     <i class="bi bi-heart-pulse text-white fs-4"></i>
                   </div>
                   <div class="ps-4 ps-sm-3 ps-md-4">
-                    <h3 class="h5 pb-1 mb-2">Te ayudamos a conocer tu salud financiera</h3>
-                    <p class="mb-0">Analizamos tu Balance Mensual y Patrimonio para calcular tu nivel de salud financiera actual y saber desde dónde partes.</p>
+                    <h3 class="h5 pb-1 mb-2"><%= t('views.landing.features.items.health.title') %></h3>
+                    <p class="mb-0"><%= t('views.landing.features.items.health.description') %></p>
                   </div>
                 </div>
               </div>
@@ -143,8 +143,8 @@
                     <i class="bi bi-graph-up text-white fs-4"></i>
                   </div>
                   <div class="ps-4 ps-sm-3 ps-md-4">
-                    <h3 class="h5 pb-1 mb-2">Obten un plan financiero personalizado</h3>
-                    <p class="mb-0">Basado en tus objetivos específicos, calculamos tu plan de inversión con interés compuesto y recomendaciones adaptadas a ti.</p>
+                    <h3 class="h5 pb-1 mb-2"><%= t('views.landing.features.items.plan.title') %></h3>
+                    <p class="mb-0"><%= t('views.landing.features.items.plan.description') %></p>
                   </div>
                 </div>
               </div>
@@ -156,8 +156,8 @@
                     <i class="bi bi-tools text-white fs-4"></i>
                   </div>
                   <div class="ps-4 ps-sm-3 ps-md-4">
-                    <h3 class="h5 pb-1 mb-2">Accede a herramientas que simplifican tus decisiones</h3>
-                    <p class="mb-0">Calculadoras de cuota hipotecaria, simuladores de inversión y herramientas prácticas para tomar decisiones financieras informadas.</p>
+                    <h3 class="h5 pb-1 mb-2"><%= t('views.landing.features.items.tools.title') %></h3>
+                    <p class="mb-0"><%= t('views.landing.features.items.tools.description') %></p>
                   </div>
                 </div>
               </div>
@@ -169,8 +169,8 @@
                     <i class="bi bi-shield-lock text-white fs-4"></i>
                   </div>
                   <div class="ps-4 ps-sm-3 ps-md-4">
-                    <h3 class="h5 pb-1 mb-2">Datos Seguros</h3>
-                    <p class="mb-0">Tu información financiera está protegida con los más altos estándares de seguridad y nunca se comparte con terceros.</p>
+                    <h3 class="h5 pb-1 mb-2"><%= t('views.landing.features.items.security.title') %></h3>
+                    <p class="mb-0"><%= t('views.landing.features.items.security.description') %></p>
                   </div>
                 </div>
               </div>
@@ -182,8 +182,8 @@
                     <i class="bi bi-phone text-white fs-4"></i>
                   </div>
                   <div class="ps-4 ps-sm-3 ps-md-4">
-                    <h3 class="h5 pb-1 mb-2">100% Móvil</h3>
-                    <p class="mb-0">Accede a tu plan financiero desde cualquier dispositivo, optimizado para móviles.</p>
+                    <h3 class="h5 pb-1 mb-2"><%= t('views.landing.features.items.mobile.title') %></h3>
+                    <p class="mb-0"><%= t('views.landing.features.items.mobile.description') %></p>
                   </div>
                 </div>
               </div>
@@ -195,18 +195,18 @@
                     <i class="bi bi-cash-coin text-white fs-4"></i>
                   </div>
                   <div class="ps-4 ps-sm-3 ps-md-4">
-                    <h3 class="h5 pb-1 mb-2">100% Gratuito</h3>
-                    <p class="mb-0">Toda la plataforma es completamente gratuita. Sin costes ocultos, sin suscripciones, sin comisiones.</p>
+                    <h3 class="h5 pb-1 mb-2"><%= t('views.landing.features.items.free.title') %></h3>
+                    <p class="mb-0"><%= t('views.landing.features.items.free.description') %></p>
                   </div>
                 </div>
               </div>
             </div>
-            
+
             <!-- CTA Button -->
             <div class="text-center mt-5">
               <%= link_to new_user_registration_path, class: "btn btn-primary btn-lg px-5 py-3" do %>
                 <i class="bi bi-rocket-takeoff me-2"></i>
-                Comienza tu plan financiero gratis
+                <%= t('views.landing.features.cta') %>
               <% end %>
             </div>
           </div>

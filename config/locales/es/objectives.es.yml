@@ -1,0 +1,16 @@
+es:
+  objectives:
+    # Keywords for icon matching (used in Objective model)
+    icon_keywords:
+      house: "casa|vivienda|piso|apartamento|hogar"
+      car: "coche|carro|vehículo|auto|moto"
+      education: "estudio|universidad|educación|máster|colegio|formación|carrera"
+      retirement: "jubil|retiro|pensión"
+      travel: "viaje|vacacion|turismo|viajar"
+      wedding: "boda|casamiento|matrimonio"
+      emergency: "emergencia|fondo"
+      investment: "inversión|ahorro|invertir"
+      debt: "deuda|préstamo|pagar"
+      business: "negocio|empresa|emprendimiento|startup"
+      health: "salud|médico|tratamiento"
+      family: "hijo|familia|bebé"

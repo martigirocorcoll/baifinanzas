@@ -27,25 +27,25 @@ class DashboardController < ApplicationController
     action_key = params[:action_key]   # rec_key o objective_id
 
     if action_type.blank? || action_key.blank?
-      redirect_to dashboard_index_path, alert: "Parámetros inválidos" and return
+      redirect_to dashboard_index_path, alert: t('flash.invalid_params') and return
     end
 
     # Toggle: marcar o desmarcar según el estado actual
     if action_type == 'recommendation'
       if current_user.completed_recommendations.include?(action_key)
         current_user.uncomplete_recommendation!(action_key)
-        flash[:success] = "Acción desmarcada"
+        flash[:success] = t('flash.action_unmarked')
       else
         current_user.complete_recommendation!(action_key)
-        flash[:success] = "¡Acción completada! Sigue así 🎉"
+        flash[:success] = t('flash.action_completed')
       end
     elsif action_type == 'objective'
       if current_user.completed_objectives.include?(action_key.to_i)
         current_user.uncomplete_objective!(action_key)
-        flash[:success] = "Objetivo desmarcado"
+        flash[:success] = t('flash.objective_unmarked')
       else
         current_user.complete_objective!(action_key)
-        flash[:success] = "¡Objetivo completado! 🎯"
+        flash[:success] = t('flash.objective_completed')
       end
     end
 
@@ -59,16 +59,16 @@ class DashboardController < ApplicationController
     action_key = params[:action_key]
 
     if action_type.blank? || action_key.blank?
-      redirect_to dashboard_index_path, alert: "Parámetros inválidos" and return
+      redirect_to dashboard_index_path, alert: t('flash.invalid_params') and return
     end
 
     # Desmarcar
     if action_type == 'recommendation'
       current_user.uncomplete_recommendation!(action_key)
-      flash[:success] = "Acción desmarcada"
+      flash[:success] = t('flash.action_unmarked')
     elsif action_type == 'objective'
       current_user.uncomplete_objective!(action_key)
-      flash[:success] = "Objetivo desmarcado"
+      flash[:success] = t('flash.objective_unmarked')
     end
 
     redirect_to dashboard_index_path
@@ -276,72 +276,16 @@ class DashboardController < ApplicationController
   end
   
   def get_mountain_state_info
-    state = @financial_health_level
-    case state
-    when "Situación Crítica"
-      {
-        icon: "🔴",
-        bootstrap_icon: "bi bi-exclamation-circle",
-        name: "Situación Crítica",
-        level_number: 1,
-        description: "Actualmente tus gastos igualan o superan tus ingresos, lo que significa que no tienes capacidad de ahorro consistente. Esta situación es más común de lo que piensas y es el primer paso para tomar control de tus finanzas. Cada pequeña mejora en tus hábitos financieros te acercará al siguiente nivel.",
-        next_step: "Tu prioridad es crear un flujo de caja positivo reduciendo gastos o aumentando ingresos. Revisa tus recomendaciones personalizadas para encontrar las mejores oportunidades de ahorro."
-      }
-    when "Creando Fondo de Emergencia"
-      {
-        icon: "🟡",
-        bootstrap_icon: "bi bi-shield-plus",
-        name: "Creando Fondo de Emergencia",
-        level_number: 2,
-        description: "¡Excelente progreso! Has logrado tener capacidad de ahorro mensual consistente. Tus ingresos superan tus gastos y puedes destinar dinero cada mes para mejorar tu situación. Ahora necesitas crear un colchón de seguridad que te proteja ante imprevistos.",
-        next_step: "Construye tu fondo de emergencia de al menos 4 meses de gastos. Este colchón te dará tranquilidad para tomar mejores decisiones financieras."
-      }
-    when "Eliminando Deudas Caras"
-      {
-        icon: "🟠",
-        bootstrap_icon: "bi bi-credit-card-2-back",
-        name: "Eliminando Deudas Caras",
-        level_number: 3,
-        description: "Tienes capacidad de ahorro y un colchón de emergencia básico, lo cual demuestra disciplina. Sin embargo, las deudas caras (tarjetas de crédito, préstamos personales) están limitando tu potencial de crecimiento. Esta es la fase más desafiante pero también la más transformadora.",
-        next_step: "Elimina o reduce significativamente tus deudas caras. Prioriza pagar las deudas con mayor interés primero. Cada euro que destines es una inversión con retorno garantizado."
-      }
-    when "Situación Estable"
-      {
-        icon: "🟢",
-        bootstrap_icon: "bi bi-check-circle",
-        name: "Situación Estable",
-        level_number: 4,
-        description: "¡Enhorabuena! Has alcanzado estabilidad financiera que solo el 15% de la población logra. Tienes capacidad de ahorro consistente, un fondo de emergencia sólido y tus deudas están bajo control. Desde aquí puedes planificar objetivos financieros específicos como una casa, inversiones o proyectos personales.",
-        next_step: "Ahora puedes enfocarte en hacer crecer tu patrimonio. Define objetivos financieros específicos y comienza a invertir de forma inteligente."
-      }
-    when "Crecimiento Patrimonial"
-      {
-        icon: "💎",
-        bootstrap_icon: "bi bi-gem",
-        name: "Crecimiento Patrimonial",
-        level_number: 5,
-        description: "¡Extraordinario logro! Te encuentras en el 5% superior de la población. Has acumulado un patrimonio neto equivalente a al menos 2 años de ingresos, mantienes tus deudas bajo control y tienes sólida capacidad de ahorro e inversión. Puedes considerar estrategias más sofisticadas de inversión y optimización fiscal.",
-        next_step: "Tu objetivo final está al alcance: lograr que tus inversiones generen ingresos pasivos superiores a tus gastos mensuales. Optimiza tu cartera y considera estrategias avanzadas."
-      }
-    when "Libertad Financiera"
-      {
-        icon: "👑",
-        bootstrap_icon: "bi bi-trophy-fill",
-        name: "Libertad Financiera",
-        level_number: 6,
-        description: "¡Felicidades por este logro excepcional! Has alcanzado la verdadera libertad financiera, un estatus que menos del 2% de la población logra. Tus inversiones generan ingresos pasivos suficientes para cubrir todos tus gastos mensuales. Puedes elegir cómo invertir tu tiempo basándote en tus pasiones, no en necesidades económicas.",
-        next_step: "Enfócate en optimizar y preservar tu patrimonio, mientras exploras oportunidades de inversión especializadas o proyectos de impacto social."
-      }
-    else
-      {
-        icon: "❓",
-        bootstrap_icon: "bi bi-question-circle",
-        name: "Estado Desconocido",
-        level_number: 0,
-        description: "No hemos podido determinar tu estado financiero actual. Para ofrecerte el análisis más preciso necesitamos una visión completa de tu situación financiera.",
-        next_step: "Completa toda la información en tu perfil financiero para obtener tu análisis detallado."
-      }
-    end
+    level_key = current_user.financial_health_level_key
+
+    {
+      icon: t("financial.levels.#{level_key}.icon"),
+      bootstrap_icon: t("financial.levels.#{level_key}.bootstrap_icon"),
+      name: t("financial.levels.#{level_key}.name"),
+      level_number: current_user.financial_health_level_number,
+      description: t("financial.levels.#{level_key}.description"),
+      next_step: t("financial.levels.#{level_key}.next_step")
+    }
   end
 
   def prepare_pyg_chart_data
@@ -373,26 +317,19 @@ class DashboardController < ApplicationController
   end
 
   def calculate_mountain_progress
-    states = [
-      { name: "Situación Crítica", icon: "🔴", bootstrap_icon: "bi bi-exclamation-circle", level: 1 },
-      { name: "Creando Fondo de Emergencia", icon: "🟡", bootstrap_icon: "bi bi-shield-plus", level: 2 },
-      { name: "Eliminando Deudas Caras", icon: "🟠", bootstrap_icon: "bi bi-credit-card-2-back", level: 3 },
-      { name: "Situación Estable", icon: "🟢", bootstrap_icon: "bi bi-check-circle", level: 4 },
-      { name: "Crecimiento Patrimonial", icon: "💎", bootstrap_icon: "bi bi-gem", level: 5 },
-      { name: "Libertad Financiera", icon: "👑", bootstrap_icon: "bi bi-trophy-fill", level: 6 }
-    ]
-
+    level_keys = [:critical, :emergency_fund, :paying_debt, :stable, :growth, :financial_freedom]
     current_level_number = current_user.financial_health_level_number
 
-    states.map do |state|
+    level_keys.each_with_index.map do |level_key, index|
+      level_number = index + 1
       {
-        name: state[:name],
-        icon: state[:icon],
-        bootstrap_icon: state[:bootstrap_icon],
-        level: state[:level],
-        status: if state[:level] < current_level_number
+        name: t("financial.levels.#{level_key}.name"),
+        icon: t("financial.levels.#{level_key}.icon"),
+        bootstrap_icon: t("financial.levels.#{level_key}.bootstrap_icon"),
+        level: level_number,
+        status: if level_number < current_level_number
                   "completed"
-                elsif state[:level] == current_level_number
+                elsif level_number == current_level_number
                   "current"
                 else
                   "pending"
@@ -402,36 +339,38 @@ class DashboardController < ApplicationController
   end
 
   def calculate_next_level_progress
-    case @financial_health_level
-    when "Situación Crítica"
-      target = "Creando Fondo de Emergencia"
+    level_key = current_user.financial_health_level_key
+
+    case level_key
+    when :critical
+      target = t('financial.levels.emergency_fund.name')
       requirements = [
-        { name: "Flujo positivo", current: @monthly_cash_flow, target: 1, completed: @monthly_cash_flow > 0 }
+        { name: t('financial.next_level.positive_cash_flow'), current: @monthly_cash_flow, target: 1, completed: @monthly_cash_flow > 0 }
       ]
-    when "Creando Fondo de Emergencia"
-      target = "Eliminando Deudas Caras"
+    when :emergency_fund
+      target = t('financial.levels.paying_debt.name')
       emergency_needed = current_user.monthly_expenses * 2
       current_emergency = current_user.liquid_assets
       requirements = [
-        { name: "Colchón 2 meses", current: current_emergency, target: emergency_needed, completed: current_user.has_partial_emergency_fund? }
+        { name: t('financial.next_level.emergency_2_months'), current: current_emergency, target: emergency_needed, completed: current_user.has_partial_emergency_fund? }
       ]
-    when "Eliminando Deudas Caras"
-      target = "Situación Estable"
+    when :paying_debt
+      target = t('financial.levels.stable.name')
       current_ratio = current_user.expensive_debt_ratio
       requirements = [
-        { name: "Deuda cara < 40% patrimonio", current: (current_ratio * 100).round(1), target: 40, completed: current_ratio < 0.4 }
+        { name: t('financial.next_level.expensive_debt_under_40'), current: (current_ratio * 100).round(1), target: 40, completed: current_ratio < 0.4 }
       ]
-    when "Situación Estable"
-      target = "Crecimiento Patrimonial"
+    when :stable
+      target = t('financial.levels.growth.name')
       target_net_worth = current_user.annual_income * 2
       requirements = [
-        { name: "Patrimonio ≥ 2 años ingresos", current: @net_worth, target: target_net_worth, completed: @net_worth >= target_net_worth }
+        { name: t('financial.next_level.net_worth_2_years'), current: @net_worth, target: target_net_worth, completed: @net_worth >= target_net_worth }
       ]
-    when "Crecimiento Patrimonial"
-      target = "Libertad Financiera"
+    when :growth
+      target = t('financial.levels.financial_freedom.name')
       investment_income = current_user.investment_income_monthly
       requirements = [
-        { name: "Ingresos inversión ≥ gastos", current: investment_income, target: current_user.monthly_expenses, completed: current_user.has_financial_freedom? }
+        { name: t('financial.next_level.investment_income_covers_expenses'), current: investment_income, target: current_user.monthly_expenses, completed: current_user.has_financial_freedom? }
       ]
     else
       target = nil
@@ -442,7 +381,7 @@ class DashboardController < ApplicationController
   end
 
   def financial_health_allows_objectives?
-    ["Situación Estable", "Crecimiento Patrimonial", "Libertad Financiera"].include?(@financial_health_level)
+    [:stable, :growth, :financial_freedom].include?(current_user.financial_health_level_key)
   end
   
   def prepare_objectives_with_recommendations
@@ -478,70 +417,21 @@ class DashboardController < ApplicationController
   end
 
   def get_recommendation_info(recommendation_slug)
-    case recommendation_slug
-    when "better_bank_account"
-      {
-        title: "Optimiza tu Cuenta Bancaria",
-        description: "Elimina comisiones innecesarias y ahorra hasta 200€/año",
-        cta: "Comparar Cuentas",
-        icon: "bi-bank"
-      }
-    when "emergency_deposit"
-      {
-        title: "Construye tu Fondo de Emergencia",
-        description: "Protégete ante imprevistos con un colchón financiero seguro",
-        cta: "Ver Depósitos",
-        icon: "bi-shield-check"
-      }
-    when "saving_advice"
-      {
-        title: "Consejos para Ahorrar Más",
-        description: "Estrategias personalizadas para crear capacidad de ahorro",
-        cta: "Ver Consejos",
-        icon: "bi-piggy-bank"
-      }
-    when "debt_review"
-      {
-        title: "Optimiza tus Deudas",
-        description: "Reduce intereses y acelera la cancelación de tus deudas",
-        cta: "Revisar Deudas",
-        icon: "bi-credit-card"
-      }
-    when "debt_optimization"
-      {
-        title: "Estrategia Anti-Deudas",
-        description: "Plan integral para liberarte de deudas caras rápidamente",
-        cta: "Ver Estrategia",
-        icon: "bi-arrow-down-circle"
-      }
-    when "mortgage_optimization"
-      {
-        title: "Optimiza tu Hipoteca",
-        description: "Reduce el coste de tu hipoteca y ahorra miles de euros",
-        cta: "Optimizar Hipoteca",
-        icon: "bi-house"
-      }
-    when "portfolio_optimization"
-      {
-        title: "Optimiza tus Inversiones",
-        description: "Maximiza la rentabilidad de tu cartera de inversiones",
-        cta: "Optimizar Cartera",
-        icon: "bi-graph-up"
-      }
-    when "tax_advisory"
-      {
-        title: "Asesoramiento Fiscal",
-        description: "Optimiza tu fiscalidad y planifica tu patrimonio",
-        cta: "Contactar Asesor",
-        icon: "bi-calculator"
-      }
-    else
-      {
-        title: recommendation_slug.humanize,
-        description: "Recomendación personalizada para tu situación",
-        cta: "Ver Detalles",
-        icon: "bi-info-circle"
-      }
+    # Normalize key for lookup
+    lookup_key = case recommendation_slug
+    when 'debt_review' then 'debt_optimization'
+    else recommendation_slug
     end
+
+    {
+      title: t("financial.recommendations.#{lookup_key}.description",
+               default: t("financial.recommendations.default.description")),
+      description: t("financial.recommendations.#{lookup_key}.benefit",
+                     default: t("financial.recommendations.default.benefit")),
+      cta: t("financial.recommendations.#{lookup_key}.cta",
+             default: t("financial.recommendations.default.cta")),
+      icon: t("financial.recommendations.#{lookup_key}.icon",
+              default: "bi-info-circle")
+    }
   end
 end

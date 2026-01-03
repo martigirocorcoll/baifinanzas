@@ -1,0 +1,109 @@
+en:
+  activerecord:
+    models:
+      user: "User"
+      objective: "Goal"
+      pyg: "Profit & Loss"
+      balance: "Balance"
+      recommendation: "Recommendation"
+      influencer: "Influencer"
+      user_action: "User action"
+
+    attributes:
+      user:
+        email: "Email"
+        password: "Password"
+        password_confirmation: "Confirm password"
+        phone: "Phone"
+        country: "Country"
+        risk_profile: "Risk profile"
+      objective:
+        title: "Title"
+        target_amount: "Target amount"
+        target_date: "Target date"
+      pyg:
+        ingresos_mensual: "Monthly income"
+        gasto_compra: "Groceries"
+        alquiler_hipoteca: "Rent"
+        gastos_utilities: "Utilities"
+        gastos_seguros: "Insurance"
+        gastos_transporte: "Transportation"
+        restaurantes_y_ocio: "Dining & Entertainment"
+        cuota_hipoteca: "Mortgage Payment"
+        cuota_coche: "Car Payment"
+        otras_cuotas: "Other Payments"
+        suscripciones: "Subscriptions"
+        cuidado_personal: "Personal Care"
+        otros_gastos: "Other Expenses"
+      balance:
+        valor_inmuebles: "Real estate value"
+        dinero_cuenta_corriente: "Checking account"
+        dinero_cuenta_ahorro_depos: "Savings/deposits"
+        dinero_inversiones_f: "Investments"
+        dinero_planes_pensiones: "Pension plans"
+        valor_coches_vehiculos: "Vehicles"
+        valor_otros_activos: "Other assets"
+        hipoteca_inmuebles: "Mortgage"
+        deuda_tarjeta_credito: "Credit card debt"
+        prestamos_personales: "Personal loans"
+        prestamos_coches: "Vehicle loans"
+        otras_deudas: "Other debts"
+      recommendation:
+        slug: "Identifier"
+        title: "Title"
+        description: "Description"
+        content: "Content"
+      influencer:
+        code: "Code"
+        name: "Name"
+        email: "Email"
+
+    errors:
+      models:
+        objective:
+          attributes:
+            title:
+              blank: "Title is required"
+            target_amount:
+              blank: "Target amount is required"
+              greater_than: "Amount must be greater than €0"
+              not_a_number: "Amount must be a number"
+            target_date:
+              blank: "Target date is required"
+              must_be_future: "Target date must be in the future"
+        pyg:
+          attributes:
+            ingresos_mensual:
+              blank: "Monthly income is required"
+              greater_than_or_equal_to: "Income cannot be negative"
+            base:
+              negative_expenses: "Expenses cannot be negative"
+        balance:
+          attributes:
+            base:
+              negative_values: "Values cannot be negative"
+        user:
+          attributes:
+            email:
+              blank: "Email is required"
+              taken: "This email is already registered"
+              invalid: "Email is not valid"
+            password:
+              blank: "Password is required"
+              too_short: "Password is too short (minimum %{count} characters)"
+            password_confirmation:
+              confirmation: "Passwords don't match"
+
+      messages:
+        blank: "can't be blank"
+        present: "must be blank"
+        not_a_number: "is not a number"
+        greater_than: "must be greater than %{count}"
+        greater_than_or_equal_to: "must be greater than or equal to %{count}"
+        less_than: "must be less than %{count}"
+        less_than_or_equal_to: "must be less than or equal to %{count}"
+        taken: "has already been taken"
+        invalid: "is invalid"
+        confirmation: "doesn't match"
+        too_short: "is too short (minimum is %{count} characters)"
+        too_long: "is too long (maximum is %{count} characters)"

@@ -1,11 +1,12 @@
 class Objective < ApplicationRecord
   belongs_to :user
 
-  validates :title, presence: { message: "El título es obligatorio" }
-  validates :target_amount, presence: { message: "El importe objetivo es obligatorio" },
-            numericality: { only_integer: true, greater_than: 0, message: "El importe debe ser mayor a 0€" }
-  validates :target_date, presence: { message: "La fecha objetivo es obligatoria" }
-  
+  # Validations use Rails I18n automatically from activerecord.errors.models.objective
+  validates :title, presence: true
+  validates :target_amount, presence: true,
+            numericality: { only_integer: true, greater_than: 0 }
+  validates :target_date, presence: true
+
   validate :fecha_objetivo_futura
 
   def valid_for_display?
@@ -23,7 +24,13 @@ class Objective < ApplicationRecord
 
   def is_retirement_objective?
     return false unless title.present?
-    title.downcase.include?('jubil') || title.downcase.include?('pension') || title.downcase.include?('retir')
+
+    # Get keywords from both locales
+    es_keywords = I18n.t('objectives.icon_keywords.retirement', locale: :es, default: '')
+    en_keywords = I18n.t('objectives.icon_keywords.retirement', locale: :en, default: '')
+    all_keywords = "#{es_keywords}|#{en_keywords}"
+
+    title.downcase.match?(Regexp.new(all_keywords, Regexp::IGNORECASE))
   end
 
   def investment_recommendation
@@ -48,7 +55,7 @@ class Objective < ApplicationRecord
       0.08
     end
   end
-  
+
   # Alias para compatibilidad con el controlador
   def expected_return
     annual_return_rate
@@ -57,10 +64,10 @@ class Objective < ApplicationRecord
   def monthly_savings_needed
     return target_amount unless target_date.present?
     return target_amount if months_to_target <= 0
-    
+
     monthly_rate = annual_return_rate / 12
     periods = months_to_target
-    
+
     if monthly_rate == 0
       target_amount / periods
     else
@@ -69,7 +76,7 @@ class Objective < ApplicationRecord
   end
 
   def savings_capacity_analysis
-    return { sufficient: false, message: "Usuario sin datos financieros" } unless user.balance && user.pyg
+    return { sufficient: false, message: I18n.t('dashboard.savings_capacity.no_data', default: 'No financial data') } unless user.balance && user.pyg
 
     monthly_needed = monthly_savings_needed
     available_cash_flow = user.monthly_cash_flow
@@ -96,41 +103,31 @@ class Objective < ApplicationRecord
 
     title_lower = title.downcase
 
-    # Casa / Vivienda
-    return "bi-house-heart" if title_lower.match?(/casa|vivienda|piso|apartamento|hogar/)
+    # Check each icon type against both language keywords
+    icon_types = {
+      house: "bi-house-heart",
+      car: "bi-car-front",
+      education: "bi-mortarboard",
+      retirement: "bi-piggy-bank-fill",
+      travel: "bi-airplane",
+      wedding: "bi-heart",
+      emergency: "bi-shield-check",
+      investment: "bi-graph-up-arrow",
+      debt: "bi-credit-card-2-back",
+      business: "bi-briefcase",
+      health: "bi-heart-pulse",
+      family: "bi-people"
+    }
 
-    # Coche / Vehículo
-    return "bi-car-front" if title_lower.match?(/coche|carro|veh[ií]culo|auto|moto/)
+    icon_types.each do |icon_type, icon_class|
+      es_keywords = I18n.t("objectives.icon_keywords.#{icon_type}", locale: :es, default: '')
+      en_keywords = I18n.t("objectives.icon_keywords.#{icon_type}", locale: :en, default: '')
+      all_keywords = "#{es_keywords}|#{en_keywords}".gsub('||', '|')
 
-    # Educación
-    return "bi-mortarboard" if title_lower.match?(/estudio|universidad|educaci[oó]n|m[aá]ster|colegio|formaci[oó]n|carrera/)
-
-    # Jubilación / Retiro
-    return "bi-piggy-bank-fill" if title_lower.match?(/jubil|retiro|pensi[oó]n/)
-
-    # Viaje / Vacaciones
-    return "bi-airplane" if title_lower.match?(/viaje|vacacion|turismo|viajar/)
-
-    # Boda / Matrimonio
-    return "bi-heart" if title_lower.match?(/boda|casamiento|matrimonio/)
-
-    # Fondo de emergencia
-    return "bi-shield-check" if title_lower.match?(/emergencia|fondo/)
-
-    # Inversión / Ahorro
-    return "bi-graph-up-arrow" if title_lower.match?(/inversi[oó]n|ahorro|invertir/)
-
-    # Deuda
-    return "bi-credit-card-2-back" if title_lower.match?(/deuda|pr[eé]stamo|pagar/)
-
-    # Negocio / Empresa
-    return "bi-briefcase" if title_lower.match?(/negocio|empresa|emprendimiento|startup/)
-
-    # Salud
-    return "bi-heart-pulse" if title_lower.match?(/salud|m[eé]dico|tratamiento/)
-
-    # Familia / Hijos
-    return "bi-people" if title_lower.match?(/hijo|familia|beb[eé]/)
+      if all_keywords.present? && title_lower.match?(Regexp.new(all_keywords, Regexp::IGNORECASE))
+        return icon_class
+      end
+    end
 
     # Default
     "bi-bullseye"
@@ -140,9 +137,9 @@ class Objective < ApplicationRecord
 
   def fecha_objetivo_futura
     return unless target_date.present?
-    
+
     if target_date <= Date.current
-      errors.add(:target_date, "La fecha objetivo debe ser futura")
+      errors.add(:target_date, :must_be_future)
     end
   end
 end

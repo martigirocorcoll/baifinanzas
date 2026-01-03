@@ -1,0 +1,144 @@
+en:
+  financial:
+    levels:
+      critical:
+        name: "Critical Situation"
+        icon: "🔴"
+        bootstrap_icon: "bi bi-exclamation-circle"
+        description: "Your expenses currently equal or exceed your income, meaning you have no consistent savings capacity. This situation is more common than you think and is the first step toward taking control of your finances. Every small improvement in your financial habits will bring you closer to the next level."
+        next_step: "Your priority is to create positive cash flow by reducing expenses or increasing income. Check your personalized recommendations to find the best savings opportunities."
+      emergency_fund:
+        name: "Building Emergency Fund"
+        icon: "🟡"
+        bootstrap_icon: "bi bi-shield-plus"
+        description: "Excellent progress! You have achieved consistent monthly savings capacity. Your income exceeds your expenses and you can allocate money each month to improve your situation. Now you need to create a safety cushion to protect yourself against unexpected events."
+        next_step: "Build your emergency fund of at least 4 months of expenses. This cushion will give you peace of mind to make better financial decisions."
+      paying_debt:
+        name: "Eliminating Expensive Debt"
+        icon: "🟠"
+        bootstrap_icon: "bi bi-credit-card-2-back"
+        description: "You have savings capacity and a basic emergency cushion, which shows discipline. However, expensive debts (credit cards, personal loans) are limiting your growth potential. This is the most challenging phase but also the most transformative."
+        next_step: "Eliminate or significantly reduce your expensive debts. Prioritize paying off debts with the highest interest first. Every euro you allocate is an investment with guaranteed return."
+      stable:
+        name: "Stable Situation"
+        icon: "🟢"
+        bootstrap_icon: "bi bi-check-circle"
+        description: "Congratulations! You have achieved financial stability that only 15% of the population reaches. You have consistent savings capacity, a solid emergency fund, and your debts are under control. From here you can plan specific financial goals like a house, investments, or personal projects."
+        next_step: "Now you can focus on growing your wealth. Define specific financial goals and start investing smartly."
+      growth:
+        name: "Wealth Growth"
+        icon: "💎"
+        bootstrap_icon: "bi bi-gem"
+        description: "Extraordinary achievement! You are in the top 5% of the population. You have accumulated a net worth equivalent to at least 2 years of income, keep your debts under control, and have solid savings and investment capacity. You can consider more sophisticated investment and tax optimization strategies."
+        next_step: "Your final goal is within reach: making your investments generate passive income that exceeds your monthly expenses. Optimize your portfolio and consider advanced strategies."
+      financial_freedom:
+        name: "Financial Freedom"
+        icon: "👑"
+        bootstrap_icon: "bi bi-trophy-fill"
+        description: "Congratulations on this exceptional achievement! You have reached true financial freedom, a status that less than 2% of the population achieves. Your investments generate enough passive income to cover all your monthly expenses. You can choose how to invest your time based on your passions, not financial needs."
+        next_step: "Focus on optimizing and preserving your wealth, while exploring specialized investment opportunities or social impact projects."
+      unknown:
+        name: "Unknown Status"
+        icon: "❓"
+        bootstrap_icon: "bi bi-question-circle"
+        description: "We could not determine your current financial status. To provide you with the most accurate analysis, we need a complete view of your financial situation."
+        next_step: "Complete all information in your financial profile to get your detailed analysis."
+
+    recommendations:
+      better_bank_account:
+        title: "Get a better bank account"
+        benefit: "Eliminate unnecessary fees"
+        description: "Eliminate unnecessary fees and save up to €200/year"
+        cta: "Compare Accounts"
+        icon: "bi-bank"
+      emergency_deposit:
+        title: "Build your emergency fund"
+        benefit: "Protect your savings against unexpected events"
+        description: "Protect yourself against unexpected events with a secure financial cushion"
+        cta: "View Deposits"
+        icon: "bi-shield-check"
+      debt_optimization:
+        title: "Reduce your debts"
+        benefit: "Reduce the burden of your debts"
+        description: "Comprehensive plan to free yourself from expensive debts quickly"
+        cta: "View Strategy"
+        icon: "bi-credit-card-2-back"
+      debt_review:
+        title: "Reduce your debts"
+        benefit: "Reduce the burden of your debts"
+        description: "Reduce interest rates and accelerate debt payoff"
+        cta: "Review Debts"
+        icon: "bi-credit-card"
+      mortgage_optimization:
+        title: "Pay less on your mortgage"
+        benefit: "Pay less on your mortgage"
+        description: "Reduce your mortgage costs and save thousands of euros"
+        cta: "Optimize Mortgage"
+        icon: "bi-house-door"
+      portfolio_optimization:
+        title: "Optimize your investments"
+        benefit: "Maximize the return on your investments"
+        description: "Maximize the profitability of your investment portfolio"
+        cta: "Optimize Portfolio"
+        icon: "bi-graph-up-arrow"
+      tax_advisory:
+        title: "Analyze your taxes"
+        benefit: "Optimize your tax situation"
+        description: "Optimize your taxes and plan your wealth"
+        cta: "Contact Advisor"
+        icon: "bi-calculator"
+      saving_advice:
+        title: "Learn to save"
+        benefit: "Identify savings opportunities"
+        description: "Personalized strategies to create savings capacity"
+        cta: "View Tips"
+        icon: "bi-lightbulb"
+      ac_curt:
+        title: "Invest for the medium term"
+        benefit: "Grow your money in the medium term"
+        description: "2-5 year investments with moderate returns"
+        cta: "View Options"
+        icon: "bi-bar-chart"
+      ac_llarg:
+        title: "Invest for the long term"
+        benefit: "Build wealth over the long term"
+        description: "5+ year investments to maximize your wealth"
+        cta: "View Options"
+        icon: "bi-graph-up"
+      ac_jubil:
+        title: "Save for your retirement"
+        benefit: "Secure your financial future"
+        description: "Prepare your future with tax advantages"
+        cta: "View Plans"
+        icon: "bi-piggy-bank-fill"
+      ac_diposit:
+        title: "Build your emergency fund"
+        benefit: "Protect your savings against unexpected events"
+        description: "Secure deposits for your emergency fund"
+        cta: "View Deposits"
+        icon: "bi-shield-check"
+      ac_fiscal:
+        title: "Analyze your taxes"
+        benefit: "Optimize your tax situation"
+        description: "Optimize your taxes and plan your wealth"
+        cta: "Contact Advisor"
+        icon: "bi-calculator"
+      default:
+        title: "Recommendation"
+        benefit: "Improve your financial situation"
+        description: "Personalized recommendation for your situation"
+        cta: "View Details"
+        icon: "bi-check-circle"
+
+    next_level:
+      positive_cash_flow: "Positive cash flow"
+      emergency_2_months: "2-month cushion"
+      expensive_debt_under_40: "Expensive debt < 40% net worth"
+      net_worth_2_years: "Net worth ≥ 2 years income"
+      investment_income_covers_expenses: "Investment income ≥ expenses"
+
+    action_plan:
+      reach_goal: "Reach your goal of %{amount}"
+      plan_future: "Plan your financial future"
+      create_new_objective: "Create new goal"
+      define_first_objective: "Define your first goal"

@@ -19,37 +19,43 @@ class User < ApplicationRecord
     admin == true
   end
 
-  def financial_health_level
-    return "Situación Crítica" unless balance && pyg
+  # Returns a symbol representing the financial health level
+  def financial_health_level_key
+    return :critical unless balance && pyg
 
     if libertad_financiera?
-      "Libertad Financiera"
+      :financial_freedom
     elsif acomodado?
-      "Crecimiento Patrimonial"
+      :growth
     elsif invirtiendo_en_objetivos?
-      "Situación Estable"
+      :stable
     elsif liberandose_de_deudas?
-      "Eliminando Deudas Caras"
+      :paying_debt
     elsif construyendo_base?
-      "Creando Fondo de Emergencia"
+      :emergency_fund
     else
-      "Situación Crítica"
+      :critical
     end
   end
 
+  # Returns the translated name of the financial health level
+  def financial_health_level
+    I18n.t("financial.levels.#{financial_health_level_key}.name")
+  end
+
   def financial_health_level_number
-    case financial_health_level
-    when "Situación Crítica"
+    case financial_health_level_key
+    when :critical
       1
-    when "Creando Fondo de Emergencia"
+    when :emergency_fund
       2
-    when "Eliminando Deudas Caras"
+    when :paying_debt
       3
-    when "Situación Estable"
+    when :stable
       4
-    when "Crecimiento Patrimonial"
+    when :growth
       5
-    when "Libertad Financiera"
+    when :financial_freedom
       6
     else
       0
@@ -184,7 +190,7 @@ class User < ApplicationRecord
   end
 
   def can_invest_in_objectives?
-    ["Situación Estable", "Crecimiento Patrimonial", "Libertad Financiera"].include?(financial_health_level)
+    [:stable, :growth, :financial_freedom].include?(financial_health_level_key)
   end
 
   def monthly_income
@@ -203,30 +209,30 @@ class User < ApplicationRecord
   def base_financial_recommendations
     recommendations = []
 
-    case financial_health_level
-    when "Situación Crítica"
+    case financial_health_level_key
+    when :critical
       # Priority: Create cash flow, optimize bank, review debts
       recommendations = ["saving_advice", "better_bank_account"]
       recommendations << "debt_optimization" if total_debt > 0
-      recommendations << "mortgage_optimization" if has_mortgage?  # Hipoteca en TODOS los niveles
-    when "Creando Fondo de Emergencia"
+      recommendations << "mortgage_optimization" if has_mortgage?
+    when :emergency_fund
       # Priority: Build emergency fund, optimize bank
       recommendations = ["emergency_deposit", "better_bank_account"]
       recommendations << "debt_optimization" if total_debt > 0
       recommendations << "mortgage_optimization" if has_mortgage?
-    when "Eliminando Deudas Caras"
+    when :paying_debt
       # Priority: Pay off expensive debt, maintain emergency fund
       recommendations = ["debt_optimization", "emergency_deposit", "better_bank_account"]
       recommendations << "mortgage_optimization" if has_mortgage?
-    when "Situación Estable"
+    when :stable
       # Priority: Maintain stability, optimize assets
       recommendations = ["better_bank_account", "emergency_deposit"]
       recommendations << "mortgage_optimization" if has_mortgage?
-    when "Crecimiento Patrimonial"
+    when :growth
       # Priority: Grow wealth through investments
       recommendations = ["portfolio_optimization", "better_bank_account", "emergency_deposit"]
       recommendations << "mortgage_optimization" if has_mortgage?
-    when "Libertad Financiera"
+    when :financial_freedom
       # Priority: Preserve wealth, optimize taxes
       recommendations = ["tax_advisory", "portfolio_optimization", "better_bank_account", "emergency_deposit"]
       recommendations << "mortgage_optimization" if has_mortgage?
@@ -313,7 +319,7 @@ class User < ApplicationRecord
         type: 'recommendation',
         key: rec_key,
         slug: slug,
-        title: recommendation&.title || recommendation_title(rec_key),
+        title: recommendation_title(rec_key),
         benefit_text: recommendation_benefit_text(rec_key),
         icon: recommendation_icon(rec_key),
         time_minutes: recommendation_time(rec_key),
@@ -331,12 +337,13 @@ class User < ApplicationRecord
       valid_objectives.each do |obj|
         # Obtener slug de la recomendación de inversión
         investment_slug = obj.investment_recommendation.dasherize
+        formatted_amount = ActionController::Base.helpers.number_to_currency(obj.target_amount, unit: '€', precision: 0)
 
         actions << {
           position: actions.length + 1,
           type: 'objective',
           title: obj.title,
-          benefit_text: "Alcanza tu meta de #{ActionController::Base.helpers.number_to_currency(obj.target_amount, unit: '€', precision: 0)}",
+          benefit_text: I18n.t('financial.action_plan.reach_goal', amount: formatted_amount),
           icon: obj.objective_icon,
           time_months: obj.months_to_target,
           completed: false, # Los objetivos no se marcan como completados en el action plan
@@ -353,11 +360,12 @@ class User < ApplicationRecord
       end
 
       # Siempre añadir la opción de crear un nuevo objetivo (puede haber múltiples objetivos)
+      title_key = valid_objectives.any? ? 'create_new_objective' : 'define_first_objective'
       actions << {
         position: actions.length + 1,
         type: 'create_objective',
-        title: valid_objectives.any? ? 'Crear nuevo objetivo' : 'Define tu primer objetivo',
-        benefit_text: "Planifica tu futuro financiero",
+        title: I18n.t("financial.action_plan.#{title_key}"),
+        benefit_text: I18n.t('financial.action_plan.plan_future'),
         icon: "bi-plus-circle",
         completed: false
       }
@@ -405,57 +413,29 @@ class User < ApplicationRecord
   end
 
   def recommendation_title(rec_key)
-    case rec_key
-    when 'better_bank_account'
-      "Ten una mejor cuenta bancaria"
-    when 'emergency_deposit', 'ac_cdiposit'
-      "Construye tu fondo de emergencia"
-    when 'debt_optimization', 'debt_review'
-      "Reduce tus deudas"
-    when 'mortgage_optimization'
-      "Paga menos por tu hipoteca"
-    when 'portfolio_optimization'
-      "Optimiza tus inversiones"
-    when 'tax_advisory', 'ac_fiscal'
-      "Analiza tu fiscalidad"
-    when 'saving_advice'
-      "Aprende a ahorrar"
-    when 'ac_curt'
-      "Invierte a medio plazo"
-    when 'ac_llarg'
-      "Invierte a largo plazo"
-    when 'ac_jubil'
-      "Ahorra para tu jubilación"
-    else
-      rec_key.titleize
+    # Normalize key for lookup
+    lookup_key = case rec_key
+    when 'ac_cdiposit' then 'emergency_deposit'
+    when 'debt_review' then 'debt_optimization'
+    when 'ac_fiscal' then 'tax_advisory'
+    else rec_key
     end
+
+    I18n.t("financial.recommendations.#{lookup_key}.title",
+           default: I18n.t("financial.recommendations.default.title"))
   end
 
   def recommendation_benefit_text(rec_key)
-    case rec_key
-    when 'better_bank_account'
-      "Elimina comisiones innecesarias"
-    when 'emergency_deposit', 'ac_cdiposit'
-      "Protege tus ahorros ante imprevistos"
-    when 'debt_optimization', 'debt_review'
-      "Reduce el peso de tus deudas"
-    when 'mortgage_optimization'
-      "Paga menos por tu hipoteca"
-    when 'portfolio_optimization'
-      "Maximiza el rendimiento de tus inversiones"
-    when 'tax_advisory', 'ac_fiscal'
-      "Optimiza tu situación fiscal"
-    when 'saving_advice'
-      "Identifica oportunidades de ahorro"
-    when 'ac_curt'
-      "Haz crecer tu dinero a medio plazo"
-    when 'ac_llarg'
-      "Construye patrimonio a largo plazo"
-    when 'ac_jubil'
-      "Asegura tu futuro financiero"
-    else
-      "Mejora tu situación financiera"
+    # Normalize key for lookup
+    lookup_key = case rec_key
+    when 'ac_cdiposit' then 'emergency_deposit'
+    when 'debt_review' then 'debt_optimization'
+    when 'ac_fiscal' then 'tax_advisory'
+    else rec_key
     end
+
+    I18n.t("financial.recommendations.#{lookup_key}.benefit",
+           default: I18n.t("financial.recommendations.default.benefit"))
   end
 
   def recommendation_icon(rec_key)

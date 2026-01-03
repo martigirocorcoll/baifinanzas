@@ -2,7 +2,7 @@
   <!-- Indicador de Progreso -->
   <div class="text-center mb-4">
     <span class="badge bg-primary px-4 py-2 fs-6">
-      <i class="bi bi-list-check me-2"></i>Paso 2 de 2
+      <i class="bi bi-list-check me-2"></i><%= t('views.balance_form.step_indicator') %>
     </span>
   </div>
 
@@ -16,44 +16,20 @@
 
         <!-- Título y Descripción -->
         <div class="text-center mb-4">
-          <h2 class="mb-3 text-primary fw-bold">Calcula tu patrimonio neto</h2>
+          <h2 class="mb-3 text-primary fw-bold"><%= t('views.balance_form.title') %></h2>
           <p class="text-muted">
-            Rellena tus activos y deudas para obtener una visión clara de tu patrimonio neto.
-            <strong>Si no tienes algún activo o deuda, déjalo en 0.</strong>
+            <%= t('views.balance_form.description') %>
+            <strong><%= t('views.balance_form.note') %></strong>
           </p>
         </div>
 
-        <% total_assets = @balance.valor_inmuebles.to_i +
-                          @balance.dinero_cuenta_corriente.to_i +
-                          @balance.dinero_cuenta_ahorro_depos.to_i +
-                          @balance.dinero_inversiones_f.to_i +
-                          @balance.dinero_planes_pensiones.to_i +
-                          @balance.valor_coches_vehiculos.to_i +
-                          @balance.valor_otros_activos.to_i %>
+        <% asset_fields = %w[valor_inmuebles dinero_cuenta_corriente dinero_cuenta_ahorro_depos
+                             dinero_inversiones_f dinero_planes_pensiones valor_coches_vehiculos valor_otros_activos]
+           asset_colors = %w[success info info primary warning secondary dark]
 
-        <% total_liabilities = @balance.hipoteca_inmuebles.to_i +
-                               @balance.deuda_tarjeta_credito.to_i +
-                               @balance.prestamos_personales.to_i +
-                               @balance.prestamos_coches.to_i +
-                               @balance.otras_deudas.to_i %>
-
-        <% assets = {
-          valor_inmuebles:            ["Inmuebles", "¿Valor estimado de tus inmuebles?", "success"],
-          dinero_cuenta_corriente:    ["Cuenta Corriente", "¿Dinero en cuenta corriente?", "info"],
-          dinero_cuenta_ahorro_depos: ["Cuentas de Ahorro/Depósitos", "¿Dinero en cuenta de ahorro o depósito?", "info"],
-          dinero_inversiones_f:       ["Inversiones Financieras", "¿Dinero en inversiones financieras?", "primary"],
-          dinero_planes_pensiones:    ["Planes de Pensiones", "¿Dinero en planes de pensiones/jubilación?", "warning"],
-          valor_coches_vehiculos:     ["Vehículos", "¿Valor actual de tus vehículos?", "secondary"],
-          valor_otros_activos:        ["Otros Activos", "¿Valor de otros activos (joyas, acciones, etc.)?", "dark"]
-        } %>
-
-        <% liabilities = {
-          hipoteca_inmuebles:    ["Hipoteca Inmuebles", "¿Deuda pendiente de tu hipoteca?", "danger"],
-          deuda_tarjeta_credito: ["Tarjetas de Crédito", "¿Cuánto debes en tarjetas de crédito?", "danger"],
-          prestamos_personales:  ["Préstamos Personales", "¿Préstamos personales pendientes?", "warning"],
-          prestamos_coches:      ["Préstamos de Coches", "¿Préstamo de coche pendiente?", "dark"],
-          otras_deudas:          ["Otras Deudas", "¿Otras deudas pendientes?", "muted"]
-        } %>
+           debt_fields = %w[hipoteca_inmuebles deuda_tarjeta_credito prestamos_personales prestamos_coches otras_deudas]
+           debt_colors = %w[danger danger warning dark muted]
+        %>
 
         <div class="row gx-4">
           <!-- Sección ACTIVOS con background -->
@@ -61,14 +37,14 @@
             <div class="card bg-success bg-opacity-10 border-success border-2 h-100">
               <div class="card-body p-4">
                 <h3 class="h5 mb-3 text-success fw-bold">
-                  <i class="bi bi-wallet2 me-2"></i>Activos
+                  <i class="bi bi-wallet2 me-2"></i><%= t('views.balance_form.assets_section') %>
                 </h3>
-                <% assets.each do |field,(label, hint, color)| %>
+                <% asset_fields.each_with_index do |field, index| %>
                   <div class="mb-3">
                     <label class="form-label d-flex align-items-center fw-semibold">
-                      <span class="badge bg-<%= color %> me-2" style="width:10px;height:10px;border-radius:50%;"></span>
-                      <%= label %>
-                      <i class="bi bi-info-circle text-muted ms-1" data-bs-toggle="tooltip" title="<%= hint %>"></i>
+                      <span class="badge bg-<%= asset_colors[index] %> me-2" style="width:10px;height:10px;border-radius:50%;"></span>
+                      <%= t("views.balance_form.assets.#{field}") %>
+                      <i class="bi bi-info-circle text-muted ms-1" data-bs-toggle="tooltip" title="<%= t("views.balance_form.assets.#{field}_hint") %>"></i>
                     </label>
                     <div class="input-group">
                       <%= f.input_field field,
@@ -81,7 +57,7 @@
                   </div>
                 <% end %>
                 <div class="mt-4 p-3 bg-white rounded">
-                  <p class="text-muted mb-1 small">Total Activos</p>
+                  <p class="text-muted mb-1 small"><%= t('views.balance_form.total_assets') %></p>
                   <p class="h5 mb-0 text-success fw-bold" id="total-assets">
                     €0
                   </p>
@@ -95,14 +71,14 @@
             <div class="card bg-danger bg-opacity-10 border-danger border-2 h-100">
               <div class="card-body p-4">
                 <h3 class="h5 mb-3 text-danger fw-bold">
-                  <i class="bi bi-credit-card me-2"></i>Pasivos (Deudas)
+                  <i class="bi bi-credit-card me-2"></i><%= t('views.balance_form.debts_section') %>
                 </h3>
-                <% liabilities.each do |field,(label, hint, color)| %>
+                <% debt_fields.each_with_index do |field, index| %>
                   <div class="mb-3">
                     <label class="form-label d-flex align-items-center fw-semibold">
-                      <span class="badge bg-<%= color %> me-2" style="width:10px;height:10px;border-radius:50%;"></span>
-                      <%= label %>
-                      <i class="bi bi-info-circle text-muted ms-1" data-bs-toggle="tooltip" title="<%= hint %>"></i>
+                      <span class="badge bg-<%= debt_colors[index] %> me-2" style="width:10px;height:10px;border-radius:50%;"></span>
+                      <%= t("views.balance_form.debts.#{field}") %>
+                      <i class="bi bi-info-circle text-muted ms-1" data-bs-toggle="tooltip" title="<%= t("views.balance_form.debts.#{field}_hint") %>"></i>
                     </label>
                     <div class="input-group">
                       <%= f.input_field field,
@@ -115,7 +91,7 @@
                   </div>
                 <% end %>
                 <div class="mt-4 p-3 bg-white rounded">
-                  <p class="text-muted mb-1 small">Total Deudas</p>
+                  <p class="text-muted mb-1 small"><%= t('views.balance_form.total_debts') %></p>
                   <p class="h5 mb-0 text-danger fw-bold" id="total-liabilities">
                     €0
                   </p>
@@ -130,15 +106,19 @@
           <div class="card-body p-4">
             <div class="d-flex justify-content-between align-items-center">
               <div>
-                <p class="text-muted mb-1">Tu patrimonio neto</p>
-                <p class="fw-bold mb-0 fs-5">Activos - Deudas</p>
+                <p class="text-muted mb-1"><%= t('views.balance_form.net_worth_title') %></p>
+                <p class="fw-bold mb-0 fs-5"><%= t('views.balance_form.net_worth_formula') %></p>
               </div>
               <div class="text-end">
                 <p class="h3 mb-0 fw-bold text-success" id="net-worth-amount">
                   €0
                 </p>
-                <small class="text-muted" id="net-worth-label">
-                  Completa los campos para ver tu patrimonio
+                <small class="text-muted" id="net-worth-label"
+                       data-prompt="<%= t('views.balance_form.net_worth_prompt') %>"
+                       data-positive="<%= t('views.balance_form.net_worth_positive') %>"
+                       data-negative="<%= t('views.balance_form.net_worth_negative') %>"
+                       data-balanced="<%= t('views.balance_form.net_worth_balanced') %>">
+                  <%= t('views.balance_form.net_worth_prompt') %>
                 </small>
               </div>
             </div>
@@ -149,7 +129,7 @@
         <div class="text-center">
           <%= f.button :submit, class: "btn btn-lg btn-success px-5 shadow" do %>
             <i class="bi bi-arrow-right-circle me-2"></i>
-            <%= @balance.new_record? ? "Ver mi plan financiero personalizado" : "Actualizar patrimonio" %>
+            <%= @balance.new_record? ? t('views.balance_form.submit_new') : t('views.balance_form.submit_update') %>
           <% end %>
         </div>
 
@@ -159,7 +139,7 @@
       <div class="text-center mt-3">
         <%= link_to edit_pyg_path, class: "text-muted text-decoration-none" do %>
           <i class="bi bi-pencil me-1"></i>
-          <small>Corregir datos de pérdidas y ganancias mensual</small>
+          <small><%= t('views.balance_form.edit_pyg_link') %></small>
         <% end %>
       </div>
 
@@ -178,6 +158,14 @@ document.addEventListener('turbo:load', function() {
   const totalLiabilitiesEl = document.getElementById('total-liabilities');
   const netWorthAmountEl = document.getElementById('net-worth-amount');
   const netWorthLabelEl = document.getElementById('net-worth-label');
+
+  // Get translated labels from data attributes
+  const labels = {
+    prompt: netWorthLabelEl.dataset.prompt,
+    positive: netWorthLabelEl.dataset.positive,
+    negative: netWorthLabelEl.dataset.negative,
+    balanced: netWorthLabelEl.dataset.balanced
+  };
 
   // Formatear número con separadores europeos (1.234,56)
   function formatNumber(value) {
@@ -265,13 +253,13 @@ document.addEventListener('turbo:load', function() {
     // Actualizar color y label del patrimonio neto
     if (netWorth > 0) {
       netWorthAmountEl.className = 'h3 mb-0 fw-bold text-success';
-      netWorthLabelEl.textContent = 'Patrimonio positivo';
+      netWorthLabelEl.textContent = labels.positive;
     } else if (netWorth < 0) {
       netWorthAmountEl.className = 'h3 mb-0 fw-bold text-danger';
-      netWorthLabelEl.textContent = 'Patrimonio negativo';
+      netWorthLabelEl.textContent = labels.negative;
     } else {
       netWorthAmountEl.className = 'h3 mb-0 fw-bold text-muted';
-      netWorthLabelEl.textContent = 'Patrimonio equilibrado';
+      netWorthLabelEl.textContent = labels.balanced;
     }
   }
 

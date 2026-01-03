@@ -1,9 +1,36 @@
 class ApplicationController < ActionController::Base
+  around_action :switch_locale
   before_action :authenticate_user!, unless: :devise_controller?
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :track_referral
 
+  # Include locale in all generated URLs
+  def default_url_options
+    { locale: I18n.locale }
+  end
+
   protected
+
+  def switch_locale(&action)
+    locale = extract_locale || I18n.default_locale
+    session[:locale] = locale
+    I18n.with_locale(locale, &action)
+  end
+
+  def extract_locale
+    # Priority: URL param > session > browser Accept-Language > default
+    parsed_locale = params[:locale] ||
+                    session[:locale] ||
+                    extract_locale_from_accept_language_header
+
+    I18n.available_locales.map(&:to_s).include?(parsed_locale.to_s) ? parsed_locale.to_sym : nil
+  end
+
+  def extract_locale_from_accept_language_header
+    return nil unless request.env['HTTP_ACCEPT_LANGUAGE']
+    accepted = request.env['HTTP_ACCEPT_LANGUAGE'].scan(/[a-z]{2}/).first
+    I18n.available_locales.map(&:to_s).include?(accepted) ? accepted : nil
+  end
 
   def configure_permitted_parameters
     keys = [:phone, :country, :risk_profile, :influencer_id]

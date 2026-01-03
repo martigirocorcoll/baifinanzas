@@ -1,18 +1,30 @@
-<h2>Forgot your password?</h2>
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-10 col-lg-8 col-xl-6">
+      <h2 class="mb-4 text-center"><%= t('views.devise.password.forgot_title') %></h2>
 
-<%= simple_form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
-  <%= f.error_notification %>
+      <%= simple_form_for(resource, as: resource_name, url: password_path(resource_name),
+            html: { method: :post, class: "mx-auto", style: "max-width: 400px;" }) do |f| %>
+        <%= f.error_notification %>
 
-  <div class="form-inputs">
-    <%= f.input :email,
+        <div class="mb-3">
+          <%= f.input :email,
                 required: true,
                 autofocus: true,
-                input_html: { autocomplete: "email" } %>
-  </div>
+                label: t('views.devise.password.email'),
+                input_html: { class: "form-control", autocomplete: "email", placeholder: "usuario@ejemplo.com" },
+                label_html: { class: "form-label" },
+                wrapper: false %>
+        </div>
 
-  <div class="form-actions">
-    <%= f.button :submit, "Send me reset password instructions" %>
-  </div>
-<% end %>
+        <div class="d-grid mb-3">
+          <%= f.button :submit, t('views.devise.password.submit'), class: "btn btn-primary btn-lg" %>
+        </div>
 
-<%= render "devise/shared/links" %>
+        <div class="text-center">
+          <%= link_to t('views.devise.password.back_to_login'), new_session_path(resource_name), class: "text-muted small" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

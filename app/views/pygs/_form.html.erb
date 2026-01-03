@@ -2,7 +2,7 @@
   <!-- Indicador de Progreso -->
   <div class="text-center mb-4">
     <span class="badge bg-primary px-4 py-2 fs-6">
-      <i class="bi bi-list-check me-2"></i>Paso 1 de 2
+      <i class="bi bi-list-check me-2"></i><%= t('views.pyg_form.step_indicator') %>
     </span>
   </div>
 
@@ -16,11 +16,10 @@
 
         <!-- Título y Descripción -->
         <div class="text-center mb-4">
-          <h2 class="mb-3 text-primary fw-bold">Calcula tu estado de pérdidas y ganancias mensual</h2>
+          <h2 class="mb-3 text-primary fw-bold"><%= t('views.pyg_form.title') %></h2>
           <p class="text-muted">
-            Si nunca has hecho un presupuesto, este formulario es un buen punto de partida.
-            Introduce tus datos y obtén una visión clara de tus finanzas mensuales.
-            <strong>Si no tienes algún gasto, déjalo en 0.</strong>
+            <%= t('views.pyg_form.description') %>
+            <strong><%= t('views.pyg_form.note') %></strong>
           </p>
         </div>
 
@@ -28,11 +27,11 @@
         <div class="card bg-success bg-opacity-10 border-success border-2 mb-4">
           <div class="card-body p-4">
             <h3 class="h5 mb-3 text-success fw-bold">
-              <i class="bi bi-cash-coin me-2"></i>Ingresos Mensuales
+              <i class="bi bi-cash-coin me-2"></i><%= t('views.pyg_form.income_section') %>
             </h3>
             <div class="row">
               <div class="col-12">
-                <label class="form-label fw-semibold">Ingresos mensuales totales</label>
+                <label class="form-label fw-semibold"><%= t('views.pyg_form.income_label') %></label>
                 <div class="input-group input-group-lg">
                   <%= f.input_field :ingresos_mensual,
                         type: "text",
@@ -41,7 +40,7 @@
                         data: { field: "ingresos_mensual" } %>
                   <span class="input-group-text bg-success text-white fw-bold">€</span>
                 </div>
-                <small class="text-muted">Incluye salario, rentas, pensiones, etc.</small>
+                <small class="text-muted"><%= t('views.pyg_form.income_help') %></small>
               </div>
             </div>
           </div>
@@ -51,30 +50,21 @@
         <div class="card bg-danger bg-opacity-10 border-danger border-2 mb-4">
           <div class="card-body p-4">
             <h3 class="h5 mb-3 text-danger fw-bold">
-              <i class="bi bi-cart3 me-2"></i>Gastos Mensuales
+              <i class="bi bi-cart3 me-2"></i><%= t('views.pyg_form.expenses_section') %>
             </h3>
             <div class="row gx-3 gy-3">
-              <% expenses = {
-                gasto_compra:          ["Compras (mensual)", "primary"],
-                alquiler_hipoteca:     ["Alquiler (mensual)", "success"],
-                gastos_utilities:      ["Servicios - luz, agua, gas (mensual)", "warning"],
-                gastos_seguros:        ["Seguros (mensual)", "danger"],
-                gastos_transporte:     ["Transporte (mensual)", "info"],
-                restaurantes_y_ocio:   ["Restaurantes y Ocio (mensual)", "secondary"],
-                cuota_hipoteca:        ["Cuota Hipoteca (mensual)", "primary"],
-                cuota_coche:           ["Cuota Coche (mensual)", "dark"],
-                otras_cuotas:          ["Otras Cuotas (mensual)", "muted"],
-                suscripciones:         ["Suscripciones (mensual)", "info"],
-                cuidado_personal:      ["Cuidado Personal (mensual)", "secondary"],
-                otros_gastos:          ["Otros Gastos (mensual)", "dark"]
-              } %>
+              <% expense_fields = %w[gasto_compra alquiler_hipoteca gastos_utilities gastos_seguros
+                                     gastos_transporte restaurantes_y_ocio cuota_hipoteca cuota_coche
+                                     otras_cuotas suscripciones cuidado_personal otros_gastos]
+                 colors = %w[primary success warning danger info secondary primary dark muted info secondary dark]
+              %>
 
-              <% expenses.each do |field, (label, color)| %>
+              <% expense_fields.each_with_index do |field, index| %>
                 <div class="col-12 col-md-6">
                   <label for="pyg_<%= field %>" class="form-label d-flex align-items-center fw-semibold">
-                    <span class="badge bg-<%= color %> me-2"
+                    <span class="badge bg-<%= colors[index] %> me-2"
                           style="width:10px; height:10px; border-radius:50%;"></span>
-                    <%= label %>
+                    <%= t("views.pyg_form.expenses.#{field}") %>
                   </label>
                   <div class="input-group">
                     <%= f.input_field field,
@@ -95,15 +85,19 @@
           <div class="card-body p-4">
             <div class="d-flex justify-content-between align-items-center">
               <div>
-                <p class="text-muted mb-1">Balance mensual</p>
-                <p class="fw-bold mb-0 fs-5">Diferencia entre ingresos y gastos</p>
+                <p class="text-muted mb-1"><%= t('views.pyg_form.balance_section') %></p>
+                <p class="fw-bold mb-0 fs-5"><%= t('views.pyg_form.balance_description') %></p>
               </div>
               <div class="text-end">
                 <p class="h3 mb-0 fw-bold text-success" id="balance-amount">
                   €0
                 </p>
-                <small class="text-muted" id="balance-label">
-                  Completa los campos para ver tu balance
+                <small class="text-muted" id="balance-label"
+                       data-prompt="<%= t('views.pyg_form.balance_prompt') %>"
+                       data-savings="<%= t('views.pyg_form.savings_label') %>"
+                       data-deficit="<%= t('views.pyg_form.deficit_label') %>"
+                       data-balanced="<%= t('views.pyg_form.balanced_label') %>">
+                  <%= t('views.pyg_form.balance_prompt') %>
                 </small>
               </div>
             </div>
@@ -114,7 +108,7 @@
         <div class="text-center">
           <%= f.button :submit, class: "btn btn-lg btn-success px-5 shadow" do %>
             <i class="bi bi-arrow-right-circle me-2"></i>
-            <%= @pyg.new_record? ? "Continuar al siguiente paso" : "Actualizar presupuesto" %>
+            <%= @pyg.new_record? ? t('views.pyg_form.submit_new') : t('views.pyg_form.submit_update') %>
           <% end %>
         </div>
 
@@ -129,6 +123,14 @@ document.addEventListener('turbo:load', function() {
   const balanceAmount = document.getElementById('balance-amount');
   const balanceLabel = document.getElementById('balance-label');
   const ingresosInput = document.querySelector('[data-field="ingresos_mensual"]');
+
+  // Get translated labels from data attributes
+  const labels = {
+    prompt: balanceLabel.dataset.prompt,
+    savings: balanceLabel.dataset.savings,
+    deficit: balanceLabel.dataset.deficit,
+    balanced: balanceLabel.dataset.balanced
+  };
 
   // Formatear número con separadores europeos (1.234,56)
   function formatNumber(value) {
@@ -200,13 +202,13 @@ document.addEventListener('turbo:load', function() {
     // Actualizar color y label
     if (diferencia > 0) {
       balanceAmount.className = 'h3 mb-0 fw-bold text-success';
-      balanceLabel.textContent = 'Ahorro mensual';
+      balanceLabel.textContent = labels.savings;
     } else if (diferencia < 0) {
       balanceAmount.className = 'h3 mb-0 fw-bold text-danger';
-      balanceLabel.textContent = 'Déficit mensual';
+      balanceLabel.textContent = labels.deficit;
     } else {
       balanceAmount.className = 'h3 mb-0 fw-bold text-muted';
-      balanceLabel.textContent = 'Balance equilibrado';
+      balanceLabel.textContent = labels.balanced;
     }
   }
 

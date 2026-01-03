@@ -1,0 +1,109 @@
+es:
+  activerecord:
+    models:
+      user: "Usuario"
+      objective: "Objetivo"
+      pyg: "Cuenta de Resultados"
+      balance: "Balance"
+      recommendation: "Recomendación"
+      influencer: "Influencer"
+      user_action: "Acción de usuario"
+
+    attributes:
+      user:
+        email: "Correo electrónico"
+        password: "Contraseña"
+        password_confirmation: "Confirmar contraseña"
+        phone: "Teléfono"
+        country: "País"
+        risk_profile: "Perfil de riesgo"
+      objective:
+        title: "Título"
+        target_amount: "Cantidad objetivo"
+        target_date: "Fecha objetivo"
+      pyg:
+        ingresos_mensual: "Ingresos mensuales"
+        gasto_compra: "Compras"
+        alquiler_hipoteca: "Alquiler"
+        gastos_utilities: "Servicios"
+        gastos_seguros: "Seguros"
+        gastos_transporte: "Transporte"
+        restaurantes_y_ocio: "Restaurantes y Ocio"
+        cuota_hipoteca: "Cuota Hipoteca"
+        cuota_coche: "Cuota Coche"
+        otras_cuotas: "Otras Cuotas"
+        suscripciones: "Suscripciones"
+        cuidado_personal: "Cuidado Personal"
+        otros_gastos: "Otros Gastos"
+      balance:
+        valor_inmuebles: "Valor de inmuebles"
+        dinero_cuenta_corriente: "Cuenta corriente"
+        dinero_cuenta_ahorro_depos: "Ahorros/depósitos"
+        dinero_inversiones_f: "Inversiones"
+        dinero_planes_pensiones: "Planes pensiones"
+        valor_coches_vehiculos: "Vehículos"
+        valor_otros_activos: "Otros activos"
+        hipoteca_inmuebles: "Hipoteca"
+        deuda_tarjeta_credito: "Deuda tarjetas"
+        prestamos_personales: "Préstamos personales"
+        prestamos_coches: "Préstamos vehículos"
+        otras_deudas: "Otras deudas"
+      recommendation:
+        slug: "Identificador"
+        title: "Título"
+        description: "Descripción"
+        content: "Contenido"
+      influencer:
+        code: "Código"
+        name: "Nombre"
+        email: "Email"
+
+    errors:
+      models:
+        objective:
+          attributes:
+            title:
+              blank: "El título es obligatorio"
+            target_amount:
+              blank: "El importe objetivo es obligatorio"
+              greater_than: "El importe debe ser mayor a 0€"
+              not_a_number: "El importe debe ser un número"
+            target_date:
+              blank: "La fecha objetivo es obligatoria"
+              must_be_future: "La fecha objetivo debe ser futura"
+        pyg:
+          attributes:
+            ingresos_mensual:
+              blank: "Los ingresos mensuales son obligatorios"
+              greater_than_or_equal_to: "Los ingresos no pueden ser negativos"
+            base:
+              negative_expenses: "Los gastos no pueden ser negativos"
+        balance:
+          attributes:
+            base:
+              negative_values: "Los valores no pueden ser negativos"
+        user:
+          attributes:
+            email:
+              blank: "El email es obligatorio"
+              taken: "Este email ya está registrado"
+              invalid: "El email no es válido"
+            password:
+              blank: "La contraseña es obligatoria"
+              too_short: "La contraseña es demasiado corta (mínimo %{count} caracteres)"
+            password_confirmation:
+              confirmation: "Las contraseñas no coinciden"
+
+      messages:
+        blank: "no puede estar en blanco"
+        present: "debe estar en blanco"
+        not_a_number: "no es un número"
+        greater_than: "debe ser mayor que %{count}"
+        greater_than_or_equal_to: "debe ser mayor o igual a %{count}"
+        less_than: "debe ser menor que %{count}"
+        less_than_or_equal_to: "debe ser menor o igual a %{count}"
+        taken: "ya está en uso"
+        invalid: "no es válido"
+        confirmation: "no coincide"
+        too_short: "es demasiado corto (mínimo %{count} caracteres)"
+        too_long: "es demasiado largo (máximo %{count} caracteres)"

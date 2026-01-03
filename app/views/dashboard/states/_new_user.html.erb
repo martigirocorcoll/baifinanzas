@@ -1,7 +1,7 @@
 <!-- ESTADO 1: USUARIO NUEVO -->
 <div class="welcome-hero">
-  <h1>¡Hola, <%= current_user.email.split('@').first.capitalize %>!</h1>
-  <p class="lead mb-4">Descubre tu salud financiera en solo 2 minutos</p>
+  <h1><%= t('views.dashboard.new_user.welcome', name: current_user.email.split('@').first.capitalize) %></h1>
+  <p class="lead mb-4"><%= t('views.dashboard.new_user.subtitle') %></p>
 </div>
 
 <div class="benefit-grid">
@@ -9,154 +9,154 @@
     <div class="benefit-icon">
       <i class="bi bi-graph-up"></i>
     </div>
-    <h5 class="text-success mb-2">Análisis de flujo de caja</h5>
-    <p class="small mb-0 text-muted">Ve exactamente dónde va tu dinero</p>
+    <h5 class="text-success mb-2"><%= t('views.dashboard.new_user.benefits.cash_flow.title') %></h5>
+    <p class="small mb-0 text-muted"><%= t('views.dashboard.new_user.benefits.cash_flow.description') %></p>
   </div>
-  
+
   <div class="benefit-card">
     <div class="benefit-icon">
       <i class="bi bi-trophy"></i>
     </div>
-    <h5 class="text-success mb-2">Ranking personalizado</h5>
-    <p class="small mb-0 text-muted">Compárate con otros ahorradores</p>
+    <h5 class="text-success mb-2"><%= t('views.dashboard.new_user.benefits.ranking.title') %></h5>
+    <p class="small mb-0 text-muted"><%= t('views.dashboard.new_user.benefits.ranking.description') %></p>
   </div>
-  
+
   <div class="benefit-card">
     <div class="benefit-icon">
       <i class="bi bi-lightbulb"></i>
     </div>
-    <h5 class="text-success mb-2">Recomendaciones</h5>
-    <p class="small mb-0 text-muted">Productos financieros ideales para ti</p>
+    <h5 class="text-success mb-2"><%= t('views.dashboard.new_user.benefits.recommendations.title') %></h5>
+    <p class="small mb-0 text-muted"><%= t('views.dashboard.new_user.benefits.recommendations.description') %></p>
   </div>
 </div>
 <div class="form-section">
   <h3 class="text-center mb-3">
     <i class="bi bi-clipboard-data text-primary me-2"></i>
-    Completa tu Análisis de Ingresos y Gastos
+    <%= t('views.dashboard.new_user.form.title') %>
   </h3>
   <p class="text-center mb-4 text-muted">
-    El primer paso para obtener un plan financiero personalizado es conocer tu realidad financiera. 
-    <br><small><i class="bi bi-shield-lock text-success me-1"></i><strong>Tus datos son privados y no los compartimos con nadie.</strong></small>
+    <%= t('views.dashboard.new_user.form.description') %>
+    <br><small><i class="bi bi-shield-lock text-success me-1"></i><strong><%= t('views.dashboard.new_user.form.privacy') %></strong></small>
   </p>
-        
+
         <%= form_with model: @pyg, local: true, class: "row g-3" do |f| %>
           <div class="col-md-6">
             <label for="pyg_ingresos_mensual" class="form-label">
               <i class="bi bi-cash-coin text-success me-1"></i>
-              Ingresos mensuales *
+              <%= t('views.dashboard.new_user.form.income_label') %>
             </label>
             <%= f.number_field :ingresos_mensual, class: "form-control", step: 0.01, required: true, placeholder: "Ej: 2500" %>
           </div>
-          
-          
+
+
           <div class="col-12">
             <hr class="my-4">
             <h5 class="text-center mb-3">
               <i class="bi bi-cart text-danger me-2"></i>
-              Gastos Mensuales
+              <%= t('views.dashboard.new_user.form.expenses_title') %>
             </h5>
           </div>
-          
+
           <div class="col-md-6">
             <label for="pyg_alquiler_hipoteca" class="form-label">
               <i class="bi bi-house me-1"></i>
-              Alquiler/Hipoteca
+              <%= t('views.dashboard.new_user.form.rent') %>
             </label>
             <%= f.number_field :alquiler_hipoteca, class: "form-control", step: 0.01, placeholder: "Ej: 800" %>
           </div>
-          
+
           <div class="col-md-6">
             <label for="pyg_gastos_utilities" class="form-label">
               <i class="bi bi-lightning me-1"></i>
-              Servicios (luz, agua, gas, internet)
+              <%= t('views.dashboard.new_user.form.utilities') %>
             </label>
             <%= f.number_field :gastos_utilities, class: "form-control", step: 0.01, placeholder: "Ej: 150" %>
           </div>
-          
+
           <div class="col-md-6">
             <label for="pyg_gasto_compra" class="form-label">
               <i class="bi bi-basket me-1"></i>
-              Alimentación y compras
+              <%= t('views.dashboard.new_user.form.groceries') %>
             </label>
             <%= f.number_field :gasto_compra, class: "form-control", step: 0.01, placeholder: "Ej: 400" %>
           </div>
-          
+
           <div class="col-md-6">
             <label for="pyg_gastos_transporte" class="form-label">
               <i class="bi bi-car-front me-1"></i>
-              Transporte
+              <%= t('views.dashboard.new_user.form.transport') %>
             </label>
             <%= f.number_field :gastos_transporte, class: "form-control", step: 0.01, placeholder: "Ej: 200" %>
           </div>
-          
+
           <div class="col-md-6">
             <label for="pyg_restaurantes_y_ocio" class="form-label">
               <i class="bi bi-controller me-1"></i>
-              Restaurantes y ocio
+              <%= t('views.dashboard.new_user.form.leisure') %>
             </label>
             <%= f.number_field :restaurantes_y_ocio, class: "form-control", step: 0.01, placeholder: "Ej: 300" %>
           </div>
-          
+
           <div class="col-md-6">
             <label for="pyg_gastos_seguros" class="form-label">
               <i class="bi bi-shield-check me-1"></i>
-              Seguros
+              <%= t('views.dashboard.new_user.form.insurance') %>
             </label>
             <%= f.number_field :gastos_seguros, class: "form-control", step: 0.01, placeholder: "Ej: 150" %>
           </div>
-          
+
           <div class="col-md-6">
             <label for="pyg_cuota_hipoteca" class="form-label">
               <i class="bi bi-house-door me-1"></i>
-              Cuota hipoteca
+              <%= t('views.dashboard.new_user.form.mortgage_payment') %>
             </label>
             <%= f.number_field :cuota_hipoteca, class: "form-control", step: 0.01, placeholder: "Ej: 600" %>
           </div>
-          
+
           <div class="col-md-6">
             <label for="pyg_cuota_coche" class="form-label">
               <i class="bi bi-car-front-fill me-1"></i>
-              Cuota coche
+              <%= t('views.dashboard.new_user.form.car_payment') %>
             </label>
             <%= f.number_field :cuota_coche, class: "form-control", step: 0.01, placeholder: "Ej: 250" %>
           </div>
-          
+
           <div class="col-md-6">
             <label for="pyg_otras_cuotas" class="form-label">
               <i class="bi bi-credit-card me-1"></i>
-              Otras cuotas/préstamos
+              <%= t('views.dashboard.new_user.form.other_payments') %>
             </label>
             <%= f.number_field :otras_cuotas, class: "form-control", step: 0.01, placeholder: "Ej: 100" %>
           </div>
-          
+
           <div class="col-md-6">
             <label for="pyg_suscripciones" class="form-label">
               <i class="bi bi-play-circle me-1"></i>
-              Suscripciones (Netflix, Spotify, etc.)
+              <%= t('views.dashboard.new_user.form.subscriptions') %>
             </label>
             <%= f.number_field :suscripciones, class: "form-control", step: 0.01, placeholder: "Ej: 50" %>
           </div>
-          
+
           <div class="col-md-6">
             <label for="pyg_cuidado_personal" class="form-label">
               <i class="bi bi-heart me-1"></i>
-              Cuidado personal
+              <%= t('views.dashboard.new_user.form.personal_care') %>
             </label>
             <%= f.number_field :cuidado_personal, class: "form-control", step: 0.01, placeholder: "Ej: 80" %>
           </div>
-          
+
           <div class="col-md-6">
             <label for="pyg_otros_gastos" class="form-label">
               <i class="bi bi-three-dots me-1"></i>
-              Otros gastos
+              <%= t('views.dashboard.new_user.form.other_expenses') %>
             </label>
             <%= f.number_field :otros_gastos, class: "form-control", step: 0.01, placeholder: "Ej: 200" %>
           </div>
-          
+
           <div class="col-12 text-center mt-4">
             <button type="submit" class="btn btn-baifinanzas btn-lg px-5 py-3">
               <i class="bi bi-rocket-takeoff me-2"></i>
-              Descubrir mi Salud Financiera
+              <%= t('views.dashboard.new_user.form.submit') %>
             </button>
           </div>
         <% end %>
