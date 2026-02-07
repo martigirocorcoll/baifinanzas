@@ -32,6 +32,14 @@ class User < ApplicationRecord
     role == "user"
   end
 
+  def pyg_completed?
+    pyg.present? && pyg.ingresos_mensual.present? && pyg.ingresos_mensual > 0
+  end
+
+  def balance_completed?
+    balance.present? && (total_assets > 0 || total_debt > 0)
+  end
+
   def profile_complete?
     pyg_completed? && balance_completed?
   end
