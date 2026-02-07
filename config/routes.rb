@@ -5,8 +5,9 @@ Rails.application.routes.draw do
   get  "manifest",       to: "rails/pwa#manifest",        as: :pwa_manifest
 
   # Native app endpoints (sin locale)
-  get "native/config", to: "native#config", as: :native_config
-  get "native/tabs",   to: "native#tabs",   as: :native_tabs
+  get "native/config",             to: "native#config",             as: :native_config
+  get "native/tabs",               to: "native#tabs",               as: :native_tabs
+  get "native/path-configuration", to: "native#path_configuration", as: :native_path_configuration
 
   # Root sin locale - redirige al locale por defecto
   root to: redirect("/#{I18n.default_locale}", status: 302)

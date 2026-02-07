@@ -19,6 +19,58 @@ class NativeController < ApplicationController
     }
   end
 
+  def path_configuration
+    render json: {
+      settings: {
+        screenshots_enabled: true
+      },
+      rules: [
+        {
+          patterns: ["/.*"],
+          properties: {
+            context: "default",
+            pull_to_refresh_enabled: true
+          }
+        },
+        {
+          patterns: ["/new$", "/edit$"],
+          properties: {
+            context: "modal",
+            pull_to_refresh_enabled: false
+          }
+        },
+        {
+          patterns: ["/calculators/.*"],
+          properties: {
+            context: "default",
+            pull_to_refresh_enabled: false
+          }
+        },
+        {
+          patterns: ["/onboarding/.*"],
+          properties: {
+            context: "modal",
+            pull_to_refresh_enabled: false
+          }
+        },
+        {
+          patterns: ["/users/sign_in", "/users/sign_up"],
+          properties: {
+            context: "default",
+            pull_to_refresh_enabled: false
+          }
+        },
+        {
+          patterns: ["/objectives/new", "/objectives/\\d+/edit"],
+          properties: {
+            context: "modal",
+            pull_to_refresh_enabled: false
+          }
+        }
+      ]
+    }
+  end
+
   def tabs
     render json: {
       tabs: [
