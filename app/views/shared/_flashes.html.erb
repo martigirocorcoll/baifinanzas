@@ -1,5 +1,5 @@
-<!-- Toast Notifications (positioned bottom-right) -->
-<div class="toast-container position-fixed bottom-0 end-0 p-3">
+<!-- Toast Notifications (top in Turbo Native to avoid tab bar, bottom-right otherwise) -->
+<div class="toast-container position-fixed end-0 p-3 <%= turbo_native_app? ? 'top-0' : 'bottom-0' %>" style="z-index: 9999;">
   <% if flash[:success] %>
     <div class="toast show align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="5000">
       <div class="d-flex">

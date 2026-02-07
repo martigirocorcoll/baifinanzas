@@ -1051,9 +1051,10 @@ body.app-layout {
   width: 100%;
 }
 
-// Turbo Native: add safe area top padding (no native nav bar covers content)
+// Turbo Native: safe area padding (native tab bar + status bar cover content)
 .turbo-native .app-main {
   padding-top: env(safe-area-inset-top);
+  padding-bottom: calc(env(safe-area-inset-bottom) + 80px);
 }
 
 // Page container for app
