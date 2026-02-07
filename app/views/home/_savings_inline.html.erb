@@ -1,0 +1,25 @@
+<%# Savings Inline Summary - No card wrapper %>
+<div class="savings-inline">
+  <div class="savings-inline__row">
+    <span><%= t('home.savings_summary.monthly_cash_flow') %></span>
+    <strong class="<%= @savings_capacity[:available] >= 0 ? 'text-brand' : 'text-danger' %>">
+      <%= number_to_currency(@savings_capacity[:available], unit: "\u20AC", precision: 0) %>
+    </strong>
+  </div>
+
+  <div class="savings-inline__row">
+    <span><%= t('home.savings_summary.committed_to_objectives') %></span>
+    <span class="text-muted">
+      -<%= number_to_currency(@savings_capacity[:committed], unit: "\u20AC", precision: 0) %>
+    </span>
+  </div>
+
+  <div class="savings-inline__divider"></div>
+
+  <div class="savings-inline__row savings-inline__row--total">
+    <span><%= t('home.savings_summary.available_remaining') %></span>
+    <strong class="<%= @savings_capacity[:remaining] >= 0 ? 'text-success' : 'text-danger' %>">
+      <%= number_to_currency(@savings_capacity[:remaining], unit: "\u20AC", precision: 0) %>
+    </strong>
+  </div>
+</div>

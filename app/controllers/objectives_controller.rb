@@ -1,5 +1,6 @@
 class ObjectivesController < ApplicationController
-  before_action :set_objective, only: %i[ show edit update destroy ]
+  layout 'app'
+  before_action :set_objective, only: %i[ show edit update destroy update_progress ]
 
   # GET /objectives or /objectives.json
   def index
@@ -31,14 +32,14 @@ class ObjectivesController < ApplicationController
       objective_attrs[:target_date] = Date.new(year, month, 1).end_of_month
     end
     
-    @objective = Objective.new(objective_attrs)
+    @objective = current_user.objectives.new(objective_attrs)
 
     respond_to do |format|
       if @objective.save
-        format.html { redirect_to dashboard_index_path(show_objective: @objective.id), notice: t('controllers.objectives.created') }
+        format.html { redirect_to home_path, notice: t('controllers.objectives.created') }
         format.json { render :show, status: :created, location: @objective }
       else
-        format.html { render :new, status: :unprocessable_entity }
+        format.html { redirect_to home_path, alert: @objective.errors.full_messages.join(', ') }
         format.json { render json: @objective.errors, status: :unprocessable_entity }
       end
     end
@@ -58,13 +59,20 @@ class ObjectivesController < ApplicationController
 
     respond_to do |format|
       if @objective.update(objective_attrs)
-        format.html { redirect_to dashboard_index_path(show_objective: @objective.id), notice: t('controllers.objectives.updated') }
+        format.html { redirect_to home_path, notice: t('controllers.objectives.updated') }
         format.json { render :show, status: :ok, location: @objective }
       else
-        format.html { render :edit, status: :unprocessable_entity }
+        format.html { redirect_to home_path, alert: @objective.errors.full_messages.join(', ') }
         format.json { render json: @objective.errors, status: :unprocessable_entity }
       end
     end
+  end
+
+  # PATCH /objectives/1/update_progress
+  def update_progress
+    amount = params[:current_amount].to_i
+    @objective.update_column(:current_amount, [amount, 0].max)
+    redirect_to home_path, notice: t('controllers.objectives.progress_updated')
   end
 
   # DELETE /objectives/1 or /objectives/1.json
@@ -72,7 +80,7 @@ class ObjectivesController < ApplicationController
     @objective.destroy!
 
     respond_to do |format|
-      format.html { redirect_to dashboard_index_path, status: :see_other, notice: t('controllers.objectives.deleted') }
+      format.html { redirect_to home_path, status: :see_other, notice: t('controllers.objectives.deleted') }
       format.json { head :no_content }
     end
   end
@@ -80,11 +88,11 @@ class ObjectivesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_objective
-      @objective = Objective.find(params[:id])
+      @objective = current_user.objectives.find(params[:id])
     end
 
     # Only allow a list of trusted parameters through.
     def objective_params
-      params.require(:objective).permit(:user_id, :title, :description, :target_amount, :target_date, :target_date_month, :target_date_year)
+      params.require(:objective).permit(:user_id, :title, :description, :target_amount, :target_date, :target_date_month, :target_date_year, :current_amount)
     end
 end

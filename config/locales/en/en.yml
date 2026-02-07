@@ -39,6 +39,7 @@ en:
       created: "Goal created successfully. You can now see your personalized recommendation."
       updated: "Goal updated successfully."
       deleted: "Goal deleted successfully."
+      progress_updated: "Progress updated."
     pygs:
       created: "Excellent! Step 1 completed. Now let's move on to your balance sheet."
       updated: "Income & expenses updated successfully."
@@ -94,6 +95,7 @@ en:
       default: "%m/%d/%Y"
       short: "%b %d"
       long: "%B %d, %Y"
+      month_year: "%b %Y"
     day_names:
       - Sunday
       - Monday

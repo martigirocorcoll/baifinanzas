@@ -1,0 +1,34 @@
+<%# Savings Summary Card %>
+<div class="app-card">
+  <div class="app-card__header">
+    <h2 class="app-card__title">
+      <i class="bi bi-piggy-bank"></i>
+      <%= t('home.savings_summary.title', default: 'Resumen de ahorro') %>
+    </h2>
+  </div>
+
+  <div class="app-card__body">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <span class="text-muted small"><%= t('home.savings_summary.monthly_cash_flow', default: 'Capacidad de ahorro mensual') %></span>
+      <strong class="<%= @savings_capacity[:available] >= 0 ? 'text-brand' : 'text-danger' %>">
+        <%= number_to_currency(@savings_capacity[:available], unit: "\u20AC", precision: 0) %>
+      </strong>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <span class="text-muted small"><%= t('home.savings_summary.committed_to_objectives', default: 'Comprometido en objetivos') %></span>
+      <span class="text-muted">
+        -<%= number_to_currency(@savings_capacity[:committed], unit: "\u20AC", precision: 0) %>
+      </span>
+    </div>
+
+    <hr class="my-2">
+
+    <div class="d-flex justify-content-between align-items-center">
+      <strong class="small"><%= t('home.savings_summary.available_remaining', default: 'Disponible restante') %></strong>
+      <strong class="<%= @savings_capacity[:remaining] >= 0 ? 'text-success' : 'text-danger' %>">
+        <%= number_to_currency(@savings_capacity[:remaining], unit: "\u20AC", precision: 0) %>
+      </strong>
+    </div>
+  </div>
+</div>

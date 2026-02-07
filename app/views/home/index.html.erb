@@ -1,0 +1,120 @@
+<%# Hero: full-width, outside app-container %>
+<%= render 'home/hero' %>
+
+<div class="app-container">
+  <%# Action Plan Carousel %>
+  <div class="home-section">
+    <%= render 'home/action_carousel' %>
+  </div>
+
+  <% if @can_invest %>
+    <%# Objectives Carousel %>
+    <div class="home-section">
+      <%= render 'home/objectives_carousel' %>
+    </div>
+  <% end %>
+</div>
+
+<%# Bottom teal section: savings + metrics + charts %>
+<div class="teal-section home-bottom-section">
+  <div class="app-container" style="animation: none;">
+    <% if @can_invest %>
+      <%= render 'home/savings_inline' %>
+      <div style="margin-bottom: 1rem;"></div>
+    <% end %>
+    <%= render 'home/financial_charts' %>
+  </div>
+</div>
+
+<%# Level Guide Modal %>
+<%= render 'home/level_guide_modal' %>
+
+<% if @can_invest %>
+  <%# Objective Form Modal %>
+  <%= render 'home/objective_modal' %>
+<% end %>
+
+<script>
+(function() {
+  function initHomeCarousels() {
+    function setupCarousel(carouselId, dotsId) {
+      var carousel = document.getElementById(carouselId);
+      var dotsContainer = document.getElementById(dotsId);
+      if (!carousel || !dotsContainer) return;
+
+      var cards = carousel.querySelectorAll('.carousel__card');
+      var dots = dotsContainer.querySelectorAll('.carousel__dot');
+      if (cards.length === 0) return;
+
+      // Auto-scroll to first uncompleted (action carousel only)
+      if (carouselId === 'actionCarousel') {
+        var firstIdx = parseInt(carousel.dataset.firstUncompleted) || 0;
+        if (firstIdx > 0 && firstIdx < cards.length) {
+          requestAnimationFrame(function() {
+            var target = cards[firstIdx];
+            carousel.scrollTo({ left: target.offsetLeft - carousel.offsetLeft, behavior: 'smooth' });
+          });
+        }
+      }
+
+      // Activate first dot
+      if (dots.length > 0) {
+        dots[0].classList.add('carousel__dot--active');
+      }
+
+      // Disconnect previous observer if any
+      var observerKey = '_observer_' + carouselId;
+      if (window[observerKey]) {
+        window[observerKey].disconnect();
+      }
+
+      // IntersectionObserver for dot updates
+      if ('IntersectionObserver' in window) {
+        var observer = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              var idx = Array.prototype.indexOf.call(cards, entry.target);
+              dots.forEach(function(d, i) {
+                if (i === idx) {
+                  d.classList.add('carousel__dot--active');
+                } else {
+                  d.classList.remove('carousel__dot--active');
+                }
+              });
+            }
+          });
+        }, {
+          root: carousel,
+          threshold: 0.5
+        });
+
+        window[observerKey] = observer;
+        cards.forEach(function(card) { observer.observe(card); });
+      }
+
+      // Click dot to scroll (with guard)
+      dots.forEach(function(dot) {
+        if (dot.dataset.bound) return;
+        dot.dataset.bound = '1';
+        dot.addEventListener('click', function() {
+          var idx = parseInt(dot.dataset.index);
+          if (cards[idx]) {
+            cards[idx].scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
+          }
+        });
+      });
+    }
+
+    setupCarousel('actionCarousel', 'actionDots');
+    setupCarousel('objectivesCarousel', 'objectiveDots');
+  }
+
+  // Init on turbo:load and DOMContentLoaded
+  document.addEventListener('turbo:load', initHomeCarousels);
+  if (document.readyState !== 'loading') {
+    initHomeCarousels();
+  } else {
+    document.addEventListener('DOMContentLoaded', initHomeCarousels);
+  }
+})();
+</script>

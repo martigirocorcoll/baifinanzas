@@ -1,0 +1,53 @@
+<%# Completion page - no header, celebration %>
+<div class="app-container d-flex flex-column justify-content-center" style="min-height: 100vh; padding-bottom: 100px;">
+  <div class="text-center">
+    <%# Progress bar %>
+    <div class="progress mb-5" style="height: 4px;">
+      <div class="progress-bar bg-success" style="width: 100%"></div>
+    </div>
+
+    <div class="mb-4">
+      <span style="font-size: 4rem;"><%= @financial_level[:icon].presence || '' %></span>
+    </div>
+
+    <h1 class="h3 mb-3"><%= t('onboarding.complete.title', default: 'Tu plan esta listo!') %></h1>
+
+    <%# Financial level card %>
+    <div class="app-card text-start mb-4">
+      <p class="text-muted small mb-2"><%= t('onboarding.complete.your_level', default: 'Tu nivel financiero') %></p>
+
+      <div class="d-flex align-items-center mb-3">
+        <span class="level-badge level-badge--<%= @financial_level[:number] %> me-2">
+          <i class="<%= @financial_level[:icon] %>"></i>
+        </span>
+        <div>
+          <h3 class="h5 mb-0"><%= @financial_level[:name] %></h3>
+          <small class="text-muted">
+            <%= t('onboarding.complete.level_x_of_6', level: @financial_level[:number], default: "Nivel #{@financial_level[:number]} de 6") %>
+          </small>
+        </div>
+      </div>
+
+      <div class="progress mb-2" style="height: 8px;">
+        <div class="progress-bar" style="width: <%= (@financial_level[:number] / 6.0 * 100).round %>%; background-color: var(--bs-primary);"></div>
+      </div>
+    </div>
+
+    <p class="text-muted mb-4">
+      <%= t('onboarding.complete.now_you_can', default: 'Ahora puedes ver tu plan de accion, crear objetivos financieros y usar las calculadoras.') %>
+    </p>
+
+    <div class="app-disclaimer text-start">
+      <i class="bi bi-lightbulb text-warning me-2"></i>
+      <small>
+        <%= t('onboarding.complete.tip',
+            default: 'Este es un resultado aproximado. Completa tu perfil detallado para un analisis mas preciso.') %>
+      </small>
+    </div>
+
+    <%= link_to home_path, class: 'btn-app btn-app--primary btn-app--lg btn-app--block mt-4' do %>
+      <%= t('onboarding.complete.go_to_dashboard', default: 'Ir a mi dashboard') %>
+      <i class="bi bi-arrow-right ms-2"></i>
+    <% end %>
+  </div>
+</div>

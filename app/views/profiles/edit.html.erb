@@ -1,0 +1,42 @@
+<% content_for :header do %>
+  <%= render "shared/app_header",
+      title: t('profile.edit.title', default: 'Datos personales'),
+      back_path: profile_path %>
+<% end %>
+
+<div class="app-container">
+  <%= form_with model: @user, url: profile_path, method: :patch, local: true do |f| %>
+    <div class="app-form__group">
+      <%= f.label :email, t('profile.edit.email', default: 'Email'), class: 'app-form__label' %>
+      <%= f.email_field :email,
+          class: 'app-form__input',
+          placeholder: 'tu@email.com' %>
+    </div>
+
+    <div class="app-divider"></div>
+
+    <p class="text-muted small mb-3">
+      <%= t('profile.edit.password_hint', default: 'Deja en blanco si no quieres cambiar la contrasena') %>
+    </p>
+
+    <div class="app-form__group">
+      <%= f.label :password, t('profile.edit.new_password', default: 'Nueva contrasena'), class: 'app-form__label' %>
+      <%= f.password_field :password,
+          class: 'app-form__input',
+          placeholder: '********',
+          autocomplete: 'new-password' %>
+    </div>
+
+    <div class="app-form__group">
+      <%= f.label :password_confirmation, t('profile.edit.confirm_password', default: 'Confirmar contrasena'), class: 'app-form__label' %>
+      <%= f.password_field :password_confirmation,
+          class: 'app-form__input',
+          placeholder: '********',
+          autocomplete: 'new-password' %>
+    </div>
+
+    <div class="mt-4">
+      <%= f.submit t('profile.edit.save', default: 'Guardar cambios'), class: 'btn-app btn-app--primary btn-app--block' %>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BaiFinanzas - Presentacion</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --brand-primary: #165668;
+      --brand-light: #1d7a8c;
+      --text-primary: #1a1a1a;
+      --text-secondary: #6b7280;
+      --bg-primary: #ffffff;
+      --bg-secondary: #f9fafb;
+      --border-color: #e5e7eb;
+      --success: #10b981;
+      --warning: #f59e0b;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      line-height: 1.6;
+      font-size: 16px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 24px;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      padding: 60px 0;
+      background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-light) 100%);
+      color: white;
+      margin: -40px -24px 40px -24px;
+      padding-left: 24px;
+      padding-right: 24px;
+    }
+
+    .header h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .header .tagline {
+      font-size: 1.25rem;
+      opacity: 0.9;
+      font-weight: 400;
+    }
+
+    /* Sections */
+    section {
+      margin-bottom: 48px;
+      page-break-inside: avoid;
+    }
+
+    h2 {
+      color: var(--brand-primary);
+      font-size: 1.75rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--brand-primary);
+    }
+
+    h3 {
+      color: var(--text-primary);
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin: 24px 0 12px 0;
+    }
+
+    h4 {
+      color: var(--brand-primary);
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin: 20px 0 8px 0;
+    }
+
+    p {
+      margin-bottom: 16px;
+      color: var(--text-secondary);
+    }
+
+    strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border-color);
+    }
+
+    .card-highlight {
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+      border-color: var(--brand-light);
+    }
+
+    /* Quote/Highlight box */
+    .highlight-box {
+      background: var(--bg-secondary);
+      border-left: 4px solid var(--brand-primary);
+      padding: 20px 24px;
+      margin: 24px 0;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .highlight-box p {
+      margin: 0;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+      font-style: italic;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 0.95rem;
+    }
+
+    th, td {
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    th {
+      background: var(--brand-primary);
+      color: white;
+      font-weight: 600;
+    }
+
+    tr:nth-child(even) {
+      background: var(--bg-secondary);
+    }
+
+    tr:hover {
+      background: #f0f9ff;
+    }
+
+    /* Lists */
+    ul, ol {
+      margin: 16px 0;
+      padding-left: 24px;
+    }
+
+    li {
+      margin-bottom: 8px;
+      color: var(--text-secondary);
+    }
+
+    li strong {
+      color: var(--text-primary);
+    }
+
+    /* Navigation diagram */
+    .nav-diagram {
+      background: var(--text-primary);
+      color: white;
+      padding: 16px;
+      border-radius: 12px;
+      font-family: monospace;
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .nav-diagram .tabs {
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0;
+    }
+
+    .nav-diagram .tab {
+      text-align: center;
+    }
+
+    .nav-diagram .tab-icon {
+      font-size: 1.5rem;
+      margin-bottom: 4px;
+    }
+
+    .nav-diagram .tab-label {
+      font-size: 0.8rem;
+    }
+
+    /* Feature grid */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .feature-item {
+      background: var(--bg-secondary);
+      padding: 20px;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+    }
+
+    .feature-item h4 {
+      margin-top: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .feature-item p {
+      margin-bottom: 0;
+      font-size: 0.9rem;
+    }
+
+    /* Flow diagram */
+    .flow {
+      background: var(--bg-secondary);
+      padding: 24px;
+      border-radius: 12px;
+      margin: 20px 0;
+    }
+
+    .flow-step {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .flow-number {
+      background: var(--brand-primary);
+      color: white;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      margin-right: 16px;
+      flex-shrink: 0;
+    }
+
+    .flow-arrow {
+      text-align: center;
+      color: var(--brand-primary);
+      font-size: 1.5rem;
+      margin: 8px 0 8px 8px;
+    }
+
+    /* Level badges */
+    .level-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .level-1 { background: #fee2e2; color: #991b1b; }
+    .level-2 { background: #fef3c7; color: #92400e; }
+    .level-3 { background: #fef3c7; color: #92400e; }
+    .level-4 { background: #d1fae5; color: #065f46; }
+    .level-5 { background: #dbeafe; color: #1e40af; }
+    .level-6 { background: #e0e7ff; color: #3730a3; }
+
+    /* Calculator cards */
+    .calc-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .calc-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 20px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .calc-icon {
+      font-size: 2rem;
+      flex-shrink: 0;
+    }
+
+    .calc-content h4 {
+      margin: 0 0 8px 0;
+      color: var(--text-primary);
+    }
+
+    .calc-content p {
+      margin: 0;
+      font-size: 0.9rem;
+    }
+
+    /* Differentiators */
+    .diff-item {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+      align-items: flex-start;
+    }
+
+    .diff-number {
+      background: var(--brand-primary);
+      color: white;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+
+    /* Recommendation cards */
+    .rec-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .rec-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 16px;
+    }
+
+    .rec-card .rec-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .rec-card .rec-icon {
+      font-size: 1.5rem;
+    }
+
+    .rec-card h4 {
+      margin: 0;
+      font-size: 1rem;
+      color: var(--text-primary);
+    }
+
+    .rec-card p {
+      margin: 0;
+      font-size: 0.85rem;
+    }
+
+    .rec-card .rec-levels {
+      margin-top: 10px;
+      font-size: 0.75rem;
+      color: var(--brand-primary);
+      font-weight: 500;
+    }
+
+    /* User journey example */
+    .persona-card {
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+      border: 2px solid var(--brand-primary);
+      border-radius: 16px;
+      padding: 24px;
+      margin: 24px 0;
+    }
+
+    .persona-header {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .persona-avatar {
+      width: 80px;
+      height: 80px;
+      background: var(--brand-primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+    }
+
+    .persona-info h3 {
+      margin: 0 0 4px 0;
+      color: var(--text-primary);
+    }
+
+    .persona-info p {
+      margin: 0;
+      color: var(--text-secondary);
+    }
+
+    .persona-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin: 20px 0;
+      padding: 16px;
+      background: white;
+      border-radius: 10px;
+    }
+
+    .persona-stat {
+      text-align: center;
+    }
+
+    .persona-stat .value {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--brand-primary);
+    }
+
+    .persona-stat .label {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    .timeline {
+      position: relative;
+      padding-left: 30px;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 10px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--brand-primary);
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 24px;
+      padding-left: 20px;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -24px;
+      top: 4px;
+      width: 12px;
+      height: 12px;
+      background: var(--brand-primary);
+      border-radius: 50%;
+      border: 3px solid white;
+    }
+
+    .timeline-item.completed::before {
+      background: var(--success);
+    }
+
+    .timeline-date {
+      font-size: 0.85rem;
+      color: var(--brand-primary);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .timeline-title {
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .timeline-desc {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin: 0;
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: 60px;
+      padding-top: 40px;
+      border-top: 2px solid var(--border-color);
+      text-align: center;
+      color: var(--text-secondary);
+    }
+
+    .footer p {
+      margin-bottom: 8px;
+    }
+
+    /* Print styles */
+    @media print {
+      .header {
+        margin: 0;
+        padding: 40px 24px;
+      }
+
+      section {
+        page-break-inside: avoid;
+      }
+
+      .container {
+        max-width: 100%;
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .feature-grid, .rec-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .header h1 {
+        font-size: 2rem;
+      }
+
+      .persona-stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>BaiFinanzas</h1>
+      <p class="tagline">Tu plan financiero personalizado, 100% gratis</p>
+    </header>
+
+    <!-- Que es -->
+    <section>
+      <h2>Que es BaiFinanzas?</h2>
+      <p>BaiFinanzas es una <strong>aplicacion movil gratuita</strong> que ayuda a las personas a mejorar su situacion financiera de forma sencilla y personalizada.</p>
+
+      <div class="highlight-box">
+        <p>"Que puedo hacer YO, en MI situacion especifica, para mejorar mis finanzas?"</p>
+      </div>
+
+      <p>No es un curso generico. No es un banco. Es tu <strong>asistente financiero personal</strong> que analiza tu situacion real y te dice exactamente que pasos seguir.</p>
+    </section>
+
+    <!-- Para quien -->
+    <section>
+      <h2>Para quien es?</h2>
+      <p>BaiFinanzas esta disenada para cualquier persona que quiera:</p>
+      <ul>
+        <li>Entender mejor su situacion financiera actual</li>
+        <li>Saber cuanto deberia ahorrar cada mes</li>
+        <li>Planificar objetivos importantes (comprar casa, coche, viajes, jubilacion...)</li>
+        <li>Recibir recomendaciones personalizadas segun su nivel</li>
+        <li>Usar calculadoras financieras faciles de entender</li>
+      </ul>
+      <p><strong>No necesitas conocimientos previos de finanzas.</strong> La app te guia paso a paso.</p>
+    </section>
+
+    <!-- Como funciona -->
+    <section>
+      <h2>Como funciona?</h2>
+
+      <h3>Fase 1: Onboarding rapido (2 minutos)</h3>
+      <p>Al entrar por primera vez, la app te hace <strong>solo 4 preguntas basicas</strong>:</p>
+      <div class="card">
+        <ol>
+          <li><strong>Cuanto ganas al mes?</strong> (ingresos netos)</li>
+          <li><strong>Cuanto gastas al mes?</strong> (total aproximado)</li>
+          <li><strong>Cuanto tienes ahorrado?</strong> (cuentas + inversiones)</li>
+          <li><strong>Cuanto debes?</strong> (hipoteca + prestamos + tarjetas)</li>
+        </ol>
+      </div>
+      <p>Con estos 4 datos, BaiFinanzas calcula tu <strong>nivel financiero aproximado</strong> y te muestra <strong>recomendaciones basicas</strong>.</p>
+
+      <div class="card card-highlight">
+        <h4 style="margin-top: 0;">Que puedes hacer con solo 4 datos?</h4>
+        <ul style="margin-bottom: 0;">
+          <li>Ver tu nivel financiero aproximado (del 1 al 6)</li>
+          <li>Recibir recomendaciones genericas segun tu nivel</li>
+          <li>Usar las calculadoras financieras</li>
+          <li>Crear objetivos personales</li>
+        </ul>
+      </div>
+
+      <h3>Fase 2: Perfil completo (opcional pero recomendado)</h3>
+      <p>Para obtener <strong>recomendaciones personalizadas con productos concretos</strong>, el usuario puede completar su perfil detallado:</p>
+
+      <div class="card">
+        <p><strong>Desglose de gastos:</strong> alquiler, compras, transporte, ocio, seguros... (12 categorias)</p>
+        <p><strong>Desglose de activos:</strong> cuenta corriente, ahorro, inversiones, inmuebles, vehiculos...</p>
+        <p style="margin-bottom: 0;"><strong>Desglose de deudas:</strong> hipoteca, tarjetas, prestamos personales, coche...</p>
+      </div>
+
+      <p>Con el perfil completo, la app puede:</p>
+      <ul>
+        <li>Calcular tu nivel financiero con <strong>precision total</strong></li>
+        <li>Mostrarte <strong>productos especificos</strong> recomendados (bancos, brokers, fondos...)</li>
+        <li>Darte tu <strong>plan de accion completo</strong> con todos los pasos</li>
+        <li>Calcular exactamente cuanto te falta para tu fondo de emergencia</li>
+      </ul>
+
+      <h3>Descubre tu nivel financiero</h3>
+      <p>La app clasifica tu situacion en <strong>6 niveles</strong>:</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Nivel</th>
+            <th>Nombre</th>
+            <th>Significado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="level-badge level-1">1</span></td>
+            <td>Situacion Critica</td>
+            <td>Gastas mas de lo que ganas</td>
+          </tr>
+          <tr>
+            <td><span class="level-badge level-2">2</span></td>
+            <td>Creando Fondo de Emergencia</td>
+            <td>Empezando a ahorrar</td>
+          </tr>
+          <tr>
+            <td><span class="level-badge level-3">3</span></td>
+            <td>Eliminando Deudas</td>
+            <td>Pagando deudas caras</td>
+          </tr>
+          <tr>
+            <td><span class="level-badge level-4">4</span></td>
+            <td>Situacion Estable</td>
+            <td>Tienes colchon y sin deudas caras</td>
+          </tr>
+          <tr>
+            <td><span class="level-badge level-5">5</span></td>
+            <td>Crecimiento Patrimonial</td>
+            <td>Tu patrimonio crece</td>
+          </tr>
+          <tr>
+            <td><span class="level-badge level-6">6</span></td>
+            <td>Libertad Financiera</td>
+            <td>Vives de tus inversiones</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Paso 3: Sigue tu plan de accion</h3>
+      <p>Segun tu nivel, la app te muestra <strong>tareas concretas</strong> ordenadas por prioridad:</p>
+      <ul>
+        <li><strong>Con datos basicos:</strong> Plan generico (ej: "Crea un fondo de emergencia")</li>
+        <li><strong>Con perfil completo:</strong> Plan detallado con productos especificos y enlaces</li>
+      </ul>
+      <p>Cada tarea debe completarse antes de pasar a la siguiente. Esto asegura que el usuario construye una base solida antes de avanzar.</p>
+
+      <h3>Paso 4: Crea tus objetivos personales</h3>
+      <p>Una vez en <strong>Nivel 4 (Situacion Estable)</strong> o superior, puedes anadir <strong>objetivos propios</strong>:</p>
+      <ul>
+        <li>Comprar un coche, un piso, hacer un viaje...</li>
+        <li>La app calcula automaticamente cuanto necesitas ahorrar cada mes</li>
+        <li>Te recomienda el tipo de inversion segun el plazo (corto, medio o largo)</li>
+        <li>Te muestra la diferencia entre ahorrar e invertir con interes compuesto</li>
+      </ul>
+    </section>
+
+    <!-- NUEVO: Tipos de recomendaciones -->
+    <section>
+      <h2>Tipos de recomendaciones</h2>
+      <p>BaiFinanzas ofrece <strong>10 tipos de recomendaciones</strong> que se activan segun tu nivel financiero y situacion personal:</p>
+
+      <div class="rec-grid">
+        <div class="rec-card">
+          <div class="rec-header">
+            <span class="rec-icon">🏦</span>
+            <h4>Mejor cuenta bancaria</h4>
+          </div>
+          <p>Elimina comisiones innecesarias cambiando a una cuenta sin comisiones (ahorro tipico: €100-150/ano).</p>
+          <div class="rec-levels">Niveles: 1, 2, 3, 4, 5, 6</div>
+        </div>
+
+        <div class="rec-card">
+          <div class="rec-header">
+            <span class="rec-icon">🛡️</span>
+            <h4>Fondo de emergencia</h4>
+          </div>
+          <p>Construye un colchon de seguridad equivalente a 4-6 meses de gastos en un deposito seguro.</p>
+          <div class="rec-levels">Niveles: 2, 3, 4, 5, 6</div>
+        </div>
+
+        <div class="rec-card">
+          <div class="rec-header">
+            <span class="rec-icon">💳</span>
+            <h4>Reduccion de deudas</h4>
+          </div>
+          <p>Plan para eliminar deudas caras (tarjetas, prestamos personales) que limitan tu crecimiento.</p>
+          <div class="rec-levels">Niveles: 1, 2, 3 (si tiene deudas)</div>
+        </div>
+
+        <div class="rec-card">
+          <div class="rec-header">
+            <span class="rec-icon">🏠</span>
+            <h4>Optimizacion de hipoteca</h4>
+          </div>
+          <p>Reduce el coste de tu hipoteca: renegociacion, cambio de banco, o amortizacion anticipada.</p>
+          <div class="rec-levels">Si tiene hipoteca</div>
+        </div>
+
+        <div class="rec-card">
+          <div class="rec-header">
+            <span class="rec-icon">💡</span>
+            <h4>Consejos de ahorro</h4>
+          </div>
+          <p>Estrategias personalizadas para identificar gastos hormiga y crear capacidad de ahorro.</p>
+          <div class="rec-levels">Nivel: 1 (Situacion Critica)</div>
+        </div>
+
+        <div class="rec-card">
+          <div class="rec-header">
+            <span class="rec-icon">📊</span>
+            <h4>Inversion a medio plazo</h4>
+          </div>
+          <p>Para objetivos de 2-5 anos: fondos mixtos con rentabilidad moderada (~3% anual).</p>
+          <div class="rec-levels">Objetivos 2-5 anos</div>
+        </div>
+
+        <div class="rec-card">
+          <div class="rec-header">
+            <span class="rec-icon">📈</span>
+            <h4>Inversion a largo plazo</h4>
+          </div>
+          <p>Para objetivos de +5 anos: fondos indexados con mayor rentabilidad (~8% anual historico).</p>
+          <div class="rec-levels">Objetivos +5 anos</div>
+        </div>
+
+        <div class="rec-card">
+          <div class="rec-header">
+            <span class="rec-icon">🐷</span>
+            <h4>Ahorro para jubilacion</h4>
+          </div>
+          <p>Planes de pensiones y productos con ventajas fiscales para preparar tu retiro.</p>
+          <div class="rec-levels">Objetivos de jubilacion</div>
+        </div>
+
+        <div class="rec-card">
+          <div class="rec-header">
+            <span class="rec-icon">📉</span>
+            <h4>Optimizacion de cartera</h4>
+          </div>
+          <p>Revisa y mejora tus inversiones actuales: reduce comisiones, diversifica, rebalancea.</p>
+          <div class="rec-levels">Niveles: 5, 6</div>
+        </div>
+
+        <div class="rec-card">
+          <div class="rec-header">
+            <span class="rec-icon">🧮</span>
+            <h4>Asesoria fiscal</h4>
+          </div>
+          <p>Optimiza tu fiscalidad: deducciones, planificacion patrimonial, estructuras eficientes.</p>
+          <div class="rec-levels">Nivel: 6 (Libertad Financiera)</div>
+        </div>
+      </div>
+
+      <div class="card card-highlight">
+        <p><strong>Recomendaciones inteligentes:</strong> La app no muestra todas las recomendaciones a todos los usuarios. Solo aparecen las relevantes para tu situacion especifica y nivel financiero actual.</p>
+      </div>
+
+      <h3>Recomendaciones segun fase del perfil</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Con datos basicos (4 campos)</th>
+            <th>Con perfil completo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <ul style="margin: 0; padding-left: 20px;">
+                <li>Nivel financiero aproximado</li>
+                <li>Recomendaciones genericas por nivel</li>
+                <li>"Abre una cuenta sin comisiones"</li>
+                <li>"Crea un fondo de emergencia"</li>
+              </ul>
+            </td>
+            <td>
+              <ul style="margin: 0; padding-left: 20px;">
+                <li>Nivel financiero preciso</li>
+                <li><strong>Productos especificos</strong> recomendados</li>
+                <li>"Abre cuenta en [Banco X] (enlace)"</li>
+                <li>"Tu fondo deberia ser €X.XXX exactamente"</li>
+                <li>Plan de accion completo con todos los pasos</li>
+              </ul>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="card" style="margin-top: 16px;">
+        <p style="margin: 0;"><strong>Estrategia:</strong> El onboarding rapido reduce friccion y permite al usuario ver valor inmediato. Una vez dentro, animamos a completar el perfil para desbloquear recomendaciones mas precisas y productos concretos con enlaces de afiliado.</p>
+      </div>
+    </section>
+
+    <!-- NUEVO: Ejemplo de usuario -->
+    <section>
+      <h2>Ejemplo: El viaje de Laura</h2>
+      <p>Veamos como BaiFinanzas ayuda a una usuaria real a mejorar su situacion financiera paso a paso:</p>
+
+      <div class="persona-card">
+        <div class="persona-header">
+          <div class="persona-avatar">👩</div>
+          <div class="persona-info">
+            <h3>Laura Garcia, 32 anos</h3>
+            <p>Disenadora grafica en Barcelona. Quiere comprar un piso pero no sabe por donde empezar.</p>
+          </div>
+        </div>
+
+        <div class="persona-stats">
+          <div class="persona-stat">
+            <div class="value">2.400 euros</div>
+            <div class="label">Ingresos/mes</div>
+          </div>
+          <div class="persona-stat">
+            <div class="value">2.100 euros</div>
+            <div class="label">Gastos/mes</div>
+          </div>
+          <div class="persona-stat">
+            <div class="value">3.500 euros</div>
+            <div class="label">Ahorros</div>
+          </div>
+          <div class="persona-stat">
+            <div class="value">0 euros</div>
+            <div class="label">Deudas</div>
+          </div>
+        </div>
+
+        <h4>Situacion inicial (solo con 4 datos basicos)</h4>
+        <p>Laura descarga BaiFinanzas y completa el onboarding rapido en 2 minutos.</p>
+
+        <div class="card" style="margin: 20px 0;">
+          <p style="margin: 0;"><strong>Nivel inicial:</strong> <span class="level-badge level-2">Nivel 2</span> - "Creando Fondo de Emergencia"</p>
+          <p style="margin: 8px 0 0 0; font-size: 0.9rem;"><strong>Por que?</strong> Laura tiene cash flow positivo (€300/mes), pero sus ahorros (€3.500) no cubren 4 meses de gastos.</p>
+        </div>
+
+        <h4>Calculos iniciales</h4>
+        <div class="card" style="margin: 20px 0; background: white;">
+          <table style="margin: 0; font-size: 0.9rem;">
+            <tr>
+              <td><strong>Cash flow mensual:</strong></td>
+              <td>€2.400 - €2.100 = <strong>€300/mes</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Fondo de emergencia necesario:</strong></td>
+              <td>4 meses x €2.100 = <strong>€8.400</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Le faltan:</strong></td>
+              <td>€8.400 - €3.500 = <strong>€4.900</strong></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <h3>El plan de accion de Laura (paso a paso)</h3>
+      <p>BaiFinanzas genera un plan personalizado. <strong>Cada paso debe completarse antes de pasar al siguiente:</strong></p>
+
+      <div class="timeline">
+        <div class="timeline-item completed">
+          <div class="timeline-date">Paso 1: Semana 1</div>
+          <div class="timeline-title">Abrir cuenta sin comisiones</div>
+          <p class="timeline-desc">Laura paga €20/trimestre en su banco tradicional (€80/ano) + €12/trimestre por su tarjeta (€48/ano). <strong>Total: €128/ano en comisiones.</strong></p>
+          <p class="timeline-desc" style="margin-top: 8px;">Cambia a una cuenta online sin comisiones. <strong>Ahorro real: ~€120/ano.</strong></p>
+        </div>
+
+        <div class="timeline-item completed">
+          <div class="timeline-date">Paso 2: Mes 1-17</div>
+          <div class="timeline-title">Construir fondo de emergencia completo</div>
+          <p class="timeline-desc">Objetivo: llegar a €8.400 (4 meses de gastos).</p>
+          <div class="card" style="margin: 12px 0; padding: 16px; background: white;">
+            <p style="margin: 0; font-size: 0.9rem;"><strong>Calculo:</strong></p>
+            <p style="margin: 4px 0 0 0; font-size: 0.9rem;">€4.900 / €300/mes = <strong>16.3 meses</strong></p>
+            <p style="margin: 4px 0 0 0; font-size: 0.9rem;">Laura tardara aproximadamente <strong>17 meses</strong> en completar su fondo de emergencia.</p>
+          </div>
+          <p class="timeline-desc"><strong>Al completar este paso:</strong> Laura pasa al <span class="level-badge level-4">Nivel 4</span> (Situacion Estable)</p>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-date">Paso 3: Mes 18</div>
+          <div class="timeline-title">Crear objetivo: "Entrada del piso"</div>
+          <p class="timeline-desc">Con el fondo de emergencia completo, Laura puede empezar a ahorrar para su piso.</p>
+          <div class="card" style="margin: 12px 0; padding: 16px; background: white;">
+            <p style="margin: 0; font-size: 0.9rem;"><strong>Objetivo:</strong> €25.000 para entrada de piso</p>
+            <p style="margin: 4px 0 0 0; font-size: 0.9rem;"><strong>Plazo:</strong> 6 anos (72 meses)</p>
+            <p style="margin: 4px 0 0 0; font-size: 0.9rem;"><strong>Capacidad de ahorro:</strong> €300/mes</p>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-date">Paso 4: Mes 18+</div>
+          <div class="timeline-title">Invertir para el objetivo a largo plazo</div>
+          <p class="timeline-desc">Como el objetivo es a +5 anos, la app recomienda <strong>inversion a largo plazo</strong> (fondos indexados, rentabilidad historica ~8%).</p>
+          <div class="card" style="margin: 12px 0; padding: 16px; background: white;">
+            <p style="margin: 0; font-size: 0.9rem;"><strong>Comparativa: €300/mes durante 6 anos</strong></p>
+            <table style="margin: 8px 0 0 0; font-size: 0.9rem;">
+              <tr>
+                <td>Sin invertir (bajo el colchon):</td>
+                <td><strong>€21.600</strong></td>
+              </tr>
+              <tr>
+                <td>Invirtiendo al 8% anual:</td>
+                <td><strong>€27.600</strong></td>
+              </tr>
+              <tr style="background: #d1fae5;">
+                <td>Diferencia (interes compuesto):</td>
+                <td><strong>+€6.000 extra</strong></td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <h3>Resumen: El progreso de Laura</h3>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Momento</th>
+            <th>Nivel</th>
+            <th>Ahorros</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Dia 1</td>
+            <td><span class="level-badge level-2">Nivel 2</span></td>
+            <td>€3.500</td>
+            <td>Empieza con BaiFinanzas</td>
+          </tr>
+          <tr>
+            <td>Mes 17</td>
+            <td><span class="level-badge level-4">Nivel 4</span></td>
+            <td>€8.400</td>
+            <td>Fondo emergencia completo</td>
+          </tr>
+          <tr>
+            <td>Mes 18</td>
+            <td><span class="level-badge level-4">Nivel 4</span></td>
+            <td>€8.400 + inversiones</td>
+            <td>Empieza objetivo "piso"</td>
+          </tr>
+          <tr>
+            <td>Ano 6 (mes 90)</td>
+            <td><span class="level-badge level-4">Nivel 4</span></td>
+            <td>€8.400 + €27.600</td>
+            <td>Lista para comprar piso</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="card card-highlight" style="margin-top: 20px;">
+        <p><strong>Que ha conseguido Laura con BaiFinanzas?</strong></p>
+        <ul style="margin-bottom: 0;">
+          <li>Paso de <strong>Nivel 2 a Nivel 4</strong> (Situacion Estable)</li>
+          <li>Tiene un <strong>fondo de emergencia de €8.400</strong> (4 meses de gastos)</li>
+          <li>Ahorra <strong>~€120/ano</strong> en comisiones bancarias</li>
+          <li>Sabe exactamente cuanto necesita ahorrar cada mes (€300)</li>
+          <li>Gracias al interes compuesto, conseguira <strong>€6.000 extra</strong> para su piso</li>
+          <li>En 6 anos tendra <strong>€27.600</strong> para la entrada (vs €21.600 sin invertir)</li>
+        </ul>
+      </div>
+
+      <div class="card" style="margin-top: 16px;">
+        <p style="margin: 0; font-size: 0.9rem;"><strong>Nota:</strong> Si Laura quisiera llegar a €30.000, necesitaria ahorrar €370/mes, o alargar el plazo a 7 anos. La app le ayuda a ver estas opciones con sus calculadoras.</p>
+      </div>
+    </section>
+
+    <!-- Las 4 secciones -->
+    <section>
+      <h2>Las 4 secciones de la app</h2>
+      <p>La aplicacion tiene una navegacion sencilla con <strong>4 pestanas</strong> en la parte inferior:</p>
+
+      <div class="nav-diagram">
+        <div class="tabs">
+          <div class="tab">
+            <div class="tab-icon">🏠</div>
+            <div class="tab-label">Home</div>
+          </div>
+          <div class="tab">
+            <div class="tab-icon">🎬</div>
+            <div class="tab-label">Discovery</div>
+          </div>
+          <div class="tab">
+            <div class="tab-icon">📊</div>
+            <div class="tab-label">Calculadoras</div>
+          </div>
+          <div class="tab">
+            <div class="tab-icon">👤</div>
+            <div class="tab-label">Perfil</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="feature-grid">
+        <div class="feature-item">
+          <h4>🏠 HOME</h4>
+          <p>Pantalla principal con tu nivel financiero, plan de accion y objetivos personales.</p>
+        </div>
+        <div class="feature-item">
+          <h4>🎬 DISCOVERY</h4>
+          <p>Videos educativos, articulos sobre finanzas y novedades de la app.</p>
+        </div>
+        <div class="feature-item">
+          <h4>📊 CALCULADORAS</h4>
+          <p>7 herramientas financieras faciles de usar para planificar tu futuro.</p>
+        </div>
+        <div class="feature-item">
+          <h4>👤 PERFIL</h4>
+          <p>Tus datos personales, configuracion de la app e idioma.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Calculadoras -->
+    <section>
+      <h2>Las 7 Calculadoras</h2>
+      <p>Herramientas financieras practicas y faciles de usar:</p>
+
+      <div class="calc-grid">
+        <div class="calc-card">
+          <div class="calc-icon">📈</div>
+          <div class="calc-content">
+            <h4>Interes Compuesto</h4>
+            <p>Calcula cuanto tendras en el futuro con tus ahorros e inversiones. Incluye grafico visual.</p>
+          </div>
+        </div>
+
+        <div class="calc-card">
+          <div class="calc-icon">🏠</div>
+          <div class="calc-content">
+            <h4>Cuota Hipotecaria</h4>
+            <p>Simula tu cuota mensual con tipo fijo, mixto o variable. Ve como te afecta el Euribor.</p>
+          </div>
+        </div>
+
+        <div class="calc-card">
+          <div class="calc-icon">🛡️</div>
+          <div class="calc-content">
+            <h4>Fondo de Emergencia</h4>
+            <p>Calcula cuanto necesitas tener guardado para imprevistos (recomendado: 4-6 meses de gastos).</p>
+          </div>
+        </div>
+
+        <div class="calc-card">
+          <div class="calc-icon">🏝️</div>
+          <div class="calc-content">
+            <h4>Libertad Financiera</h4>
+            <p>Cuanto patrimonio necesitas para vivir de tus inversiones sin trabajar?</p>
+          </div>
+        </div>
+
+        <div class="calc-card">
+          <div class="calc-icon">🎯</div>
+          <div class="calc-content">
+            <h4>Objetivo de Inversion</h4>
+            <p>Tienes una meta? Te dice cuanto invertir al mes o cuantos anos tardaras.</p>
+          </div>
+        </div>
+
+        <div class="calc-card">
+          <div class="calc-icon">💰</div>
+          <div class="calc-content">
+            <h4>Amortizacion Anticipada</h4>
+            <p>Tienes hipoteca y dinero extra? Compara: mejor amortizar o invertir?</p>
+          </div>
+        </div>
+
+        <div class="calc-card">
+          <div class="calc-icon">📊</div>
+          <div class="calc-content">
+            <h4>Rentabilidad de Inversion</h4>
+            <p>Calcula tu rentabilidad real anualizada y comparala con la inflacion y el mercado.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Diseno -->
+    <section>
+      <h2>Diseno y experiencia</h2>
+
+      <h3>Estilo visual</h3>
+      <p>BaiFinanzas tiene un diseno <strong>limpio, moderno y profesional</strong>:</p>
+
+      <div class="card">
+        <ul>
+          <li><strong>Color principal:</strong> Teal (#165668) - transmite confianza y seriedad</li>
+          <li><strong>Fondo:</strong> Blanco/gris claro - facil de leer</li>
+          <li><strong>Tipografia:</strong> Inter - moderna y legible</li>
+          <li><strong>Iconos:</strong> Minimalistas, faciles de entender</li>
+          <li><strong>Sin distracciones:</strong> Nada de animaciones innecesarias</li>
+        </ul>
+      </div>
+      <p>El estilo esta inspirado en apps como <strong>N26</strong> y <strong>Fintonic</strong>: serias pero accesibles.</p>
+
+      <h3>Pensada para movil</h3>
+      <p>La app esta disenada <strong>primero para movil</strong> con navegacion comoda, botones grandes y formularios simples. Tambien funciona en tablet y navegador web.</p>
+
+      <h3>Idiomas</h3>
+      <p>Disponible en <strong>espanol</strong> e <strong>ingles</strong>. El usuario puede cambiar el idioma en cualquier momento.</p>
+    </section>
+
+    <!-- Modelo de negocio -->
+    <section>
+      <h2>Modelo de negocio</h2>
+
+      <h3>Como es gratis?</h3>
+      <p>BaiFinanzas es <strong>100% gratis para los usuarios</strong>. No hay suscripcion ni funciones de pago.</p>
+
+      <h3>Como gana dinero la app?</h3>
+      <p>A traves de <strong>enlaces de afiliado</strong>:</p>
+      <div class="card">
+        <ul>
+          <li>Cuando la app recomienda un producto (banco, broker, etc.)</li>
+          <li>Si el usuario se registra a traves de nuestro enlace</li>
+          <li>La empresa nos paga una comision</li>
+        </ul>
+      </div>
+      <p><strong>Importante:</strong> Solo recomendamos productos que realmente consideramos buenos.</p>
+
+      <h3>El papel de los influencers</h3>
+      <p>BaiFinanzas trabaja con <strong>influencers de finanzas personales</strong>. Cada influencer tiene su codigo de referido y puede personalizar sus recomendaciones.</p>
+
+      <div class="card card-highlight">
+        <p><strong>Modelo win-win-win:</strong></p>
+        <ul>
+          <li>El usuario recibe educacion financiera gratis</li>
+          <li>El influencer monetiza su audiencia</li>
+          <li>BaiFinanzas crece con nuevos usuarios</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Diferenciadores -->
+    <section>
+      <h2>Por que BaiFinanzas?</h2>
+
+      <div class="diff-item">
+        <div class="diff-number">1</div>
+        <div><strong>Personalizacion real</strong> - No es contenido generico, es especifico para TU situacion</div>
+      </div>
+
+      <div class="diff-item">
+        <div class="diff-number">2</div>
+        <div><strong>Simplicidad</strong> - Solo 4 preguntas para empezar, no formularios eternos</div>
+      </div>
+
+      <div class="diff-item">
+        <div class="diff-number">3</div>
+        <div><strong>Plan de accion claro</strong> - Te dice QUE hacer y EN QUE ORDEN</div>
+      </div>
+
+      <div class="diff-item">
+        <div class="diff-number">4</div>
+        <div><strong>Calculadoras practicas</strong> - Herramientas que realmente usas</div>
+      </div>
+
+      <div class="diff-item">
+        <div class="diff-number">5</div>
+        <div><strong>Contenido de calidad</strong> - De influencers que conoces y en quien confias</div>
+      </div>
+
+      <div class="diff-item">
+        <div class="diff-number">6</div>
+        <div><strong>Sin publicidad molesta</strong> - Diseno limpio, sin banners ni pop-ups</div>
+      </div>
+
+      <div class="diff-item">
+        <div class="diff-number">7</div>
+        <div><strong>Gratis de verdad</strong> - No hay "version premium" oculta</div>
+      </div>
+    </section>
+
+    <!-- Resumen -->
+    <section>
+      <h2>Resumen de funcionalidades</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Funcionalidad</th>
+            <th>Descripcion</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Nivel financiero</strong></td>
+            <td>Diagnostico de tu situacion en 6 niveles</td>
+          </tr>
+          <tr>
+            <td><strong>Plan de accion</strong></td>
+            <td>Tareas personalizadas segun tu nivel</td>
+          </tr>
+          <tr>
+            <td><strong>10 tipos de recomendaciones</strong></td>
+            <td>Desde cuenta bancaria hasta asesoria fiscal</td>
+          </tr>
+          <tr>
+            <td><strong>Objetivos</strong></td>
+            <td>Crea metas y calcula cuanto ahorrar</td>
+          </tr>
+          <tr>
+            <td><strong>7 Calculadoras</strong></td>
+            <td>Herramientas financieras faciles de usar</td>
+          </tr>
+          <tr>
+            <td><strong>Discovery</strong></td>
+            <td>Videos, articulos y contenido educativo</td>
+          </tr>
+          <tr>
+            <td><strong>Perfil</strong></td>
+            <td>Gestiona tus datos y configuracion</td>
+          </tr>
+          <tr>
+            <td><strong>Bilingue</strong></td>
+            <td>Espanol e ingles</td>
+          </tr>
+          <tr>
+            <td><strong>100% gratis</strong></td>
+            <td>Sin suscripcion ni pagos</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p><strong>BaiFinanzas</strong></p>
+      <p>Tu plan financiero personalizado</p>
+      <p style="margin-top: 20px; font-size: 0.9rem;">Documento de presentacion - Enero 2026</p>
+    </footer>
+  </div>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<%# Home Hero - Full width, compact %>
+<div class="home-hero teal-section" id="homeHero">
+  <%# Level badge + info button %>
+  <div class="home-hero__top">
+    <span class="level-badge level-badge--pill level-badge--<%= @financial_level[:number] %>">
+      <i class="<%= @financial_level[:icon] %>"></i>
+      <%= @financial_level[:name] %>
+    </span>
+    <a href="#" class="text-white" data-bs-toggle="modal" data-bs-target="#levelGuideModal" aria-label="<%= t('home.financial_level.see_requirements') %>">
+      <i class="bi bi-info-circle" style="font-size: 1.25rem;"></i>
+    </a>
+  </div>
+
+  <%# Level progress bar + label %>
+  <div class="progress-level">
+    <div class="progress-level__bar progress-level__bar--<%= @financial_level[:number] %>"
+         style="width: <%= (@financial_level[:number] / 6.0 * 100).round %>%">
+    </div>
+  </div>
+  <div class="d-flex justify-content-between mt-2">
+    <small class="text-muted">
+      <%= t('home.financial_level.level_x_of_6', level: @financial_level[:number]) %>
+    </small>
+    <% if @next_level %>
+      <small class="text-muted">
+        <%= t('home.financial_level.next') %> <%= @next_level[:name] %>
+      </small>
+    <% end %>
+  </div>
+</div>

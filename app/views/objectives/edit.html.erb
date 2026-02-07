@@ -1,12 +1,70 @@
-<% content_for :title, "Editing objective" %>
+<% content_for :title, t('objectives.edit.title', default: 'Editar objetivo') %>
 
-<h1>Editing objective</h1>
+<div style="padding: 1rem;">
+  <div class="app-card">
+    <div class="app-card__header">
+      <h2 class="app-card__title">
+        <i class="bi bi-pencil"></i>
+        <%= t('objectives.edit.title', default: 'Editar objetivo') %>
+      </h2>
+    </div>
+    <div class="app-card__body">
+      <%= simple_form_for @objective,
+          url: objective_path(@objective),
+          html: { method: :patch } do |f| %>
 
-<%= render "form", objective: @objective %>
+        <div class="app-form__group">
+          <%= f.label :title, t('objectives.form.title'), class: 'app-form__label' %>
+          <%= f.text_field :title,
+              class: 'app-form__input',
+              placeholder: t('objectives.form.title_placeholder'),
+              required: true %>
+        </div>
 
-<br>
+        <div class="app-form__group">
+          <%= f.label :target_amount, t('objectives.form.amount'), class: 'app-form__label' %>
+          <div class="app-form__input-group">
+            <span class="app-form__input-prefix">&euro;</span>
+            <%= f.number_field :target_amount,
+                class: 'app-form__input',
+                min: 100,
+                step: 100,
+                required: true %>
+          </div>
+        </div>
 
-<div>
-  <%= link_to "Show this objective", @objective %> |
-  <%= link_to "Back to objectives", objectives_path %>
+        <div class="app-form__group">
+          <%= f.label :current_amount, t('objectives.form.current_amount'), class: 'app-form__label' %>
+          <div class="app-form__input-group">
+            <span class="app-form__input-prefix">&euro;</span>
+            <%= f.number_field :current_amount,
+                class: 'app-form__input',
+                min: 0,
+                step: 100 %>
+          </div>
+          <p class="app-form__hint">
+            <%= t('objectives.form.current_amount_hint') %>
+          </p>
+        </div>
+
+        <div class="app-form__group">
+          <%= f.label :target_date, t('objectives.form.date'), class: 'app-form__label' %>
+          <%= f.date_field :target_date,
+              class: 'app-form__input',
+              min: Date.tomorrow.to_s,
+              required: true %>
+          <p class="app-form__hint">
+            <%= t('objectives.form.date_hint') %>
+          </p>
+        </div>
+
+        <div style="display: flex; gap: 0.75rem; margin-top: 1.5rem;">
+          <%= link_to home_path, class: 'btn btn-light', style: 'flex: 1; text-align: center;' do %>
+            <%= t('common.cancel') %>
+          <% end %>
+          <%= f.submit t('objectives.edit.save', default: 'Guardar cambios'), class: 'btn btn-primary', style: 'flex: 1;' %>
+        </div>
+      <% end %>
+    </div>
+  </div>
 </div>

@@ -1,0 +1,110 @@
+<% content_for :header do %>
+  <header class="app-header">
+    <%= link_to onboarding_welcome_path, class: 'app-header__back' do %>
+      <i class="bi bi-chevron-left"></i>
+    <% end %>
+    <h1 class="app-header__title"><%= t('onboarding.basic.title', default: 'Datos basicos') %></h1>
+    <div></div>
+  </header>
+<% end %>
+
+<div class="app-container">
+  <%# Progress bar %>
+  <div class="progress mb-4" style="height: 4px;">
+    <div class="progress-bar bg-brand" style="width: 50%"></div>
+  </div>
+
+  <p class="text-muted mb-4">
+    <%= t('onboarding.basic.description',
+        default: 'Con estos 4 datos podemos calcular tu nivel financiero aproximado.') %>
+  </p>
+
+  <%= form_with url: onboarding_basic_path, method: :post, local: true do |f| %>
+    <div class="app-form__group">
+      <label class="app-form__label">
+        <i class="bi bi-cash-coin text-brand me-1"></i>
+        <%= t('onboarding.basic.monthly_income', default: 'Ingresos mensuales') %>
+      </label>
+      <div class="app-form__input-group">
+        <span class="app-form__input-prefix">&euro;</span>
+        <input type="number"
+               name="ingresos_mensual"
+               class="app-form__input"
+               placeholder="2500"
+               min="0"
+               step="100"
+               required>
+      </div>
+      <p class="app-form__hint">
+        <%= t('onboarding.basic.income_hint', default: 'Tu salario neto mensual') %>
+      </p>
+    </div>
+
+    <div class="app-form__group">
+      <label class="app-form__label">
+        <i class="bi bi-cart text-brand me-1"></i>
+        <%= t('onboarding.basic.monthly_expenses', default: 'Gastos mensuales (total)') %>
+      </label>
+      <div class="app-form__input-group">
+        <span class="app-form__input-prefix">&euro;</span>
+        <input type="number"
+               name="gastos_mensual"
+               class="app-form__input"
+               placeholder="1800"
+               min="0"
+               step="100"
+               required>
+      </div>
+      <p class="app-form__hint">
+        <%= t('onboarding.basic.expenses_hint', default: 'Alquiler, compras, facturas, ocio...') %>
+      </p>
+    </div>
+
+    <div class="app-form__group">
+      <label class="app-form__label">
+        <i class="bi bi-piggy-bank text-brand me-1"></i>
+        <%= t('onboarding.basic.total_savings', default: 'Ahorros totales') %>
+      </label>
+      <div class="app-form__input-group">
+        <span class="app-form__input-prefix">&euro;</span>
+        <input type="number"
+               name="ahorros_totales"
+               class="app-form__input"
+               placeholder="12000"
+               min="0"
+               step="500"
+               required>
+      </div>
+      <p class="app-form__hint">
+        <%= t('onboarding.basic.savings_hint', default: 'Cuentas bancarias + inversiones') %>
+      </p>
+    </div>
+
+    <div class="app-form__group">
+      <label class="app-form__label">
+        <i class="bi bi-credit-card text-brand me-1"></i>
+        <%= t('onboarding.basic.total_debt', default: 'Deudas totales') %>
+      </label>
+      <div class="app-form__input-group">
+        <span class="app-form__input-prefix">&euro;</span>
+        <input type="number"
+               name="deudas_totales"
+               class="app-form__input"
+               placeholder="95000"
+               min="0"
+               step="500"
+               required>
+      </div>
+      <p class="app-form__hint">
+        <%= t('onboarding.basic.debt_hint', default: 'Hipoteca + prestamos + tarjetas') %>
+      </p>
+    </div>
+
+    <div class="mt-4">
+      <button type="submit" class="btn-app btn-app--primary btn-app--block btn-app--lg">
+        <%= t('onboarding.basic.calculate', default: 'Ver mi nivel financiero') %>
+        <i class="bi bi-arrow-right ms-2"></i>
+      </button>
+    </div>
+  <% end %>
+</div>

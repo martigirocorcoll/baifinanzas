@@ -1,0 +1,176 @@
+<%# Objectives Card %>
+<div class="app-card">
+  <div class="app-card__header">
+    <h2 class="app-card__title">
+      <i class="bi bi-bullseye"></i>
+      <%= t('home.objectives.title', default: 'Tus objetivos') %>
+    </h2>
+    <a href="#" class="app-card__action" data-bs-toggle="modal" data-bs-target="#objectiveModal">
+      <i class="bi bi-plus-lg"></i>
+      <%= t('home.objectives.new', default: 'Nuevo') %>
+    </a>
+  </div>
+
+  <div class="app-card__body">
+    <%# Intro explanation %>
+    <div class="app-explanation mb-3">
+      <i class="bi bi-stars app-explanation__icon"></i>
+      <p class="app-explanation__text">
+        <%= t('home.objectives.intro_description', default: 'Ya tienes capacidad de ahorro. Decide en que quieres centrarte y te ayudamos a crear un plan.') %>
+      </p>
+    </div>
+
+    <% if @active_objectives.any? %>
+      <%# Savings capacity indicator %>
+      <% if @savings_capacity[:remaining] < 0 %>
+        <div class="alert alert-warning d-flex align-items-center mb-3 py-2">
+          <i class="bi bi-exclamation-triangle me-2"></i>
+          <small>
+            <%= t('home.objectives.exceeds_capacity',
+                default: 'Tus objetivos superan tu capacidad de ahorro mensual') %>
+          </small>
+        </div>
+      <% end %>
+
+      <%# Objectives list %>
+      <% @active_objectives.each do |objective| %>
+        <div class="objective-card objective-card--accent">
+          <div class="objective-card__header">
+            <div class="d-flex align-items-start">
+              <span class="objective-card__icon"><%= objective.objective_icon_emoji %></span>
+              <div>
+                <h4 class="objective-card__title"><%= objective.title %></h4>
+                <p class="objective-card__meta mb-0">
+                  <%= number_to_currency(objective.target_amount, unit: '€', precision: 0) %>
+                  <span class="mx-1">&middot;</span>
+                  <%= l(objective.target_date, format: :month_year) %>
+                </p>
+              </div>
+            </div>
+            <div class="dropdown">
+              <a href="#" class="text-muted" data-bs-toggle="dropdown">
+                <i class="bi bi-three-dots-vertical"></i>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li>
+                  <%= link_to edit_objective_path(objective), class: 'dropdown-item' do %>
+                    <i class="bi bi-pencil me-2"></i>
+                    <%= t('common.edit', default: 'Editar') %>
+                  <% end %>
+                </li>
+                <li>
+                  <%= button_to objective_path(objective),
+                      method: :delete,
+                      class: 'dropdown-item text-danger',
+                      data: { turbo_confirm: t('objectives.confirm_delete', default: 'Eliminar este objetivo?') } do %>
+                    <i class="bi bi-trash me-2"></i>
+                    <%= t('common.delete', default: 'Eliminar') %>
+                  <% end %>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <%# Progress bar %>
+          <% progress = objective.current_progress_percentage %>
+          <div class="objective-card__progress">
+            <div class="objective-card__progress-bar">
+              <span style="width: <%= [progress, 100].min %>%"></span>
+            </div>
+          </div>
+
+          <%# Current / target amount - tappable row %>
+          <a href="#" style="display: flex; align-items: center; justify-content: space-between; margin-top: 0.375rem; padding: 0.375rem 0.5rem; background: #f3f4f6; border-radius: 6px; text-decoration: none;"
+             data-bs-toggle="collapse" data-bs-target="#progressFormList<%= objective.id %>">
+            <span style="font-size: 0.8125rem; color: #374151; font-weight: 500;">
+              <%= number_to_currency(objective.current_amount, unit: '€', precision: 0) %>
+              <%= t('home.objectives.progress_of') %>
+              <%= number_to_currency(objective.target_amount, unit: '€', precision: 0) %>
+            </span>
+            <span style="font-size: 0.6875rem; color: #165668; font-weight: 600;">
+              <i class="bi bi-pencil-square me-1"></i><%= t('home.objectives.update_progress') %>
+            </span>
+          </a>
+
+          <%# Inline progress update form (collapsed) %>
+          <div class="collapse" id="progressFormList<%= objective.id %>">
+            <%= form_with url: update_progress_objective_path(objective), method: :patch, style: "display: flex; gap: 0.5rem; align-items: center; margin-top: 0.5rem;" do |f| %>
+              <div style="flex: 1;">
+                <input type="number" name="current_amount" value="<%= objective.current_amount %>"
+                       min="0" step="100" placeholder="<%= t('home.objectives.current_amount_label') %>"
+                       class="form-control form-control-sm" style="font-size: 0.8125rem;">
+              </div>
+              <button type="submit" class="btn btn-sm" style="background: #165668; color: #fff; font-size: 0.75rem; white-space: nowrap;">
+                <i class="bi bi-check-lg"></i>
+              </button>
+            <% end %>
+          </div>
+
+          <%# Savings info %>
+          <div class="objective-card__savings">
+            <span><%= t('home.objectives.save_monthly', default: 'Ahorrar:') %></span>
+            <span><%= number_to_currency(objective.monthly_savings_needed, unit: '', precision: 0) %><%= t('home.objectives.per_month', default: '/mes') %></span>
+          </div>
+
+          <%# Influencer video or placeholder %>
+          <%
+            obj_inf = current_user.influencer || Influencer.default_influencer
+            obj_video_url = case objective.investment_recommendation
+              when "ac_diposit" then obj_inf&.video_diposit
+              when "ac_curt" then obj_inf&.video_curt
+              when "ac_llarg" then obj_inf&.video_llarg
+              when "ac_jubil" then obj_inf&.video_jubil
+              else nil
+            end
+            obj_rec_slug = objective.investment_recommendation.gsub('_', '-')
+            obj_is_deposit = objective.investment_recommendation == "ac_diposit"
+            obj_cta_label = obj_is_deposit ? t('home.objectives.see_deposit_plan') : t('home.objectives.see_investment_plan')
+            obj_cta_icon = obj_is_deposit ? "bi-safe" : "bi-graph-up-arrow"
+            obj_placeholder = case objective.investment_recommendation
+              when "ac_diposit" then { icon: "bi-safe", label: t('home.objectives.placeholder_deposit') }
+              when "ac_curt"    then { icon: "bi-bar-chart-line", label: t('home.objectives.placeholder_fixed_income') }
+              when "ac_llarg"   then { icon: "bi-graph-up-arrow", label: t('home.objectives.placeholder_index_funds') }
+              when "ac_jubil"   then { icon: "bi-piggy-bank", label: t('home.objectives.placeholder_retirement') }
+              else { icon: "bi-graph-up", label: "" }
+            end
+          %>
+          <% if obj_video_url.present? %>
+            <div class="ratio ratio-16x9" style="margin-top: 0.5rem; border-radius: 8px; overflow: hidden;">
+              <iframe src="<%= obj_video_url %>" allowfullscreen loading="lazy"></iframe>
+            </div>
+          <% else %>
+            <%= link_to recommendation_path(obj_rec_slug, objetivo_id: objective.id), style: "text-decoration: none;" do %>
+              <div style="margin-top: 0.5rem; border-radius: 8px; overflow: hidden; background: linear-gradient(135deg, #e8f4f7, #d1ecf1); aspect-ratio: 16/9; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.25rem;">
+                <i class="bi <%= obj_placeholder[:icon] %>" style="font-size: 2rem; color: #165668;"></i>
+                <span style="font-size: 0.8125rem; font-weight: 600; color: #165668;"><%= obj_placeholder[:label] %></span>
+              </div>
+            <% end %>
+          <% end %>
+
+          <%# CTA to investment recommendation %>
+          <%= link_to recommendation_path(obj_rec_slug, objetivo_id: objective.id),
+              style: "display: flex; align-items: center; justify-content: center; gap: 0.375rem; width: 100%; padding: 0.5rem 0.75rem; margin-top: 0.5rem; font-size: 0.8125rem; font-weight: 600; color: #fff; background: linear-gradient(135deg, #1d7a8c, #165668); border-radius: 8px; text-decoration: none;" do %>
+            <i class="bi <%= obj_cta_icon %>"></i>
+            <%= obj_cta_label %>
+          <% end %>
+        </div>
+      <% end %>
+    <% else %>
+      <%# Empty state %>
+      <div class="empty-state">
+        <i class="bi bi-bullseye empty-state__icon"></i>
+        <h4 class="empty-state__title">
+          <%= t('home.objectives.no_objectives', default: 'Sin objetivos') %>
+        </h4>
+        <p class="empty-state__description">
+          <%= t('home.objectives.create_first',
+              default: 'Crea tu primer objetivo financiero para empezar a planificar tu futuro.') %>
+        </p>
+        <a href="#" class="btn-app btn-app--primary" data-bs-toggle="modal" data-bs-target="#objectiveModal">
+          <i class="bi bi-plus-lg"></i>
+          <%= t('home.objectives.create_objective', default: 'Crear objetivo') %>
+        </a>
+      </div>
+    <% end %>
+  </div>
+</div>

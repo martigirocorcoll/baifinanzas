@@ -1,0 +1,254 @@
+<% content_for :header do %>
+  <%= render "shared/app_header",
+      title: @title,
+      back_path: calculators_path %>
+<% end %>
+
+<div class="app-container">
+  <p class="text-muted mb-4">
+    <%= t('calculators.investment_goal.intro',
+        default: 'Calcula cuanto necesitas invertir o cuanto tiempo tardaras en alcanzar tu objetivo.') %>
+  </p>
+
+  <%# Common inputs %>
+  <div class="app-form__group">
+    <label class="app-form__label"><%= t('calculators.investment_goal.target_capital', default: 'Objetivo de capital final') %></label>
+    <div class="app-form__input-group">
+      <span class="app-form__input-prefix">&euro;</span>
+      <input type="number" class="app-form__input" id="targetCapital" value="100000" min="0" step="5000">
+    </div>
+  </div>
+
+  <div class="app-form__group">
+    <label class="app-form__label"><%= t('calculators.investment_goal.initial_capital', default: 'Capital inicial') %></label>
+    <div class="app-form__input-group">
+      <span class="app-form__input-prefix">&euro;</span>
+      <input type="number" class="app-form__input" id="initialCapital" value="5000" min="0" step="1000">
+    </div>
+  </div>
+
+  <div class="app-form__group">
+    <label class="app-form__label">
+      <%= t('calculators.investment_goal.expected_return', default: 'Rentabilidad esperada') %>
+      <span class="text-brand fw-semibold ms-2" id="returnDisplay">7%</span>
+    </label>
+    <div class="app-slider">
+      <input type="range" class="app-slider__input" id="expectedReturn" min="1" max="15" value="7" step="0.5">
+      <div class="app-slider__labels"><span>1%</span><span>15%</span></div>
+    </div>
+  </div>
+
+  <div class="app-divider"></div>
+
+  <%# Mode selection %>
+  <h5 class="mb-3"><%= t('calculators.investment_goal.what_to_calculate', default: 'Que quieres calcular?') %></h5>
+
+  <div class="d-flex gap-2 mb-4">
+    <button type="button" class="btn btn-primary flex-fill mode-option active" data-mode="contribution">
+      <i class="bi bi-cash-coin me-1"></i> <%= t('calculators.investment_goal.mode_contribution', default: 'Cuanto invertir/mes') %>
+    </button>
+    <button type="button" class="btn btn-outline-primary flex-fill mode-option" data-mode="time">
+      <i class="bi bi-clock me-1"></i> <%= t('calculators.investment_goal.mode_time', default: 'Cuantos anos') %>
+    </button>
+  </div>
+
+  <%# Mode A: Calculate monthly contribution %>
+  <div id="modeContribution">
+    <div class="app-form__group">
+      <label class="app-form__label">
+        <%= t('calculators.investment_goal.desired_term', default: 'Plazo deseado') %>
+        <span class="text-brand fw-semibold ms-2" id="yearsDisplay">15 anos</span>
+      </label>
+      <div class="app-slider">
+        <input type="range" class="app-slider__input" id="desiredYears" min="1" max="40" value="15">
+        <div class="app-slider__labels"><span>1</span><span>40</span></div>
+      </div>
+    </div>
+  </div>
+
+  <%# Mode B: Calculate time needed %>
+  <div id="modeTime" style="display: none;">
+    <div class="app-form__group">
+      <label class="app-form__label"><%= t('calculators.investment_goal.monthly_contribution', default: 'Aportacion mensual') %></label>
+      <div class="app-form__input-group">
+        <span class="app-form__input-prefix">&euro;</span>
+        <input type="number" class="app-form__input" id="monthlyContribution" value="300" min="0" step="50">
+      </div>
+    </div>
+  </div>
+
+  <%# Results %>
+  <div class="result-card result-card--highlight" id="resultMain">
+    <p class="result-card__label" id="resultLabel">Aportacion mensual necesaria</p>
+    <p class="result-card__value" id="resultValue">&euro;315/mes</p>
+  </div>
+
+  <div class="app-card mt-3">
+    <h4 class="app-card__title mb-3">
+      <i class="bi bi-calculator"></i>
+      <%= t('calculators.investment_goal.breakdown', default: 'Desglose') %>
+    </h4>
+
+    <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+      <span class="text-muted"><%= t('calculators.investment_goal.target', default: 'Objetivo') %></span>
+      <span id="breakdownTarget">&euro;100,000</span>
+    </div>
+    <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+      <span class="text-muted"><%= t('calculators.investment_goal.initial', default: 'Capital inicial') %></span>
+      <span id="breakdownInitial">&euro;5,000</span>
+    </div>
+    <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+      <span class="text-muted"><%= t('calculators.investment_goal.total_contributed', default: 'Total aportado') %></span>
+      <span id="breakdownContributed">&euro;61,700</span>
+    </div>
+    <div class="d-flex justify-content-between align-items-center py-2">
+      <span class="text-muted"><%= t('calculators.investment_goal.interest_earned', default: 'Intereses generados') %></span>
+      <strong class="text-success" id="breakdownInterest">&euro;33,300</strong>
+    </div>
+  </div>
+
+  <%# Disclaimer %>
+  <div class="app-disclaimer mt-4">
+    <i class="bi bi-info-circle me-1"></i>
+    <%= t('calculators.investment_goal.disclaimer',
+        default: 'Calculo basado en rentabilidad constante. La rentabilidad real puede variar. Rentabilidades pasadas no garantizan resultados futuros.') %>
+  </div>
+</div>
+
+<script>
+function initInvestmentGoal() {
+  var i18n = {
+    yearsSuffix: '<%= j t("calculators.investment_goal.js.years_suffix", default: " anos") %>',
+    monthsSuffix: '<%= j t("calculators.investment_goal.js.months_suffix", default: " meses") %>',
+    and: '<%= j t("calculators.investment_goal.js.and", default: " y ") %>',
+    monthlyContributionNeeded: '<%= j t("calculators.investment_goal.js.monthly_contribution_needed", default: "Aportacion mensual necesaria") %>',
+    timeNeeded: '<%= j t("calculators.investment_goal.js.time_needed", default: "Tiempo necesario") %>',
+    alreadyReached: '<%= j t("calculators.investment_goal.js.already_reached", default: "Ya tienes tu objetivo!") %>',
+    moreThan50Years: '<%= j t("calculators.investment_goal.js.more_than_50_years", default: "Mas de 50 anos") %>'
+  };
+
+  var targetEl = document.getElementById('targetCapital');
+  var initialEl = document.getElementById('initialCapital');
+  var returnEl = document.getElementById('expectedReturn');
+  var yearsEl = document.getElementById('desiredYears');
+  var contributionEl = document.getElementById('monthlyContribution');
+  var modeButtons = document.querySelectorAll('.mode-option');
+
+  var currentMode = 'contribution';
+
+  function formatCurrency(value) {
+    return new Intl.NumberFormat('es-ES', {
+      style: 'currency', currency: 'EUR',
+      minimumFractionDigits: 0, maximumFractionDigits: 0
+    }).format(value);
+  }
+
+  // Mode switching
+  modeButtons.forEach(function(btn) {
+    if (btn.dataset.bound) return;
+    btn.dataset.bound = '1';
+    btn.addEventListener('click', function() {
+      modeButtons.forEach(function(b) {
+        b.classList.remove('btn-primary', 'active');
+        b.classList.add('btn-outline-primary');
+      });
+      this.classList.remove('btn-outline-primary');
+      this.classList.add('btn-primary', 'active');
+      currentMode = this.dataset.mode;
+
+      document.getElementById('modeContribution').style.display = currentMode === 'contribution' ? 'block' : 'none';
+      document.getElementById('modeTime').style.display = currentMode === 'time' ? 'block' : 'none';
+      calculate();
+    });
+  });
+
+  function calculate() {
+    var target = parseFloat(targetEl.value) || 0;
+    var initial = parseFloat(initialEl.value) || 0;
+    var annualReturn = (parseFloat(returnEl.value) || 7) / 100;
+    var monthlyRate = annualReturn / 12;
+
+    document.getElementById('returnDisplay').textContent = returnEl.value + '%';
+    document.getElementById('breakdownTarget').textContent = formatCurrency(target);
+    document.getElementById('breakdownInitial').textContent = formatCurrency(initial);
+
+    if (currentMode === 'contribution') {
+      // Calculate monthly contribution needed
+      var years = parseInt(yearsEl.value) || 15;
+      var months = years * 12;
+      document.getElementById('yearsDisplay').textContent = years + i18n.yearsSuffix;
+
+      // Future value of initial capital
+      var fvInitial = initial * Math.pow(1 + monthlyRate, months);
+      var remaining = target - fvInitial;
+
+      var monthly = 0;
+      if (remaining > 0 && monthlyRate > 0) {
+        // PMT = FV * r / ((1+r)^n - 1)
+        monthly = remaining * monthlyRate / (Math.pow(1 + monthlyRate, months) - 1);
+      } else if (remaining > 0) {
+        monthly = remaining / months;
+      }
+
+      var totalContributed = initial + (monthly * months);
+      var interestEarned = target - totalContributed;
+
+      document.getElementById('resultLabel').textContent = i18n.monthlyContributionNeeded;
+      document.getElementById('resultValue').textContent = formatCurrency(Math.round(monthly)) + '/mes';
+      document.getElementById('breakdownContributed').textContent = formatCurrency(Math.round(totalContributed));
+      document.getElementById('breakdownInterest').textContent = formatCurrency(Math.round(Math.max(0, interestEarned)));
+
+    } else {
+      // Calculate time needed
+      var monthlyPmt = parseFloat(contributionEl.value) || 0;
+
+      if (monthlyPmt <= 0 && initial >= target) {
+        document.getElementById('resultLabel').textContent = i18n.timeNeeded;
+        document.getElementById('resultValue').textContent = i18n.alreadyReached;
+        document.getElementById('breakdownContributed').textContent = formatCurrency(initial);
+        document.getElementById('breakdownInterest').textContent = formatCurrency(0);
+        return;
+      }
+
+      // Iterate month by month to find when target is reached
+      var balance = initial;
+      var monthsNeeded = 0;
+      var maxMonths = 600; // 50 years cap
+
+      while (balance < target && monthsNeeded < maxMonths) {
+        balance = balance * (1 + monthlyRate) + monthlyPmt;
+        monthsNeeded++;
+      }
+
+      if (monthsNeeded >= maxMonths) {
+        document.getElementById('resultLabel').textContent = i18n.timeNeeded;
+        document.getElementById('resultValue').textContent = i18n.moreThan50Years;
+      } else {
+        var yearsNeeded = Math.floor(monthsNeeded / 12);
+        var remainingMonths = monthsNeeded % 12;
+        var timeStr = yearsNeeded > 0 ? yearsNeeded + i18n.yearsSuffix : '';
+        if (remainingMonths > 0) timeStr += (timeStr ? i18n.and : '') + remainingMonths + i18n.monthsSuffix;
+
+        document.getElementById('resultLabel').textContent = i18n.timeNeeded;
+        document.getElementById('resultValue').textContent = timeStr;
+      }
+
+      var totalContributed = initial + (monthlyPmt * monthsNeeded);
+      var interestEarned = target - totalContributed;
+
+      document.getElementById('breakdownContributed').textContent = formatCurrency(Math.round(totalContributed));
+      document.getElementById('breakdownInterest').textContent = formatCurrency(Math.round(Math.max(0, interestEarned)));
+    }
+  }
+
+  [targetEl, initialEl, returnEl, yearsEl, contributionEl].forEach(function(el) {
+    if (el.dataset.bound) return;
+    el.dataset.bound = '1';
+    el.addEventListener('input', calculate);
+  });
+
+  calculate();
+}
+document.addEventListener('DOMContentLoaded', initInvestmentGoal);
+document.addEventListener('turbo:load', initInvestmentGoal);
+</script>

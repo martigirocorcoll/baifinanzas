@@ -1,0 +1,83 @@
+<% content_for :header do %>
+  <%= render "shared/app_header",
+      title: t('profile.settings_page.title', default: 'Configuracion'),
+      back_path: profile_path %>
+<% end %>
+
+<div class="app-container">
+  <%# Language selection %>
+  <div class="app-section">
+    <h3 class="app-section__title"><%= t('profile.settings_page.language', default: 'Idioma') %></h3>
+
+    <%= form_with url: profile_settings_path, method: :patch, local: true do |f| %>
+      <div class="app-card">
+        <div class="form-check mb-3">
+          <input type="radio" name="new_locale" value="es" id="locale_es"
+                 class="form-check-input" <%= 'checked' if @current_locale == :es %>>
+          <label class="form-check-label d-flex align-items-center" for="locale_es">
+            <span class="me-2">ES</span>
+            Espanol
+          </label>
+        </div>
+
+        <div class="form-check">
+          <input type="radio" name="new_locale" value="en" id="locale_en"
+                 class="form-check-input" <%= 'checked' if @current_locale == :en %>>
+          <label class="form-check-label d-flex align-items-center" for="locale_en">
+            <span class="me-2">EN</span>
+            English
+          </label>
+        </div>
+      </div>
+
+      <div class="mt-3">
+        <%= submit_tag t('profile.settings_page.save', default: 'Guardar'), class: 'btn-app btn-app--primary btn-app--block' %>
+      </div>
+    <% end %>
+  </div>
+
+  <%# Notifications (placeholder) %>
+  <div class="app-section">
+    <h3 class="app-section__title"><%= t('profile.settings_page.notifications', default: 'Notificaciones') %></h3>
+
+    <div class="app-card">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <h4 class="h6 mb-1"><%= t('profile.settings_page.push_notifications', default: 'Notificaciones push') %></h4>
+          <small class="text-muted"><%= t('profile.settings_page.push_description', default: 'Recibe recordatorios y actualizaciones') %></small>
+        </div>
+        <div class="form-check form-switch">
+          <input class="form-check-input" type="checkbox" disabled>
+        </div>
+      </div>
+      <p class="text-muted small mt-2 mb-0">
+        <i class="bi bi-info-circle me-1"></i>
+        <%= t('profile.settings_page.notifications_coming_soon', default: 'Disponible proximamente') %>
+      </p>
+    </div>
+  </div>
+
+  <%# About %>
+  <div class="app-section">
+    <h3 class="app-section__title"><%= t('profile.settings_page.about', default: 'Acerca de') %></h3>
+
+    <div class="app-card">
+      <div class="d-flex justify-content-between py-2 border-bottom">
+        <span class="text-muted"><%= t('profile.settings_page.version', default: 'Version') %></span>
+        <span>1.0.0</span>
+      </div>
+
+      <div class="d-flex justify-content-between py-2">
+        <span class="text-muted"><%= t('profile.settings_page.your_influencer', default: 'Tu referidor') %></span>
+        <span><%= current_user.influencer&.name || 'BaiJavier' %></span>
+      </div>
+    </div>
+
+    <div class="mt-4">
+      <a href="mailto:soporte@baifinanzas.com" class="btn-app btn-app--secondary btn-app--block">
+        <i class="bi bi-envelope me-2"></i>
+        <%= t('profile.settings_page.contact_support', default: 'Contactar soporte') %>
+      </a>
+    </div>
+  </div>
+</div>

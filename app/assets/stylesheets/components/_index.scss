@@ -1,6 +1,11 @@
-// Import your components CSS files here.
+// Import component CSS files
+// Order matters: base components first, then app-specific
+
+// Base Bootstrap overrides
 @import "alert";
 @import "avatar";
 @import "form_legend_clear";
 @import "navbar";
-@import "theme";
+
+// App-specific styles (mobile-first for Turbo Native)
+@import "app";

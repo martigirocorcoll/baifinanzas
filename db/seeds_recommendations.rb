@@ -3,7 +3,7 @@
 # Recomendaciones de objetivos (basadas en investment_recommendation)
 recommendations_data = [
   {
-    slug: "ac_diposit",
+    slug: "ac-diposit",
     title: "Depósito a Corto Plazo",
     description: "Producto financiero ideal para objetivos a corto plazo (menos de 2 años) que prioriza la seguridad y liquidez por encima de la rentabilidad.",
     content: "Los depósitos a corto plazo son la opción más segura para tus objetivos inmediatos. Con una rentabilidad aproximada del 1.5% anual, garantizan que tu dinero esté disponible cuando lo necesites sin riesgo de pérdidas.\n\n**Ventajas principales:**\n- Garantía total del capital invertido\n- Liquidez inmediata o a muy corto plazo\n- Sin comisiones de gestión\n- Rentabilidad fija y predecible\n\n**¿Cuándo es recomendable?**\nEste producto es perfecto cuando tu objetivo está a menos de 2 años y no puedes permitirte ningún riesgo de pérdida del capital. La estabilidad es más importante que la rentabilidad máxima.",

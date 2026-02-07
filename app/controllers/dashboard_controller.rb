@@ -1,4 +1,5 @@
 class DashboardController < ApplicationController
+  layout 'app'
   def index
     @pyg = current_user.pyg || current_user.build_pyg
     @balance = current_user.balance || current_user.build_balance
@@ -27,7 +28,7 @@ class DashboardController < ApplicationController
     action_key = params[:action_key]   # rec_key o objective_id
 
     if action_type.blank? || action_key.blank?
-      redirect_to dashboard_index_path, alert: t('flash.invalid_params') and return
+      redirect_to home_path, alert: t('flash.invalid_params') and return
     end
 
     # Toggle: marcar o desmarcar según el estado actual
@@ -49,8 +50,8 @@ class DashboardController < ApplicationController
       end
     end
 
-    # Redirigir de vuelta al dashboard
-    redirect_to dashboard_index_path
+    # Redirigir de vuelta al home
+    redirect_to home_path
   end
 
   # Desmarcar una acción/recomendación como completada
@@ -59,7 +60,7 @@ class DashboardController < ApplicationController
     action_key = params[:action_key]
 
     if action_type.blank? || action_key.blank?
-      redirect_to dashboard_index_path, alert: t('flash.invalid_params') and return
+      redirect_to home_path, alert: t('flash.invalid_params') and return
     end
 
     # Desmarcar
@@ -71,7 +72,7 @@ class DashboardController < ApplicationController
       flash[:success] = t('flash.objective_unmarked')
     end
 
-    redirect_to dashboard_index_path
+    redirect_to home_path
   end
 
   private

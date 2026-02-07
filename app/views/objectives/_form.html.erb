@@ -24,6 +24,15 @@
     </div>
   </div>
 
+  <div class="row gx-3">
+    <div class="col-12 col-md-6 mb-3">
+      <%= f.input :current_amount,
+            label: t('objectives.form.current_amount', default: 'Ya aportado'),
+            input_html: { class: "form-control text-end", type: "number", min: 0, step: 100 },
+            wrapper: false %>
+    </div>
+  </div>
+
   <div class="row gx-3 mb-3">
     <div class="col-12 col-md-6">
       <%= f.input :target_date,

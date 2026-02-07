@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_10_24_162913) do
+ActiveRecord::Schema[7.2].define(version: 2026_02_06_203841) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -64,6 +64,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_24_162913) do
     t.string "ac_mortgage"
     t.string "video_saving"
     t.string "video_mortgage"
+    t.string "video_diposit"
     t.index ["ac_compte"], name: "index_influencers_on_ac_compte"
     t.index ["code"], name: "index_influencers_on_code", unique: true
     t.index ["default"], name: "index_influencers_on_default"
@@ -79,6 +80,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_24_162913) do
     t.date "target_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "current_amount", default: 0, null: false
     t.index ["user_id"], name: "index_objectives_on_user_id"
   end
 

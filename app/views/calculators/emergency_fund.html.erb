@@ -1,0 +1,212 @@
+<% content_for :header do %>
+  <%= render "shared/app_header",
+      title: @title,
+      back_path: calculators_path %>
+<% end %>
+
+<div class="app-container">
+  <%# Input form %>
+  <div class="app-form__group">
+    <label class="app-form__label">
+      <%= t('calculators.emergency_fund.monthly_expenses', default: 'Gastos mensuales') %>
+      <% if @user_expenses.present? %>
+        <a href="#" class="info-trigger" data-bs-toggle="popover"
+           data-bs-trigger="click"
+           data-bs-html="true"
+           data-bs-content="<strong>Tus gastos guardados:</strong><br><%= number_to_currency(@user_expenses, unit: '', precision: 0) %>/mes">
+          <i class="bi bi-info-circle"></i>
+        </a>
+      <% end %>
+    </label>
+    <div class="app-form__input-group">
+      <span class="app-form__input-prefix">&euro;</span>
+      <input type="number"
+             class="app-form__input"
+             id="monthlyExpenses"
+             value="<%= @user_expenses || 1800 %>"
+             min="0"
+             step="100">
+    </div>
+  </div>
+
+  <div class="app-form__group">
+    <label class="app-form__label">
+      <%= t('calculators.emergency_fund.months_coverage', default: 'Meses de cobertura') %>
+    </label>
+    <div class="d-flex gap-2">
+      <button type="button" class="btn btn-outline-primary months-option" data-months="3">3</button>
+      <button type="button" class="btn btn-primary months-option active" data-months="4">4</button>
+      <button type="button" class="btn btn-outline-primary months-option" data-months="5">5</button>
+      <button type="button" class="btn btn-outline-primary months-option" data-months="6">6</button>
+    </div>
+    <p class="app-form__hint mt-2">
+      <%= t('calculators.emergency_fund.recommended', default: 'Recomendado: 4-6 meses') %>
+    </p>
+  </div>
+
+  <div class="app-form__group">
+    <label class="app-form__label">
+      <%= t('calculators.emergency_fund.current_savings', default: 'Ahorros actuales') %>
+      <% if @user_savings.present? %>
+        <a href="#" class="info-trigger" data-bs-toggle="popover"
+           data-bs-trigger="click"
+           data-bs-html="true"
+           data-bs-content="<strong>Tus ahorros guardados:</strong><br><%= number_to_currency(@user_savings, unit: '', precision: 0) %>">
+          <i class="bi bi-info-circle"></i>
+        </a>
+      <% end %>
+    </label>
+    <div class="app-form__input-group">
+      <span class="app-form__input-prefix">&euro;</span>
+      <input type="number"
+             class="app-form__input"
+             id="currentSavings"
+             value="<%= @user_savings || 3000 %>"
+             min="0"
+             step="100">
+    </div>
+  </div>
+
+  <div class="app-divider"></div>
+
+  <%# Results %>
+  <div class="app-card">
+    <h4 class="app-card__title mb-3">
+      <i class="bi bi-shield-check"></i>
+      <%= t('calculators.emergency_fund.your_fund', default: 'Tu fondo de emergencia') %>
+    </h4>
+
+    <div class="mb-4">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <span class="text-muted"><%= t('calculators.emergency_fund.target', default: 'Objetivo:') %></span>
+        <strong id="targetAmount" class="text-brand">&euro;7,200</strong>
+      </div>
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <span class="text-muted"><%= t('calculators.emergency_fund.current', default: 'Tienes:') %></span>
+        <strong id="currentAmount">&euro;3,000</strong>
+      </div>
+      <div class="progress" style="height: 10px;">
+        <div class="progress-bar bg-success" id="progressBar" style="width: 42%"></div>
+      </div>
+      <div class="text-center mt-2">
+        <span id="progressPercent" class="text-muted small">42%</span>
+      </div>
+    </div>
+
+    <div class="bg-light rounded p-3">
+      <div class="d-flex justify-content-between align-items-center">
+        <span><%= t('calculators.emergency_fund.missing', default: 'Te faltan:') %></span>
+        <strong id="missingAmount" class="text-danger">&euro;4,200</strong>
+      </div>
+    </div>
+  </div>
+
+  <%# Monthly savings plan %>
+  <div class="app-card mt-4">
+    <h4 class="app-card__title mb-3">
+      <%= t('calculators.emergency_fund.savings_plan', default: 'Plan de ahorro') %>
+    </h4>
+
+    <div class="app-form__group">
+      <label class="app-form__label">
+        <%= t('calculators.emergency_fund.monthly_savings', default: 'Cuanto puedes ahorrar al mes?') %>
+      </label>
+      <div class="app-form__input-group">
+        <span class="app-form__input-prefix">&euro;</span>
+        <input type="number"
+               class="app-form__input"
+               id="monthlySavings"
+               value="300"
+               min="0"
+               step="50">
+      </div>
+    </div>
+
+  </div>
+
+  <%# Disclaimer %>
+  <div class="app-disclaimer mt-4">
+    <i class="bi bi-info-circle me-1"></i>
+    <%= t('calculators.emergency_fund.disclaimer',
+        default: 'El fondo de emergencia debe estar en una cuenta de facil acceso (deposito o cuenta de ahorro).') %>
+  </div>
+</div>
+
+<script>
+function initEmergencyFund() {
+  var i18n = {
+    fundComplete: '<%= j t("calculators.emergency_fund.js.fund_complete", default: "Ya tienes tu fondo de emergencia completo!") %>',
+    fundInMonths: '<%= j t("calculators.emergency_fund.js.fund_in_months", default: "Completaras tu fondo en %{months} meses (%{date})") %>',
+    indicateSavings: '<%= j t("calculators.emergency_fund.js.indicate_savings", default: "Indica cuanto puedes ahorrar al mes") %>'
+  };
+
+  const monthlyExpensesEl = document.getElementById('monthlyExpenses');
+  const currentSavingsEl = document.getElementById('currentSavings');
+  const monthlySavingsEl = document.getElementById('monthlySavings');
+  const monthButtons = document.querySelectorAll('.months-option');
+
+  let selectedMonths = 4;
+
+  function formatCurrency(value) {
+    return new Intl.NumberFormat('es-ES', {
+      style: 'currency',
+      currency: 'EUR',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(value);
+  }
+
+  function calculate() {
+    const monthlyExpenses = parseFloat(monthlyExpensesEl.value) || 0;
+    const currentSavings = parseFloat(currentSavingsEl.value) || 0;
+    const monthlySavings = parseFloat(monthlySavingsEl.value) || 0;
+
+    const target = monthlyExpenses * selectedMonths;
+    const missing = Math.max(0, target - currentSavings);
+    const progress = target > 0 ? Math.min(100, (currentSavings / target) * 100) : 0;
+
+    document.getElementById('targetAmount').textContent = formatCurrency(target);
+    document.getElementById('currentAmount').textContent = formatCurrency(currentSavings);
+    document.getElementById('missingAmount').textContent = formatCurrency(missing);
+    document.getElementById('progressBar').style.width = progress + '%';
+    document.getElementById('progressPercent').textContent = Math.round(progress) + '%';
+
+  }
+
+  // Dispose existing popovers before re-init
+  document.querySelectorAll('[data-bs-toggle="popover"]').forEach(function(el) {
+    var existing = bootstrap.Popover.getInstance(el);
+    if (existing) existing.dispose();
+  });
+
+  // Month button handlers
+  monthButtons.forEach(btn => {
+    if (btn.dataset.bound) return;
+    btn.dataset.bound = '1';
+    btn.addEventListener('click', function() {
+      monthButtons.forEach(b => b.classList.remove('btn-primary', 'active'));
+      monthButtons.forEach(b => b.classList.add('btn-outline-primary'));
+      this.classList.remove('btn-outline-primary');
+      this.classList.add('btn-primary', 'active');
+      selectedMonths = parseInt(this.dataset.months);
+      calculate();
+    });
+  });
+
+  // Input handlers (guard against stacking)
+  [monthlyExpensesEl, currentSavingsEl, monthlySavingsEl].forEach(el => {
+    if (el.dataset.bound) return;
+    el.dataset.bound = '1';
+    el.addEventListener('input', calculate);
+  });
+
+  // Initialize popovers
+  const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
+  popoverTriggerList.forEach(el => new bootstrap.Popover(el));
+
+  // Initial calculation
+  calculate();
+}
+document.addEventListener('DOMContentLoaded', initEmergencyFund);
+document.addEventListener('turbo:load', initEmergencyFund);
+</script>

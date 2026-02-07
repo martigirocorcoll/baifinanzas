@@ -1,0 +1,217 @@
+<% content_for :header do %>
+  <%= render "shared/app_header",
+      title: @title,
+      back_path: calculators_path %>
+<% end %>
+
+<div class="app-container">
+  <p class="text-muted mb-4">
+    <%= t('calculators.financial_freedom.intro',
+        default: 'Calcula el patrimonio que necesitas para vivir de tus inversiones.') %>
+  </p>
+
+  <%# Input form %>
+  <div class="app-form__group">
+    <label class="app-form__label">
+      <%= t('calculators.financial_freedom.monthly_expenses', default: 'Gastos mensuales') %>
+      <% if @user_expenses.present? %>
+        <a href="#" class="info-trigger" data-bs-toggle="popover"
+           data-bs-trigger="click"
+           data-bs-html="true"
+           data-bs-content="<strong>Tus gastos actuales:</strong><br><%= number_to_currency(@user_expenses, unit: '', precision: 0) %>/mes">
+          <i class="bi bi-info-circle"></i>
+        </a>
+      <% end %>
+    </label>
+    <div class="app-form__input-group">
+      <span class="app-form__input-prefix">&euro;</span>
+      <input type="number"
+             class="app-form__input"
+             id="monthlyExpenses"
+             value="<%= @user_expenses || 2500 %>"
+             min="0"
+             step="100">
+    </div>
+    <p class="app-form__hint">
+      <%= t('calculators.financial_freedom.expenses_hint', default: 'Pueden ser tus gastos actuales o los que esperas tener en el futuro') %>
+    </p>
+  </div>
+
+  <div class="app-form__group">
+    <label class="app-form__label">
+      <%= t('calculators.financial_freedom.expected_return', default: 'Rentabilidad esperada') %>
+      <span class="text-brand fw-semibold ms-2" id="returnDisplay">5%</span>
+    </label>
+    <div class="app-slider">
+      <input type="range"
+             class="app-slider__input"
+             id="expectedReturn"
+             min="2"
+             max="10"
+             value="5"
+             step="0.5">
+      <div class="app-slider__labels">
+        <span>2%</span>
+        <span>10%</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="app-form__group">
+    <label class="app-form__label">
+      <%= t('calculators.financial_freedom.current_net_worth', default: 'Tu patrimonio actual') %>
+      <% if @user_net_worth.present? %>
+        <a href="#" class="info-trigger" data-bs-toggle="popover"
+           data-bs-trigger="click"
+           data-bs-html="true"
+           data-bs-content="<strong>Tu patrimonio guardado:</strong><br><%= number_to_currency(@user_net_worth, unit: '', precision: 0) %>">
+          <i class="bi bi-info-circle"></i>
+        </a>
+      <% end %>
+    </label>
+    <div class="app-form__input-group">
+      <span class="app-form__input-prefix">&euro;</span>
+      <input type="number"
+             class="app-form__input"
+             id="currentNetWorth"
+             value="<%= @user_net_worth || 45000 %>"
+             min="0"
+             step="1000">
+    </div>
+  </div>
+
+  <div class="app-divider"></div>
+
+  <%# Results %>
+  <div class="result-card result-card--highlight">
+    <p class="result-card__label"><%= t('calculators.financial_freedom.required_net_worth', default: 'Patrimonio necesario para libertad financiera') %></p>
+    <p class="result-card__value" id="requiredNetWorth">&euro;623,380</p>
+  </div>
+
+  <%# Calculation breakdown %>
+  <div class="app-card">
+    <h4 class="app-card__title mb-3">
+      <i class="bi bi-calculator"></i>
+      <%= t('calculators.financial_freedom.calculation', default: 'Calculo') %>
+    </h4>
+
+    <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+      <span class="text-muted"><%= t('calculators.financial_freedom.annual_expenses', default: 'Gastos anuales') %></span>
+      <span id="annualExpenses">&euro;30,000</span>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+      <span class="text-muted"><%= t('calculators.financial_freedom.taxes', default: '+ Impuestos (~23%)') %></span>
+      <span id="taxes">&euro;8,961</span>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+      <span class="text-muted"><%= t('calculators.financial_freedom.gross_income_needed', default: '= Ganancias brutas necesarias') %></span>
+      <strong id="grossIncomeNeeded">&euro;38,961</strong>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center py-2">
+      <span class="text-muted"><%= t('calculators.financial_freedom.at_return', default: 'Con rentabilidad del') %> <span id="returnRate">5%</span></span>
+      <strong class="text-brand" id="finalNetWorth">&euro;623,380</strong>
+    </div>
+  </div>
+
+  <%# Your situation %>
+  <div class="app-card mt-4">
+    <h4 class="app-card__title mb-3">
+      <i class="bi bi-person-check"></i>
+      <%= t('calculators.financial_freedom.your_situation', default: 'Tu situacion') %>
+    </h4>
+
+    <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+      <span class="text-muted"><%= t('calculators.financial_freedom.current', default: 'Tu patrimonio actual') %></span>
+      <span id="currentDisplay">&euro;45,000</span>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center py-2">
+      <span class="text-muted"><%= t('calculators.financial_freedom.missing', default: 'Te faltan') %></span>
+      <strong class="text-danger" id="missingAmount">&euro;578,380</strong>
+    </div>
+
+    <div class="progress mt-3" style="height: 10px;">
+      <div class="progress-bar bg-success" id="progressBar" style="width: 7%"></div>
+    </div>
+    <p class="text-center mt-2 small text-muted" id="progressPercent">7% del objetivo</p>
+  </div>
+
+  <%# Disclaimer %>
+  <div class="app-disclaimer mt-4">
+    <i class="bi bi-info-circle me-1"></i>
+    <%= t('calculators.financial_freedom.disclaimer',
+        default: 'Esta calculadora asume una tasa impositiva aproximada del 23%. Consulta con un asesor fiscal para tu situacion especifica.') %>
+  </div>
+</div>
+
+<script>
+function initFinancialFreedom() {
+  var i18n = {
+    yearsSuffix: '<%= j t("calculators.financial_freedom.js.years_suffix", default: " anos") %>',
+    ofTarget: '<%= j t("calculators.financial_freedom.js.of_target", default: "% del objetivo") %>'
+  };
+
+  const monthlyExpensesEl = document.getElementById('monthlyExpenses');
+  const expectedReturnEl = document.getElementById('expectedReturn');
+  const currentNetWorthEl = document.getElementById('currentNetWorth');
+
+  function formatCurrency(value) {
+    return new Intl.NumberFormat('es-ES', {
+      style: 'currency',
+      currency: 'EUR',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(value);
+  }
+
+  function calculate() {
+    const monthlyExpenses = parseFloat(monthlyExpensesEl.value) || 0;
+    const expectedReturn = (parseFloat(expectedReturnEl.value) || 5) / 100;
+    const currentNetWorth = parseFloat(currentNetWorthEl.value) || 0;
+
+    const annualExpenses = monthlyExpenses * 12;
+    // To cover expenses after ~23% taxes, need gross income = expenses / (1 - 0.23)
+    const grossIncomeNeeded = annualExpenses / 0.77;
+    const taxes = grossIncomeNeeded - annualExpenses;
+    const requiredNetWorth = grossIncomeNeeded / expectedReturn;
+    const missing = Math.max(0, requiredNetWorth - currentNetWorth);
+    const progress = requiredNetWorth > 0 ? Math.min(100, (currentNetWorth / requiredNetWorth) * 100) : 0;
+
+    // Update displays
+    document.getElementById('returnDisplay').textContent = expectedReturnEl.value + '%';
+    document.getElementById('annualExpenses').textContent = formatCurrency(annualExpenses);
+    document.getElementById('taxes').textContent = formatCurrency(Math.round(taxes));
+    document.getElementById('grossIncomeNeeded').textContent = formatCurrency(Math.round(grossIncomeNeeded));
+    document.getElementById('returnRate').textContent = expectedReturnEl.value + '%';
+    document.getElementById('finalNetWorth').textContent = formatCurrency(Math.round(requiredNetWorth));
+    document.getElementById('requiredNetWorth').textContent = formatCurrency(Math.round(requiredNetWorth));
+    document.getElementById('currentDisplay').textContent = formatCurrency(currentNetWorth);
+    document.getElementById('missingAmount').textContent = formatCurrency(Math.round(missing));
+    document.getElementById('progressBar').style.width = progress + '%';
+    document.getElementById('progressPercent').textContent = Math.round(progress) + i18n.ofTarget;
+  }
+
+  // Dispose existing popovers before re-init
+  document.querySelectorAll('[data-bs-toggle="popover"]').forEach(function(el) {
+    var existing = bootstrap.Popover.getInstance(el);
+    if (existing) existing.dispose();
+  });
+
+  // Initialize popovers
+  const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
+  popoverTriggerList.forEach(el => new bootstrap.Popover(el));
+
+  [monthlyExpensesEl, expectedReturnEl, currentNetWorthEl].forEach(el => {
+    if (el.dataset.bound) return;
+    el.dataset.bound = '1';
+    el.addEventListener('input', calculate);
+  });
+
+  calculate();
+}
+document.addEventListener('DOMContentLoaded', initFinancialFreedom);
+document.addEventListener('turbo:load', initFinancialFreedom);
+</script>

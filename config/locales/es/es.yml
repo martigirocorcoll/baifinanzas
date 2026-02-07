@@ -39,6 +39,7 @@ es:
       created: "Objetivo creado correctamente. Ya puedes ver tu recomendación personalizada."
       updated: "Objetivo actualizado correctamente."
       deleted: "Objetivo eliminado correctamente."
+      progress_updated: "Progreso actualizado."
     pygs:
       created: "¡Excelente! Paso 1 completado. Ahora vamos con tu balance patrimonial."
       updated: "PYG actualizado correctamente."
@@ -88,12 +89,55 @@ es:
         delimiter: "."
         format: "%n %u"
 
+  # Datetime distance_in_words (used by time_ago_in_words helper)
+  datetime:
+    distance_in_words:
+      about_x_hours:
+        one: "hace 1 hora"
+        other: "hace %{count} horas"
+      about_x_months:
+        one: "hace 1 mes"
+        other: "hace %{count} meses"
+      about_x_years:
+        one: "hace 1 año"
+        other: "hace %{count} años"
+      almost_x_years:
+        one: "hace casi 1 año"
+        other: "hace casi %{count} años"
+      half_a_minute: "hace medio minuto"
+      less_than_x_seconds:
+        one: "hace menos de 1 segundo"
+        other: "hace menos de %{count} segundos"
+      less_than_x_minutes:
+        one: "hace menos de 1 minuto"
+        other: "hace menos de %{count} minutos"
+      over_x_years:
+        one: "hace mas de 1 año"
+        other: "hace mas de %{count} años"
+      x_days:
+        one: "hace 1 dia"
+        other: "hace %{count} dias"
+      x_minutes:
+        one: "hace 1 minuto"
+        other: "hace %{count} minutos"
+      x_months:
+        one: "hace 1 mes"
+        other: "hace %{count} meses"
+      x_seconds:
+        one: "hace 1 segundo"
+        other: "hace %{count} segundos"
+
   # Date and time
   date:
+    order:
+      - :day
+      - :month
+      - :year
     formats:
       default: "%d/%m/%Y"
       short: "%d %b"
       long: "%d de %B de %Y"
+      month_year: "%b %Y"
     day_names:
       - Domingo
       - Lunes

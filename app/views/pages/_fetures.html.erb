@@ -6,14 +6,14 @@
         </div>
 
         <!-- Grid de objetivos -->
-        <div class="row g-4 mb-5">
-          <!-- Objetivo 1 -->
-          <div class="col-md-6 col-lg-4">
-            <%= link_to new_user_registration_path, class: "text-decoration-none" do %>
-              <div class="card h-100 border-0 shadow-sm objective-card">
+        <div class="row g-4 mb-5 justify-content-center">
+          <!-- Objetivo 1: Eliminar deudas -->
+          <div class="col-md-6 col-lg-3">
+            <%= link_to "#", class: "text-decoration-none" do %>
+              <div class="card h-100 border-0 shadow-sm landing-goal-card">
                 <div class="card-body text-center p-4">
-                  <div class="bg-danger bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
-                    <i class="bi bi-scissors fs-3 text-danger"></i>
+                  <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px; background-color: rgba(22, 86, 104, 0.1);">
+                    <i class="bi bi-scissors fs-3" style="color: #165668;"></i>
                   </div>
                   <h4 class="h5 mb-3 text-dark"><%= t('views.landing.goal_examples.goals.debt_free.title') %></h4>
                   <p class="text-muted mb-0"><%= t('views.landing.goal_examples.goals.debt_free.description') %></p>
@@ -22,13 +22,13 @@
             <% end %>
           </div>
 
-          <!-- Objetivo 2 -->
-          <div class="col-md-6 col-lg-4">
-            <%= link_to new_user_registration_path, class: "text-decoration-none" do %>
-              <div class="card h-100 border-0 shadow-sm objective-card">
+          <!-- Objetivo 2: Empezar a invertir -->
+          <div class="col-md-6 col-lg-3">
+            <%= link_to "#", class: "text-decoration-none" do %>
+              <div class="card h-100 border-0 shadow-sm landing-goal-card">
                 <div class="card-body text-center p-4">
-                  <div class="bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
-                    <i class="bi bi-graph-up-arrow fs-3 text-success"></i>
+                  <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px; background-color: rgba(22, 86, 104, 0.1);">
+                    <i class="bi bi-graph-up-arrow fs-3" style="color: #165668;"></i>
                   </div>
                   <h4 class="h5 mb-3 text-dark"><%= t('views.landing.goal_examples.goals.start_investing.title') %></h4>
                   <p class="text-muted mb-0"><%= t('views.landing.goal_examples.goals.start_investing.description') %></p>
@@ -37,13 +37,13 @@
             <% end %>
           </div>
 
-          <!-- Objetivo 3 -->
-          <div class="col-md-6 col-lg-4">
-            <%= link_to new_user_registration_path, class: "text-decoration-none" do %>
-              <div class="card h-100 border-0 shadow-sm objective-card">
+          <!-- Objetivo 3: Pagar hipoteca -->
+          <div class="col-md-6 col-lg-3">
+            <%= link_to "#", class: "text-decoration-none" do %>
+              <div class="card h-100 border-0 shadow-sm landing-goal-card">
                 <div class="card-body text-center p-4">
-                  <div class="bg-warning bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
-                    <i class="bi bi-speedometer2 fs-3 text-warning"></i>
+                  <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px; background-color: rgba(22, 86, 104, 0.1);">
+                    <i class="bi bi-speedometer2 fs-3" style="color: #165668;"></i>
                   </div>
                   <h4 class="h5 mb-3 text-dark"><%= t('views.landing.goal_examples.goals.pay_mortgage.title') %></h4>
                   <p class="text-muted mb-0"><%= t('views.landing.goal_examples.goals.pay_mortgage.description') %></p>
@@ -52,88 +52,13 @@
             <% end %>
           </div>
 
-          <!-- Objetivo 4 -->
-          <div class="col-md-6 col-lg-4">
-            <%= link_to new_user_registration_path, class: "text-decoration-none" do %>
-              <div class="card h-100 border-0 shadow-sm objective-card">
+          <!-- Objetivo 4: Libertad financiera -->
+          <div class="col-md-6 col-lg-3">
+            <%= link_to "#", class: "text-decoration-none" do %>
+              <div class="card h-100 border-0 shadow-sm landing-goal-card">
                 <div class="card-body text-center p-4">
-                  <div class="bg-info bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
-                    <i class="bi bi-mortarboard fs-3 text-info"></i>
-                  </div>
-                  <h4 class="h5 mb-3 text-dark"><%= t('views.landing.goal_examples.goals.children_education.title') %></h4>
-                  <p class="text-muted mb-0"><%= t('views.landing.goal_examples.goals.children_education.description') %></p>
-                </div>
-              </div>
-            <% end %>
-          </div>
-
-          <!-- Objetivo 5 -->
-          <div class="col-md-6 col-lg-4">
-            <%= link_to new_user_registration_path, class: "text-decoration-none" do %>
-              <div class="card h-100 border-0 shadow-sm objective-card">
-                <div class="card-body text-center p-4">
-                  <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
-                    <i class="bi bi-car-front fs-3 text-primary"></i>
-                  </div>
-                  <h4 class="h5 mb-3 text-dark"><%= t('views.landing.goal_examples.goals.buy_car.title') %></h4>
-                  <p class="text-muted mb-0"><%= t('views.landing.goal_examples.goals.buy_car.description') %></p>
-                </div>
-              </div>
-            <% end %>
-          </div>
-
-          <!-- Objetivo 6 -->
-          <div class="col-md-6 col-lg-4">
-            <%= link_to new_user_registration_path, class: "text-decoration-none" do %>
-              <div class="card h-100 border-0 shadow-sm objective-card">
-                <div class="card-body text-center p-4">
-                  <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px; background-color: rgba(153, 102, 255, 0.1);">
-                    <i class="bi bi-building fs-3" style="color: #9966ff;"></i>
-                  </div>
-                  <h4 class="h5 mb-3 text-dark"><%= t('views.landing.goal_examples.goals.buy_property.title') %></h4>
-                  <p class="text-muted mb-0"><%= t('views.landing.goal_examples.goals.buy_property.description') %></p>
-                </div>
-              </div>
-            <% end %>
-          </div>
-
-          <!-- Objetivo 7 -->
-          <div class="col-md-6 col-lg-4">
-            <%= link_to new_user_registration_path, class: "text-decoration-none" do %>
-              <div class="card h-100 border-0 shadow-sm objective-card">
-                <div class="card-body text-center p-4">
-                  <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px; background-color: rgba(255, 107, 107, 0.1);">
-                    <i class="bi bi-sunset fs-3" style="color: #ff6b6b;"></i>
-                  </div>
-                  <h4 class="h5 mb-3 text-dark"><%= t('views.landing.goal_examples.goals.plan_retirement.title') %></h4>
-                  <p class="text-muted mb-0"><%= t('views.landing.goal_examples.goals.plan_retirement.description') %></p>
-                </div>
-              </div>
-            <% end %>
-          </div>
-
-          <!-- Objetivo 8 -->
-          <div class="col-md-6 col-lg-4">
-            <%= link_to new_user_registration_path, class: "text-decoration-none" do %>
-              <div class="card h-100 border-0 shadow-sm objective-card">
-                <div class="card-body text-center p-4">
-                  <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px; background-color: rgba(255, 165, 0, 0.1);">
-                    <i class="bi bi-percent fs-3" style="color: #ffa500;"></i>
-                  </div>
-                  <h4 class="h5 mb-3 text-dark"><%= t('views.landing.goal_examples.goals.improve_mortgage.title') %></h4>
-                  <p class="text-muted mb-0"><%= t('views.landing.goal_examples.goals.improve_mortgage.description') %></p>
-                </div>
-              </div>
-            <% end %>
-          </div>
-
-          <!-- Objetivo 9 -->
-          <div class="col-md-6 col-lg-4">
-            <%= link_to new_user_registration_path, class: "text-decoration-none" do %>
-              <div class="card h-100 border-0 shadow-sm objective-card">
-                <div class="card-body text-center p-4">
-                  <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px; background-color: rgba(34, 197, 94, 0.1);">
-                    <i class="bi bi-trophy fs-3" style="color: #22c55e;"></i>
+                  <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px; background-color: rgba(22, 86, 104, 0.1);">
+                    <i class="bi bi-trophy fs-3" style="color: #165668;"></i>
                   </div>
                   <h4 class="h5 mb-3 text-dark"><%= t('views.landing.goal_examples.goals.financial_freedom.title') %></h4>
                   <p class="text-muted mb-0"><%= t('views.landing.goal_examples.goals.financial_freedom.description') %></p>
@@ -146,20 +71,20 @@
       </section>
 
       <style>
-        .objective-card {
+        .landing-goal-card {
           cursor: pointer;
           transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
           opacity: 0;
           transform: translateY(30px);
         }
-        
-        .objective-card.animate {
+
+        .landing-goal-card.animate {
           opacity: 1;
           transform: translateY(0);
           transition: opacity 0.6s ease-out, transform 0.6s ease-out;
         }
-        
-        .objective-card:hover {
+
+        .landing-goal-card:hover {
           transform: translateY(-5px);
           box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
         }
@@ -167,16 +92,16 @@
 
       <script>
         document.addEventListener('turbo:load', function() {
-          const objectiveCards = document.querySelectorAll('.objective-card');
-          
+          const goalCards = document.querySelectorAll('.landing-goal-card');
+
           const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
               if (entry.isIntersecting) {
-                const cards = Array.from(objectiveCards);
+                const cards = Array.from(goalCards);
                 cards.forEach((card, index) => {
                   setTimeout(() => {
                     card.classList.add('animate');
-                  }, index * 150); // 150ms delay between each card
+                  }, index * 150);
                 });
                 observer.unobserve(entry.target);
               }
@@ -184,9 +109,9 @@
           }, {
             threshold: 0.1
           });
-          
-          if (objectiveCards.length > 0) {
-            observer.observe(objectiveCards[0].closest('section'));
+
+          if (goalCards.length > 0) {
+            observer.observe(goalCards[0].closest('section'));
           }
         });
       </script>

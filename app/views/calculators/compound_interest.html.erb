@@ -1,0 +1,276 @@
+<% content_for :header do %>
+  <%= render "shared/app_header",
+      title: @title,
+      back_path: calculators_path %>
+<% end %>
+
+<div class="app-container" data-controller="compound-interest">
+  <%# Input form %>
+  <div class="app-form__group">
+    <label class="app-form__label">
+      <%= t('calculators.compound_interest.initial_capital', default: 'Capital inicial') %>
+    </label>
+    <div class="app-form__input-group">
+      <span class="app-form__input-prefix">&euro;</span>
+      <input type="number"
+             class="app-form__input"
+             data-compound-interest-target="initialCapital"
+             data-action="input->compound-interest#calculate"
+             value="10000"
+             min="0"
+             step="100">
+    </div>
+  </div>
+
+  <div class="app-form__group">
+    <label class="app-form__label">
+      <%= t('calculators.compound_interest.monthly_contribution', default: 'Aportacion mensual') %>
+    </label>
+    <div class="app-form__input-group">
+      <span class="app-form__input-prefix">&euro;</span>
+      <input type="number"
+             class="app-form__input"
+             data-compound-interest-target="monthlyContribution"
+             data-action="input->compound-interest#calculate"
+             value="200"
+             min="0"
+             step="10">
+    </div>
+  </div>
+
+  <div class="app-form__group">
+    <label class="app-form__label">
+      <%= t('calculators.compound_interest.years', default: 'Anos de inversion') %>
+      <span class="text-brand fw-semibold ms-2" data-compound-interest-target="yearsDisplay">20</span>
+    </label>
+    <div class="app-slider">
+      <input type="range"
+             class="app-slider__input"
+             data-compound-interest-target="years"
+             data-action="input->compound-interest#calculate"
+             min="1"
+             max="40"
+             value="20">
+      <div class="app-slider__labels">
+        <span>1</span>
+        <span>40</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="app-form__group">
+    <label class="app-form__label">
+      <%= t('calculators.compound_interest.rate', default: 'Rentabilidad anual esperada') %>
+      <span class="text-brand fw-semibold ms-2" data-compound-interest-target="rateDisplay">7%</span>
+    </label>
+    <div class="app-slider">
+      <input type="range"
+             class="app-slider__input"
+             data-compound-interest-target="rate"
+             data-action="input->compound-interest#calculate"
+             min="1"
+             max="15"
+             value="7"
+             step="0.5">
+      <div class="app-slider__labels">
+        <span>1%</span>
+        <span>15%</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="app-divider"></div>
+
+  <%# Results %>
+  <div class="result-card result-card--highlight">
+    <p class="result-card__label"><%= t('calculators.compound_interest.future_value', default: 'Valor futuro') %></p>
+    <p class="result-card__value" data-compound-interest-target="futureValue">&euro;0</p>
+  </div>
+
+  <div class="row g-3 mb-4">
+    <div class="col-6">
+      <div class="result-card">
+        <p class="result-card__label"><%= t('calculators.compound_interest.total_contributed', default: 'Capital aportado') %></p>
+        <p class="result-card__value h5 mb-0" data-compound-interest-target="totalContributed">&euro;0</p>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="result-card">
+        <p class="result-card__label"><%= t('calculators.compound_interest.interest_earned', default: 'Intereses ganados') %></p>
+        <p class="result-card__value h5 mb-0 text-success" data-compound-interest-target="interestEarned">&euro;0</p>
+      </div>
+    </div>
+  </div>
+
+  <%# Chart %>
+  <div class="app-card">
+    <h4 class="app-card__title mb-3">
+      <i class="bi bi-graph-up-arrow"></i>
+      <%= t('calculators.compound_interest.evolution', default: 'Evolucion del capital') %>
+    </h4>
+    <canvas id="compoundInterestChart" height="200"></canvas>
+  </div>
+
+  <%# Disclaimer %>
+  <div class="app-disclaimer mt-4">
+    <i class="bi bi-info-circle me-1"></i>
+    <%= t('calculators.compound_interest.disclaimer',
+        default: 'Esta calculadora es solo orientativa. La rentabilidad pasada no garantiza rentabilidad futura.') %>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+function initCompoundInterest() {
+  // Wait for Chart.js CDN to load (may not be ready yet on Turbo navigations)
+  if (typeof Chart === 'undefined') {
+    setTimeout(initCompoundInterest, 50);
+    return;
+  }
+
+  var i18n = {
+    today: '<%= j t("calculators.compound_interest.js.today", default: "Hoy") %>',
+    year: '<%= j t("calculators.compound_interest.js.year", default: "Ano") %>',
+    totalValue: '<%= j t("calculators.compound_interest.js.total_value", default: "Valor total") %>',
+    capitalContributed: '<%= j t("calculators.compound_interest.js.capital_contributed", default: "Capital aportado") %>'
+  };
+
+  const initialCapitalEl = document.querySelector('[data-compound-interest-target="initialCapital"]');
+  const monthlyContributionEl = document.querySelector('[data-compound-interest-target="monthlyContribution"]');
+  const yearsEl = document.querySelector('[data-compound-interest-target="years"]');
+  const rateEl = document.querySelector('[data-compound-interest-target="rate"]');
+  const yearsDisplayEl = document.querySelector('[data-compound-interest-target="yearsDisplay"]');
+  const rateDisplayEl = document.querySelector('[data-compound-interest-target="rateDisplay"]');
+  const futureValueEl = document.querySelector('[data-compound-interest-target="futureValue"]');
+  const totalContributedEl = document.querySelector('[data-compound-interest-target="totalContributed"]');
+  const interestEarnedEl = document.querySelector('[data-compound-interest-target="interestEarned"]');
+
+  // Destroy existing chart on re-initialization (Turbo navigation)
+  if (window._compoundInterestChart) {
+    window._compoundInterestChart.destroy();
+    window._compoundInterestChart = null;
+  }
+
+  let chart = null;
+
+  function formatCurrency(value) {
+    return new Intl.NumberFormat('es-ES', {
+      style: 'currency',
+      currency: 'EUR',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(value);
+  }
+
+  function calculate() {
+    const initialCapital = parseFloat(initialCapitalEl.value) || 0;
+    const monthlyContribution = parseFloat(monthlyContributionEl.value) || 0;
+    const years = parseInt(yearsEl.value) || 1;
+    const annualRate = (parseFloat(rateEl.value) || 0) / 100;
+    const monthlyRate = annualRate / 12;
+
+    // Update display values
+    yearsDisplayEl.textContent = years;
+    rateDisplayEl.textContent = rateEl.value + '%';
+
+    // Calculate future value with compound interest
+    // FV = P(1+r)^n + PMT * (((1+r)^n - 1) / r)
+    const months = years * 12;
+    let futureValue = initialCapital;
+    let totalContributed = initialCapital;
+
+    const yearlyValues = [initialCapital];
+    const yearlyContributions = [initialCapital];
+
+    for (let year = 1; year <= years; year++) {
+      // Compound for 12 months with monthly contributions
+      for (let month = 1; month <= 12; month++) {
+        futureValue = futureValue * (1 + monthlyRate) + monthlyContribution;
+        totalContributed += monthlyContribution;
+      }
+      yearlyValues.push(Math.round(futureValue));
+      yearlyContributions.push(Math.round(totalContributed));
+    }
+
+    const interestEarned = futureValue - totalContributed;
+
+    // Update result displays
+    futureValueEl.textContent = formatCurrency(Math.round(futureValue));
+    totalContributedEl.textContent = formatCurrency(Math.round(totalContributed));
+    interestEarnedEl.textContent = formatCurrency(Math.round(interestEarned));
+
+    // Update chart
+    updateChart(years, yearlyValues, yearlyContributions);
+  }
+
+  function updateChart(years, values, contributions) {
+    const ctx = document.getElementById('compoundInterestChart').getContext('2d');
+    const labels = Array.from({length: years + 1}, (_, i) => i === 0 ? i18n.today : i18n.year + ' ' + i);
+
+    if (chart) {
+      chart.destroy();
+    }
+
+    window._compoundInterestChart = chart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: i18n.totalValue,
+            data: values,
+            borderColor: '#165668',
+            backgroundColor: 'rgba(22, 86, 104, 0.1)',
+            fill: true,
+            tension: 0.3
+          },
+          {
+            label: i18n.capitalContributed,
+            data: contributions,
+            borderColor: '#9ca3af',
+            backgroundColor: 'transparent',
+            borderDash: [5, 5],
+            tension: 0.3
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+          legend: {
+            position: 'bottom'
+          },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                return context.dataset.label + ': ' + formatCurrency(context.parsed.y);
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              callback: function(value) {
+                return formatCurrency(value);
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+
+  // Attach event listeners
+  [initialCapitalEl, monthlyContributionEl, yearsEl, rateEl].forEach(el => {
+    el.addEventListener('input', calculate);
+  });
+
+  // Initial calculation
+  calculate();
+}
+document.addEventListener('DOMContentLoaded', initCompoundInterest);
+document.addEventListener('turbo:load', initCompoundInterest);
+</script>

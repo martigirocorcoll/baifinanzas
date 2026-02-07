@@ -1,4 +1,5 @@
 class RecommendationsController < ApplicationController
+  layout 'app'
   before_action :authenticate_user!
   before_action :set_recommendation, only: [:show]
 
@@ -88,7 +89,7 @@ class RecommendationsController < ApplicationController
       years = (@objective.months_to_target / 12.0).ceil
       annual_return = (@objective.expected_return * 100).round(1)
       target_amount = @objective.target_amount.round(0)
-      objective_name = @objective.name
+      objective_name = @objective.title
 
       {
         has_objective: true,

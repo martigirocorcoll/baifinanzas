@@ -12,10 +12,14 @@ es:
     # Landing page
     landing:
       hero:
-        title_html: "Crea tu plan financiero personalizado <span class='text-success'>gratuito</span>"
-        subtitle: "Analiza tus finanzas, descubre tu nivel de salud financiera y obtén un plan concreto para alcanzar tus objetivos económicos."
-        cta: "Empezar mi plan"
-        quote: "El mejor momento para empezar fue ayer y el segundo mejor es hoy"
+        title_html: "Tu plan financiero personalizado, <span style='color: #165668;'>100% gratis</span>"
+        subtitle: "Descarga la app, responde 4 preguntas y descubre tu nivel financiero con un plan de accion personalizado para alcanzar tus objetivos."
+        cta: "Descargar app"
+        download_on: "Descargar en"
+        get_it_on: "Disponible en"
+        badge_free: "100% gratis"
+        badge_secure: "Datos seguros"
+        badge_quick: "2 min setup"
       cards:
         balance:
           title: "Balance Mensual"
@@ -32,7 +36,7 @@ es:
       features:
         title: "¿Cómo adapto las finanzas a mi situación?"
         subtitle: "Es la pregunta que más nos hacéis. Con esta app queremos daros la solución."
-        cta: "Comienza tu plan financiero gratis"
+        cta: "Descargar app gratis"
         dashboard:
           health_title: "Salud Financiera"
           health_level: "Nivel: Invirtiendo en Objetivos"
@@ -93,7 +97,7 @@ es:
           answer_2: "Cuando cambies un objetivo, la app recalculará automáticamente tu plan y te proporcionará nuevas recomendaciones adaptadas a tus nuevas metas financieras."
       cta_final:
         prompt: "¿Listo para comenzar tu viaje hacia la libertad financiera?"
-        button: "Crear mi plan financiero gratis"
+        button: "Descargar app gratis"
       # Footer (under landing for shared footer)
       footer:
         back_to_top: "Volver arriba"
@@ -120,7 +124,7 @@ es:
       testimonials:
         title: "A nuestros usuarios les encanta nuestra app"
         cta_prompt: "¿Quieres ser el próximo en alcanzar tus objetivos financieros?"
-        cta_button: "Empieza tu plan financiero gratis"
+        cta_button: "Descargar app gratis"
         items:
           marc:
             quote: "Gracias a la app conseguí salir de mis deudas en 9 meses. El plan personalizado me ayudó a organizar mis finanzas y ahora por fin puedo ahorrar para mis objetivos. ¡Increíble que sea gratis!"
@@ -141,7 +145,7 @@ es:
       # How it works section
       how_it_works:
         title: "¿Cómo funciona?"
-        cta_button: "Empezar mi plan ahora"
+        cta_button: "Descargar app gratis"
         steps:
           step1:
             title: "Completa tu Balance Mensual"
@@ -294,8 +298,8 @@ es:
     investment_types:
       ac_diposit: "Depósito a corto plazo"
       ac_curt: "Renta fija a medio plazo"
-      ac_llarg: "Fondos indexados a largo plazo"
-      ac_jubil: "Plan de pensiones"
+      ac_llarg: "Renta variable global a largo plazo"
+      ac_jubil: "Renta variable global para jubilacion"
 
     # Devise
     devise:
@@ -593,24 +597,42 @@ es:
           title: "Invierte a medio plazo con seguridad y rentabilidad equilibradas"
           description_html: "Para objetivos entre <strong>2 y 5 años</strong>, necesitas equilibrio: más rentabilidad que un depósito, pero menos riesgo que la renta variable. Los fondos de renta fija te permiten obtener rendimientos moderados (≈3% anual) con volatilidad mucho menor que la bolsa. Es el punto medio perfecto para objetivos como la entrada de una vivienda, renovación del hogar, o cualquier proyecto a medio plazo. Tienes suficiente tiempo para que tu dinero crezca por encima de la inflación, pero no tanto como para asumir la volatilidad de la renta variable."
         ac_jubil:
-          title: "Planifica tu jubilación y asegura tu libertad financiera"
-          description: "La jubilación puede parecer lejana, pero cada año que esperas te cuesta decenas de miles de euros en interés compuesto perdido. Con la pensión pública en duda, necesitas un plan propio. Descubre cómo crear un colchón de jubilación que trabaje para ti durante décadas, aprovechando el poder del interés compuesto y las ventajas fiscales."
+          title: "Planifica tu jubilacion con fondos de renta variable global"
+          description: "Preparar tu jubilacion no es opcional, es fundamental. El sistema publico de pensiones es muy dificil de sostener como esta ahora: cada vez hay mas jubilados y menos trabajadores cotizando. Cada año que esperas te cuesta decenas de miles de euros en interes compuesto perdido. Empieza cuanto antes con fondos de renta variable global y deja que el tiempo haga el trabajo por ti."
         tax_advisory:
           title: "Optimiza tu fiscalidad y paga solo lo justo"
           description: "Cuando tu patrimonio e ingresos crecen, los impuestos se convierten en tu mayor gasto anual. La diferencia entre pagar lo justo y pagar de más puede suponer miles (o decenas de miles) de euros cada año. Una buena planificación fiscal no es evadir impuestos, es estructurar inteligentemente tus finanzas para cumplir la ley pagando solo lo que corresponde. Descubre cómo un asesor fiscal especializado puede ayudarte a optimizar tu IRPF, planificar herencias, elegir la mejor estructura para tus inversiones y empresas."
         portfolio_optimization:
           title: "Optimiza tu cartera de inversión con una segunda opinión independiente"
           description: "Si ya tienes una cartera de inversión, es fundamental asegurarte de que está bien estructurada y alineada con tus objetivos. Los bancos y servicios de banca privada suelen recomendar sus propios productos, que no siempre son los más adecuados para ti. Una segunda opinión independiente te ayuda a identificar conflictos de interés, riesgos ocultos en productos complejos, y oportunidades de mejora. Recibe un análisis gratuito de tu situación actual y descubre si tu cartera está realmente optimizada o si hay margen de mejora."
+        ac_diposit:
+          title: "Separa tu ahorro a corto plazo y protege tu objetivo"
+          description: "Cuando tienes un objetivo a menos de 2 años, lo mas importante no es buscar rentabilidad, sino proteger tu dinero y no gastarlo sin querer. Tener tus ahorros en la misma cuenta que usas para el dia a dia es la forma mas facil de gastarlos sin darte cuenta. Un deposito o cuenta separada te da disciplina, claridad y, de paso, algo de rentabilidad."
         mortgage_optimization:
           title: "Reduce el coste de tu hipoteca y ahorra miles de euros"
           description_html: "La hipoteca es probablemente tu mayor gasto mensual durante 20-30 años. Una reducción de solo 0,5 puntos en el tipo de interés puede ahorrarte decenas de miles de euros durante la vida del préstamo. El mercado hipotecario cambia constantemente, pero tu banco no te llamará para ofrecerte mejores condiciones. La pregunta es simple: <strong>¿estás pagando más de lo necesario por tu hipoteca?</strong> Un broker hipotecario puede analizar tu situación actual sin coste y mostrarte si puedes pagar menos cada mes por lo mismo. Si puedes ahorrar, ¿por qué no hacerlo?"
+
+      # Short subtitles (1 line, value proposition)
+      subtitles:
+        better_bank_account: "Elimina comisiones y pon tu dinero a trabajar desde el dia 1."
+        emergency_deposit: "Protege tu estabilidad con un colchon que trabaja para ti."
+        debt_optimization: "Cada mes que pasa, tus deudas te cuestan mas. Actua ahora."
+        saving_advice: "Libera entre el 10% y 30% de tus ingresos sin sacrificar calidad de vida."
+        ac_diposit: "Separa tu dinero, protege tu objetivo a corto plazo."
+        ac_llarg: "El tiempo y el interes compuesto son tus mejores aliados."
+        ac_curt: "Mas rentabilidad que un deposito, menos riesgo que la bolsa."
+        ac_jubil: "Cada año que esperas te cuesta miles en interes compuesto perdido."
+        tax_advisory: "La diferencia entre pagar lo justo y pagar de mas son miles de euros."
+        portfolio_optimization: "Una segunda opinion independiente puede ahorrarte miles a largo plazo."
+        mortgage_optimization: "0,5 puntos menos en tu tipo = decenas de miles ahorrados."
 
       # CTA buttons
       ctas:
         better_bank_account: "Abrir cuenta sin comisiones"
         emergency_deposit: "Ver depósitos recomendados"
-        debt_optimization: "Conseguir el libro recomendado"
-        saving_advice: "Ver cuaderno recomendado"
+        debt_optimization: "Consigue salir de deudas"
+        saving_advice: "Descubre como ahorrar"
+        ac_diposit: "Abrir deposito a corto plazo"
         ac_llarg: "Empezar a invertir ahora"
         ac_curt: "Abrir cuenta de inversión"
         ac_jubil: "Empieza a asegurar tu jubilación"
@@ -618,6 +640,38 @@ es:
         portfolio_optimization: "Solicitar análisis gratuito"
         mortgage_optimization: "Comparar ofertas de hipoteca"
         default: "Ver producto recomendado"
+
+      # Inline simulator labels
+      simulators:
+        emergency:
+          title: "Tu fondo de emergencia"
+          target: "Objetivo (4 meses de gastos)"
+          current: "Ahorros actuales"
+          remaining: "Te faltan"
+          time_estimate: "Tiempo estimado"
+          months: "meses"
+          progress: "Progreso"
+          cash_flow_label: "Tu cash flow mensual"
+          no_savings: "Sin capacidad de ahorro actual"
+          complete: "Tienes tu fondo cubierto"
+        mortgage:
+          title: "Cuanto puedes ahorrar en tu hipoteca"
+          current_payment: "Cuota actual"
+          current_rate: "Tipo actual"
+          years_remaining: "Anos restantes"
+          new_rate: "Tipo nuevo"
+          new_payment: "Nueva cuota"
+          monthly_savings: "Ahorras al mes"
+          total_savings: "Ahorro total"
+        bank_account:
+          title: "Cuanto pierdes con una cuenta sin remunerar"
+          average_balance: "Saldo medio en cuenta"
+          remuneration_rate: "Tipo de remuneracion"
+          rate_note: "El porcentaje es orientativo. Ajustalo segun la oferta que encuentres."
+          current_return: "Cuenta corriente (0%)"
+          optimized_return: "Cuenta remunerada"
+          annual_loss: "Dejas sobre la mesa al año"
+          in_5_years: "En 5 años pierdes"
 
       # Secondary CTA titles
       cta2_titles:
@@ -628,6 +682,7 @@ es:
         tax_advisory: "Solicita tu consultoría fiscal gratuita"
         portfolio_optimization: "Solicita tu análisis de cartera gratuito"
         mortgage_optimization: "Compara ofertas y empieza a ahorrar"
+        ac_diposit: "¿Listo para proteger tu ahorro a corto plazo?"
         ac_llarg: "¿Listo para hacer crecer tu patrimonio?"
         ac_curt: "¿Listo para invertir con equilibrio?"
         ac_jubil: "¿Listo para asegurar tu jubilación?"
@@ -649,6 +704,7 @@ es:
       # Page-specific content
       pages:
         better_bank_account:
+          motivational_text: "No tiene sentido mantener tu dinero en una cuenta que no te remunera nada, cuando existen cuentas en el mercado que si lo hacen. Aunque no sea tu cuenta principal ni la definitiva, abrirla es el primer paso para aprovechar la remuneracion de tu dinero."
           why_important:
             intro_html: "A diferencia de otros pasos que requieren cambios de hábitos o decisiones más complejas, esto es una acción puntual con beneficio perpetuo: <strong>inviertes 20 minutos una vez y ahorras para siempre</strong>."
             first_step_ideal: "Es el primer paso ideal porque:"
@@ -689,6 +745,7 @@ es:
                 answer: "No hay problema. Las cuentas sin comisiones no tienen permanencia ni penalización por cancelación. Puedes cerrarla cuando quieras sin coste alguno. Además, muchas de estas cuentas ofrecen bonos de bienvenida por domiciliar nómina o mantener saldo durante los primeros meses. Aprovecha primero estos bonos y después decides si la mantienes o la cierras."
 
         emergency_deposit:
+          motivational_text: "Un fondo de emergencia es la base de cualquier plan financiero solido. Sin el, cualquier imprevisto puede obligarte a endeudarte o vender inversiones en el peor momento. Tenerlo te da tranquilidad y libertad para tomar mejores decisiones."
           why_important:
             intro: "El fondo de emergencia es tu red de seguridad financiera. Sin él, cualquier imprevisto (una avería del coche, un problema de salud, o quedarte sin trabajo temporalmente) puede desestabilizar completamente tu situación."
             benefits_title: "Tener un fondo de emergencia te permite:"
@@ -728,7 +785,42 @@ es:
               - question: "¿Qué pasa si tengo deudas? ¿Primero las pago o primero creo el fondo?"
                 answer: "Si tienes deudas caras (tarjetas de crédito con intereses altos), balancea ambas cosas: crea primero un pequeño fondo de 1 mes de gastos, luego ataca las deudas, y cuando las reduzcas, completa tu fondo. Un pequeño fondo de seguridad te permite después empezar a pagar deudas sin incurrir en más deuda si viene algún imprevisto."
 
+        ac_diposit:
+          motivational_text: "Cuando ahorras para algo concreto a corto plazo, lo mas importante es no mezclarlo con el dinero del dia a dia. Si lo dejas en tu cuenta corriente, es muy facil que se gaste sin querer en compras, recibos o imprevistos. Separarlo en un deposito o cuenta aparte te da claridad sobre cuanto llevas, disciplina para no tocarlo, y de paso genera algo de rentabilidad mientras esperas."
+          key_points:
+            title: "Por que separar tu ahorro a corto plazo"
+            discipline:
+              title: "Disciplina automatica"
+              text: "Al tenerlo en otro sitio, eliminas la tentacion de gastarlo. No dependes de tu fuerza de voluntad, dependes de la estructura."
+            clarity:
+              title: "Claridad total"
+              text: "Sabes exactamente cuanto llevas ahorrado para tu objetivo. Sin mezclar con gastos del dia a dia ni otros movimientos."
+            small_return:
+              title: "Algo de rentabilidad extra"
+              text: "Aunque no sea mucho, tu dinero genera intereses mientras espera. Es mejor que tenerlo parado en una cuenta a 0%."
+            protection:
+              title: "Proteccion frente a ti mismo"
+              text: "El mayor riesgo para un ahorro a corto plazo no es la inflacion ni el mercado, es gastartelo antes de tiempo. Separarlo es la mejor proteccion."
+          faq:
+            items:
+              - question: "Si es a corto plazo, ¿merece la pena moverlo a otro sitio?"
+                answer: "Si. Aunque sea poco tiempo, tenerlo separado reduce mucho el riesgo de gastarlo sin querer. Ademas, abrir una cuenta o deposito se hace en minutos y el beneficio es inmediato: claridad y disciplina."
+              - question: "¿Puedo acceder al dinero si lo necesito antes?"
+                answer: "Depende del producto. Los depositos a la vista y las cuentas remuneradas te permiten acceder al dinero en cualquier momento. Si eliges un deposito a plazo fijo, puede haber penalizacion por cancelacion anticipada. Para objetivos a corto plazo, recomendamos productos con disponibilidad inmediata."
+              - question: "¿Cuanta rentabilidad puedo esperar?"
+                answer: "En depositos y cuentas remuneradas, la rentabilidad actual esta entre el 1% y el 3% anual. No es mucho, pero es mejor que un 0%. La rentabilidad aqui no es el objetivo principal, es un bonus. Lo importante es separar y proteger tu ahorro."
+
         debt_optimization:
+          motivational_text: "Eliminar la deuda cara es la mejor inversion que puedes hacer. Cada euro que destinas a saldar deudas con intereses altos te ahorra un 15-25% anual garantizado, algo que ningun otro producto financiero puede ofrecerte."
+          debt_types_explanation: "La deuda mala (tarjetas de credito, prestamos personales, financiaciones de consumo) tiene intereses altos y no genera valor. La deuda aceptable, como una hipoteca, suele tener un interes bajo y financia un activo que puede revalorizarse. La prioridad es eliminar la deuda mala lo antes posible."
+          simulator:
+            title: "Cuanto te cuesta tu deuda"
+            debt_amount: "Deuda pendiente"
+            interest_rate: "Tipo de interes (TAE)"
+            time_period: "Si no la pagas en..."
+            total_interest: "Solo en intereses pagas"
+            total_payback: "Total que acabas pagando"
+            note: "Calculo orientativo con interes compuesto anual. Las condiciones reales pueden variar."
           why_important:
             intro: "Las deudas caras (tarjetas de crédito, préstamos personales, financiaciones de consumo) son el mayor enemigo de tu libertad financiera."
             compound_interest_title: "El interés compuesto trabajando EN TU CONTRA:"
@@ -799,6 +891,7 @@ es:
                 answer: "Depende de tu cantidad de deuda y tu capacidad de pago. Pero aquí tienes un dato esperanzador: la mayoría de personas que siguen este método con disciplina eliminan sus deudas caras en 12-24 meses. Las victorias rápidas (primera deuda eliminada en 3-6 meses) te mantienen motivado para seguir. Lo importante es empezar HOY. Cada mes que esperas es un mes más pagando intereses que podrías evitar."
 
         saving_advice:
+          motivational_text: "La mayoria de personas pueden liberar entre un 10% y un 30% de sus ingresos sin sacrificar calidad de vida. El primer paso no es invertir ni buscar productos financieros, sino saber hacia donde va tu dinero y generar un flujo de caja positivo cada mes."
           why_important:
             intro_html: "Si estás en situación crítica, el primer problema no es \"dónde invertir\" o \"qué productos financieros usar\". <strong>El problema es generar flujo de caja positivo</strong>. Si gastas todo (o más de) lo que ganas, es imposible avanzar."
             good_news_html: "La buena noticia: <strong>la mayoría de personas pueden liberar entre 10% y 30% de sus ingresos sin cambiar radicalmente su estilo de vida</strong>. El problema no es que no tengas dinero, es que no sabes hacia dónde va."
@@ -880,6 +973,16 @@ es:
                 answer: "Probablemente intentaste el enfoque restrictivo: \"voy a gastar menos en todo\". Eso no funciona porque requiere fuerza de voluntad constante. Nuestro método es diferente: primero OBSERVAS (rastreo sin juzgar), luego IDENTIFICAS gastos específicos que no valoras, y finalmente los ELIMINAS de forma permanente (cancelar suscripciones, automatizar ahorros, implementar reglas sencillas). No es fuerza de voluntad, es SISTEMA. Los sistemas funcionan mejor que la motivación."
 
         tax_advisory:
+          motivational_text: "Si esta recomendacion aparece en tu plan es porque tu perfil de ingresos y patrimonio hace que una optimizacion fiscal pueda tener un impacto real. La diferencia entre pagar lo justo y pagar de mas pueden ser miles de euros cada año, y un asesor especializado sabe exactamente donde estan esas oportunidades."
+          simulator:
+            title: "Cuanto puedes ahorrar en impuestos"
+            annual_income: "Ingresos brutos anuales"
+            current_rate: "Tipo efectivo actual"
+            optimized_rate: "Tipo efectivo optimizado"
+            annual_savings: "Ahorras al año"
+            net_increase: "Mas neto en tu bolsillo"
+            in_5_years: "En 5 años ahorras"
+            note: "Simulacion orientativa. El ahorro real depende de tu situacion personal, tipo de ingresos y patrimonio. Consulta con un asesor fiscal para un analisis detallado."
           why_important:
             intro_html: "Cuando tu patrimonio e ingresos crecen, <strong>los impuestos se convierten en tu mayor gasto anual</strong>. Probablemente pagas más en impuestos que en vivienda, transporte y alimentación juntos. Y a diferencia de esos gastos, los impuestos pueden optimizarse legalmente con la estrategia correcta."
             cost_title: "El coste real de no optimizar"
@@ -1010,6 +1113,15 @@ es:
                 answer_html: "<p class=\"mb-3\"><strong>Es muy particular para cada caso</strong>, ya que depende de tu situación específica: ingresos, patrimonio, estructura actual, familia, comunidad autónoma, etc. No hay una cifra universal.</p><p class=\"mb-3\">Sin embargo, en muchos casos el ahorro es <strong>suficientemente sustancial como para considerar la asesoría fiscal un paso obligatorio para cualquier persona con una cierta carga fiscal</strong>. Estamos hablando de ahorros que pueden representar miles de euros anuales, o decenas de miles en planificaciones complejas como herencias.</p><p class=\"mb-0\">Si tienes ingresos superiores a €60k anuales, patrimonio significativo (>€200k), eres autónomo o empresario, o prevés recibir/dar herencias importantes, es muy probable que un asesor fiscal encuentre optimizaciones relevantes en tu caso. La consultoría inicial te mostrará el ahorro estimado específico para tu situación.</p>"
 
         portfolio_optimization:
+          motivational_text: "Una revision independiente de tu cartera siempre es una buena idea. Tu banco, incluida la banca privada, tiene sus propios intereses y tiende a recomendar productos propios. Un asesor independiente trabaja para ti, no para una entidad, y puede detectar ineficiencias que estan costando dinero sin que lo sepas."
+          simulator:
+            title: "Cuanto pagas en comisiones"
+            intro: "Las comisiones en productos de inversion bancarios existen aunque esten ocultas. Lo que cobra el banco es lo que deja de ganar el cliente."
+            invested_amount: "Patrimonio invertido"
+            commission_rate: "Comisiones totales anuales"
+            annual_cost: "Pagas al año en comisiones"
+            cost_10_years: "En 10 años habras pagado"
+            note: "Las comisiones incluyen gestion, custodia, y costes ocultos del producto. El rango habitual en banca es entre 1,5% y 2,5% anual."
           why_important:
             intro_html: "Si ya tienes patrimonio invertido, es fundamental asegurarte de que tu cartera está bien estructurada. El problema es que <strong>la mayoría de servicios de inversión de bancos y banca privada tienen un conflicto de interés inherente</strong>: ganan más cuando te venden sus propios productos, no cuando te ofrecen las mejores soluciones del mercado."
             conflict_title: "El conflicto de interés de la banca"
@@ -1129,6 +1241,7 @@ es:
                 answer_html: "<p class=\"mb-3\"><strong>A partir de €50.000 invertidos</strong> el análisis empieza a tener sentido, porque las diferencias en comisiones y estructura se vuelven significativas.</p><p class=\"mb-3\">Ejemplo práctico:</p><p class=\"mb-2\"><strong>Con €50.000 invertidos:</strong></p><ul class=\"mb-3\"><li>Fondo caro (1,8% TER): €900/año en comisiones</li><li>Fondo eficiente (0,3% TER): €150/año en comisiones</li><li><strong>Ahorro anual: €750</strong></li><li>En 20 años: <strong>€15.000 ahorrados solo en comisiones</strong> (sin contar interés compuesto)</li></ul><p class=\"mb-3\"><strong>Con €200.000 o más:</strong> El análisis es prácticamente obligatorio. Las diferencias en comisiones, estructura y riesgo pueden representar decenas de miles de euros a largo plazo.</p><p class=\"mb-0\">Dicho esto, el análisis inicial es gratuito, así que aunque tengas menos patrimonio, puedes solicitarlo sin problema. El asesor te dirá si tiene sentido optimizar o si tu situación actual ya es buena.</p>"
 
         mortgage_optimization:
+          motivational_text: "Tu hipoteca no es algo que se firma y se olvida. El mercado cambia y, cuando los tipos bajan, puedes renegociar o subrogar para conseguir mejores condiciones. Cada punto que ahorras son miles de euros a largo plazo. Lo mas recomendable es revisarlo periodicamente con un experto que conozca las ofertas actuales del mercado."
           why_important:
             intro_html: "La hipoteca es probablemente tu mayor gasto mensual durante décadas. <strong>Una pequeña reducción en el tipo de interés puede significar miles de euros de ahorro</strong>. La pregunta es simple: ¿estás pagando más de lo necesario?"
             example_title: "Ejemplo ilustrativo de ahorro potencial"
@@ -1238,6 +1351,7 @@ es:
                 answer_html: "<p class=\"mb-3\"><strong>Sí, tu banco PUEDE negarse a mejorar tu tipo de interés.</strong> No están obligados legalmente a ofrecerte mejores condiciones solo porque lo pidas o porque el mercado haya cambiado.</p><div class=\"bg-light rounded p-3 mb-3\"><h6 class=\"text-warning mb-2\"><i class=\"bi bi-exclamation-triangle me-2\"></i>La realidad</h6><p class=\"mb-2\">Si simplemente llamas a tu banco y pides que te bajen el tipo \"porque sí\":</p><ul class=\"small mb-0\"><li>Probablemente te dirán que no</li><li>O te darán una mejora muy pequeña e insuficiente</li><li>No tienen incentivo para reducir su margen de beneficio</li></ul></div><div class=\"bg-success bg-opacity-10 rounded p-3 mb-3\"><h6 class=\"text-success mb-2\"><i class=\"bi bi-shield-check me-2\"></i>Pero aquí está la clave</h6><p class=\"mb-2\"><strong>Tu banco NO puede impedirte cambiar a otra entidad.</strong></p><p class=\"mb-2\">La subrogación es un derecho que tienes como cliente:</p><ul class=\"small mb-0\"><li>Si otro banco te ofrece mejores condiciones, puedes cambiarte</li><li>Tu banco actual no puede bloquearlo</li><li>El proceso está regulado por ley</li><li><strong>Es una decisión tuya, no del banco</strong></li></ul></div><p class=\"mb-0\"><strong>Por eso el broker hipotecario es valioso:</strong> No depende de la voluntad de tu banco. El broker compara TODAS las opciones del mercado y te ayuda a conseguir la mejor, sea quedándote (si tu banco mejora) o cambiándote (si hay mejores ofertas fuera). <strong>El poder de decisión siempre es tuyo.</strong></p>"
 
         ac_llarg:
+          motivational_text: "Con un horizonte de mas de 5 años, puedes plantear renta variable: fondos de renta variable global que replican el mercado mundial. Historicamente es el tipo de inversion mas rentable (~8% anual de media). Tiene volatilidad, es decir, el valor sube y baja, pero con un plazo largo las caidas se recuperan y el crecimiento se impone. La clave es empezar, aportar regularmente, y no vender en panico. El grafico muestra el rango de lo que puede pasar segun tu horizonte."
           why_important:
             intro_html: "Para objetivos <strong>a partir de 5 años</strong>, el tiempo transforma el riesgo en seguridad. Lo que parece arriesgado a corto plazo (volatilidad del mercado) se convierte en la estrategia más segura y rentable a largo plazo. Con un horizonte de 5-10 años o más, invertir en fondos diversificados globalmente es estadísticamente más seguro que dejar tu dinero parado."
             inflation_title: "El coste de NO invertir: La inflación devora tu poder adquisitivo"
@@ -1352,6 +1466,7 @@ es:
                 answer_html: "<p class=\"mb-2\"><strong>Sí, tienes liquidez total.</strong> A diferencia de un plan de pensiones, los fondos de inversión te permiten retirar tu dinero cuando quieras (normalmente en 2-3 días hábiles).</p><p class=\"mb-2\">Pero recuerda: <strong>esta estrategia funciona porque tienes tiempo</strong>. Si sacas el dinero en un momento malo del mercado (crisis), podrías tener pérdidas. Por eso:</p><ul class=\"mb-0\"><li>Invierte solo dinero que no vayas a necesitar en 5+ años</li><li>Ten un fondo de emergencia aparte (3-6 meses de gastos) para imprevistos</li><li>Si tienes que sacar dinero antes de tiempo, es mejor pero no ideal</li></ul>"
 
         ac_curt:
+          motivational_text: "Para objetivos entre 2 y 5 años, la renta fija es tu mejor aliada. Son prestamos que haces a gobiernos y empresas: ellos te devuelven el dinero con intereses en un plazo pactado. La rentabilidad es moderada pero predecible (2-3% anual). No tiene sentido asumir la volatilidad de la bolsa sin horizonte suficiente, porque una caida justo cuando necesitas el dinero podria hacerte perder. Un 2-3% real ya supera la inflacion y protege tu objetivo. Ademas, tener tu ahorro separado en una cuenta de inversion te ayuda a no gastarlo: lo que no ves, no lo tocas. El grafico muestra como el rango de incertidumbre es estrecho: eso es seguridad."
           why_important:
             intro_html: "Para objetivos entre 2 y 5 años, <strong>necesitas equilibrio entre rentabilidad y seguridad</strong>. No tienes suficiente tiempo para asumir la volatilidad de la renta variable, pero sí para obtener mejores rendimientos que un depósito tradicional."
             balance_title: "El punto medio perfecto: Mejor que un depósito, más seguro que la bolsa"
@@ -1455,6 +1570,7 @@ es:
                 answer_html: "<p class=\"mb-2\"><strong>Sí, tienes liquidez total.</strong> Los fondos de renta fija te permiten retirar tu dinero cuando quieras (normalmente en 2-3 días hábiles).</p><p class=\"mb-2\">Pero ten en cuenta:</p><ul class=\"mb-2\"><li>Si sacas el dinero cuando el fondo está temporalmente en negativo (por subida de tipos de interés), materializas la pérdida</li><li>Si esperas, el fondo se recupera con el tiempo (los bonos van madurando y devolviendo el capital)</li></ul><p class=\"mb-0\"><strong>Recomendación:</strong> Invierte solo dinero que puedas dejar 2+ años. Si crees que puedes necesitar liquidez antes, mejor déjalo en cuenta remunerada o depósito (aunque ganes menos).</p>"
 
         ac_jubil:
+          motivational_text: "Ahorrar para la jubilacion no es opcional, es fundamental. El sistema publico de pensiones es muy dificil de sostener como esta ahora: cada vez hay mas jubilados y menos trabajadores cotizando, y la pension que recibiras sera mucho menor que tu ultimo sueldo. La buena noticia es que la jubilacion es el objetivo a mas largo plazo que existe, y eso es una ventaja enorme. Puedes invertir en fondos de renta variable global porque tienes decadas por delante para absorber cualquier caida. El tiempo es tu mayor aliado: empezar pronto es mucho mas importante que aportar mucho. Prueba a aumentar los años de inversion en el simulador y veras como con muchisima menos aportacion mensual se llega al mismo objetivo."
           why_important:
             intro_html: "La jubilación puede parecer lejana, pero <strong>la realidad es que la pensión pública probablemente no será suficiente</strong> para mantener tu nivel de vida actual. Y cada año que esperas, pierdes la oportunidad más valiosa que tienes: el tiempo."
             pension_reality_title: "La realidad del sistema de pensiones español"
@@ -1560,11 +1676,13 @@ es:
           title: "Evolución del capital: Ahorro vs Inversión"
           savings_label: "Ahorro sin interés"
           investment_label: "Inversión con interés compuesto"
+          volatility_range_label: "Rango probable"
+          risk_warning_short_term: "Con este plazo, podrias acabar con menos de lo que aportaste"
         results:
           final_capital: "Capital final estimado"
           total_contributed: "Total aportado"
           profit: "Beneficio generado"
-        disclaimer_html: "<strong>Nota:</strong> Esta es una simulación orientativa basada en rentabilidad histórica. Los resultados reales pueden variar. La inversión en fondos indexados conlleva riesgos y el capital no está garantizado."
+        disclaimer_html: "<strong>Nota:</strong> Esta es una simulacion orientativa basada en rentabilidad historica. Los resultados reales pueden variar. La inversion en fondos de renta variable conlleva riesgos y el capital no esta garantizado."
 
       # Common labels for all pages
       labels:

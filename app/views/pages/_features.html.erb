@@ -8,33 +8,33 @@
               <div class="bg-light rounded-4 p-4 shadow-sm dashboard-container" id="dashboard">
                 <div class="row g-3">
                   <div class="col-12">
-                    <div class="bg-success bg-opacity-10 rounded-3 p-3 text-center dashboard-card" data-delay="0">
-                      <h5 class="text-success mb-2"><i class="bi bi-heart-pulse me-2"></i><%= t('views.landing.features.dashboard.health_title') %></h5>
+                    <div class="rounded-3 p-3 text-center dashboard-card" data-delay="0" style="background-color: rgba(22, 86, 104, 0.1);">
+                      <h5 class="mb-2" style="color: #165668;"><i class="bi bi-heart-pulse me-2"></i><%= t('views.landing.features.dashboard.health_title') %></h5>
                       <div class="progress mb-2" style="height: 8px;">
-                        <div class="progress-bar bg-success progress-bar-animated" data-width="75" style="width: 0%;"></div>
+                        <div class="progress-bar progress-bar-animated" data-width="75" style="width: 0%; background-color: #165668;"></div>
                       </div>
                       <small class="text-muted"><%= t('views.landing.features.dashboard.health_level') %></small>
                     </div>
                   </div>
                   <div class="col-6">
-                    <div class="bg-primary bg-opacity-10 rounded-3 p-3 text-center dashboard-card" data-delay="200">
-                      <h6 class="text-primary mb-1"><i class="bi bi-graph-up me-2"></i><%= t('views.landing.features.dashboard.balance_title') %></h6>
+                    <div class="rounded-3 p-3 text-center dashboard-card" data-delay="200" style="background-color: rgba(22, 86, 104, 0.1);">
+                      <h6 class="mb-1" style="color: #165668;"><i class="bi bi-graph-up me-2"></i><%= t('views.landing.features.dashboard.balance_title') %></h6>
                       <div class="h5 text-success mb-0">+€2,150</div>
                       <small class="text-muted"><%= t('views.landing.features.dashboard.monthly') %></small>
                     </div>
                   </div>
                   <div class="col-6">
-                    <div class="bg-warning bg-opacity-10 rounded-3 p-3 text-center dashboard-card" data-delay="400">
-                      <h6 class="text-warning mb-1"><i class="bi bi-wallet2 me-2"></i><%= t('views.landing.features.dashboard.patrimony_title') %></h6>
+                    <div class="rounded-3 p-3 text-center dashboard-card" data-delay="400" style="background-color: rgba(22, 86, 104, 0.1);">
+                      <h6 class="mb-1" style="color: #165668;"><i class="bi bi-wallet2 me-2"></i><%= t('views.landing.features.dashboard.patrimony_title') %></h6>
                       <div class="h5 text-success mb-0">€45,300</div>
                       <small class="text-muted"><%= t('views.landing.features.dashboard.patrimony') %></small>
                     </div>
                   </div>
                   <div class="col-12">
-                    <div class="bg-info bg-opacity-10 rounded-3 p-3 text-center dashboard-card" data-delay="600">
-                      <h6 class="text-info mb-2"><i class="bi bi-house me-2"></i><%= t('views.landing.features.dashboard.objective_title') %></h6>
+                    <div class="rounded-3 p-3 text-center dashboard-card" data-delay="600" style="background-color: rgba(22, 86, 104, 0.1);">
+                      <h6 class="mb-2" style="color: #165668;"><i class="bi bi-house me-2"></i><%= t('views.landing.features.dashboard.objective_title') %></h6>
                       <div class="progress mb-2" style="height: 6px;">
-                        <div class="progress-bar bg-info progress-bar-animated" data-width="45" style="width: 0%;"></div>
+                        <div class="progress-bar progress-bar-animated" data-width="45" style="width: 0%; background-color: #165668;"></div>
                       </div>
                       <small class="text-muted">€68,000 / €150,000</small>
                     </div>
@@ -80,7 +80,14 @@
           <script>
             document.addEventListener('turbo:load', function() {
               const dashboard = document.getElementById('dashboard');
-              
+              if (!dashboard) return;
+
+              // Disconnect previous observer if any
+              if (window._featuresObserver) {
+                window._featuresObserver.disconnect();
+                window._featuresObserver = null;
+              }
+
               const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                   if (entry.isIntersecting) {
@@ -113,6 +120,7 @@
                 threshold: 0.3 // Se activa cuando el 30% del elemento es visible
               });
               
+              window._featuresObserver = observer;
               observer.observe(dashboard);
             });
           </script>
@@ -126,8 +134,8 @@
               <!-- Paso 1 -->
               <div class="col pb-2 pb-xl-0 mb-4 mb-xl-5">
                 <div class="d-flex align-items-start pe-xl-3">
-                  <div class="d-table bg-success rounded-3 flex-shrink-0 p-3 mb-3">
-                    <i class="bi bi-heart-pulse text-white fs-4"></i>
+                  <div class="d-table rounded-3 flex-shrink-0 p-3 mb-3" style="background-color: rgba(22, 86, 104, 0.1);">
+                    <i class="bi bi-heart-pulse fs-4" style="color: #165668;"></i>
                   </div>
                   <div class="ps-4 ps-sm-3 ps-md-4">
                     <h3 class="h5 pb-1 mb-2"><%= t('views.landing.features.items.health.title') %></h3>
@@ -139,8 +147,8 @@
               <!-- Paso 2 -->
               <div class="col pb-2 pb-xl-0 mb-4 mb-xl-5">
                 <div class="d-flex align-items-start ps-xl-3">
-                  <div class="d-table bg-primary rounded-3 flex-shrink-0 p-3 mb-3">
-                    <i class="bi bi-graph-up text-white fs-4"></i>
+                  <div class="d-table rounded-3 flex-shrink-0 p-3 mb-3" style="background-color: rgba(22, 86, 104, 0.1);">
+                    <i class="bi bi-graph-up fs-4" style="color: #165668;"></i>
                   </div>
                   <div class="ps-4 ps-sm-3 ps-md-4">
                     <h3 class="h5 pb-1 mb-2"><%= t('views.landing.features.items.plan.title') %></h3>
@@ -152,8 +160,8 @@
               <!-- Paso 3 -->
               <div class="col pb-2 pb-xl-0 mb-4 mb-xl-5">
                 <div class="d-flex align-items-start pe-xl-3">
-                  <div class="d-table bg-warning rounded-3 flex-shrink-0 p-3 mb-3">
-                    <i class="bi bi-tools text-white fs-4"></i>
+                  <div class="d-table rounded-3 flex-shrink-0 p-3 mb-3" style="background-color: rgba(22, 86, 104, 0.1);">
+                    <i class="bi bi-tools fs-4" style="color: #165668;"></i>
                   </div>
                   <div class="ps-4 ps-sm-3 ps-md-4">
                     <h3 class="h5 pb-1 mb-2"><%= t('views.landing.features.items.tools.title') %></h3>
@@ -165,8 +173,8 @@
               <!-- Extra: Datos Seguros -->
               <div class="col pb-2 pb-xl-0 mb-4 mb-xl-5">
                 <div class="d-flex align-items-start ps-xl-3">
-                  <div class="d-table bg-dark rounded-3 flex-shrink-0 p-3 mb-3">
-                    <i class="bi bi-shield-lock text-white fs-4"></i>
+                  <div class="d-table rounded-3 flex-shrink-0 p-3 mb-3" style="background-color: rgba(22, 86, 104, 0.1);">
+                    <i class="bi bi-shield-lock fs-4" style="color: #165668;"></i>
                   </div>
                   <div class="ps-4 ps-sm-3 ps-md-4">
                     <h3 class="h5 pb-1 mb-2"><%= t('views.landing.features.items.security.title') %></h3>
@@ -175,11 +183,11 @@
                 </div>
               </div>
 
-              <!-- Extra: 100% Móvil -->
+              <!-- Extra: 100% Movil -->
               <div class="col pb-2 pb-xl-0 mb-4 mb-xl-5">
                 <div class="d-flex align-items-start pe-xl-3">
-                  <div class="d-table bg-info rounded-3 flex-shrink-0 p-3 mb-3">
-                    <i class="bi bi-phone text-white fs-4"></i>
+                  <div class="d-table rounded-3 flex-shrink-0 p-3 mb-3" style="background-color: rgba(22, 86, 104, 0.1);">
+                    <i class="bi bi-phone fs-4" style="color: #165668;"></i>
                   </div>
                   <div class="ps-4 ps-sm-3 ps-md-4">
                     <h3 class="h5 pb-1 mb-2"><%= t('views.landing.features.items.mobile.title') %></h3>
@@ -191,8 +199,8 @@
               <!-- Extra: 100% Gratuito -->
               <div class="col pb-2 pb-xl-0 mb-4 mb-xl-5">
                 <div class="d-flex align-items-start ps-xl-3">
-                  <div class="d-table bg-success rounded-3 flex-shrink-0 p-3 mb-3">
-                    <i class="bi bi-cash-coin text-white fs-4"></i>
+                  <div class="d-table rounded-3 flex-shrink-0 p-3 mb-3" style="background-color: rgba(22, 86, 104, 0.1);">
+                    <i class="bi bi-cash-coin fs-4" style="color: #165668;"></i>
                   </div>
                   <div class="ps-4 ps-sm-3 ps-md-4">
                     <h3 class="h5 pb-1 mb-2"><%= t('views.landing.features.items.free.title') %></h3>
@@ -204,8 +212,8 @@
 
             <!-- CTA Button -->
             <div class="text-center mt-5">
-              <%= link_to new_user_registration_path, class: "btn btn-primary btn-lg px-5 py-3" do %>
-                <i class="bi bi-rocket-takeoff me-2"></i>
+              <%= link_to "#", class: "btn btn-primary btn-lg px-5 py-3" do %>
+                <i class="bi bi-download me-2"></i>
                 <%= t('views.landing.features.cta') %>
               <% end %>
             </div>

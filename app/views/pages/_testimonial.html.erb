@@ -1,5 +1,5 @@
 <!-- Testimonials -->
-<section class="py-5 mb-md-2" style="background: radial-gradient(116.18% 118% at 50% 100%, rgba(99, 102, 241, 0.1) 0%, rgba(218, 70, 239, 0.05) 41.83%, rgba(241, 244, 253, 0.07) 82.52%);">
+<section class="py-5 mb-md-2" style="background: linear-gradient(135deg, rgba(22, 86, 104, 0.04) 0%, rgba(22, 86, 104, 0.02) 100%);">
   <div class="container py-lg-4">
     <div class="row py-md-3">
       <div class="col-xl-3 col-lg-4 pt-2">
@@ -22,8 +22,8 @@
           <div class="mb-5">
             <div class="d-flex flex-column h-100 px-2 px-sm-0 mb-0">
               <div class="card h-100 position-relative border-0 shadow-sm pt-4 testimonial-card" data-slide="left">
-                <span class="btn btn-icon btn-success shadow-success pe-none position-absolute top-0 start-0 translate-middle-y ms-4">
-                  <i class="bi bi-person-fill"></i>
+                <span class="d-inline-flex align-items-center justify-content-center rounded-circle pe-none position-absolute top-0 start-0 translate-middle-y ms-4" style="width: 40px; height: 40px; background-color: #165668; box-shadow: 0 4px 12px rgba(22, 86, 104, 0.3);">
+                  <i class="bi bi-person-fill text-white"></i>
                 </span>
                 <blockquote class="card-body pb-4 mb-0">
                   <p class="fs-lg mb-0"><%= t('views.landing.testimonials.items.marc.quote') %></p>
@@ -42,8 +42,8 @@
           <div class="mb-5">
             <div class="d-flex flex-column h-100 px-2 px-sm-0 mb-0">
               <div class="card h-100 position-relative border-0 shadow-sm pt-4 testimonial-card" data-slide="right">
-                <span class="btn btn-icon btn-warning shadow-warning pe-none position-absolute top-0 start-0 translate-middle-y ms-4">
-                  <i class="bi bi-person-workspace"></i>
+                <span class="d-inline-flex align-items-center justify-content-center rounded-circle pe-none position-absolute top-0 start-0 translate-middle-y ms-4" style="width: 40px; height: 40px; background-color: #165668; box-shadow: 0 4px 12px rgba(22, 86, 104, 0.3);">
+                  <i class="bi bi-person-workspace text-white"></i>
                 </span>
                 <blockquote class="card-body pb-4 mb-0">
                   <p class="fs-lg mb-0"><%= t('views.landing.testimonials.items.carlos.quote') %></p>
@@ -62,8 +62,8 @@
           <div class="mb-5">
             <div class="d-flex flex-column h-100 px-2 px-sm-0 mb-0">
               <div class="card h-100 position-relative border-0 shadow-sm pt-4 testimonial-card" data-slide="left">
-                <span class="btn btn-icon btn-info shadow-info pe-none position-absolute top-0 start-0 translate-middle-y ms-4">
-                  <i class="bi bi-person-badge"></i>
+                <span class="d-inline-flex align-items-center justify-content-center rounded-circle pe-none position-absolute top-0 start-0 translate-middle-y ms-4" style="width: 40px; height: 40px; background-color: #165668; box-shadow: 0 4px 12px rgba(22, 86, 104, 0.3);">
+                  <i class="bi bi-person-badge text-white"></i>
                 </span>
                 <blockquote class="card-body pb-4 mb-0">
                   <p class="fs-lg mb-0"><%= t('views.landing.testimonials.items.ana.quote') %></p>
@@ -82,8 +82,8 @@
           <div class="mb-5">
             <div class="d-flex flex-column h-100 px-2 px-sm-0 mb-0">
               <div class="card h-100 position-relative border-0 shadow-sm pt-4 testimonial-card" data-slide="right">
-                <span class="btn btn-icon btn-danger shadow-danger pe-none position-absolute top-0 start-0 translate-middle-y ms-4">
-                  <i class="bi bi-person-check"></i>
+                <span class="d-inline-flex align-items-center justify-content-center rounded-circle pe-none position-absolute top-0 start-0 translate-middle-y ms-4" style="width: 40px; height: 40px; background-color: #165668; box-shadow: 0 4px 12px rgba(22, 86, 104, 0.3);">
+                  <i class="bi bi-person-check text-white"></i>
                 </span>
                 <blockquote class="card-body pb-4 mb-0">
                   <p class="fs-lg mb-0"><%= t('views.landing.testimonials.items.david.quote') %></p>
@@ -106,8 +106,8 @@
   <div class="container">
     <div class="text-center pb-5">
       <p class="fs-lg text-muted mb-4"><%= t('views.landing.testimonials.cta_prompt') %></p>
-      <%= link_to new_user_registration_path, class: "btn btn-primary btn-lg px-5 py-3" do %>
-        <i class="bi bi-rocket-takeoff me-2"></i>
+      <%= link_to "#", class: "btn btn-primary btn-lg px-5 py-3" do %>
+        <i class="bi bi-download me-2"></i>
         <%= t('views.landing.testimonials.cta_button') %>
       <% end %>
     </div>

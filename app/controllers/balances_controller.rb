@@ -1,4 +1,5 @@
 class BalancesController < ApplicationController
+  layout 'app'
   before_action :authenticate_user!
   before_action :set_balance, only: %i[show edit update]
 

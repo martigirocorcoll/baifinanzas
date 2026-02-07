@@ -1,0 +1,2869 @@
+// BaiFinanzas App Styles
+// Mobile-first design for Turbo Native app
+// Clean, professional styling inspired by N26/Fintonic
+
+// ============================================
+// REPLACEMENTS FOR REMOVED SILICON THEME
+// Minimal classes actually used in views
+// ============================================
+
+// Font size utilities (Silicon fs-* system)
+.fs-xs { font-size: 0.75rem !important; }
+.fs-sm { font-size: 0.875rem !important; }
+.fs-base { font-size: 1rem !important; }
+.fs-lg { font-size: 1.125rem !important; }
+.fs-xl { font-size: 1.25rem !important; }
+
+// Circular icon button (used in footer)
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border-radius: 50%;
+}
+
+// Sticky navbar (used on landing)
+.navbar-sticky {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1030;
+  background-color: $bg-primary;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+// Card hover effect (FAQ section)
+.card-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+}
+
+// Back-to-top button
+.btn-scroll-top {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 1025;
+  display: none;
+}
+
+// Z-index utility
+.zindex-5 { z-index: 5 !important; }
+
+// Font smoothing
+html * {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// ============================================
+// APP LAYOUT
+// ============================================
+
+// App body - no padding when using app layout
+body.app-layout {
+  padding-top: 0;
+  padding-bottom: calc(60px + env(safe-area-inset-bottom)); // Bottom nav height + safe area
+  background-color: $bg-primary;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+
+// Safe area handling for iOS
+@supports (padding: env(safe-area-inset-bottom)) {
+  body.app-layout {
+    padding-bottom: calc(60px + env(safe-area-inset-bottom));
+  }
+}
+
+// ============================================
+// APP HEADER (Simple top bar)
+// ============================================
+
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: $bg-primary;
+  border-bottom: 1px solid $border-light;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 56px;
+
+  &__title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: $text-primary;
+    margin: 0;
+  }
+
+  &__back {
+    display: flex;
+    align-items: center;
+    color: $text-primary;
+    text-decoration: none;
+    font-weight: 500;
+
+    i {
+      font-size: 1.25rem;
+      margin-right: 0.25rem;
+    }
+
+    &:hover {
+      color: $brand-primary;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  &__action {
+    color: $text-secondary;
+    font-size: 1.25rem;
+    padding: 0.25rem;
+
+    &:hover {
+      color: $brand-primary;
+    }
+  }
+}
+
+// ============================================
+// BOTTOM NAVIGATION (Tab Bar)
+// ============================================
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background-color: $bg-primary;
+  border-top: 1px solid $border-light;
+  display: flex;
+  justify-content: space-around;
+  align-items: stretch;
+  padding-bottom: env(safe-area-inset-bottom);
+  height: calc(60px + env(safe-area-inset-bottom));
+
+  &__item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 0.25rem;
+    text-decoration: none;
+    color: $text-muted;
+    font-size: 0.75rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
+    min-height: 60px;
+    position: relative;
+
+    &:hover {
+      color: $text-secondary;
+    }
+
+    &--active {
+      color: $brand-primary;
+      font-weight: 600;
+
+      &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 24px;
+        height: 3px;
+        background: $brand-gradient;
+        border-radius: 0 0 3px 3px;
+      }
+    }
+  }
+
+  &__icon {
+    font-size: 1.375rem;
+    margin-bottom: 0.25rem;
+    line-height: 1;
+  }
+
+  &__label {
+    line-height: 1;
+  }
+}
+
+// ============================================
+// APP CARDS
+// ============================================
+
+.app-card {
+  background-color: $card-bg;
+  border: 1px solid $card-border;
+  border-radius: $border-radius-lg;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  box-shadow: $card-shadow;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+
+  &--no-border {
+    border: none;
+    box-shadow: $box-shadow-sm;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+
+  &__title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: $text-primary;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    i {
+      color: $brand-primary;
+    }
+  }
+
+  &__action {
+    color: $brand-primary;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &__body {
+    // Default body styles
+  }
+
+  &__footer {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid $border-light;
+  }
+}
+
+// ============================================
+// FINANCIAL LEVEL BADGE
+// ============================================
+
+.level-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.875rem;
+  border-radius: $border-radius;
+  font-size: 0.875rem;
+  font-weight: 500;
+
+  &--pill {
+    border-radius: $border-radius-pill;
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+  }
+
+  &--1 {
+    background-color: rgba($level-critical, 0.1);
+    color: $level-critical;
+  }
+
+  &--2, &--3 {
+    background-color: rgba($level-building, 0.1);
+    color: darken($level-building, 10%);
+  }
+
+  &--4 {
+    background-color: rgba($level-stable, 0.1);
+    color: darken($level-stable, 5%);
+  }
+
+  &--5, &--6 {
+    background-color: rgba($level-growth, 0.1);
+    color: $level-growth;
+  }
+}
+
+// ============================================
+// APP EXPLANATION BOX (contextual info from the app)
+// ============================================
+
+.app-explanation {
+  background-color: rgba($brand-primary, 0.05);
+  border-radius: $border-radius;
+  padding: 0.75rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+
+  &__icon {
+    color: $brand-primary;
+    font-size: 1rem;
+    flex-shrink: 0;
+    margin-top: 0.125rem;
+  }
+
+  &__text {
+    font-size: 0.8125rem;
+    color: $text-secondary;
+    margin: 0;
+    line-height: 1.5;
+  }
+}
+
+// Metric box component
+.metric-box {
+  background-color: $bg-secondary;
+  border-radius: $border-radius;
+  padding: 0.875rem;
+  text-align: center;
+
+  &__label {
+    display: block;
+    color: $text-secondary;
+    font-size: 0.75rem;
+    margin-bottom: 0.375rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  &__value {
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+}
+
+// ============================================
+// PROGRESS INDICATORS
+// ============================================
+
+.progress-level {
+  height: 6px;
+  background-color: $bg-tertiary;
+  border-radius: $border-radius-pill;
+  overflow: hidden;
+  margin-top: 0.5rem;
+
+  &__bar {
+    height: 100%;
+    border-radius: $border-radius-pill;
+    transition: width 0.3s ease;
+
+    &--1 { background-color: $level-critical; }
+    &--2, &--3 { background-color: $level-building; }
+    &--4 { background-color: $level-stable; }
+    &--5, &--6 { background-color: $level-growth; }
+  }
+}
+
+// ============================================
+// TASK LIST (Action Plan)
+// ============================================
+
+.task-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.task-item {
+  display: flex;
+  align-items: flex-start;
+  padding: 0.875rem 0;
+  border-bottom: 1px solid $border-light;
+  gap: 0.75rem;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &__checkbox {
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    border: 2px solid $border-medium;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      border-color: $brand-primary;
+    }
+
+    &--completed {
+      background-color: $success;
+      border-color: $success;
+      color: white;
+    }
+  }
+
+  &__content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__title {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: $text-primary;
+    margin: 0;
+    line-height: 1.4;
+
+    .task-item--completed & {
+      color: $text-muted;
+      text-decoration: line-through;
+    }
+  }
+
+  &__subtitle {
+    font-size: 0.8125rem;
+    color: $text-secondary;
+    margin-top: 0.125rem;
+  }
+
+  &--current {
+    background-color: rgba($brand-primary, 0.04);
+    border-left: 3px solid $brand-primary;
+    padding-left: calc(0.75rem - 3px);
+    padding-right: 0.75rem;
+    border-radius: $border-radius;
+    border-bottom-color: transparent;
+  }
+}
+
+// ============================================
+// FEATURED CURRENT TASK
+// ============================================
+
+.current-task-featured {
+  background-color: $bg-secondary;
+  border-radius: $border-radius-lg;
+  padding: 1.25rem;
+  border-left: 3px solid $brand-primary;
+}
+
+// ============================================
+// OBJECTIVE CARDS
+// ============================================
+
+.objective-card {
+  background-color: $bg-secondary;
+  border-radius: $border-radius-lg;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+
+  &--accent {
+    border-left: 3px solid $brand-primary;
+  }
+
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+  }
+
+  &__icon {
+    font-size: 1.5rem;
+    margin-right: 0.75rem;
+  }
+
+  &__title {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: $text-primary;
+    margin: 0;
+  }
+
+  &__meta {
+    font-size: 0.8125rem;
+    color: $text-secondary;
+    margin-top: 0.125rem;
+  }
+
+  &__progress {
+    margin-bottom: 0.5rem;
+  }
+
+  &__progress-bar {
+    height: 6px;
+    background-color: $bg-tertiary;
+    border-radius: $border-radius-pill;
+    overflow: hidden;
+
+    span {
+      display: block;
+      height: 100%;
+      min-width: 3px;
+      background-color: $success;
+      border-radius: $border-radius-pill;
+      transition: width 0.3s ease;
+    }
+  }
+
+  &__savings {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8125rem;
+    background-color: rgba($brand-primary, 0.06);
+    border-radius: $border-radius-sm;
+    padding: 0.5rem 0.75rem;
+    margin-top: 0.5rem;
+
+    span:first-child {
+      color: $text-secondary;
+    }
+
+    span:last-child {
+      font-weight: 600;
+      color: $brand-primary;
+    }
+  }
+}
+
+// ============================================
+// CALCULATOR CARDS
+// ============================================
+
+.calculator-card {
+  display: flex;
+  align-items: flex-start;
+  background-color: $bg-primary;
+  border: 1px solid $border-light;
+  border-radius: $border-radius-lg;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: $brand-primary;
+    box-shadow: $card-shadow-hover;
+    transform: translateY(-1px);
+    color: inherit;
+
+    .calculator-card__arrow {
+      transform: translateX(2px);
+      color: $brand-primary;
+    }
+  }
+
+  &__icon {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    background-color: rgba($brand-primary, 0.1);
+    border-radius: $border-radius;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+
+    i {
+      font-size: 1.375rem;
+      color: $brand-primary;
+    }
+
+    // Color-coded icon backgrounds
+    &--growth {
+      background-color: rgba($success, 0.1);
+      i { color: $success; }
+    }
+
+    &--home {
+      background-color: rgba($info, 0.1);
+      i { color: $info; }
+    }
+
+    &--safety {
+      background-color: rgba($warning, 0.1);
+      i { color: darken($warning, 5%); }
+    }
+
+    &--freedom {
+      background-color: rgba($brand-primary, 0.1);
+      i { color: $brand-primary; }
+    }
+
+    &--goal {
+      background-color: rgba($brand-primary-light, 0.12);
+      i { color: $brand-primary-light; }
+    }
+
+    &--debt {
+      background-color: rgba($danger, 0.1);
+      i { color: $danger; }
+    }
+
+    &--returns {
+      background-color: rgba($success, 0.1);
+      i { color: darken($success, 5%); }
+    }
+  }
+
+  &__content {
+    flex: 1;
+  }
+
+  &__title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: $text-primary;
+    margin: 0 0 0.25rem;
+  }
+
+  &__description {
+    font-size: 0.8125rem;
+    color: $text-secondary;
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  &__arrow {
+    flex-shrink: 0;
+    color: $text-muted;
+    font-size: 1rem;
+    margin-left: 0.5rem;
+    align-self: center;
+    transition: transform 0.2s ease, color 0.2s ease;
+  }
+}
+
+// ============================================
+// FORM STYLES (App-specific)
+// ============================================
+
+.app-form {
+  &__group {
+    margin-bottom: 1.25rem;
+  }
+
+  &__label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: $text-secondary;
+    margin-bottom: 0.375rem;
+  }
+
+  &__input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border: 1px solid $border-medium;
+    border-radius: $border-radius;
+    background-color: $bg-primary;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+    &:focus {
+      outline: none;
+      border-color: $brand-primary;
+      box-shadow: 0 0 0 3px rgba($brand-primary, 0.15);
+    }
+
+    &::placeholder {
+      color: $text-muted;
+    }
+  }
+
+  &__input-group {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+  }
+
+  &__input-prefix,
+  &__input-suffix {
+    display: flex;
+    align-items: center;
+    padding: 0 0.875rem;
+    background-color: $bg-secondary;
+    border: 1px solid $border-medium;
+    color: $text-secondary;
+    font-weight: 500;
+  }
+
+  &__input-prefix {
+    border-right: none;
+    border-radius: $border-radius 0 0 $border-radius;
+  }
+
+  &__input-suffix {
+    border-left: none;
+    border-radius: 0 $border-radius $border-radius 0;
+  }
+
+  &__input-group &__input {
+    border-radius: 0;
+  }
+
+  &__input-group &__input:first-child {
+    border-radius: $border-radius 0 0 $border-radius;
+  }
+
+  &__input-group &__input:last-child {
+    border-radius: 0 $border-radius $border-radius 0;
+  }
+
+  &__hint {
+    font-size: 0.8125rem;
+    color: $text-muted;
+    margin-top: 0.375rem;
+  }
+
+  &__error {
+    font-size: 0.8125rem;
+    color: $danger;
+    margin-top: 0.375rem;
+  }
+}
+
+// ============================================
+// BUTTONS (App-specific)
+// ============================================
+
+.btn-app {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: $border-radius;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+
+  &--primary {
+    background-color: $brand-primary;
+    color: white;
+
+    &:hover {
+      background-color: $brand-primary-dark;
+      color: white;
+    }
+  }
+
+  &--secondary {
+    background-color: $bg-secondary;
+    color: $text-primary;
+    border: 1px solid $border-medium;
+
+    &:hover {
+      background-color: $bg-tertiary;
+      color: $text-primary;
+    }
+  }
+
+  &--outline {
+    background-color: white;
+    color: $text-primary;
+    border: 1.5px solid $border-medium;
+
+    &:hover {
+      border-color: $brand-primary;
+      color: $brand-primary;
+    }
+  }
+
+  &--success {
+    background-color: $success;
+    color: white;
+
+    &:hover {
+      background-color: darken($success, 5%);
+      color: white;
+    }
+  }
+
+  &--danger {
+    background-color: $danger;
+    color: white;
+
+    &:hover {
+      background-color: darken($danger, 5%);
+      color: white;
+    }
+  }
+
+  &--ghost {
+    background-color: transparent;
+    color: $brand-primary;
+
+    &:hover {
+      background-color: rgba($brand-primary, 0.1);
+    }
+  }
+
+  &--block {
+    width: 100%;
+  }
+
+  &--sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  &--lg {
+    padding: 1rem 2rem;
+    font-size: 1.125rem;
+  }
+}
+
+// ============================================
+// RESULT CARDS (Calculator results)
+// ============================================
+
+.result-card {
+  background-color: $bg-secondary;
+  border-radius: $border-radius-lg;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  text-align: center;
+
+  &__label {
+    font-size: 0.8125rem;
+    color: $text-secondary;
+    margin-bottom: 0.625rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    font-weight: 500;
+  }
+
+  &__value {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: $brand-primary;
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  &__sublabel {
+    font-size: 0.8125rem;
+    color: $text-muted;
+    margin-top: 0.625rem;
+  }
+
+  &--highlight {
+    background: $brand-gradient-subtle;
+    border: 1px solid rgba($brand-primary, 0.15);
+  }
+}
+
+// ============================================
+// SLIDER/RANGE INPUT
+// ============================================
+
+.app-slider {
+  width: 100%;
+  margin: 0.5rem 0;
+
+  &__input {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 8px;
+    background: $bg-tertiary;
+    border-radius: $border-radius-pill;
+    outline: none;
+    padding: 12px 0;
+    box-sizing: content-box;
+    background-clip: content-box;
+    cursor: pointer;
+
+    &::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 28px;
+      height: 28px;
+      background: $brand-primary;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+
+      &:hover {
+        transform: scale(1.1);
+      }
+    }
+
+    &::-moz-range-thumb {
+      width: 28px;
+      height: 28px;
+      background: $brand-primary;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+
+      &:hover {
+        transform: scale(1.1);
+      }
+    }
+
+    // Filled track on Firefox
+    &::-moz-range-progress {
+      background-color: $brand-primary;
+      height: 8px;
+      border-radius: $border-radius-pill;
+    }
+  }
+
+  &__labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: $text-muted;
+    margin-top: 0.25rem;
+  }
+}
+
+// ============================================
+// INFO TOOLTIP / POPOVER TRIGGER
+// ============================================
+
+.info-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background-color: $bg-tertiary;
+  color: $text-secondary;
+  font-size: 0.75rem;
+  cursor: pointer;
+  margin-left: 0.25rem;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: $brand-primary;
+    color: white;
+  }
+}
+
+// ============================================
+// EMPTY STATE
+// ============================================
+
+.empty-state {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: $text-secondary;
+
+  &__icon {
+    font-size: 3rem;
+    color: $text-muted;
+    margin-bottom: 1rem;
+  }
+
+  &__title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: $text-primary;
+    margin-bottom: 0.5rem;
+  }
+
+  &__description {
+    font-size: 0.875rem;
+    color: $text-secondary;
+    margin-bottom: 1.5rem;
+  }
+}
+
+// ============================================
+// DIVIDER
+// ============================================
+
+.app-divider {
+  height: 1px;
+  background-color: $border-light;
+  margin: 1.5rem 0;
+
+  &--thick {
+    height: 8px;
+    background-color: $bg-secondary;
+    margin: 0;
+  }
+}
+
+// ============================================
+// UTILITY CLASSES
+// ============================================
+
+.text-brand {
+  color: $brand-primary !important;
+}
+
+.bg-brand {
+  background-color: $brand-primary !important;
+}
+
+.bg-brand-light {
+  background-color: rgba($brand-primary, 0.1) !important;
+}
+
+// Safe area padding utility
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.safe-area-top {
+  padding-top: env(safe-area-inset-top);
+}
+
+// Main content wrapper - prevents overflow on iOS Safari
+.app-main {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+// Page container for app
+.app-container {
+  padding: 1rem 1rem 2rem;
+  max-width: 600px;
+  margin: 0 auto;
+  overflow-x: hidden;
+}
+
+// Section spacing
+.app-section {
+  margin-bottom: 1.5rem;
+
+  &__title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: $text-muted;
+    margin-bottom: 0.75rem;
+    padding-left: 0.25rem;
+    border-left: 3px solid $brand-primary;
+  }
+}
+
+// ============================================
+// DISCOVERY PAGE
+// ============================================
+
+.filter-chip {
+  flex-shrink: 0;
+  border-radius: $border-radius-pill !important;
+  padding: 0.375rem 1rem !important;
+  font-weight: 500;
+  font-size: 0.8125rem;
+}
+
+.discovery-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.discovery-feed-item {
+  margin-bottom: 1.25rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid $border-light;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+// Video - inline, no card wrapper
+.discovery-video {
+  &__meta {
+    font-size: 0.75rem;
+    color: $text-muted;
+    margin-bottom: 0.5rem;
+  }
+
+  &__embed {
+    border-radius: $border-radius;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+  }
+
+  &__title {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    margin: 0;
+  }
+}
+
+// Article - clickable card with category border
+.discovery-article {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  padding: 1rem;
+  border: 1px solid $card-border;
+  border-radius: $border-radius-lg;
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+
+  &:hover {
+    box-shadow: $card-shadow-hover;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  &__body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__meta {
+    font-size: 0.75rem;
+    color: $text-muted;
+    margin-bottom: 0.375rem;
+    display: flex;
+    align-items: center;
+  }
+
+  &__title {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    margin: 0 0 0.25rem;
+  }
+
+  &__excerpt {
+    font-size: 0.8125rem;
+    color: $text-secondary;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  &__arrow {
+    color: $text-muted;
+    flex-shrink: 0;
+    margin-left: 0.75rem;
+  }
+
+  &__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 0.375rem;
+    flex-shrink: 0;
+  }
+}
+
+// News - simple teal left border
+.discovery-news {
+  border-left: 3px solid $brand-primary;
+  padding-left: 0.875rem;
+
+  &__meta {
+    font-size: 0.75rem;
+    color: $text-muted;
+    margin-bottom: 0.375rem;
+  }
+
+  &__title {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    margin: 0 0 0.25rem;
+  }
+
+  &__content {
+    font-size: 0.8125rem;
+    color: $text-secondary;
+    margin: 0;
+  }
+}
+
+// Article body (used in show_article page)
+.article-body {
+  h5 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-top: 1.25rem;
+    margin-bottom: 0.5rem;
+    color: $text-primary;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  p {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: $text-secondary;
+  }
+
+  ul, ol {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: $text-secondary;
+    padding-left: 1.25rem;
+  }
+
+  li {
+    margin-bottom: 0.35rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .article-body p,
+  .article-body ul,
+  .article-body ol {
+    font-size: 1rem;
+  }
+}
+
+// ============================================
+// APP DISCLAIMERS & NOTES (not Bootstrap alerts)
+// ============================================
+
+.app-disclaimer {
+  color: $text-muted;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  margin-top: 1rem;
+}
+
+.app-note {
+  border-left: 2px solid rgba($brand-primary, 0.25);
+  padding: 0.625rem 0.875rem;
+  color: $text-secondary;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+// ============================================
+// PROFILE PAGE
+// ============================================
+
+.profile-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: $brand-gradient-subtle;
+  border: 3px solid transparent;
+  background-clip: padding-box;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    background: $brand-gradient;
+    z-index: -1;
+  }
+
+  i {
+    font-size: 2rem;
+    color: $brand-primary;
+  }
+
+  &--initials {
+    background: $brand-primary;
+
+    span {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: $text-inverse;
+      letter-spacing: 0.05em;
+    }
+  }
+}
+
+// Profile stats row
+.profile-stats {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  background: $bg-secondary;
+  border-radius: $border-radius-lg;
+  padding: 0.875rem 0.5rem;
+  margin-bottom: 1rem;
+
+  &__item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.125rem;
+  }
+
+  &__value {
+    font-size: 1rem;
+    font-weight: 700;
+    color: $text-primary;
+  }
+
+  &__label {
+    font-size: 0.6875rem;
+    color: $text-muted;
+    text-align: center;
+  }
+
+  &__divider {
+    width: 1px;
+    height: 28px;
+    background: $border-light;
+    flex-shrink: 0;
+  }
+}
+
+// Go to plan link
+.profile-plan-link {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.75rem 1rem;
+  background: rgba($brand-primary, 0.06);
+  border: 1px solid rgba($brand-primary, 0.15);
+  border-radius: $border-radius-lg;
+  color: $brand-primary;
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-decoration: none;
+  margin-bottom: 1.25rem;
+  transition: background 0.15s ease;
+
+  &:hover {
+    background: rgba($brand-primary, 0.1);
+    color: $brand-primary;
+  }
+
+  .bi-list-check { font-size: 1.125rem; }
+}
+
+.profile-menu-item {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  padding: 1rem 1.25rem;
+  background-color: $card-bg;
+  border: 1px solid $card-border;
+  border-radius: $border-radius-lg;
+  margin-bottom: 0.5rem;
+  box-shadow: $card-shadow;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+
+  &:hover {
+    box-shadow: $card-shadow-hover;
+    transform: translateY(-1px);
+    color: inherit;
+
+    .profile-menu-item__arrow {
+      transform: translateX(2px);
+      color: $brand-primary;
+    }
+  }
+
+  &__icon-wrap {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    background-color: $bg-secondary;
+    border-radius: $border-radius;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+  }
+
+  &__content {
+    flex: 1;
+  }
+
+  &__title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: $text-primary;
+    margin: 0 0 0.125rem;
+  }
+
+  &__subtitle {
+    font-size: 0.8125rem;
+    color: $text-secondary;
+    margin: 0;
+  }
+
+  &__arrow {
+    flex-shrink: 0;
+    color: $text-muted;
+    font-size: 1rem;
+    transition: transform 0.2s ease, color 0.2s ease;
+  }
+}
+
+// ============================================
+// CALCULATOR DETAIL VIEWS
+// ============================================
+
+.calculator-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, $border-light, transparent);
+  margin: 1.5rem 0;
+}
+
+.comparison-bar {
+  &__label {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: $text-primary;
+    margin-bottom: 0.25rem;
+  }
+
+  &__value {
+    font-size: 0.75rem;
+    color: $text-secondary;
+    font-weight: 500;
+  }
+}
+
+.verdict-card {
+  border-radius: $border-radius-lg;
+  padding: 1.25rem;
+  margin: 1rem 0;
+  border: 1px solid;
+
+  &--positive {
+    background-color: rgba($success, 0.06);
+    border-color: rgba($success, 0.2);
+  }
+
+  &--negative {
+    background-color: rgba($danger, 0.06);
+    border-color: rgba($danger, 0.2);
+  }
+
+  &--neutral {
+    background-color: rgba($warning, 0.06);
+    border-color: rgba($warning, 0.2);
+  }
+}
+
+// ============================================
+// PRIORITY 4: NICE-TO-HAVE POLISH
+// ============================================
+
+// App header shadow instead of border
+.app-header {
+  border-bottom: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+// Focus states for accessibility
+.btn-app:focus-visible,
+.calculator-card:focus-visible,
+.profile-menu-item:focus-visible,
+.bottom-nav__item:focus-visible {
+  outline: 2px solid $brand-primary;
+  outline-offset: 2px;
+}
+
+// Page transition on Turbo loads
+.app-container {
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ============================================
+// RECOMMENDATIONS PAGE
+// ============================================
+
+.rec-title {
+  font-size: 1.375rem;
+  font-weight: 700;
+  color: $text-primary;
+  margin-bottom: 1rem;
+  line-height: 1.3;
+}
+
+.rec-subtitle {
+  color: $text-secondary;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  margin-bottom: 1.25rem;
+}
+
+.rec-body-text {
+  font-size: 0.9375rem;
+  color: $text-secondary;
+  line-height: 1.6;
+  margin-bottom: 1.25rem;
+}
+
+.rec-section {
+  margin-bottom: 1.25rem;
+
+  &__title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: $text-primary;
+    margin-bottom: 0.5rem;
+  }
+}
+
+.rec-video {
+  border-radius: $border-radius-lg;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.rec-objective-context {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 0.75rem;
+  background: rgba($brand-primary, 0.06);
+  border-radius: $border-radius;
+  font-size: 0.8125rem;
+  color: $text-secondary;
+  margin-bottom: 1rem;
+
+  i {
+    color: $brand-primary;
+    flex-shrink: 0;
+  }
+
+  strong {
+    color: $text-primary;
+  }
+}
+
+// CTA button (green, big, prominent)
+.rec-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 1rem 1.5rem;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  text-align: center;
+  color: white;
+  background: linear-gradient(135deg, #1EDD88 0%, #16a34a 100%);
+  border: none;
+  border-radius: $border-radius-lg;
+  text-decoration: none;
+  box-shadow: 0 4px 14px rgba(30, 221, 136, 0.35);
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(30, 221, 136, 0.45);
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(30, 221, 136, 0.3);
+  }
+
+  &--disabled {
+    background: $bg-tertiary;
+    color: $text-muted;
+    box-shadow: none;
+    pointer-events: none;
+  }
+
+  i {
+    font-size: 1.125rem;
+  }
+}
+
+.rec-cta-note {
+  text-align: center;
+  font-size: 0.75rem;
+  color: $text-muted;
+  margin-top: 0.5rem;
+}
+
+// Simulator inline
+.rec-simulator {
+  background: $bg-secondary;
+  border-radius: $border-radius-lg;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+
+  &__title {
+    font-size: 1.0625rem;
+    font-weight: 700;
+    color: $text-primary;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    letter-spacing: -0.01em;
+
+    i {
+      color: $brand-primary;
+    }
+  }
+
+  &__label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: $text-secondary;
+    margin-bottom: 0.375rem;
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.875rem;
+  }
+
+  &__slider {
+    flex: 1;
+  }
+
+  &__value {
+    min-width: 80px;
+    text-align: right;
+    font-size: 1rem;
+    font-weight: 700;
+    color: $brand-primary;
+  }
+
+  &__result {
+    text-align: center;
+    padding: 0.75rem 0.5rem;
+    background: white;
+    border-radius: $border-radius;
+    margin-top: 1rem;
+  }
+
+  &__highlight {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: $brand-primary;
+    line-height: 1.2;
+    word-break: break-word;
+  }
+
+  &__result-label {
+    font-size: 0.6875rem;
+    color: $text-secondary;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    margin-bottom: 0.25rem;
+    line-height: 1.3;
+  }
+
+  &__result-sublabel {
+    font-size: 0.8125rem;
+    color: $text-muted;
+    margin-top: 0.25rem;
+  }
+
+  &__progress-wrap {
+    margin-top: 0.75rem;
+  }
+
+  &__results-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    margin-top: 1rem;
+
+    // When 3 children, last one spans full width centered
+    &--trio {
+      grid-template-columns: 1fr 1fr;
+
+      > :last-child {
+        grid-column: 1 / -1;
+        max-width: 60%;
+        justify-self: center;
+      }
+    }
+  }
+
+  &__note {
+    font-size: 0.8125rem;
+    color: $text-muted;
+    font-style: italic;
+    margin: 0.25rem 0 0;
+  }
+}
+
+// Educational compact cards
+.rec-edu-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.rec-edu-card {
+  background: $bg-secondary;
+  border-radius: $border-radius;
+  padding: 1rem;
+
+  &__title {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: $text-primary;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    letter-spacing: -0.01em;
+  }
+
+  &__text {
+    font-size: 0.875rem;
+    color: $text-secondary;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  &--highlight {
+    background: rgba($brand-primary, 0.06);
+    border-left: 3px solid $brand-primary;
+  }
+
+  &--warning {
+    background: rgba($warning, 0.06);
+    border-left: 3px solid $warning;
+  }
+
+  &--danger {
+    background: rgba($danger, 0.06);
+    border-left: 3px solid $danger;
+  }
+
+  &--success {
+    background: rgba($success, 0.06);
+    border-left: 3px solid $success;
+  }
+}
+
+// FAQ accordion (compact)
+.rec-faq {
+  margin-bottom: 1.5rem;
+
+  &__title {
+    font-size: 1.0625rem;
+    font-weight: 700;
+    color: $text-primary;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    letter-spacing: -0.01em;
+
+    i {
+      color: $brand-primary;
+    }
+  }
+
+  .accordion-button {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    padding: 0.75rem 0;
+    background: none;
+    box-shadow: none;
+    color: $text-primary;
+
+    &:not(.collapsed) {
+      color: $brand-primary;
+      background: none;
+      box-shadow: none;
+    }
+
+    &::after {
+      width: 1rem;
+      height: 1rem;
+      background-size: 1rem;
+    }
+  }
+
+  .accordion-body {
+    font-size: 0.9rem;
+    color: $text-secondary;
+    padding: 0 0 0.75rem;
+    line-height: 1.65;
+  }
+
+  .accordion-item {
+    border: none;
+    border-bottom: 1px solid $border-light;
+    background: none;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}
+
+// Disclaimer + completed section
+.rec-legal {
+  color: #b0b5bd;
+  font-size: 0.6875rem;
+  line-height: 1.5;
+  padding: 1rem 0;
+  border-top: none;
+  opacity: 0.85;
+
+  strong {
+    color: #a0a5ad;
+    font-weight: 600;
+  }
+}
+
+.rec-completed {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.125rem;
+  background: $bg-primary;
+  border: 1px solid $border-light;
+  border-radius: $border-radius-lg;
+  margin-top: 1rem;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+
+  &__checkbox {
+    flex-shrink: 0;
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  &__label {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: $text-primary;
+  }
+
+  &__sublabel {
+    font-size: 0.8125rem;
+    color: $text-secondary;
+    margin-top: 0.125rem;
+  }
+}
+
+// Section divider inside recommendations
+.rec-divider {
+  height: 1px;
+  background: $border-light;
+  margin: 1.5rem 0;
+}
+
+// Comparison bars (for bank account simulator)
+.rec-comparison {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  &__row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8125rem;
+  }
+
+  &__label {
+    min-width: 80px;
+    color: $text-secondary;
+    flex-shrink: 0;
+  }
+
+  &__bar {
+    flex: 1;
+    height: 24px;
+    border-radius: $border-radius-sm;
+    display: flex;
+    align-items: center;
+    padding: 0 0.5rem;
+    font-weight: 600;
+    font-size: 0.75rem;
+    color: white;
+  }
+
+  &__amount {
+    min-width: 60px;
+    text-align: right;
+    font-weight: 600;
+    color: $text-primary;
+  }
+}
+
+// ============================================
+// HOME HERO SECTION
+// ============================================
+
+.home-hero {
+  background: rgba($brand-primary, 0.04);
+  padding: 1.5rem 1rem 1.25rem;
+  max-width: 600px;
+  margin: 0 auto;
+
+  &__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+  }
+
+  &__toggle {
+    margin-top: 0.875rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.625rem 1rem;
+    background: none;
+    border: 1px solid $border-light;
+    border-radius: $border-radius;
+    color: $text-secondary;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      border-color: $brand-primary;
+      color: $brand-primary;
+    }
+  }
+
+  &__toggle-icon {
+    font-size: 0.75rem;
+    transition: transform 0.35s ease;
+  }
+
+  &__details {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.35s ease, opacity 0.25s ease, margin 0.35s ease;
+    margin-top: 0;
+  }
+
+  &--expanded {
+    .home-hero__details {
+      max-height: 400px;
+      opacity: 1;
+      margin-top: 1rem;
+    }
+
+    .home-hero__toggle-icon {
+      transform: rotate(180deg);
+    }
+  }
+
+  &__metrics-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  &__edit-links {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+
+    a {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.375rem;
+      padding: 0.625rem 0.5rem;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: $brand-primary;
+      background: rgba($brand-primary, 0.08);
+      border-radius: $border-radius;
+      text-decoration: none;
+      transition: background 0.2s ease;
+
+      &:hover {
+        background: rgba($brand-primary, 0.14);
+        color: $brand-primary;
+      }
+    }
+  }
+
+  &__warning {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 0.75rem;
+    margin-top: 1rem;
+    background: rgba($warning, 0.08);
+    border-radius: $border-radius;
+    font-size: 0.8125rem;
+    color: $text-secondary;
+
+    i {
+      color: $warning;
+      flex-shrink: 0;
+    }
+
+    a {
+      color: $brand-primary;
+      font-weight: 500;
+      margin-left: auto;
+      flex-shrink: 0;
+      text-decoration: none;
+    }
+  }
+}
+
+// ============================================
+// CAROUSEL SYSTEM (shared by actions + objectives)
+// ============================================
+
+.carousel-wrap {
+  margin: 0 -1rem;
+  padding-left: 1rem;
+}
+
+.carousel {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  gap: 0.75rem;
+  padding-right: 1rem;
+  padding-bottom: 0.25rem;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  scrollbar-width: none;
+
+  &__card {
+    flex: 0 0 auto;
+    width: calc(85% - 0.375rem);
+    scroll-snap-align: start;
+    background: $card-bg;
+    border: 1px solid $card-border;
+    border-radius: $border-radius-lg;
+    padding: 1.375rem 1.25rem;
+    box-shadow: $card-shadow;
+
+    &--add {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border: 2px dashed $border-medium;
+      background: transparent;
+      box-shadow: none;
+      color: $text-muted;
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color 0.2s ease, color 0.2s ease;
+      min-height: 160px;
+
+      &:hover {
+        border-color: $brand-primary;
+        color: $brand-primary;
+      }
+
+      i {
+        font-size: 1.75rem;
+        margin-bottom: 0.5rem;
+      }
+
+      span {
+        font-size: 0.875rem;
+        font-weight: 500;
+      }
+    }
+  }
+
+  &__dots {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    margin-top: 0.875rem;
+    padding: 0;
+  }
+
+  &__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: $border-radius-pill;
+    background: $border-medium;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: width 0.25s ease, background 0.25s ease;
+
+    &--active {
+      width: 18px;
+      background: $brand-primary;
+    }
+
+    &--completed {
+      background: $success;
+    }
+  }
+}
+
+// ============================================
+// ACTION CARD (inside carousel)
+// ============================================
+
+.action-card {
+  &--completed {
+
+    .action-card__title {
+      color: $text-secondary;
+    }
+  }
+
+  &__step-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: $text-secondary;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.75rem;
+    padding-right: 3rem; // avoid overlap with toggle
+
+    i {
+      font-size: 0.8125rem;
+      color: $success;
+    }
+  }
+
+  &__step-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.125rem;
+    height: 1.125rem;
+    border-radius: 50%;
+    background: $brand-primary;
+    color: #fff;
+    font-size: 0.625rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  &__title {
+    font-size: 1.0625rem;
+    font-weight: 700;
+    color: $text-primary;
+    margin: 0 0 1rem;
+    line-height: 1.35;
+    padding-right: 2rem; // avoid overlap with toggle
+  }
+
+  &__video {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%;
+    margin-bottom: 1rem;
+    border-radius: $border-radius;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+
+    iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+  }
+
+  &__ctas {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  &__cta-primary {
+    flex: 1;
+  }
+
+  &__cta-secondary {
+    flex: 1;
+  }
+}
+
+// ============================================
+// OBJECTIVE CAROUSEL CARD
+// ============================================
+
+.objective-carousel-card {
+  &__emoji {
+    font-size: 1.75rem;
+    line-height: 1;
+  }
+
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+  }
+
+  &__title {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: $text-primary;
+    margin: 0.25rem 0 0.125rem;
+  }
+
+  &__meta {
+    font-size: 0.8125rem;
+    color: $text-secondary;
+  }
+
+  &__progress {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+
+    &-track {
+      flex: 1;
+      height: 6px;
+      background: $bg-tertiary;
+      border-radius: $border-radius-pill;
+      overflow: hidden;
+
+      span {
+        display: block;
+        height: 100%;
+        min-width: 3px;
+        background: $success;
+        border-radius: $border-radius-pill;
+        transition: width 0.3s ease;
+      }
+    }
+
+    &-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: $text-secondary;
+      flex-shrink: 0;
+    }
+  }
+
+  &__savings {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8125rem;
+    background: rgba($brand-primary, 0.06);
+    border-radius: $border-radius-sm;
+    padding: 0.5rem 0.75rem;
+
+    span:first-child {
+      color: $text-secondary;
+    }
+
+    span:last-child {
+      font-weight: 600;
+      color: $brand-primary;
+    }
+  }
+}
+
+// ============================================
+// SAVINGS INLINE (no card wrapper)
+// ============================================
+
+.savings-inline {
+  padding: 0.5rem 0 1rem;
+
+  &__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    font-size: 0.875rem;
+    color: $text-secondary;
+
+    &--total {
+      font-weight: 600;
+      color: $text-primary;
+    }
+  }
+
+  &__divider {
+    height: 1px;
+    background: $border-light;
+    margin: 0.25rem 0;
+  }
+}
+
+// ============================================
+// HOME SECTION HEADERS
+// ============================================
+
+.home-section {
+  margin-bottom: 1.5rem;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+  }
+
+  &__title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: $text-primary;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    i {
+      color: $brand-primary;
+    }
+  }
+
+  &__counter {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: $text-secondary;
+  }
+
+  &__action {
+    color: $brand-primary;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+// ============================================
+// TEAL SECTION (hero, savings, discovery)
+// ============================================
+
+.teal-section {
+  background-color: $brand-primary;
+  color: $text-inverse;
+
+  .level-badge--pill {
+    background: $text-inverse !important;
+    color: $brand-primary !important;
+  }
+
+  .progress-level {
+    background-color: rgba(255, 255, 255, 0.2);
+    &__bar { background-color: $text-inverse !important; }
+  }
+
+  // Direct children text overrides (not inside white cards)
+  > .app-container > .savings-inline {
+    .savings-inline__row { color: rgba(255, 255, 255, 0.85); }
+    .savings-inline__row--total { color: $text-inverse; }
+    .savings-inline__divider { background: rgba(255, 255, 255, 0.2); }
+    .text-brand { color: $text-inverse !important; }
+    .text-muted { color: rgba(255, 255, 255, 0.6) !important; }
+    .text-success { color: #86efac !important; }
+    .text-danger { color: #fca5a5 !important; }
+  }
+
+  small.text-muted { color: rgba(255, 255, 255, 0.6) !important; }
+}
+
+// ============================================
+// HOME BOTTOM SECTION (teal with metrics + charts)
+// ============================================
+
+.home-bottom-section {
+  padding: 1.25rem 0 2rem;
+}
+
+.home-bottom__metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.home-bottom__metric-box {
+  background: #ffffff;
+  border-radius: $border-radius;
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.home-bottom__metric-label {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: $text-muted;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.home-bottom__metric-value {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: $text-primary;
+}
+
+.home-bottom__warning {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: $border-radius;
+  padding: 0.625rem 0.75rem;
+  margin-bottom: 1rem;
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.85);
+
+  i { color: #fbbf24; font-size: 1rem; flex-shrink: 0; }
+  span { flex: 1; }
+}
+
+.home-bottom__warning-link {
+  color: $text-inverse;
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-decoration: none;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+
+  &:hover { color: $text-inverse; text-decoration: underline; }
+}
+
+.home-bottom__card {
+  background: #ffffff;
+  border-radius: $border-radius-lg;
+  padding: 1rem;
+  margin-bottom: 1rem;
+
+  .financial-chart {
+    &__bar-label { color: $text-secondary; }
+    &__bar-track { background: $bg-tertiary; }
+    &__bar-amount { color: $text-primary; }
+    &__result {
+      background: $bg-secondary;
+      &-label { color: $text-secondary; }
+    }
+  }
+}
+
+.home-bottom__card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.home-bottom__card-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: $text-primary;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  i { font-size: 1rem; color: $brand-primary; }
+}
+
+.home-bottom__card-action {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: $text-muted;
+  text-decoration: none;
+
+  &:hover { color: $brand-primary; }
+}
+
+// ============================================
+// TOGGLE CHECK (mark completed on cards)
+// ============================================
+
+.toggle-check {
+  position: absolute;
+  top: 0.625rem;
+  right: 0.625rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  border-radius: $border-radius;
+  padding: 0.375rem 0.625rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1.5px solid;
+  cursor: pointer;
+  z-index: 2;
+  transition: all 0.15s ease;
+
+  i { font-size: 0.875rem; }
+
+  &--pending {
+    background-color: $bg-primary;
+    border-color: $border-color;
+    color: $text-secondary;
+
+    &:hover {
+      border-color: $brand-primary;
+      color: $brand-primary;
+      background-color: rgba($brand-primary, 0.04);
+    }
+  }
+
+  &--done {
+    background-color: rgba($success, 0.08);
+    border-color: $success;
+    color: $success;
+    animation: checkPop 0.35s ease;
+
+    &:hover {
+      background-color: rgba($success, 0.14);
+    }
+  }
+}
+
+@keyframes checkPop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+.carousel__card {
+  position: relative;
+}
+
+.action-card--completed {
+  .action-card__step-pill,
+  .action-card__title,
+  .action-card__video,
+  .action-card__ctas {
+    opacity: 0.6;
+    transition: opacity 0.3s ease;
+  }
+  .toggle-check { opacity: 1; }
+}
+
+// ============================================
+// CARD CTAs (2 buttons per card)
+// ============================================
+
+.card-ctas {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+
+  .btn-app { flex: 1; }
+}
+
+// ============================================
+// FINANCIAL CHART (CSS horizontal bars)
+// ============================================
+
+.financial-chart {
+  &__bar-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.75rem;
+  }
+
+  &__bar-label {
+    width: 70px;
+    flex-shrink: 0;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: $text-secondary;
+  }
+
+  &__bar-track {
+    flex: 1;
+    height: 24px;
+    background: $bg-tertiary;
+    border-radius: $border-radius-sm;
+    overflow: hidden;
+    position: relative;
+  }
+
+  &__bar-fill {
+    height: 100%;
+    border-radius: $border-radius-sm;
+    display: flex;
+    align-items: center;
+    padding-left: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: $text-inverse;
+    transition: width 0.3s ease;
+    min-width: 2px;
+
+    &--green { background-color: $success; }
+    &--red { background-color: $danger; }
+  }
+
+  &__bar-amount {
+    flex-shrink: 0;
+    min-width: 70px;
+    text-align: right;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: $text-primary;
+    padding-left: 0.5rem;
+  }
+
+  &__result {
+    background: $bg-secondary;
+    border-radius: $border-radius;
+    padding: 0.75rem 1rem;
+    margin-top: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    &-label {
+      font-size: 0.8125rem;
+      color: $text-secondary;
+    }
+
+    &-value {
+      font-size: 1rem;
+      font-weight: 700;
+    }
+  }
+}
+
+// ============================================
+// DISCOVERY PAGE (teal background)
+// ============================================
+
+.discovery-page {
+  background-color: $brand-primary;
+  min-height: 100vh;
+  padding-bottom: 2rem;
+
+  .filter-chip {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: rgba(255, 255, 255, 0.85);
+
+    &.active {
+      background: $text-inverse;
+      color: $brand-primary;
+      border-color: $text-inverse;
+    }
+
+    &:hover:not(.active) {
+      border-color: rgba(255, 255, 255, 0.6);
+      color: $text-inverse;
+    }
+  }
+
+  .empty-state {
+    color: rgba(255, 255, 255, 0.7);
+    &__icon { color: rgba(255, 255, 255, 0.4); }
+    &__title { color: $text-inverse; }
+    &__description { color: rgba(255, 255, 255, 0.7); }
+  }
+}
+
+.discovery-card {
+  background: $text-inverse;
+  border-radius: $border-radius-lg;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  margin-bottom: 1rem;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+  &:hover {
+    color: inherit;
+    text-decoration: none;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  &__topline {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  &__badge {
+    display: inline-block;
+    padding: 0.125rem 0.5rem;
+    border-radius: 999px;
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    background: $bg-tertiary;
+    color: $text-secondary;
+    flex-shrink: 0;
+  }
+
+  &__meta {
+    font-size: 0.75rem;
+    color: $text-muted;
+  }
+
+  &__title {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: $text-primary;
+    margin: 0 0 0.375rem;
+    line-height: 1.4;
+  }
+
+  &__content {
+    font-size: 0.8125rem;
+    color: $text-secondary;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  &__embed {
+    border-radius: $border-radius;
+    overflow: hidden;
+    margin-top: 0.5rem;
+  }
+}
+
+// ============================================
+// CALCULATORS PAGE (teal background)
+// ============================================
+
+.calculators-page {
+  background-color: $brand-primary;
+  min-height: 100vh;
+  padding-bottom: 2rem;
+}
+
+.calculator-category {
+  margin-bottom: 1.5rem;
+
+  &__title {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba(255, 255, 255, 0.55);
+    margin-bottom: 0.75rem;
+    padding-left: 0.25rem;
+  }
+}
+
+.calculator-card--white {
+  background-color: #ffffff;
+  border-color: transparent;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.calculator-card__icon--unified {
+  background-color: rgba($brand-primary, 0.08) !important;
+  i { color: $brand-primary !important; }
+}
+
+// ============================================
+// APP FORM SECTIONS (PyG/Balance redesign)
+// ============================================
+
+.app-form__section {
+  background: rgba($brand-primary, 0.04);
+  border: 1px solid rgba($brand-primary, 0.12);
+  border-radius: $border-radius-lg;
+  padding: 1.25rem;
+  margin-bottom: 1.25rem;
+
+  &--expenses {
+    background: rgba($danger, 0.04);
+    border-color: rgba($danger, 0.12);
+
+    .app-form__section-title { color: $danger; }
+    .app-form__input-suffix { background-color: rgba($danger, 0.08); color: $danger; }
+  }
+
+  &-title {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: $brand-primary;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+}

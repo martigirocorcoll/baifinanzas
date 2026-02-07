@@ -1,0 +1,169 @@
+<%# Action Plan Card %>
+<div class="app-card">
+  <div class="app-card__header">
+    <h2 class="app-card__title">
+      <i class="bi bi-list-check"></i>
+      <%= t('home.action_plan.title', default: 'Tu plan de accion') %>
+    </h2>
+    <span class="text-muted small">
+      <%= @completed_count %>/<%= @total_count %>
+    </span>
+  </div>
+
+  <div class="app-card__body">
+    <%# Explanatory description %>
+    <div class="app-explanation mb-3">
+      <i class="bi bi-compass app-explanation__icon"></i>
+      <p class="app-explanation__text">
+        <%= t('home.action_plan.description', default: 'Basado en tu situacion, estos son los pasos que te recomendamos.') %>
+      </p>
+    </div>
+
+    <%# Progress bar %>
+    <div class="progress mb-4" style="height: 6px;">
+      <div class="progress-bar bg-success" role="progressbar"
+           style="width: <%= @progress_percentage %>%"
+           aria-valuenow="<%= @progress_percentage %>"
+           aria-valuemin="0"
+           aria-valuemax="100">
+      </div>
+    </div>
+
+    <% if @current_task %>
+      <%# Featured current task %>
+      <div class="current-task-featured">
+        <span class="badge bg-brand-light text-brand mb-3" style="font-size: 0.75rem;">
+          <%= t('home.action_plan.current_step', default: 'Paso actual') %>
+        </span>
+
+        <% if @current_task[:video_url].present? %>
+          <div class="ratio ratio-16x9 mb-3 rounded overflow-hidden">
+            <iframe src="<%= @current_task[:video_url] %>"
+                    title="<%= @current_task[:title] %>"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen>
+            </iframe>
+          </div>
+        <% end %>
+
+        <h3 class="h6 mb-2"><%= @current_task[:title] %></h3>
+
+        <% if @current_task[:benefit_text].present? %>
+          <p class="text-muted small mb-3">
+            <i class="bi bi-lightbulb text-warning me-1"></i>
+            <%= @current_task[:benefit_text] %>
+          </p>
+        <% end %>
+
+        <div class="d-flex gap-2">
+          <% if @current_task[:slug].present? %>
+            <%= link_to recommendation_path(@current_task[:slug]),
+                class: 'btn-app btn-app--primary flex-grow-1' do %>
+              <%= t('home.action_plan.see_how', default: 'Ver como hacerlo') %>
+            <% end %>
+          <% end %>
+
+          <%= button_to complete_action_path,
+              method: :post,
+              params: { action_type: @current_task[:type], action_key: @current_task[:key] },
+              class: 'btn-app btn-app--secondary flex-shrink-0',
+              data: { turbo: false } do %>
+            <i class="bi bi-check-lg"></i>
+            <%= t('home.action_plan.mark_completed', default: 'Completado') %>
+          <% end %>
+        </div>
+      </div>
+
+      <%# Remaining tasks %>
+      <% uncompleted_remaining = @remaining_tasks.reject { |a| a[:completed] } %>
+      <% completed_remaining = @remaining_tasks.select { |a| a[:completed] } %>
+      <% visible_remaining = uncompleted_remaining.first(3) %>
+      <% hidden_remaining = uncompleted_remaining.drop(3) + completed_remaining %>
+
+      <% if @remaining_tasks.any? %>
+        <hr class="my-3">
+
+        <ul class="task-list">
+          <% visible_remaining.each do |action| %>
+            <li class="task-item">
+              <%= button_to complete_action_path,
+                  method: :post,
+                  params: { action_type: action[:type], action_key: action[:key] },
+                  class: "task-item__checkbox",
+                  data: { turbo: false } do %>
+              <% end %>
+              <div class="task-item__content">
+                <% if action[:slug].present? %>
+                  <%= link_to action[:title], recommendation_path(action[:slug]), class: 'task-item__title text-decoration-none' %>
+                <% else %>
+                  <span class="task-item__title"><%= action[:title] %></span>
+                <% end %>
+              </div>
+            </li>
+          <% end %>
+
+          <% completed_remaining.first(2).each do |action| %>
+            <li class="task-item task-item--completed">
+              <%= button_to complete_action_path,
+                  method: :post,
+                  params: { action_type: action[:type], action_key: action[:key] },
+                  class: "task-item__checkbox task-item__checkbox--completed",
+                  data: { turbo: false } do %>
+                <i class="bi bi-check"></i>
+              <% end %>
+              <div class="task-item__content">
+                <span class="task-item__title"><%= action[:title] %></span>
+              </div>
+            </li>
+          <% end %>
+        </ul>
+
+        <% if hidden_remaining.length > 0 %>
+          <div class="text-center mt-2">
+            <a href="#" class="small text-brand" data-bs-toggle="collapse" data-bs-target="#remainingTasks">
+              <%= t('home.action_plan.show_remaining', count: hidden_remaining.length, default: "+#{hidden_remaining.length} tareas mas") %>
+            </a>
+
+            <div class="collapse mt-2" id="remainingTasks">
+              <ul class="task-list">
+                <% hidden_remaining.each do |action| %>
+                  <li class="task-item <%= 'task-item--completed' if action[:completed] %>">
+                    <%= button_to complete_action_path,
+                        method: :post,
+                        params: { action_type: action[:type], action_key: action[:key] },
+                        class: "task-item__checkbox #{'task-item__checkbox--completed' if action[:completed]}",
+                        data: { turbo: false } do %>
+                      <% if action[:completed] %>
+                        <i class="bi bi-check"></i>
+                      <% end %>
+                    <% end %>
+                    <div class="task-item__content">
+                      <% if action[:slug].present? && !action[:completed] %>
+                        <%= link_to action[:title], recommendation_path(action[:slug]), class: 'task-item__title text-decoration-none' %>
+                      <% else %>
+                        <span class="task-item__title"><%= action[:title] %></span>
+                      <% end %>
+                    </div>
+                  </li>
+                <% end %>
+              </ul>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+
+    <% else %>
+      <%# All completed state %>
+      <div class="empty-state py-4">
+        <i class="bi bi-trophy empty-state__icon text-warning" style="font-size: 2.5rem;"></i>
+        <h4 class="empty-state__title mt-2">
+          <%= t('home.action_plan.all_completed_title', default: 'Plan completado!') %>
+        </h4>
+        <p class="empty-state__description">
+          <%= t('home.action_plan.all_completed_description', default: 'Has completado todas las tareas de tu plan de accion. Sigue asi!') %>
+        </p>
+      </div>
+    <% end %>
+  </div>
+</div>

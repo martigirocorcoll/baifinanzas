@@ -1,0 +1,227 @@
+<% content_for :header do %>
+  <%= render "shared/app_header",
+      title: @title,
+      back_path: calculators_path %>
+<% end %>
+
+<div class="app-container">
+  <p class="text-muted mb-4">
+    <%= t('calculators.investment_returns.intro',
+        default: 'Calcula la rentabilidad real de tus inversiones y comparala con el mercado.') %>
+  </p>
+
+  <%# Inputs %>
+  <div class="app-form__group">
+    <label class="app-form__label"><%= t('calculators.investment_returns.initial_invested', default: 'Capital inicial invertido') %></label>
+    <div class="app-form__input-group">
+      <span class="app-form__input-prefix">&euro;</span>
+      <input type="number" class="app-form__input" id="initialInvested" value="10000" min="0" step="1000">
+    </div>
+  </div>
+
+  <div class="app-form__group">
+    <label class="app-form__label"><%= t('calculators.investment_returns.additional_contributions', default: 'Aportaciones externas (total)') %></label>
+    <div class="app-form__input-group">
+      <span class="app-form__input-prefix">&euro;</span>
+      <input type="number" class="app-form__input" id="additionalContributions" value="5000" min="0" step="500">
+    </div>
+  </div>
+
+  <div class="app-form__group">
+    <label class="app-form__label"><%= t('calculators.investment_returns.final_value', default: 'Valor final de la inversion') %></label>
+    <div class="app-form__input-group">
+      <span class="app-form__input-prefix">&euro;</span>
+      <input type="number" class="app-form__input" id="finalValue" value="18500" min="0" step="500">
+    </div>
+  </div>
+
+  <div class="app-form__group">
+    <label class="app-form__label">
+      <%= t('calculators.investment_returns.time_elapsed', default: 'Tiempo transcurrido') %>
+      <span class="text-brand fw-semibold ms-2" id="yearsDisplay">3 anos</span>
+    </label>
+    <div class="app-slider">
+      <input type="range" class="app-slider__input" id="timeYears" min="1" max="30" value="3" step="0.5">
+      <div class="app-slider__labels"><span>1</span><span>30</span></div>
+    </div>
+  </div>
+
+  <div class="app-divider"></div>
+
+  <%# Results %>
+  <div class="app-card">
+    <h4 class="app-card__title mb-3">
+      <i class="bi bi-bar-chart"></i>
+      <%= t('calculators.investment_returns.your_results', default: 'Tus resultados') %>
+    </h4>
+
+    <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+      <span class="text-muted"><%= t('calculators.investment_returns.total_return_amount', default: 'Rentabilidad total') %></span>
+      <strong id="totalReturnAmount" class="text-success">+&euro;3,500 (+23.3%)</strong>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+      <span class="text-muted">
+        <%= t('calculators.investment_returns.annualized_roi', default: 'ROI anualizado') %>
+        <a href="#" class="info-trigger" data-bs-toggle="popover" data-bs-trigger="click" data-bs-html="true"
+           data-bs-content="<strong>ROI (Return on Investment)</strong><br>Rentabilidad anualizada sobre el total invertido (capital inicial + aportaciones).">
+          <i class="bi bi-info-circle"></i>
+        </a>
+      </span>
+      <strong id="annualizedROI" class="text-brand">+7.2%</strong>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center py-2">
+      <span class="text-muted">
+        <%= t('calculators.investment_returns.annualized_roe', default: 'ROE anualizado') %>
+        <a href="#" class="info-trigger" data-bs-toggle="popover" data-bs-trigger="click" data-bs-html="true"
+           data-bs-content="<strong>ROE (Return on Equity)</strong><br>Rentabilidad anualizada sobre tu capital propio inicial (sin contar aportaciones adicionales).">
+          <i class="bi bi-info-circle"></i>
+        </a>
+      </span>
+      <strong id="annualizedROE">+10.1%</strong>
+    </div>
+  </div>
+
+  <%# Comparison %>
+  <div class="app-card mt-4">
+    <h4 class="app-card__title mb-3">
+      <i class="bi bi-arrow-left-right"></i>
+      <%= t('calculators.investment_returns.comparison', default: 'Comparativa') %>
+    </h4>
+
+    <div class="mb-3">
+      <div class="d-flex justify-content-between align-items-center mb-1">
+        <span class="small"><%= t('calculators.investment_returns.your_investment', default: 'Tu inversion') %></span>
+        <span class="small fw-semibold" id="barYourReturn">+7.2%</span>
+      </div>
+      <div class="progress" style="height: 22px;">
+        <div class="progress-bar bg-primary" id="barYour" style="width: 72%"></div>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <div class="d-flex justify-content-between align-items-center mb-1">
+        <span class="small text-muted"><%= t('calculators.investment_returns.sp500', default: 'S&P 500 historico (~10%/ano)') %></span>
+        <span class="small text-muted">10%</span>
+      </div>
+      <div class="progress" style="height: 22px;">
+        <div class="progress-bar bg-success bg-opacity-50" style="width: 100%"></div>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <div class="d-flex justify-content-between align-items-center mb-1">
+        <span class="small text-muted"><%= t('calculators.investment_returns.inflation', default: 'Inflacion (~3%/ano)') %></span>
+        <span class="small text-muted">3%</span>
+      </div>
+      <div class="progress" style="height: 22px;">
+        <div class="progress-bar bg-warning bg-opacity-50" style="width: 30%"></div>
+      </div>
+    </div>
+
+    <div class="mb-0">
+      <div class="d-flex justify-content-between align-items-center mb-1">
+        <span class="small text-muted"><%= t('calculators.investment_returns.deposit', default: 'Deposito bancario (~2.5%/ano)') %></span>
+        <span class="small text-muted">2.5%</span>
+      </div>
+      <div class="progress" style="height: 22px;">
+        <div class="progress-bar bg-secondary bg-opacity-50" style="width: 25%"></div>
+      </div>
+    </div>
+  </div>
+
+  <%# Disclaimer %>
+  <div class="app-disclaimer mt-2">
+    <i class="bi bi-info-circle me-1"></i>
+    <%= t('calculators.investment_returns.disclaimer',
+        default: 'Los benchmarks son promedios historicos orientativos. Rentabilidades pasadas no garantizan resultados futuros.') %>
+  </div>
+</div>
+
+<script>
+function initInvestmentReturns() {
+  var i18n = {
+    yearsSuffix: '<%= j t("calculators.investment_returns.js.years_suffix", default: " anos") %>'
+  };
+
+  var initialEl = document.getElementById('initialInvested');
+  var additionalEl = document.getElementById('additionalContributions');
+  var finalEl = document.getElementById('finalValue');
+  var yearsEl = document.getElementById('timeYears');
+
+  var SP500 = 10;
+  var INFLATION = 3;
+  var DEPOSIT = 2.5;
+
+  function formatCurrency(value) {
+    return new Intl.NumberFormat('es-ES', {
+      style: 'currency', currency: 'EUR',
+      minimumFractionDigits: 0, maximumFractionDigits: 0
+    }).format(value);
+  }
+
+  function calculate() {
+    var initial = parseFloat(initialEl.value) || 0;
+    var additional = parseFloat(additionalEl.value) || 0;
+    var finalVal = parseFloat(finalEl.value) || 0;
+    var years = parseFloat(yearsEl.value) || 1;
+
+    var totalInvested = initial + additional;
+    var totalReturn = finalVal - totalInvested;
+    var totalReturnPct = totalInvested > 0 ? (totalReturn / totalInvested) * 100 : 0;
+
+    // Annualized ROI: based on total invested
+    // (finalValue / totalInvested)^(1/years) - 1
+    var annROI = (totalInvested > 0 && years > 0) ? (Math.pow(finalVal / totalInvested, 1 / years) - 1) * 100 : 0;
+    if (!isFinite(annROI)) annROI = 0;
+
+    // Annualized ROE: based on initial capital only
+    // (finalValue / initial)^(1/years) - 1
+    var annROE = (initial > 0 && years > 0) ? (Math.pow(finalVal / initial, 1 / years) - 1) * 100 : 0;
+    if (!isFinite(annROE)) annROE = 0;
+
+    // Update displays
+    document.getElementById('yearsDisplay').textContent = years + i18n.yearsSuffix;
+
+    var returnColor = totalReturn >= 0 ? 'text-success' : 'text-danger';
+    var sign = totalReturn >= 0 ? '+' : '';
+    document.getElementById('totalReturnAmount').innerHTML = sign + formatCurrency(Math.round(totalReturn)) + ' (' + sign + totalReturnPct.toFixed(1) + '%)';
+    document.getElementById('totalReturnAmount').className = returnColor;
+
+    var roiSign = annROI >= 0 ? '+' : '';
+    document.getElementById('annualizedROI').textContent = roiSign + annROI.toFixed(1) + '%';
+    document.getElementById('annualizedROI').className = annROI >= 0 ? 'text-brand' : 'text-danger';
+
+    var roeSign = annROE >= 0 ? '+' : '';
+    document.getElementById('annualizedROE').textContent = roeSign + annROE.toFixed(1) + '%';
+
+    // Update comparison bars (max = S&P 500 at 10%, use as reference)
+    var maxBar = Math.max(SP500, Math.abs(annROI)) || 10;
+    document.getElementById('barYourReturn').textContent = roiSign + annROI.toFixed(1) + '%';
+    document.getElementById('barYour').style.width = Math.min(100, Math.max(2, (Math.abs(annROI) / maxBar) * 100)) + '%';
+    document.getElementById('barYour').className = 'progress-bar ' + (annROI >= 0 ? 'bg-primary' : 'bg-danger');
+
+  }
+
+  // Dispose existing popovers before re-init
+  document.querySelectorAll('[data-bs-toggle="popover"]').forEach(function(el) {
+    var existing = bootstrap.Popover.getInstance(el);
+    if (existing) existing.dispose();
+  });
+
+  // Initialize popovers
+  var popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
+  popoverTriggerList.forEach(function(el) { new bootstrap.Popover(el); });
+
+  [initialEl, additionalEl, finalEl, yearsEl].forEach(function(el) {
+    if (el.dataset.bound) return;
+    el.dataset.bound = '1';
+    el.addEventListener('input', calculate);
+  });
+
+  calculate();
+}
+document.addEventListener('DOMContentLoaded', initInvestmentReturns);
+document.addEventListener('turbo:load', initInvestmentReturns);
+</script>

@@ -61,17 +61,23 @@ class Objective < ApplicationRecord
     annual_return_rate
   end
 
+  def remaining_amount
+    [target_amount - current_amount, 0].max
+  end
+
   def monthly_savings_needed
-    return target_amount unless target_date.present?
-    return target_amount if months_to_target <= 0
+    remaining = remaining_amount
+    return 0 if remaining <= 0
+    return remaining unless target_date.present?
+    return remaining if months_to_target <= 0
 
     monthly_rate = annual_return_rate / 12
     periods = months_to_target
 
     if monthly_rate == 0
-      target_amount / periods
+      remaining.to_f / periods
     else
-      target_amount / (((1 + monthly_rate) ** periods - 1) / monthly_rate)
+      remaining / (((1 + monthly_rate) ** periods - 1) / monthly_rate)
     end.round(2)
   end
 
@@ -131,6 +137,46 @@ class Objective < ApplicationRecord
 
     # Default
     "bi-bullseye"
+  end
+
+  def objective_icon_emoji
+    return "" unless title.present?
+
+    title_lower = title.downcase
+
+    # Map keywords to emojis
+    emoji_map = {
+      house: "",
+      car: "",
+      education: "",
+      retirement: "",
+      travel: "",
+      wedding: "",
+      emergency: "",
+      investment: "",
+      debt: "",
+      business: "",
+      health: "",
+      family: ""
+    }
+
+    emoji_map.each do |icon_type, emoji|
+      es_keywords = I18n.t("objectives.icon_keywords.#{icon_type}", locale: :es, default: '')
+      en_keywords = I18n.t("objectives.icon_keywords.#{icon_type}", locale: :en, default: '')
+      all_keywords = "#{es_keywords}|#{en_keywords}".gsub('||', '|')
+
+      if all_keywords.present? && title_lower.match?(Regexp.new(all_keywords, Regexp::IGNORECASE))
+        return emoji
+      end
+    end
+
+    # Default
+    ""
+  end
+
+  def current_progress_percentage
+    return 0 unless target_amount.present? && target_amount > 0
+    ((current_amount.to_f / target_amount) * 100).clamp(0, 100)
   end
 
   private

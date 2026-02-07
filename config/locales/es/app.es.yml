@@ -1,0 +1,472 @@
+es:
+  # Navigation
+  navigation:
+    bottom_nav:
+      label: "Navegacion principal"
+      home: "Inicio"
+      discovery: "Discovery"
+      calculators: "Calculadoras"
+      profile: "Perfil"
+
+  # Common
+  common:
+    edit: "Editar"
+    delete: "Eliminar"
+    save: "Guardar"
+    cancel: "Cancelar"
+    back: "Volver"
+    close: "Cerrar"
+    understood: "Entendido"
+    loading: "Cargando..."
+
+  # Home
+  home:
+    hero:
+      monthly_savings: "Ahorro mensual"
+      see_details: "Ver detalles"
+      hide_details: "Ocultar detalles"
+      level_progress: "Progreso nivel"
+      edit_income_expenses: "Ingresos y gastos"
+      edit_assets_debts: "Activos y deudas"
+
+    financial_level:
+      title: "Tu nivel financiero"
+      see_requirements: "Ver requisitos"
+      level_x_of_6: "Nivel %{level} de 6"
+      next: "Siguiente:"
+      monthly_savings: "Ahorro mensual"
+      net_worth: "Patrimonio neto"
+      complete_profile_for_accuracy: "Completa tu perfil para un nivel mas preciso"
+      complete: "Completar"
+
+    action_plan:
+      title: "Tu plan de accion"
+      description: "Basado en tu situacion, estos son los pasos que te recomendamos."
+      current_step: "Paso actual"
+      see_how: "Ver como hacerlo"
+      mark_completed: "Completado"
+      show_remaining: "+%{count} tareas mas"
+      show_all: "Ver las %{count} tareas"
+      all_completed_title: "Plan completado!"
+      all_completed_description: "Has completado todas las tareas de tu plan de accion. Sigue asi!"
+
+    action_carousel:
+      step_of: "Paso %{step} de %{total}"
+      undo: "Deshacer"
+      pending: "Pendiente"
+      done: "Hecho"
+      see_detail: "Ver detalle"
+      take_action: "Tomar accion"
+      cta:
+        saving_advice: "Ver opciones"
+        better_bank_account: "Abrir cuenta"
+        debt_optimization: "Reducir deuda"
+        mortgage_optimization: "Ver opciones"
+        emergency_deposit: "Abrir deposito"
+        portfolio_optimization: "Ver opciones"
+        tax_advisory: "Ver asesores"
+
+    objectives:
+      title: "Tus objetivos"
+      new: "Nuevo"
+      intro_description: "Ya tienes capacidad de ahorro. Decide en que quieres centrarte y te ayudamos a crear un plan."
+      exceeds_capacity: "Tus objetivos superan tu capacidad de ahorro mensual"
+      save_monthly: "Ahorrar:"
+      per_month: "/mes"
+      see_detail: "Ver detalle"
+      start_investing: "Empezar a invertir"
+      start_saving: "Empezar a ahorrar"
+      see_investment_plan: "Ver como invertir"
+      see_deposit_plan: "Ver como ahorrar"
+      placeholder_deposit: "Deposito a corto plazo"
+      placeholder_fixed_income: "Renta fija a medio plazo"
+      placeholder_index_funds: "Renta variable global"
+      placeholder_retirement: "Renta variable para jubilacion"
+      progress_of: "de"
+      update_progress: "Actualizar progreso"
+      current_amount_label: "Cuanto llevas ahorrado?"
+      no_objectives: "Sin objetivos"
+      create_first: "Crea tu primer objetivo financiero para empezar a planificar tu futuro."
+      create_objective: "Crear objetivo"
+
+    savings_summary:
+      title: "Resumen de ahorro"
+      monthly_cash_flow: "Capacidad de ahorro mensual"
+      committed_to_objectives: "Comprometido en objetivos"
+      available_remaining: "Disponible restante"
+
+    charts:
+      pyg_title: "Tu PyG mensual"
+      balance_title: "Tu patrimonio"
+      income: "Ingresos"
+      expenses: "Gastos"
+      savings_capacity: "Capacidad de ahorro"
+      assets: "Activos"
+      debts: "Deudas"
+      net_worth: "Patrimonio neto"
+      edit_pyg: "Editar PyG"
+      edit_balance: "Editar Balance"
+
+    level_guide:
+      title: "Niveles financieros"
+      description: "Tu nivel financiero indica en que etapa de tu camino hacia la libertad financiera te encuentras."
+
+  # Calculators
+  calculators:
+    title: "Calculadoras"
+    description: "Herramientas para planificar tu futuro financiero"
+    coming_soon: "Esta calculadora estara disponible muy pronto."
+    category_savings_investment: "Ahorro e Inversion"
+    category_housing_debt: "Vivienda y Deuda"
+    category_financial_security: "Seguridad Financiera"
+
+    compound_interest:
+      title: "Interes compuesto"
+      description: "Calcula el crecimiento de tus inversiones"
+      initial_capital: "Capital inicial"
+      monthly_contribution: "Aportacion mensual"
+      years: "Añosde inversion"
+      rate: "Rentabilidad anual esperada"
+      future_value: "Valor futuro"
+      total_contributed: "Capital aportado"
+      interest_earned: "Intereses ganados"
+      evolution: "Evolucion del capital"
+      disclaimer: "Esta calculadora es solo orientativa. La rentabilidad pasada no garantiza rentabilidad futura."
+      js:
+        today: "Hoy"
+        year: "Ano"
+        total_value: "Valor total"
+        capital_contributed: "Capital aportado"
+
+    mortgage:
+      title: "Cuota hipotecaria"
+      description: "Simula tu hipoteca: fija, mixta o variable"
+      fixed: "Fijo"
+      mixed: "Mixto"
+      variable: "Variable"
+      property_price: "Precio vivienda"
+      down_payment: "Entrada"
+      term: "Plazo"
+      interest_rate: "Tipo interes"
+      monthly_payment: "Cuota mensual"
+      loan_amount: "Capital"
+      total_interest: "Total intereses"
+      mixed_coming_soon: "Calculadora de hipoteca mixta disponible proximamente."
+      variable_coming_soon: "Calculadora de hipoteca variable disponible proximamente."
+      disclaimer: "Calculo orientativo. Consulta con tu banco para una oferta personalizada."
+      fixed_years: "Añosa tipo fijo"
+      fixed_rate: "Tipo fijo"
+      spread: "Diferencial"
+      euribor_estimate: "Euribor estimado"
+      fixed_period: "Periodo fijo"
+      period_duration: "Duracion del periodo"
+      variable_period: "Periodo variable"
+      payment_difference: "Diferencia de cuota"
+      current_rate: "Tipo actual"
+      current_euribor: "Euribor actual"
+      simulation_title: "Simulacion: Y si sube el Euribor?"
+      simulated_euribor: "Euribor simulado"
+      new_payment: "Nueva cuota"
+      monthly_impact: "Impacto mensual"
+      impact_by_year: "Impacto por año de hipoteca"
+      impact_explanation: "Los primeros años pagas mas intereses, por eso una subida del Euribor te afecta mas al principio."
+      js:
+        years_suffix: " años"
+        years_prefix: "Años"
+        year_prefix: "Año"
+
+    emergency_fund:
+      title: "Fondo de emergencia"
+      description: "Calcula cuanto necesitas para estar protegido"
+      monthly_expenses: "Gastos mensuales"
+      months_coverage: "Meses de cobertura"
+      recommended: "Recomendado: 4-6 meses"
+      current_savings: "Ahorros actuales"
+      your_fund: "Tu fondo de emergencia"
+      target: "Objetivo:"
+      current: "Tienes:"
+      missing: "Te faltan:"
+      savings_plan: "Plan de ahorro"
+      monthly_savings: "Cuanto puedes ahorrar al mes?"
+      disclaimer: "El fondo de emergencia debe estar en una cuenta de facil acceso (deposito o cuenta de ahorro)."
+      js:
+        fund_complete: "Ya tienes tu fondo de emergencia completo!"
+        fund_in_months: "Completaras tu fondo en %{months} meses (%{date})"
+        indicate_savings: "Indica cuanto puedes ahorrar al mes"
+
+    financial_freedom:
+      title: "Libertad financiera"
+      description: "Cuando podras vivir de tus inversiones?"
+      intro: "Calcula el patrimonio que necesitas para vivir de tus inversiones."
+      monthly_expenses: "Gastos mensuales"
+      expenses_hint: "Pueden ser tus gastos actuales o los que esperas tener en el futuro"
+      expected_return: "Rentabilidad esperada"
+      current_net_worth: "Tu patrimonio actual"
+      required_net_worth: "Patrimonio necesario para libertad financiera"
+      calculation: "Calculo"
+      annual_expenses: "Gastos anuales"
+      taxes: "+ Impuestos (~23%)"
+      gross_income_needed: "= Ganancias brutas necesarias"
+      at_return: "Con rentabilidad del"
+      your_situation: "Tu situacion"
+      current: "Tu patrimonio actual"
+      missing: "Te faltan"
+      disclaimer: "Esta calculadora asume una tasa impositiva aproximada del 23%. Consulta con un asesor fiscal para tu situacion especifica."
+      js:
+        years_suffix: " años"
+        of_target: "% del objetivo"
+
+    investment_goal:
+      title: "Objetivo de inversion"
+      description: "Calcula cuanto invertir para alcanzar tu meta"
+      intro: "Calcula cuanto necesitas invertir o cuanto tiempo tardaras en alcanzar tu objetivo."
+      target_capital: "Objetivo de capital final"
+      initial_capital: "Capital inicial"
+      expected_return: "Rentabilidad esperada"
+      what_to_calculate: "Que quieres calcular?"
+      mode_contribution: "Cuanto invertir/mes"
+      mode_time: "Cuantos años"
+      desired_term: "Plazo deseado"
+      monthly_contribution: "Aportacion mensual"
+      breakdown: "Desglose"
+      target: "Objetivo"
+      initial: "Capital inicial"
+      total_contributed: "Total aportado"
+      interest_earned: "Intereses generados"
+      disclaimer: "Calculo basado en rentabilidad constante. La rentabilidad real puede variar. Rentabilidades pasadas no garantizan resultados futuros."
+      js:
+        years_suffix: " años"
+        months_suffix: " meses"
+        and: " y "
+        monthly_contribution_needed: "Aportacion mensual necesaria"
+        time_needed: "Tiempo necesario"
+        already_reached: "Ya tienes tu objetivo!"
+        more_than_50_years: "Mas de 50 años"
+
+    early_repayment:
+      title: "Amortizacion anticipada"
+      description: "Amortizar o invertir? Compara estrategias"
+      intro: "Tienes dinero extra? Compara si es mejor amortizar tu hipoteca o invertirlo."
+      outstanding_capital: "Capital pendiente de hipoteca"
+      remaining_years: "Añosrestantes"
+      mortgage_rate: "Tipo de interes hipoteca"
+      annual_amount: "Cantidad anual disponible"
+      scenario_a: "Amortizar cada año"
+      scenario_b: "Invertir y amortizar al final"
+      years_saved: "Añosque te ahorras"
+      interest_saved: "Intereses ahorrados"
+      finish_year: "Terminas la hipoteca en"
+      investment_value: "Valor de la inversion"
+      total_contributed: "Total aportado"
+      investment_profit: "Beneficio de la inversion"
+      recommendation: "Recomendacion"
+      risk_warning: "Invertir tiene riesgo. La rentabilidad no esta garantizada. Amortizar es una ganancia segura."
+      investment_return: "Rentabilidad de inversion"
+      disclaimer: "Calculo orientativo. No tiene en cuenta deducciones fiscales ni comisiones de amortizacion anticipada."
+      js:
+        years_suffix: " años"
+        invest_better: "<strong class=\"text-brand\">Invertir</strong> te podria dejar <strong>%{amount} mas</strong> que amortizar, con una rentabilidad del %{invest_rate}% y un tipo hipotecario del %{mortgage_rate}%."
+        repay_better: "<strong class=\"text-success\">Amortizar</strong> te ahorra <strong>%{amount} mas</strong> que invertir con estos parametros."
+
+    investment_returns:
+      title: "Rentabilidad de inversion"
+      description: "Calcula tu ROI y ROE anualizado"
+      intro: "Calcula la rentabilidad real de tus inversiones y comparala con el mercado."
+      initial_invested: "Capital inicial invertido"
+      additional_contributions: "Aportaciones externas (total)"
+      final_value: "Valor final de la inversion"
+      time_elapsed: "Tiempo transcurrido"
+      your_results: "Tus resultados"
+      total_return_amount: "Rentabilidad total"
+      annualized_roi: "ROI anualizado"
+      annualized_roe: "ROE anualizado"
+      comparison: "Comparativa"
+      your_investment: "Tu inversion"
+      sp500: "S&P 500 historico (~10%/año)"
+      inflation: "Inflacion (~3%/año)"
+      deposit: "Deposito bancario (~2.5%/año)"
+      disclaimer: "Los benchmarks son promedios historicos orientativos. Rentabilidades pasadas no garantizan resultados futuros."
+      js:
+        years_suffix: " años"
+        beats_inflation: "Tu inversion supera la inflacion. Tu dinero esta creciendo en terminos reales."
+        below_inflation: "Tu inversion es positiva pero no supera la inflacion. En terminos reales estas perdiendo poder adquisitivo."
+        negative_returns: "Tu inversion tiene rentabilidad negativa. Estas perdiendo dinero."
+
+  # Discovery
+  discovery:
+    title: "Discovery"
+    back_to_feed: "Discovery"
+    badges:
+      article: "ARTICULO"
+      news: "NOVEDAD"
+    categories:
+      investment: "Inversion"
+      savings: "Ahorro"
+      debt: "Deudas"
+      budget: "Presupuesto"
+      concepts: "Conceptos"
+    filters:
+      all: "Todo"
+      videos: "Videos"
+      articles: "Articulos"
+      news: "Novedades"
+    no_content: "Sin contenido"
+    no_content_description: "El contenido educativo estara disponible muy pronto."
+    by: "Por"
+    read_time: "de lectura"
+    watch_video: "Ver video"
+    articles:
+      index_funds:
+        title: "Que es un fondo indexado?"
+        excerpt: "Los fondos indexados son una de las formas mas sencillas y eficientes de invertir a largo plazo."
+      compound_interest:
+        title: "El poder del interes compuesto"
+        excerpt: "Descubre como el interes compuesto puede multiplicar tus ahorros con el tiempo."
+      emergency_fund:
+        title: "Como crear tu fondo de emergencia"
+        excerpt: "Todo plan financiero empieza por tener un colchon de seguridad. Te explicamos como crearlo."
+      budget_rule:
+        title: "La regla 50/30/20 para tu presupuesto"
+        excerpt: "Un metodo sencillo para organizar tus ingresos y empezar a ahorrar desde hoy."
+      debt_management:
+        title: "Como gestionar tus deudas de forma inteligente"
+        excerpt: "No todas las deudas son iguales. Aprende a priorizar y eliminar las que te cuestan dinero."
+      start_investing:
+        title: "Primeros pasos para invertir"
+        excerpt: "Invertir no es solo para expertos. Con estos pasos basicos puedes empezar hoy."
+      saving_mistakes:
+        title: "5 errores que te impiden ahorrar"
+        excerpt: "Si te cuesta llegar a fin de mes, quiza estes cometiendo alguno de estos errores comunes."
+      mortgage_basics:
+        title: "Como funciona una hipoteca"
+        excerpt: "Fija, variable o mixta? Entiende los tipos de hipoteca antes de firmar nada."
+    news:
+      beta_launch:
+        title: "Bienvenido a BaiFinanzas Beta!"
+        content: "Gracias por ser de los primeros en probar BaiFinanzas. Tu opinion nos ayuda a mejorar. Si encuentras algun error o tienes sugerencias, no dudes en contactarnos."
+      calculators:
+        title: "7 calculadoras financieras disponibles"
+        content: "Ya puedes usar nuestras 7 calculadoras: interes compuesto, hipoteca (fija, mixta y variable), fondo de emergencia, libertad financiera, objetivo de inversion, amortizacion anticipada y rentabilidad."
+      personalized_plan:
+        title: "Tu plan financiero personalizado"
+        content: "Con solo 4 datos calculamos tu nivel financiero y te damos un plan de accion con tareas concretas. Actualiza tus datos para ver como sube tu nivel."
+      coming_soon:
+        title: "Proximamente: mas contenido"
+        content: "Estamos preparando mas articulos, videos y herramientas para ayudarte en tu camino financiero. Mantente atento a las novedades!"
+    video_titles:
+      bank_account: "Mejores cuentas bancarias"
+      deposits: "Depositos a plazo fijo"
+      short_term: "Inversiones a corto plazo"
+      long_term: "Invertir a largo plazo"
+      debt: "Gestion de deudas"
+      retirement: "Planificar la jubilacion"
+      taxes: "Optimizacion fiscal"
+      portfolio: "Gestion de cartera"
+
+  # Profile
+  profile:
+    title: "Perfil"
+    completion: "Perfil completado"
+    complete_for_better_recommendations: "Completa tu perfil para obtener mejores recomendaciones."
+    financial_data: "Datos financieros"
+    income_expenses: "Ingresos y gastos"
+    assets_debts: "Activos y deudas"
+    completed: "Completado"
+    pending: "Pendiente"
+    account: "Cuenta"
+    personal_data: "Datos personales"
+    name_email_password: "Nombre, email, contrasena"
+    settings: "Configuracion"
+    language_notifications: "Idioma, notificaciones"
+    logout: "Cerrar sesion"
+    updated_successfully: "Perfil actualizado correctamente"
+    settings_updated: "Configuracion actualizada"
+    your_level: "Tu nivel"
+    actions_completed: "Acciones completadas"
+    objectives_created: "Objetivos creados"
+    member_since: "Miembro desde"
+    go_to_plan: "Ir a tu plan"
+    stats: "Tu actividad"
+
+    edit:
+      title: "Datos personales"
+      name: "Nombre"
+      name_placeholder: "Tu nombre"
+      email: "Email"
+      new_password: "Nueva contrasena"
+      confirm_password: "Confirmar contrasena"
+      password_hint: "Deja en blanco si no quieres cambiar la contrasena"
+      save: "Guardar cambios"
+
+    settings_page:
+      title: "Configuracion"
+      language: "Idioma"
+      save: "Guardar"
+      notifications: "Notificaciones"
+      push_notifications: "Notificaciones push"
+      push_description: "Recibe recordatorios y actualizaciones"
+      notifications_coming_soon: "Disponible proximamente"
+      about: "Acerca de"
+      version: "Version"
+      your_influencer: "Tu referidor"
+      contact_support: "Contactar soporte"
+
+  # Onboarding
+  onboarding:
+    welcome:
+      title: "Bienvenido a BaiFinanzas!"
+      description: "Vamos a crear tu plan financiero personalizado en 2 minutos."
+      time: "Solo 4 preguntas"
+      start: "Empezar"
+
+    basic:
+      title: "Datos basicos"
+      description: "Con estos 4 datos podemos calcular tu nivel financiero aproximado."
+      monthly_income: "Ingresos mensuales"
+      income_hint: "Tu salario neto mensual"
+      monthly_expenses: "Gastos mensuales (total)"
+      expenses_hint: "Alquiler, compras, facturas, ocio..."
+      total_savings: "Ahorros totales"
+      savings_hint: "Cuentas bancarias + inversiones"
+      total_debt: "Deudas totales"
+      debt_hint: "Hipoteca + prestamos + tarjetas"
+      calculate: "Ver mi nivel financiero"
+
+    complete:
+      title: "Tu plan esta listo!"
+      your_level: "Tu nivel financiero"
+      level_x_of_6: "Nivel %{level} de 6"
+      now_you_can: "Ahora puedes ver tu plan de accion, crear objetivos financieros y usar las calculadoras."
+      tip: "Este es un resultado aproximado. Completa tu perfil detallado para un analisis mas preciso."
+      go_to_dashboard: "Ir a mi dashboard"
+
+    save_error: "Error al guardar tus datos. Por favor, intentalo de nuevo."
+
+  # Objectives
+  objectives:
+    confirm_delete: "Eliminar este objetivo?"
+    new:
+      title: "Nuevo objetivo"
+    edit:
+      title: "Editar objetivo"
+      save: "Guardar cambios"
+    form:
+      title: "Nombre del objetivo"
+      title_placeholder: "Ej: Comprar coche"
+      amount: "Cantidad objetivo"
+      date: "Fecha objetivo"
+      date_hint: "Cuando quieres alcanzar este objetivo?"
+      examples: "Ideas de objetivos:"
+      example_car: "Coche"
+      example_car_title: "Comprar coche"
+      example_travel: "Viaje"
+      example_travel_title: "Viaje de vacaciones"
+      example_emergency: "Emergencia"
+      example_emergency_title: "Fondo de emergencia"
+      example_house: "Vivienda"
+      example_house_title: "Entrada piso"
+      example_retirement: "Jubilacion"
+      example_retirement_title: "Jubilacion"
+      current_amount: "Ya aportado"
+      current_amount_hint: "Si ya tienes algo ahorrado para este objetivo"
+      create: "Crear objetivo"

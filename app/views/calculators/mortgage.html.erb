@@ -1,0 +1,556 @@
+<% content_for :header do %>
+  <%= render "shared/app_header",
+      title: @title,
+      back_path: calculators_path %>
+<% end %>
+
+<div class="app-container">
+  <%# Tab navigation %>
+  <ul class="nav nav-pills mb-4 justify-content-center" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="fixed-tab" data-bs-toggle="tab" data-bs-target="#fixed" type="button" role="tab">
+        <%= t('calculators.mortgage.fixed', default: 'Fijo') %>
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="mixed-tab" data-bs-toggle="tab" data-bs-target="#mixed" type="button" role="tab">
+        <%= t('calculators.mortgage.mixed', default: 'Mixto') %>
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="variable-tab" data-bs-toggle="tab" data-bs-target="#variable" type="button" role="tab">
+        <%= t('calculators.mortgage.variable', default: 'Variable') %>
+      </button>
+    </li>
+  </ul>
+
+  <div class="tab-content">
+    <%# ═══════════════════════════════════════════ %>
+    <%# Fixed Rate Tab %>
+    <%# ═══════════════════════════════════════════ %>
+    <div class="tab-pane fade show active" id="fixed" role="tabpanel">
+      <div class="app-form__group">
+        <label class="app-form__label"><%= t('calculators.mortgage.property_price', default: 'Precio vivienda') %></label>
+        <div class="app-form__input-group">
+          <span class="app-form__input-prefix">&euro;</span>
+          <input type="number" class="app-form__input" id="fixedPrice" value="250000" min="0" step="5000">
+        </div>
+      </div>
+
+      <div class="app-form__group">
+        <label class="app-form__label"><%= t('calculators.mortgage.down_payment', default: 'Entrada') %></label>
+        <div class="app-form__input-group">
+          <span class="app-form__input-prefix">&euro;</span>
+          <input type="number" class="app-form__input" id="fixedDown" value="50000" min="0" step="1000">
+        </div>
+        <p class="app-form__hint" id="fixedDownPercent">20% del precio</p>
+      </div>
+
+      <div class="app-form__group">
+        <label class="app-form__label">
+          <%= t('calculators.mortgage.term', default: 'Plazo') %>
+          <span class="text-brand fw-semibold ms-2" id="fixedYearsDisplay">25 anos</span>
+        </label>
+        <div class="app-slider">
+          <input type="range" class="app-slider__input" id="fixedYears" min="5" max="40" value="25">
+          <div class="app-slider__labels"><span>5</span><span>40</span></div>
+        </div>
+      </div>
+
+      <div class="app-form__group">
+        <label class="app-form__label">
+          <%= t('calculators.mortgage.interest_rate', default: 'Tipo interes') %>
+          <span class="text-brand fw-semibold ms-2" id="fixedRateDisplay">3.0%</span>
+        </label>
+        <div class="app-slider">
+          <input type="range" class="app-slider__input" id="fixedRate" min="1" max="8" value="3" step="0.1">
+          <div class="app-slider__labels"><span>1%</span><span>8%</span></div>
+        </div>
+      </div>
+
+      <div class="app-divider"></div>
+
+      <div class="result-card result-card--highlight">
+        <p class="result-card__label"><%= t('calculators.mortgage.monthly_payment', default: 'Cuota mensual') %></p>
+        <p class="result-card__value" id="fixedMonthly">&euro;948</p>
+      </div>
+
+      <div class="row g-3">
+        <div class="col-6">
+          <div class="result-card">
+            <p class="result-card__label"><%= t('calculators.mortgage.loan_amount', default: 'Capital') %></p>
+            <p class="result-card__value h5 mb-0" id="fixedLoan">&euro;200,000</p>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="result-card">
+            <p class="result-card__label"><%= t('calculators.mortgage.total_interest', default: 'Total intereses') %></p>
+            <p class="result-card__value h5 mb-0 text-warning" id="fixedInterest">&euro;84,400</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%# ═══════════════════════════════════════════ %>
+    <%# Mixed Rate Tab %>
+    <%# ═══════════════════════════════════════════ %>
+    <div class="tab-pane fade" id="mixed" role="tabpanel">
+      <div class="app-form__group">
+        <label class="app-form__label"><%= t('calculators.mortgage.property_price', default: 'Precio vivienda') %></label>
+        <div class="app-form__input-group">
+          <span class="app-form__input-prefix">&euro;</span>
+          <input type="number" class="app-form__input" id="mixedPrice" value="250000" min="0" step="5000">
+        </div>
+      </div>
+
+      <div class="app-form__group">
+        <label class="app-form__label"><%= t('calculators.mortgage.down_payment', default: 'Entrada') %></label>
+        <div class="app-form__input-group">
+          <span class="app-form__input-prefix">&euro;</span>
+          <input type="number" class="app-form__input" id="mixedDown" value="50000" min="0" step="1000">
+        </div>
+        <p class="app-form__hint" id="mixedDownPercent">20% del precio</p>
+      </div>
+
+      <div class="app-form__group">
+        <label class="app-form__label">
+          <%= t('calculators.mortgage.term', default: 'Plazo') %>
+          <span class="text-brand fw-semibold ms-2" id="mixedYearsDisplay">25 anos</span>
+        </label>
+        <div class="app-slider">
+          <input type="range" class="app-slider__input" id="mixedYears" min="5" max="40" value="25">
+          <div class="app-slider__labels"><span>5</span><span>40</span></div>
+        </div>
+      </div>
+
+      <div class="app-form__group">
+        <label class="app-form__label">
+          <%= t('calculators.mortgage.fixed_years', default: 'Anos a tipo fijo') %>
+          <span class="text-brand fw-semibold ms-2" id="mixedFixedYearsDisplay">10 anos</span>
+        </label>
+        <div class="app-slider">
+          <input type="range" class="app-slider__input" id="mixedFixedYears" min="1" max="20" value="10">
+          <div class="app-slider__labels"><span>1</span><span>20</span></div>
+        </div>
+      </div>
+
+      <div class="app-form__group">
+        <label class="app-form__label">
+          <%= t('calculators.mortgage.fixed_rate', default: 'Tipo fijo inicial') %>
+          <span class="text-brand fw-semibold ms-2" id="mixedFixedRateDisplay">2.5%</span>
+        </label>
+        <div class="app-slider">
+          <input type="range" class="app-slider__input" id="mixedFixedRate" min="1" max="6" value="2.5" step="0.1">
+          <div class="app-slider__labels"><span>1%</span><span>6%</span></div>
+        </div>
+      </div>
+
+      <div class="app-form__group">
+        <label class="app-form__label"><%= t('calculators.mortgage.spread', default: 'Diferencial') %></label>
+        <div class="app-form__input-group">
+          <span class="app-form__input-prefix">+</span>
+          <input type="number" class="app-form__input" id="mixedSpread" value="0.8" min="0" max="3" step="0.1">
+          <span class="app-form__input-suffix">%</span>
+        </div>
+      </div>
+
+      <div class="app-form__group">
+        <label class="app-form__label">
+          <%= t('calculators.mortgage.euribor_estimate', default: 'Euribor estimado (periodo variable)') %>
+          <span class="text-brand fw-semibold ms-2" id="mixedEuriborDisplay">3.5%</span>
+        </label>
+        <div class="app-slider">
+          <input type="range" class="app-slider__input" id="mixedEuribor" min="0" max="6" value="3.5" step="0.1">
+          <div class="app-slider__labels"><span>0%</span><span>6%</span></div>
+        </div>
+      </div>
+
+      <div class="app-divider"></div>
+
+      <%# Mixed results %>
+      <div class="app-card">
+        <h4 class="app-card__title mb-3">
+          <i class="bi bi-clock-history"></i>
+          <%= t('calculators.mortgage.fixed_period', default: 'Periodo fijo') %>
+        </h4>
+        <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+          <span class="text-muted"><%= t('calculators.mortgage.monthly_payment', default: 'Cuota mensual') %></span>
+          <strong class="text-brand" id="mixedFixedMonthly">&euro;790</strong>
+        </div>
+        <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+          <span class="text-muted"><%= t('calculators.mortgage.interest_rate', default: 'Tipo interes') %></span>
+          <span id="mixedFixedRateResult">2.5%</span>
+        </div>
+        <div class="d-flex justify-content-between align-items-center py-2">
+          <span class="text-muted"><%= t('calculators.mortgage.period_duration', default: 'Duracion') %></span>
+          <span id="mixedFixedPeriodYears">Anos 1-10</span>
+        </div>
+      </div>
+
+      <div class="app-card mt-3">
+        <h4 class="app-card__title mb-3">
+          <i class="bi bi-graph-up"></i>
+          <%= t('calculators.mortgage.variable_period', default: 'Periodo variable') %>
+        </h4>
+        <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+          <span class="text-muted"><%= t('calculators.mortgage.monthly_payment', default: 'Cuota mensual') %></span>
+          <strong class="text-warning" id="mixedVariableMonthly">&euro;1,089</strong>
+        </div>
+        <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+          <span class="text-muted"><%= t('calculators.mortgage.interest_rate', default: 'Tipo interes') %></span>
+          <span id="mixedVariableRateResult">4.3% (Euribor 3.5% + 0.8%)</span>
+        </div>
+        <div class="d-flex justify-content-between align-items-center py-2">
+          <span class="text-muted"><%= t('calculators.mortgage.period_duration', default: 'Duracion') %></span>
+          <span id="mixedVariablePeriodYears">Anos 11-25</span>
+        </div>
+      </div>
+
+      <div class="result-card result-card--highlight mt-3">
+        <p class="result-card__label"><%= t('calculators.mortgage.payment_difference', default: 'Diferencia de cuota') %></p>
+        <p class="result-card__value" id="mixedDifference">+&euro;299/mes</p>
+      </div>
+
+      <div class="row g-3">
+        <div class="col-6">
+          <div class="result-card">
+            <p class="result-card__label"><%= t('calculators.mortgage.loan_amount', default: 'Capital') %></p>
+            <p class="result-card__value h5 mb-0" id="mixedLoan">&euro;200,000</p>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="result-card">
+            <p class="result-card__label"><%= t('calculators.mortgage.total_interest', default: 'Total intereses') %></p>
+            <p class="result-card__value h5 mb-0 text-warning" id="mixedTotalInterest">&euro;95,000</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%# ═══════════════════════════════════════════ %>
+    <%# Variable Rate Tab %>
+    <%# ═══════════════════════════════════════════ %>
+    <div class="tab-pane fade" id="variable" role="tabpanel">
+      <div class="app-form__group">
+        <label class="app-form__label"><%= t('calculators.mortgage.property_price', default: 'Precio vivienda') %></label>
+        <div class="app-form__input-group">
+          <span class="app-form__input-prefix">&euro;</span>
+          <input type="number" class="app-form__input" id="varPrice" value="250000" min="0" step="5000">
+        </div>
+      </div>
+
+      <div class="app-form__group">
+        <label class="app-form__label"><%= t('calculators.mortgage.down_payment', default: 'Entrada') %></label>
+        <div class="app-form__input-group">
+          <span class="app-form__input-prefix">&euro;</span>
+          <input type="number" class="app-form__input" id="varDown" value="50000" min="0" step="1000">
+        </div>
+        <p class="app-form__hint" id="varDownPercent">20% del precio</p>
+      </div>
+
+      <div class="app-form__group">
+        <label class="app-form__label">
+          <%= t('calculators.mortgage.term', default: 'Plazo') %>
+          <span class="text-brand fw-semibold ms-2" id="varYearsDisplay">25 anos</span>
+        </label>
+        <div class="app-slider">
+          <input type="range" class="app-slider__input" id="varYears" min="5" max="40" value="25">
+          <div class="app-slider__labels"><span>5</span><span>40</span></div>
+        </div>
+      </div>
+
+      <div class="app-form__group">
+        <label class="app-form__label"><%= t('calculators.mortgage.spread', default: 'Diferencial') %></label>
+        <div class="app-form__input-group">
+          <span class="app-form__input-prefix">+</span>
+          <input type="number" class="app-form__input" id="varSpread" value="0.8" min="0" max="3" step="0.1">
+          <span class="app-form__input-suffix">%</span>
+        </div>
+      </div>
+
+      <div class="app-form__group">
+        <label class="app-form__label">
+          <%= t('calculators.mortgage.current_euribor', default: 'Euribor actual') %>
+          <span class="text-brand fw-semibold ms-2" id="varEuriborDisplay">3.5%</span>
+        </label>
+        <div class="app-slider">
+          <input type="range" class="app-slider__input" id="varEuribor" min="0" max="6" value="3.5" step="0.1">
+          <div class="app-slider__labels"><span>0%</span><span>6%</span></div>
+        </div>
+      </div>
+
+      <div class="app-divider"></div>
+
+      <%# Variable results %>
+      <div class="result-card result-card--highlight">
+        <p class="result-card__label"><%= t('calculators.mortgage.monthly_payment', default: 'Cuota mensual') %></p>
+        <p class="result-card__value" id="varMonthly">&euro;1,089</p>
+      </div>
+
+      <div class="row g-3">
+        <div class="col-4">
+          <div class="result-card">
+            <p class="result-card__label"><%= t('calculators.mortgage.current_rate', default: 'Tipo actual') %></p>
+            <p class="result-card__value h6 mb-0" id="varCurrentRate">4.3%</p>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="result-card">
+            <p class="result-card__label"><%= t('calculators.mortgage.loan_amount', default: 'Capital') %></p>
+            <p class="result-card__value h6 mb-0" id="varLoan">&euro;200,000</p>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="result-card">
+            <p class="result-card__label"><%= t('calculators.mortgage.total_interest', default: 'Total intereses') %></p>
+            <p class="result-card__value h6 mb-0 text-warning" id="varTotalInterest">&euro;126,700</p>
+          </div>
+        </div>
+      </div>
+
+      <%# Euribor simulation %>
+      <div class="app-card mt-4">
+        <h4 class="app-card__title mb-3">
+          <i class="bi bi-exclamation-triangle text-warning"></i>
+          <%= t('calculators.mortgage.simulation_title', default: 'Y si sube el Euribor?') %>
+        </h4>
+
+        <div class="app-form__group">
+          <label class="app-form__label">
+            <%= t('calculators.mortgage.simulated_euribor', default: 'Simular Euribor a') %>
+            <span class="text-warning fw-semibold ms-2" id="varSimEuriborDisplay">5.0%</span>
+          </label>
+          <div class="app-slider">
+            <input type="range" class="app-slider__input" id="varSimEuribor" min="0" max="8" value="5" step="0.1">
+            <div class="app-slider__labels"><span>0%</span><span>8%</span></div>
+          </div>
+        </div>
+
+        <div class="bg-light rounded p-3 mb-3">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="text-muted"><%= t('calculators.mortgage.new_payment', default: 'Nueva cuota') %></span>
+            <strong class="text-warning" id="varSimMonthly">&euro;1,216</strong>
+          </div>
+          <div class="d-flex justify-content-between align-items-center">
+            <span class="text-muted"><%= t('calculators.mortgage.monthly_impact', default: 'Impacto mensual') %></span>
+            <strong class="text-danger" id="varSimDifference">+&euro;127/mes</strong>
+          </div>
+        </div>
+
+        <h5 class="mb-3"><%= t('calculators.mortgage.impact_by_year', default: 'Impacto segun ano de hipoteca') %></h5>
+        <div id="varImpactBars">
+          <%# Dynamic bars will be inserted by JS %>
+        </div>
+        <p class="text-muted small mt-2">
+          <i class="bi bi-info-circle me-1"></i>
+          <%= t('calculators.mortgage.impact_explanation', default: 'Al principio de la hipoteca el capital pendiente es mayor, por lo que una subida del Euribor te afecta mas.') %>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <%# Disclaimer %>
+  <div class="app-disclaimer mt-4">
+    <i class="bi bi-info-circle me-1"></i>
+    <%= t('calculators.mortgage.disclaimer',
+        default: 'Calculo orientativo. Consulta con tu banco para una oferta personalizada.') %>
+  </div>
+</div>
+
+<script>
+function initMortgage() {
+  var i18n = {
+    yearsSuffix: '<%= j t("calculators.mortgage.js.years_suffix", default: " anos") %>',
+    yearsPrefix: '<%= j t("calculators.mortgage.js.years_prefix", default: "Anos ") %>',
+    yearPrefix: '<%= j t("calculators.mortgage.js.year_prefix", default: "Ano ") %>'
+  };
+
+  function formatCurrency(value) {
+    return new Intl.NumberFormat('es-ES', {
+      style: 'currency', currency: 'EUR',
+      minimumFractionDigits: 0, maximumFractionDigits: 0
+    }).format(value);
+  }
+
+  // Monthly payment formula
+  function monthlyPayment(principal, annualRate, years) {
+    if (annualRate === 0) return (years > 0) ? principal / (years * 12) : 0;
+    var r = annualRate / 12;
+    var n = years * 12;
+    return principal * (r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+  }
+
+  // Remaining principal after X months of payments
+  function remainingPrincipal(principal, annualRate, totalYears, monthsPaid) {
+    if (annualRate === 0) return principal - (principal / (totalYears * 12)) * monthsPaid;
+    var r = annualRate / 12;
+    var n = totalYears * 12;
+    var M = monthlyPayment(principal, annualRate, totalYears);
+    return principal * Math.pow(1 + r, monthsPaid) - M * (Math.pow(1 + r, monthsPaid) - 1) / r;
+  }
+
+  // ═══════════════════════════════
+  // FIXED TAB
+  // ═══════════════════════════════
+  var fPrice = document.getElementById('fixedPrice');
+  var fDown = document.getElementById('fixedDown');
+  var fYears = document.getElementById('fixedYears');
+  var fRate = document.getElementById('fixedRate');
+
+  function calculateFixed() {
+    var price = parseFloat(fPrice.value) || 0;
+    var down = parseFloat(fDown.value) || 0;
+    var years = parseInt(fYears.value) || 25;
+    var rate = (parseFloat(fRate.value) || 0) / 100;
+    var loan = price - down;
+    var monthly = monthlyPayment(loan, rate, years);
+    var totalInterest = (monthly * years * 12) - loan;
+
+    document.getElementById('fixedDownPercent').textContent = Math.round((down / price) * 100) + '% del precio';
+    document.getElementById('fixedYearsDisplay').textContent = years + i18n.yearsSuffix;
+    document.getElementById('fixedRateDisplay').textContent = fRate.value + '%';
+    document.getElementById('fixedMonthly').textContent = formatCurrency(Math.round(monthly));
+    document.getElementById('fixedLoan').textContent = formatCurrency(loan);
+    document.getElementById('fixedInterest').textContent = formatCurrency(Math.round(totalInterest));
+  }
+
+  [fPrice, fDown, fYears, fRate].forEach(function(el) { if (el.dataset.bound) return; el.dataset.bound = '1'; el.addEventListener('input', calculateFixed); });
+  calculateFixed();
+
+  // ═══════════════════════════════
+  // MIXED TAB
+  // ═══════════════════════════════
+  var mPrice = document.getElementById('mixedPrice');
+  var mDown = document.getElementById('mixedDown');
+  var mYears = document.getElementById('mixedYears');
+  var mFixedYears = document.getElementById('mixedFixedYears');
+  var mFixedRate = document.getElementById('mixedFixedRate');
+  var mSpread = document.getElementById('mixedSpread');
+  var mEuribor = document.getElementById('mixedEuribor');
+
+  function calculateMixed() {
+    var price = parseFloat(mPrice.value) || 0;
+    var down = parseFloat(mDown.value) || 0;
+    var totalYears = parseInt(mYears.value) || 25;
+    var fixedYears = parseInt(mFixedYears.value) || 10;
+    var fixedRate = (parseFloat(mFixedRate.value) || 0) / 100;
+    var spread = (parseFloat(mSpread.value) || 0) / 100;
+    var euribor = (parseFloat(mEuribor.value) || 0) / 100;
+    var loan = price - down;
+    var variableRate = euribor + spread;
+
+    // Fixed period: calculate payment for full term at fixed rate
+    var fixedMonthly = monthlyPayment(loan, fixedRate, totalYears);
+
+    // After fixed period, recalculate with remaining principal and variable rate
+    var remainingAfterFixed = remainingPrincipal(loan, fixedRate, totalYears, fixedYears * 12);
+    var remainingYears = totalYears - fixedYears;
+    var variableMonthly = remainingYears > 0 ? monthlyPayment(remainingAfterFixed, variableRate, remainingYears) : 0;
+
+    // Total interest
+    var totalPaidFixed = fixedMonthly * fixedYears * 12;
+    var totalPaidVariable = variableMonthly * remainingYears * 12;
+    var totalInterest = (totalPaidFixed + totalPaidVariable) - loan;
+
+    // Update displays
+    document.getElementById('mixedDownPercent').textContent = Math.round((down / price) * 100) + '% del precio';
+    document.getElementById('mixedYearsDisplay').textContent = totalYears + i18n.yearsSuffix;
+    document.getElementById('mixedFixedYearsDisplay').textContent = fixedYears + i18n.yearsSuffix;
+    document.getElementById('mixedFixedRateDisplay').textContent = mFixedRate.value + '%';
+    document.getElementById('mixedEuriborDisplay').textContent = mEuribor.value + '%';
+
+    document.getElementById('mixedFixedMonthly').textContent = formatCurrency(Math.round(fixedMonthly));
+    document.getElementById('mixedFixedRateResult').textContent = mFixedRate.value + '%';
+    document.getElementById('mixedFixedPeriodYears').textContent = i18n.yearsPrefix + '1-' + fixedYears;
+
+    document.getElementById('mixedVariableMonthly').textContent = formatCurrency(Math.round(variableMonthly));
+    document.getElementById('mixedVariableRateResult').textContent = (variableRate * 100).toFixed(1) + '% (Euribor ' + mEuribor.value + '% + ' + mSpread.value + '%)';
+    document.getElementById('mixedVariablePeriodYears').textContent = i18n.yearsPrefix + (fixedYears + 1) + '-' + totalYears;
+
+    var diff = variableMonthly - fixedMonthly;
+    var diffEl = document.getElementById('mixedDifference');
+    diffEl.textContent = (diff >= 0 ? '+' : '') + formatCurrency(Math.round(diff)) + '/mes';
+    diffEl.className = 'result-card__value ' + (diff >= 0 ? 'text-warning' : 'text-success');
+
+    document.getElementById('mixedLoan').textContent = formatCurrency(loan);
+    document.getElementById('mixedTotalInterest').textContent = formatCurrency(Math.round(totalInterest));
+  }
+
+  [mPrice, mDown, mYears, mFixedYears, mFixedRate, mSpread, mEuribor].forEach(function(el) { if (el.dataset.bound) return; el.dataset.bound = '1'; el.addEventListener('input', calculateMixed); });
+  calculateMixed();
+
+  // ═══════════════════════════════
+  // VARIABLE TAB
+  // ═══════════════════════════════
+  var vPrice = document.getElementById('varPrice');
+  var vDown = document.getElementById('varDown');
+  var vYears = document.getElementById('varYears');
+  var vSpread = document.getElementById('varSpread');
+  var vEuribor = document.getElementById('varEuribor');
+  var vSimEuribor = document.getElementById('varSimEuribor');
+
+  function calculateVariable() {
+    var price = parseFloat(vPrice.value) || 0;
+    var down = parseFloat(vDown.value) || 0;
+    var years = parseInt(vYears.value) || 25;
+    var spread = (parseFloat(vSpread.value) || 0) / 100;
+    var euribor = (parseFloat(vEuribor.value) || 0) / 100;
+    var loan = price - down;
+    var currentRate = euribor + spread;
+    var monthly = monthlyPayment(loan, currentRate, years);
+    var totalInterest = (monthly * years * 12) - loan;
+
+    document.getElementById('varDownPercent').textContent = Math.round((down / price) * 100) + '% del precio';
+    document.getElementById('varYearsDisplay').textContent = years + i18n.yearsSuffix;
+    document.getElementById('varEuriborDisplay').textContent = vEuribor.value + '%';
+    document.getElementById('varMonthly').textContent = formatCurrency(Math.round(monthly));
+    document.getElementById('varCurrentRate').textContent = (currentRate * 100).toFixed(1) + '%';
+    document.getElementById('varLoan').textContent = formatCurrency(loan);
+    document.getElementById('varTotalInterest').textContent = formatCurrency(Math.round(totalInterest));
+
+    // Euribor simulation
+    var simEuribor = (parseFloat(vSimEuribor.value) || 0) / 100;
+    var simRate = simEuribor + spread;
+    var simMonthly = monthlyPayment(loan, simRate, years);
+    var diffMonthly = simMonthly - monthly;
+
+    document.getElementById('varSimEuriborDisplay').textContent = vSimEuribor.value + '%';
+    document.getElementById('varSimMonthly').textContent = formatCurrency(Math.round(simMonthly));
+    var diffEl = document.getElementById('varSimDifference');
+    diffEl.textContent = (diffMonthly >= 0 ? '+' : '') + formatCurrency(Math.round(diffMonthly)) + '/mes';
+    diffEl.className = diffMonthly > 0 ? 'text-danger' : 'text-success';
+
+    // Impact by year bars
+    var barsContainer = document.getElementById('varImpactBars');
+    barsContainer.innerHTML = '';
+    var checkYears = [1, 5, 10, 15, 20];
+    var maxImpact = 0;
+    var impacts = [];
+
+    checkYears.forEach(function(yr) {
+      if (yr > years) return;
+      var remaining = remainingPrincipal(loan, currentRate, years, yr * 12);
+      var currentPay = monthlyPayment(remaining, currentRate, years - yr);
+      var simPay = monthlyPayment(remaining, simRate, years - yr);
+      var impact = simPay - currentPay;
+      impacts.push({ year: yr, impact: impact });
+      if (impact > maxImpact) maxImpact = impact;
+    });
+
+    impacts.forEach(function(item) {
+      var pct = maxImpact > 0 ? (item.impact / maxImpact) * 100 : 0;
+      var bar = document.createElement('div');
+      bar.className = 'd-flex align-items-center mb-2';
+      bar.innerHTML = '<span class="text-muted small" style="width: 55px;">' + i18n.yearPrefix + item.year + '</span>' +
+        '<div class="flex-grow-1 mx-2"><div class="progress" style="height: 18px;"><div class="progress-bar bg-warning" style="width: ' + pct + '%"></div></div></div>' +
+        '<span class="small fw-semibold" style="width: 80px; text-align: right;">' + (item.impact >= 0 ? '+' : '') + formatCurrency(Math.round(item.impact)) + '</span>';
+      barsContainer.appendChild(bar);
+    });
+  }
+
+  [vPrice, vDown, vYears, vSpread, vEuribor, vSimEuribor].forEach(function(el) { if (el.dataset.bound) return; el.dataset.bound = '1'; el.addEventListener('input', calculateVariable); });
+  calculateVariable();
+}
+document.addEventListener('DOMContentLoaded', initMortgage);
+document.addEventListener('turbo:load', initMortgage);
+</script>

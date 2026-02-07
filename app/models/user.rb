@@ -19,6 +19,23 @@ class User < ApplicationRecord
     admin == true
   end
 
+  # Check if user has completed basic onboarding (4 fields minimum)
+  def has_basic_financial_data?
+    return false unless pyg.present? && pyg.ingresos_mensual.present? && pyg.ingresos_mensual > 0
+    true
+  end
+
+  # Check if user has complete financial data (detailed PyG + Balance)
+  def has_complete_financial_data?
+    has_basic_financial_data? &&
+    balance.present? &&
+    (total_assets > 0 || total_debt > 0)
+  end
+
+  def completed_objectives
+    user_actions.completed.where(action_type: 'objective').pluck(:action_key).map(&:to_i)
+  end
+
   # Returns a symbol representing the financial health level
   def financial_health_level_key
     return :critical unless balance && pyg

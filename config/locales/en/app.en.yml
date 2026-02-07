@@ -1,0 +1,472 @@
+en:
+  # Navigation
+  navigation:
+    bottom_nav:
+      label: "Main navigation"
+      home: "Home"
+      discovery: "Discovery"
+      calculators: "Calculators"
+      profile: "Profile"
+
+  # Common
+  common:
+    edit: "Edit"
+    delete: "Delete"
+    save: "Save"
+    cancel: "Cancel"
+    back: "Back"
+    close: "Close"
+    understood: "Got it"
+    loading: "Loading..."
+
+  # Home
+  home:
+    hero:
+      monthly_savings: "Monthly savings"
+      see_details: "See details"
+      hide_details: "Hide details"
+      level_progress: "Level progress"
+      edit_income_expenses: "Income & expenses"
+      edit_assets_debts: "Assets & debts"
+
+    financial_level:
+      title: "Your financial level"
+      see_requirements: "See requirements"
+      level_x_of_6: "Level %{level} of 6"
+      next: "Next:"
+      monthly_savings: "Monthly savings"
+      net_worth: "Net worth"
+      complete_profile_for_accuracy: "Complete your profile for a more accurate level"
+      complete: "Complete"
+
+    action_plan:
+      title: "Your action plan"
+      description: "Based on your situation, these are the steps we recommend."
+      current_step: "Current step"
+      see_how: "See how to do it"
+      mark_completed: "Completed"
+      show_remaining: "+%{count} more tasks"
+      show_all: "Show all %{count} tasks"
+      all_completed_title: "Plan completed!"
+      all_completed_description: "You've completed all the tasks in your action plan. Keep it up!"
+
+    action_carousel:
+      step_of: "Step %{step} of %{total}"
+      undo: "Undo"
+      pending: "Pending"
+      done: "Done"
+      see_detail: "See detail"
+      take_action: "Take action"
+      cta:
+        saving_advice: "See options"
+        better_bank_account: "Open account"
+        debt_optimization: "Reduce debt"
+        mortgage_optimization: "See options"
+        emergency_deposit: "Open deposit"
+        portfolio_optimization: "See options"
+        tax_advisory: "See advisors"
+
+    objectives:
+      title: "Your objectives"
+      new: "New"
+      intro_description: "You have savings capacity. Decide what you want to focus on and we'll help you create a plan."
+      exceeds_capacity: "Your objectives exceed your monthly savings capacity"
+      save_monthly: "Save:"
+      per_month: "/mo"
+      see_detail: "See detail"
+      start_investing: "Start investing"
+      start_saving: "Start saving"
+      see_investment_plan: "See how to invest"
+      see_deposit_plan: "See how to save"
+      placeholder_deposit: "Short-term deposit"
+      placeholder_fixed_income: "Medium-term fixed income"
+      placeholder_index_funds: "Global equities"
+      placeholder_retirement: "Equities for retirement"
+      progress_of: "of"
+      update_progress: "Update progress"
+      current_amount_label: "How much have you saved?"
+      no_objectives: "No objectives"
+      create_first: "Create your first financial objective to start planning your future."
+      create_objective: "Create objective"
+
+    savings_summary:
+      title: "Savings summary"
+      monthly_cash_flow: "Monthly savings capacity"
+      committed_to_objectives: "Committed to objectives"
+      available_remaining: "Available remaining"
+
+    charts:
+      pyg_title: "Your monthly P&L"
+      balance_title: "Your net worth"
+      income: "Income"
+      expenses: "Expenses"
+      savings_capacity: "Savings capacity"
+      assets: "Assets"
+      debts: "Debts"
+      net_worth: "Net worth"
+      edit_pyg: "Edit P&L"
+      edit_balance: "Edit Balance"
+
+    level_guide:
+      title: "Financial levels"
+      description: "Your financial level indicates what stage you're at on your path to financial freedom."
+
+  # Calculators
+  calculators:
+    title: "Calculators"
+    description: "Tools to plan your financial future"
+    coming_soon: "This calculator will be available soon."
+    category_savings_investment: "Savings & Investment"
+    category_housing_debt: "Housing & Debt"
+    category_financial_security: "Financial Security"
+
+    compound_interest:
+      title: "Compound interest"
+      description: "Calculate the growth of your investments"
+      initial_capital: "Initial capital"
+      monthly_contribution: "Monthly contribution"
+      years: "Years of investment"
+      rate: "Expected annual return"
+      future_value: "Future value"
+      total_contributed: "Total contributed"
+      interest_earned: "Interest earned"
+      evolution: "Capital evolution"
+      disclaimer: "This calculator is for guidance only. Past returns do not guarantee future returns."
+      js:
+        today: "Today"
+        year: "Year"
+        total_value: "Total value"
+        capital_contributed: "Contributed capital"
+
+    mortgage:
+      title: "Mortgage payment"
+      description: "Simulate your mortgage: fixed, mixed or variable"
+      fixed: "Fixed"
+      mixed: "Mixed"
+      variable: "Variable"
+      property_price: "Property price"
+      down_payment: "Down payment"
+      term: "Term"
+      interest_rate: "Interest rate"
+      monthly_payment: "Monthly payment"
+      loan_amount: "Principal"
+      total_interest: "Total interest"
+      mixed_coming_soon: "Mixed mortgage calculator coming soon."
+      variable_coming_soon: "Variable mortgage calculator coming soon."
+      disclaimer: "For guidance only. Consult with your bank for a personalized offer."
+      fixed_years: "Fixed-rate years"
+      fixed_rate: "Fixed rate"
+      spread: "Spread"
+      euribor_estimate: "Estimated Euribor"
+      fixed_period: "Fixed period"
+      period_duration: "Period duration"
+      variable_period: "Variable period"
+      payment_difference: "Payment difference"
+      current_rate: "Current rate"
+      current_euribor: "Current Euribor"
+      simulation_title: "Simulation: What if Euribor rises?"
+      simulated_euribor: "Simulated Euribor"
+      new_payment: "New payment"
+      monthly_impact: "Monthly impact"
+      impact_by_year: "Impact per mortgage year"
+      impact_explanation: "In the early years you pay more interest, so a Euribor increase affects you more at the beginning."
+      js:
+        years_suffix: " years"
+        years_prefix: "Years "
+        year_prefix: "Year "
+
+    emergency_fund:
+      title: "Emergency fund"
+      description: "Calculate how much you need to be protected"
+      monthly_expenses: "Monthly expenses"
+      months_coverage: "Months of coverage"
+      recommended: "Recommended: 4-6 months"
+      current_savings: "Current savings"
+      your_fund: "Your emergency fund"
+      target: "Target:"
+      current: "You have:"
+      missing: "You need:"
+      savings_plan: "Savings plan"
+      monthly_savings: "How much can you save per month?"
+      disclaimer: "Emergency fund should be in an easily accessible account (deposit or savings account)."
+      js:
+        fund_complete: "You already have your complete emergency fund!"
+        fund_in_months: "You will complete your fund in %{months} months (%{date})"
+        indicate_savings: "Enter how much you can save per month"
+
+    financial_freedom:
+      title: "Financial freedom"
+      description: "When can you live off your investments?"
+      intro: "Calculate the net worth you need to live off your investments."
+      monthly_expenses: "Monthly expenses"
+      expenses_hint: "Can be your current expenses or expected future expenses"
+      expected_return: "Expected return"
+      current_net_worth: "Your current net worth"
+      required_net_worth: "Net worth required for financial freedom"
+      calculation: "Calculation"
+      annual_expenses: "Annual expenses"
+      taxes: "+ Taxes (~23%)"
+      gross_income_needed: "= Gross income needed"
+      at_return: "At return rate of"
+      your_situation: "Your situation"
+      current: "Your current net worth"
+      missing: "You need"
+      disclaimer: "This calculator assumes an approximate tax rate of 23%. Consult a tax advisor for your specific situation."
+      js:
+        years_suffix: " years"
+        of_target: "% of target"
+
+    investment_goal:
+      title: "Investment goal"
+      description: "Calculate how much to invest to reach your goal"
+      intro: "Calculate how much you need to invest or how long it will take to reach your goal."
+      target_capital: "Target capital"
+      initial_capital: "Initial capital"
+      expected_return: "Expected return"
+      what_to_calculate: "What do you want to calculate?"
+      mode_contribution: "How much to invest/month"
+      mode_time: "How many years"
+      desired_term: "Desired term"
+      monthly_contribution: "Monthly contribution"
+      breakdown: "Breakdown"
+      target: "Target"
+      initial: "Initial capital"
+      total_contributed: "Total contributed"
+      interest_earned: "Interest earned"
+      disclaimer: "Calculation based on constant returns. Actual returns may vary. Past performance does not guarantee future results."
+      js:
+        years_suffix: " years"
+        months_suffix: " months"
+        and: " and "
+        monthly_contribution_needed: "Monthly contribution needed"
+        time_needed: "Time needed"
+        already_reached: "You already reached your target!"
+        more_than_50_years: "More than 50 years"
+
+    early_repayment:
+      title: "Early repayment"
+      description: "Repay or invest? Compare strategies"
+      intro: "Have extra money? Compare whether it's better to repay your mortgage or invest it."
+      outstanding_capital: "Outstanding mortgage capital"
+      remaining_years: "Remaining years"
+      mortgage_rate: "Mortgage interest rate"
+      annual_amount: "Annual amount available"
+      scenario_a: "Repay each year"
+      scenario_b: "Invest and repay at the end"
+      years_saved: "Years you save"
+      interest_saved: "Interest saved"
+      finish_year: "You finish the mortgage in"
+      investment_value: "Investment value"
+      total_contributed: "Total contributed"
+      investment_profit: "Investment profit"
+      recommendation: "Recommendation"
+      risk_warning: "Investing involves risk. Returns are not guaranteed. Repaying is a guaranteed saving."
+      investment_return: "Investment return"
+      disclaimer: "For guidance only. Does not account for tax deductions or early repayment fees."
+      js:
+        years_suffix: " years"
+        invest_better: "<strong class=\"text-brand\">Investing</strong> could leave you <strong>%{amount} more</strong> than early repayment, with a %{invest_rate}% return and a %{mortgage_rate}% mortgage rate."
+        repay_better: "<strong class=\"text-success\">Early repayment</strong> saves you <strong>%{amount} more</strong> than investing with these parameters."
+
+    investment_returns:
+      title: "Investment returns"
+      description: "Calculate your annualized ROI and ROE"
+      intro: "Calculate the real return on your investments and compare with the market."
+      initial_invested: "Initial capital invested"
+      additional_contributions: "External contributions (total)"
+      final_value: "Final investment value"
+      time_elapsed: "Time elapsed"
+      your_results: "Your results"
+      total_return_amount: "Total return"
+      annualized_roi: "Annualized ROI"
+      annualized_roe: "Annualized ROE"
+      comparison: "Comparison"
+      your_investment: "Your investment"
+      sp500: "S&P 500 historical (~10%/year)"
+      inflation: "Inflation (~3%/year)"
+      deposit: "Bank deposit (~2.5%/year)"
+      disclaimer: "Benchmarks are approximate historical averages. Past performance does not guarantee future results."
+      js:
+        years_suffix: " years"
+        beats_inflation: "Your investment beats inflation. Your money is growing in real terms."
+        below_inflation: "Your investment is positive but doesn't beat inflation. In real terms you're losing purchasing power."
+        negative_returns: "Your investment has negative returns. You are losing money."
+
+  # Discovery
+  discovery:
+    title: "Discovery"
+    back_to_feed: "Discovery"
+    badges:
+      article: "ARTICLE"
+      news: "NEWS"
+    categories:
+      investment: "Investment"
+      savings: "Savings"
+      debt: "Debt"
+      budget: "Budget"
+      concepts: "Concepts"
+    filters:
+      all: "All"
+      videos: "Videos"
+      articles: "Articles"
+      news: "News"
+    no_content: "No content"
+    no_content_description: "Educational content will be available soon."
+    by: "By"
+    read_time: "read"
+    watch_video: "Watch video"
+    articles:
+      index_funds:
+        title: "What is an index fund?"
+        excerpt: "Index funds are one of the simplest and most efficient ways to invest long-term."
+      compound_interest:
+        title: "The power of compound interest"
+        excerpt: "Discover how compound interest can multiply your savings over time."
+      emergency_fund:
+        title: "How to build your emergency fund"
+        excerpt: "Every financial plan starts with a safety cushion. We explain how to create yours."
+      budget_rule:
+        title: "The 50/30/20 budgeting rule"
+        excerpt: "A simple method to organize your income and start saving today."
+      debt_management:
+        title: "How to manage your debt smartly"
+        excerpt: "Not all debts are equal. Learn to prioritize and eliminate the ones costing you money."
+      start_investing:
+        title: "First steps to start investing"
+        excerpt: "Investing is not just for experts. With these basic steps you can start today."
+      saving_mistakes:
+        title: "5 mistakes preventing you from saving"
+        excerpt: "If you struggle to make ends meet, you might be making some of these common mistakes."
+      mortgage_basics:
+        title: "How mortgages work"
+        excerpt: "Fixed, variable or mixed? Understand mortgage types before signing anything."
+    news:
+      beta_launch:
+        title: "Welcome to BaiFinanzas Beta!"
+        content: "Thanks for being one of the first to try BaiFinanzas. Your feedback helps us improve. If you find any bugs or have suggestions, don't hesitate to contact us."
+      calculators:
+        title: "7 financial calculators available"
+        content: "You can now use our 7 calculators: compound interest, mortgage (fixed, mixed and variable), emergency fund, financial freedom, investment goal, early repayment and investment returns."
+      personalized_plan:
+        title: "Your personalized financial plan"
+        content: "With just 4 data points we calculate your financial level and give you an action plan with concrete tasks. Update your data to see your level rise."
+      coming_soon:
+        title: "Coming soon: more content"
+        content: "We're preparing more articles, videos and tools to help you on your financial journey. Stay tuned for updates!"
+    video_titles:
+      bank_account: "Best bank accounts"
+      deposits: "Fixed deposits explained"
+      short_term: "Short-term investments"
+      long_term: "Long-term investing"
+      debt: "Debt management"
+      retirement: "Retirement planning"
+      taxes: "Tax optimization"
+      portfolio: "Portfolio management"
+
+  # Profile
+  profile:
+    title: "Profile"
+    completion: "Profile completed"
+    complete_for_better_recommendations: "Complete your profile to get better recommendations."
+    financial_data: "Financial data"
+    income_expenses: "Income and expenses"
+    assets_debts: "Assets and debts"
+    completed: "Completed"
+    pending: "Pending"
+    account: "Account"
+    personal_data: "Personal data"
+    name_email_password: "Name, email, password"
+    settings: "Settings"
+    language_notifications: "Language, notifications"
+    logout: "Log out"
+    updated_successfully: "Profile updated successfully"
+    settings_updated: "Settings updated"
+    your_level: "Your level"
+    actions_completed: "Actions completed"
+    objectives_created: "Objectives created"
+    member_since: "Member since"
+    go_to_plan: "Go to your plan"
+    stats: "Your activity"
+
+    edit:
+      title: "Personal data"
+      name: "Name"
+      name_placeholder: "Your name"
+      email: "Email"
+      new_password: "New password"
+      confirm_password: "Confirm password"
+      password_hint: "Leave blank if you don't want to change the password"
+      save: "Save changes"
+
+    settings_page:
+      title: "Settings"
+      language: "Language"
+      save: "Save"
+      notifications: "Notifications"
+      push_notifications: "Push notifications"
+      push_description: "Receive reminders and updates"
+      notifications_coming_soon: "Coming soon"
+      about: "About"
+      version: "Version"
+      your_influencer: "Your referrer"
+      contact_support: "Contact support"
+
+  # Onboarding
+  onboarding:
+    welcome:
+      title: "Welcome to BaiFinanzas!"
+      description: "Let's create your personalized financial plan in 2 minutes."
+      time: "Only 4 questions"
+      start: "Start"
+
+    basic:
+      title: "Basic data"
+      description: "With these 4 data points we can calculate your approximate financial level."
+      monthly_income: "Monthly income"
+      income_hint: "Your net monthly salary"
+      monthly_expenses: "Monthly expenses (total)"
+      expenses_hint: "Rent, groceries, bills, entertainment..."
+      total_savings: "Total savings"
+      savings_hint: "Bank accounts + investments"
+      total_debt: "Total debt"
+      debt_hint: "Mortgage + loans + credit cards"
+      calculate: "See my financial level"
+
+    complete:
+      title: "Your plan is ready!"
+      your_level: "Your financial level"
+      level_x_of_6: "Level %{level} of 6"
+      now_you_can: "Now you can view your action plan, create financial objectives and use the calculators."
+      tip: "This is an approximate result. Complete your detailed profile for a more accurate analysis."
+      go_to_dashboard: "Go to my dashboard"
+
+    save_error: "Error saving your data. Please try again."
+
+  # Objectives
+  objectives:
+    confirm_delete: "Delete this objective?"
+    new:
+      title: "New objective"
+    edit:
+      title: "Edit objective"
+      save: "Save changes"
+    form:
+      title: "Objective name"
+      title_placeholder: "E.g., Buy a car"
+      amount: "Target amount"
+      date: "Target date"
+      date_hint: "When do you want to reach this objective?"
+      examples: "Objective ideas:"
+      example_car: "Car"
+      example_car_title: "Buy a car"
+      example_travel: "Travel"
+      example_travel_title: "Vacation trip"
+      example_emergency: "Emergency"
+      example_emergency_title: "Emergency fund"
+      example_house: "House"
+      example_house_title: "Down payment"
+      example_retirement: "Retirement"
+      example_retirement_title: "Retirement"
+      current_amount: "Already saved"
+      current_amount_hint: "If you already have some money saved for this goal"
+      create: "Create objective"

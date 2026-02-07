@@ -1,2203 +1,1200 @@
 <% content_for :title, @contextual_title %>
 
-<!-- Navegación breadcrumb -->
-<div class="container py-3" style="padding-top: 100px !important;">
-  <div class="d-flex justify-content-between align-items-center">
-    <div class="d-flex align-items-center">
-      <%= link_to dashboard_index_path, class: "text-decoration-none text-muted" do %>
-        <i class="bi bi-speedometer2 me-1"></i>Dashboard
-      <% end %>
-      <span class="mx-2 text-muted">&gt;</span>
-      <span class="text-primary"><%= @contextual_title %></span>
+<% content_for :header do %>
+  <header class="app-header">
+    <%= link_to home_path, class: "app-header__back" do %>
+      <i class="bi bi-chevron-left"></i>
+    <% end %>
+    <h1 class="app-header__title"><%= t('views.recommendations.back', default: 'Volver') %></h1>
+    <div></div>
+  </header>
+<% end %>
+
+<%
+  slug_key = @recommendation.slug.underscore
+  inf = current_user.influencer || Influencer.default_influencer
+  video_url = case @recommendation.slug
+    when "better-bank-account" then inf&.video_compte
+    when "emergency-deposit" then inf&.video_cdiposit
+    when "ac-diposit" then inf&.video_diposit
+    when "debt-optimization" then inf&.video_deute
+    when "saving-advice" then inf&.video_saving
+    when "ac-llarg" then inf&.video_llarg
+    when "ac-curt" then inf&.video_curt
+    when "ac-jubil" then inf&.video_jubil
+    when "tax-advisory" then inf&.video_fiscal
+    when "portfolio-optimization" then inf&.video_portfolio
+    when "mortgage-optimization" then inf&.video_mortgage
+    else @recommendation.video_url
+  end
+%>
+
+<div class="app-container">
+
+  <!-- ===== ABOVE THE FOLD ===== -->
+
+  <!-- 1. TITLE -->
+  <h2 class="rec-title">
+    <%= t("views.recommendations.heroes.#{slug_key}.title", default: @contextual_title) %>
+  </h2>
+
+  <!-- Objective context (if coming from an objective) -->
+  <% if @simulator_data[:has_objective] %>
+    <div class="rec-objective-context">
+      <i class="bi bi-bullseye"></i>
+      <span>
+        <strong><%= @simulator_data[:objective_name] %></strong>
+        &middot; <%= number_to_currency(@simulator_data[:target_amount], locale: I18n.locale) %>
+        &middot; <%= @simulator_data[:years] %> <%= t('views.recommendations.years') %>
+        &middot; <%= number_to_currency(@simulator_data[:monthly_contribution], locale: I18n.locale) %><%= t('home.objectives.per_month', default: '/mes') %>
+      </span>
+    </div>
+  <% end %>
+
+  <!-- 3. VIDEO -->
+  <% if video_url.present? %>
+    <div class="rec-video mb-3">
+      <div class="ratio ratio-16x9">
+        <iframe src="<%= video_url %>" allowfullscreen></iframe>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- 4. CTA PRIMARY -->
+  <% if @affiliate_link.present? %>
+    <a href="<%= @affiliate_link %>" target="_blank"
+       style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; width: 100%; padding: 1rem 1.5rem; font-size: 1.0625rem; font-weight: 700; color: #fff; background: linear-gradient(135deg, #1d7a8c, #165668); border-radius: 12px; text-decoration: none; box-shadow: 0 4px 16px rgba(22,86,104,0.4); letter-spacing: 0.02em;">
+      <i class="bi bi-box-arrow-up-right"></i>
+      <%= t("views.recommendations.ctas.#{slug_key}", default: t('views.recommendations.ctas.default')) %>
+    </a>
+  <% else %>
+    <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; width: 100%; padding: 1rem 1.5rem; font-size: 1.0625rem; font-weight: 700; color: #9ca3af; background: #f3f4f6; border-radius: 12px;">
+      <i class="bi bi-clock"></i>
+      <%= t('views.recommendations.coming_soon_button') %>
+    </div>
+  <% end %>
+  <p style="text-align: center; font-size: 0.75rem; color: #9ca3af; margin-top: 0.5rem;"><%= t('views.recommendations.process_secure') %></p>
+
+  <div class="rec-divider"></div>
+
+  <!-- ===== BELOW THE FOLD ===== -->
+
+  <!-- 5. CONTENT SECTION (simulator or educational) -->
+  <% if @recommendation.slug == "ac-llarg" || @recommendation.slug == "ac-curt" || @recommendation.slug == "ac-jubil" %>
+    <!-- ========== MOTIVATIONAL TEXT ========== -->
+    <% simulator_key = @recommendation.slug.underscore %>
+    <p class="rec-body-text">
+      <%= t("views.recommendations.pages.#{simulator_key}.motivational_text") %>
+    </p>
+
+    <!-- ========== INVESTMENT SIMULATOR ========== -->
+    <div class="rec-simulator">
+      <div class="rec-simulator__title">
+        <i class="bi bi-calculator"></i>
+        <%= t("views.recommendations.simulator.title.#{simulator_key}") %>
+      </div>
+
+      <div class="rec-simulator__label"><%= t('views.recommendations.simulator.labels.initial_contribution') %></div>
+      <div class="rec-simulator__row" style="gap: 0;">
+        <div style="position: relative; flex: 1;">
+          <input type="number" id="initialContribution"
+                 min="0" step="500" value="<%= @simulator_data[:initial_contribution] %>"
+                 class="form-control" style="font-size: 0.875rem; padding-right: 2rem; height: 2.25rem;">
+          <span style="position: absolute; right: 0.5rem; top: 50%; transform: translateY(-50%); font-size: 0.875rem; color: #6b7280; pointer-events: none;">&euro;</span>
+        </div>
+      </div>
+
+      <div class="rec-simulator__label"><%= t('views.recommendations.simulator.labels.monthly_contribution') %></div>
+      <div class="rec-simulator__row">
+        <input type="range" class="app-slider__input rec-simulator__slider" id="monthlyContribution"
+               min="50" max="1000" step="50" value="<%= @simulator_data[:monthly_contribution] %>">
+        <div class="rec-simulator__value"><span id="monthlyValue"><%= @simulator_data[:monthly_contribution] %></span>&euro;</div>
+      </div>
+
+      <div class="rec-simulator__label"><%= t('views.recommendations.simulator.labels.years_investing') %></div>
+      <div class="rec-simulator__row">
+        <% if @recommendation.slug == "ac-curt" %>
+          <input type="range" class="app-slider__input rec-simulator__slider" id="years"
+                 min="1" max="5" step="1" value="<%= @simulator_data[:years] %>">
+        <% elsif @recommendation.slug == "ac-jubil" %>
+          <input type="range" class="app-slider__input rec-simulator__slider" id="years"
+                 min="10" max="40" step="1" value="<%= @simulator_data[:years] %>">
+        <% else %>
+          <input type="range" class="app-slider__input rec-simulator__slider" id="years"
+                 min="5" max="40" step="1" value="<%= @simulator_data[:years] %>">
+        <% end %>
+        <div class="rec-simulator__value"><span id="yearsValue"><%= @simulator_data[:years] %></span> <%= t('views.recommendations.simulator.labels.years') %></div>
+      </div>
+
+      <div class="rec-simulator__label"><%= t('views.recommendations.simulator.labels.expected_return') %></div>
+      <div class="rec-simulator__row">
+        <% if @recommendation.slug == "ac-curt" %>
+          <input type="range" class="app-slider__input rec-simulator__slider" id="returnRate"
+                 min="0.5" max="5" step="0.5" value="<%= @simulator_data[:annual_return] %>">
+        <% else %>
+          <input type="range" class="app-slider__input rec-simulator__slider" id="returnRate"
+                 min="4" max="12" step="0.5" value="<%= @simulator_data[:annual_return] %>">
+        <% end %>
+        <div class="rec-simulator__value"><span id="returnValue"><%= @simulator_data[:annual_return] %></span>%</div>
+      </div>
+
+      <!-- Chart -->
+      <div class="bg-white rounded p-2 mt-3" style="min-height: 280px;">
+        <canvas id="retirementChart"></canvas>
+      </div>
+      <p class="text-center mt-1 mb-0" style="font-size: 0.7rem; color: #9ca3af;">
+        <span style="color: #0d6efd;">&#9632;</span> <%= t('views.recommendations.simulator.chart.savings_label') %>
+        <span class="ms-2" style="color: #198754;">&#9632;</span> <%= t('views.recommendations.simulator.chart.investment_label') %>
+        <span class="ms-2" style="color: rgba(25,135,84,0.25);">&#9632;</span> <%= t('views.recommendations.simulator.chart.volatility_range_label') %>
+      </p>
+
+      <!-- Risk warning (shown/hidden by JS) -->
+      <div id="riskWarning" style="display: none; margin-top: 0.5rem; padding: 0.5rem 0.75rem; background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; font-size: 0.8125rem; color: #dc2626; text-align: center;">
+        <i class="bi bi-exclamation-triangle me-1"></i>
+        <span id="riskWarningText"></span>
+      </div>
+
+      <!-- Results -->
+      <div class="rec-simulator__results-grid rec-simulator__results-grid--trio">
+        <div class="rec-simulator__result">
+          <div class="rec-simulator__result-label"><%= t('views.recommendations.simulator.results.final_capital') %></div>
+          <div class="rec-simulator__highlight"><span id="finalCapital">0</span>&euro;</div>
+        </div>
+        <div class="rec-simulator__result">
+          <div class="rec-simulator__result-label"><%= t('views.recommendations.simulator.results.total_contributed') %></div>
+          <div class="rec-simulator__highlight" style="color: #0d6efd;"><span id="totalContributed">0</span>&euro;</div>
+        </div>
+        <div class="rec-simulator__result">
+          <div class="rec-simulator__result-label"><%= t('views.recommendations.simulator.results.profit') %></div>
+          <div class="rec-simulator__highlight" style="color: #f59e0b;"><span id="profit">0</span>&euro;</div>
+        </div>
+      </div>
+
+      <p class="app-disclaimer mt-3 mb-0" style="font-size: 0.7rem;"><i class="bi bi-info-circle me-1"></i><%= t('views.recommendations.simulator.disclaimer_html').html_safe %></p>
     </div>
 
-    <a href="<%= dashboard_index_path %>" class="btn btn-outline-secondary btn-sm">
-      <i class="bi bi-arrow-left me-1"></i>
-      <%= t('views.recommendations.back') %>
-    </a>
-  </div>
-</div>
-
-<!-- Contenido principal -->
-<div class="container py-4">
-  <div class="row justify-content-center">
-    <div class="col-lg-10">
-
-      <!-- 1. HERO -->
-      <%
-        # Convert slug to translation key (e.g., "better-bank-account" -> "better_bank_account")
-        slug_key = @recommendation.slug.underscore
-      %>
-      <div class="text-center mb-5">
-        <h1 class="display-4 fw-bold mb-3">
-          <%= t("views.recommendations.heroes.#{slug_key}.title", default: @contextual_title) %>
-        </h1>
-
-        <!-- Información del objetivo (si hay objetivo) -->
-        <% if @simulator_data[:has_objective] %>
-          <div class="alert alert-primary mb-4" role="alert">
-            <div class="d-flex align-items-center justify-content-center gap-2 mb-2">
-              <i class="bi bi-bullseye fs-5"></i>
-              <strong><%= t('views.recommendations.your_goal') %>: <%= @simulator_data[:objective_name] %></strong>
-            </div>
-            <div class="row g-2 justify-content-center">
-              <div class="col-auto">
-                <small><i class="bi bi-cash-coin me-1"></i><%= t('views.recommendations.goal_label') %>: <strong><%= number_to_currency(@simulator_data[:target_amount], locale: I18n.locale) %></strong></small>
-              </div>
-              <div class="col-auto">
-                <small><i class="bi bi-calendar-event me-1"></i><%= t('views.recommendations.in_time') %>: <strong><%= @simulator_data[:years] %> <%= t('views.recommendations.years') %></strong></small>
-              </div>
-              <div class="col-auto">
-                <small><i class="bi bi-arrow-repeat me-1"></i><%= t('views.recommendations.monthly_savings') %>: <strong><%= number_to_currency(@simulator_data[:monthly_contribution], locale: I18n.locale) %></strong></small>
-              </div>
-            </div>
-          </div>
-        <% end %>
-
-        <p class="lead text-muted mb-4">
-          <%
-            # Try description_html first for HTML content, then description
-            description_html = t("views.recommendations.heroes.#{slug_key}.description_html", default: nil)
-            description = description_html || t("views.recommendations.heroes.#{slug_key}.description", default: @recommendation.description)
-          %>
-          <%= description.html_safe %>
-        </p>
-      </div>
-
-      <!-- 2. VIDEO INFLUENCER -->
-      <div class="mb-5">
-        <div class="row justify-content-center">
-          <div class="col-lg-8">
-            <div class="ratio ratio-16x9">
-              <%
-                inf = current_user.influencer || Influencer.default_influencer
-                video_url = if @recommendation.slug == "better-bank-account"
-                  inf&.video_compte
-                elsif @recommendation.slug == "emergency-deposit"
-                  inf&.video_cdiposit
-                elsif @recommendation.slug == "debt-optimization"
-                  inf&.video_deute
-                elsif @recommendation.slug == "saving-advice"
-                  inf&.video_saving
-                elsif @recommendation.slug == "ac-llarg"
-                  inf&.video_llarg
-                elsif @recommendation.slug == "ac-curt"
-                  inf&.video_curt
-                elsif @recommendation.slug == "ac-jubil"
-                  inf&.video_jubil
-                elsif @recommendation.slug == "tax-advisory"
-                  inf&.video_fiscal
-                elsif @recommendation.slug == "portfolio-optimization"
-                  inf&.video_portfolio
-                elsif @recommendation.slug == "mortgage-optimization"
-                  inf&.video_mortgage
-                else
-                  @recommendation.video_url
-                end
-              %>
-
-              <% if video_url.present? %>
-                <iframe src="<%= video_url %>" allowfullscreen class="rounded"></iframe>
-              <% else %>
-                <!-- Video placeholder -->
-                <div class="d-flex align-items-center justify-content-center bg-light rounded">
-                  <div class="text-center">
-                    <i class="bi bi-play-circle text-muted" style="font-size: 4rem;"></i>
-                    <p class="text-muted mt-3 mb-1 h5"><%= t('views.recommendations.video_placeholder') %></p>
-                    <small class="text-muted"><%= t('views.recommendations.video_coming_soon') %></small>
-                  </div>
-                </div>
-              <% end %>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 3. CTA #1 -->
-      <div class="text-center mb-5">
-        <% if @affiliate_link.present? %>
-          <a href="<%= @affiliate_link %>" target="_blank" class="btn btn-baifinanzas-success btn-lg px-5 py-3">
-            <i class="bi <%= @recommendation.slug == 'saving-advice' ? 'bi-cart-check' : ((@recommendation.slug == 'tax-advisory' || @recommendation.slug == 'portfolio-optimization') ? 'bi-calendar-check' : 'bi-box-arrow-up-right') %> me-2"></i>
-            <%= t("views.recommendations.ctas.#{slug_key}", default: t('views.recommendations.ctas.default')) %>
-          </a>
-        <% else %>
-          <button class="btn btn-outline-secondary btn-lg px-5 py-3" disabled>
-            <i class="bi bi-clock me-2"></i>
-            <%= t('views.recommendations.coming_soon_button') %>
-          </button>
-        <% end %>
-        <p class="text-muted small mt-2 mb-0"><%= t('views.recommendations.process_secure') %></p>
-      </div>
-
-      <!-- 4. POR QUÉ ES IMPORTANTE PARA TI -->
-      <div class="mb-5">
-        <div class="bg-light rounded p-4 p-md-5">
-          <h3 class="mb-4">
-            <i class="bi bi-lightbulb text-warning me-2"></i>
-            <%= t('views.recommendations.why_important') %>
-          </h3>
-
-          <% if @recommendation.slug == "better-bank-account" %>
-            <p class="mb-3"><%= t('views.recommendations.pages.better_bank_account.why_important.intro_html').html_safe %></p>
-
-            <p class="mb-3"><%= t('views.recommendations.pages.better_bank_account.why_important.first_step_ideal') %></p>
-            <ul class="mb-3">
-              <% t('views.recommendations.pages.better_bank_account.why_important.benefits').each do |benefit| %>
-                <li><strong><%= benefit[:title] %></strong> - <%= benefit[:text] %></li>
-              <% end %>
-            </ul>
-
-            <p class="mb-0"><%= t('views.recommendations.pages.better_bank_account.why_important.conclusion_html').html_safe %></p>
-
-          <% elsif @recommendation.slug == "emergency-deposit" %>
-            <p class="mb-4"><%= t('views.recommendations.pages.emergency_deposit.why_important.intro') %></p>
-
-            <p class="mb-3"><strong><%= t('views.recommendations.pages.emergency_deposit.why_important.benefits_title') %></strong></p>
-            <ul class="mb-4">
-              <% t('views.recommendations.pages.emergency_deposit.why_important.benefits').each do |benefit| %>
-                <li><%= benefit %></li>
-              <% end %>
-            </ul>
-
-            <p class="mb-4"><%= t('views.recommendations.pages.emergency_deposit.why_important.control_html').html_safe %></p>
-
-            <p class="mb-4"><%= t('views.recommendations.pages.emergency_deposit.why_important.right_place') %></p>
-
-            <h5 class="text-primary mb-3 mt-4"><%= t('views.recommendations.pages.emergency_deposit.why_important.how_much_title') %></h5>
-
-            <div class="bg-white border border-primary rounded p-4 mb-4">
-              <div class="row align-items-center">
-                <div class="col-md-8">
-                  <p class="mb-2"><strong><%= t('views.recommendations.your_monthly_expenses') %>:</strong> <%= number_to_currency(current_user.monthly_expenses, unit: '€', precision: 0) %></p>
-                  <p class="mb-2"><strong><%= t('views.recommendations.recommended_months') %>:</strong> 4 <%= t('views.recommendations.months_unit') %></p>
-                  <p class="text-muted small mb-0"><%= t('views.recommendations.four_months_explanation') %></p>
-                </div>
-                <div class="col-md-4 text-center">
-                  <p class="text-muted small mb-1"><%= t('views.recommendations.your_target') %>:</p>
-                  <h2 class="text-success mb-0"><%= number_to_currency(current_user.emergency_fund_target, unit: '€', precision: 0) %></h2>
-                </div>
-              </div>
-            </div>
-
-          <% elsif @recommendation.slug == "debt-optimization" %>
-            <p class="mb-3"><%= t('views.recommendations.pages.debt_optimization.why_important.intro') %></p>
-
-            <p class="mb-3"><strong><%= t('views.recommendations.pages.debt_optimization.why_important.compound_interest_title') %></strong></p>
-            <p class="mb-3"><%= t('views.recommendations.pages.debt_optimization.why_important.compound_interest_text') %></p>
-
-            <h5 class="text-danger mb-3 mt-4"><%= t('views.recommendations.pages.debt_optimization.why_important.example_title') %></h5>
-
-            <div class="bg-white border border-danger rounded p-4 mb-4">
-              <p class="mb-3"><strong><%= t('views.recommendations.pages.debt_optimization.why_important.example_debt') %></strong></p>
-              <p class="text-muted small mb-3"><%= t('views.recommendations.pages.debt_optimization.why_important.example_explanation') %></p>
-
-              <div class="table-responsive">
-                <table class="table table-sm mb-0">
-                  <thead>
-                    <tr class="text-muted">
-                      <th><%= t('views.recommendations.pages.debt_optimization.why_important.table_month') %></th>
-                      <th class="text-end"><%= t('views.recommendations.pages.debt_optimization.why_important.table_accumulated') %></th>
-                      <th class="text-end"><%= t('views.recommendations.pages.debt_optimization.why_important.table_interest') %></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td><%= t('views.recommendations.pages.debt_optimization.why_important.table_initial') %></td>
-                      <td class="text-end">€3.000,00</td>
-                      <td class="text-end">—</td>
-                    </tr>
-                    <tr>
-                      <td><%= t('views.recommendations.pages.debt_optimization.why_important.table_month') %> 1</td>
-                      <td class="text-end">€3.050,00</td>
-                      <td class="text-end text-danger">+€50,00</td>
-                    </tr>
-                    <tr>
-                      <td><%= t('views.recommendations.pages.debt_optimization.why_important.table_month') %> 2</td>
-                      <td class="text-end">€3.100,83</td>
-                      <td class="text-end text-danger">+€50,83</td>
-                    </tr>
-                    <tr>
-                      <td><%= t('views.recommendations.pages.debt_optimization.why_important.table_month') %> 3</td>
-                      <td class="text-end">€3.152,52</td>
-                      <td class="text-end text-danger">+€51,69</td>
-                    </tr>
-                    <tr>
-                      <td><%= t('views.recommendations.pages.debt_optimization.why_important.table_month') %> 4</td>
-                      <td class="text-end">€3.205,07</td>
-                      <td class="text-end text-danger">+€52,55</td>
-                    </tr>
-                    <tr>
-                      <td><%= t('views.recommendations.pages.debt_optimization.why_important.table_month') %> 5</td>
-                      <td class="text-end">€3.258,48</td>
-                      <td class="text-end text-danger">+€53,41</td>
-                    </tr>
-                    <tr class="border-top border-danger">
-                      <td><strong><%= t('views.recommendations.pages.debt_optimization.why_important.table_month') %> 6</strong></td>
-                      <td class="text-end"><strong>€3.312,77</strong></td>
-                      <td class="text-end text-danger"><strong>+€54,29</strong></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-
-              <div class="alert alert-danger mt-3 mb-0">
-                <%= t('views.recommendations.pages.debt_optimization.why_important.example_result_html').html_safe %>
-              </div>
-            </div>
-
-            <p class="mb-3"><%= t('views.recommendations.pages.debt_optimization.why_important.wasted_money') %></p>
-
-            <h5 class="text-primary mb-3 mt-4"><%= t('views.recommendations.pages.debt_optimization.why_important.debt_types_title') %></h5>
-            <ul class="mb-3">
-              <li><%= t('views.recommendations.pages.debt_optimization.why_important.bad_debt_html').html_safe %></li>
-              <li><%= t('views.recommendations.pages.debt_optimization.why_important.acceptable_debt_html').html_safe %></li>
-            </ul>
-
-            <p class="mb-0"><%= t('views.recommendations.pages.debt_optimization.why_important.priority_html').html_safe %></p>
-
-          <% elsif @recommendation.slug == "saving-advice" %>
-            <p class="mb-3"><%= t('views.recommendations.pages.saving_advice.why_important.intro_html').html_safe %></p>
-
-            <p class="mb-4"><%= t('views.recommendations.pages.saving_advice.why_important.good_news_html').html_safe %></p>
-
-            <h5 class="text-primary mb-3 mt-4"><%= t('views.recommendations.pages.saving_advice.why_important.current_situation') %></h5>
-
-            <div class="bg-white border <%= current_user.monthly_cash_flow > 0 ? 'border-success' : 'border-danger' %> rounded p-4 mb-4">
-              <div class="row">
-                <div class="col-md-4 text-center mb-3 mb-md-0">
-                  <p class="text-muted small mb-1"><%= t('views.recommendations.pages.saving_advice.why_important.monthly_income') %></p>
-                  <h4 class="text-success mb-0"><%= number_to_currency(current_user.monthly_income, unit: '€', precision: 0) %></h4>
-                </div>
-                <div class="col-md-4 text-center mb-3 mb-md-0">
-                  <p class="text-muted small mb-1"><%= t('views.recommendations.pages.saving_advice.why_important.monthly_expenses') %></p>
-                  <h4 class="text-danger mb-0"><%= number_to_currency(current_user.monthly_expenses, unit: '€', precision: 0) %></h4>
-                </div>
-                <div class="col-md-4 text-center">
-                  <p class="text-muted small mb-1"><%= t('views.recommendations.pages.saving_advice.why_important.cash_flow') %></p>
-                  <h4 class="<%= current_user.monthly_cash_flow > 0 ? 'text-success' : 'text-danger' %> mb-0">
-                    <%= number_to_currency(current_user.monthly_cash_flow, unit: '€', precision: 0) %>
-                  </h4>
-                </div>
-              </div>
-
-              <% if current_user.monthly_cash_flow <= 0 %>
-                <div class="alert alert-danger mt-3 mb-0">
-                  <%= t('views.recommendations.pages.saving_advice.why_important.spending_all_html', status: current_user.monthly_cash_flow == 0 ? t('views.recommendations.pages.saving_advice.why_important.spending_all') : t('views.recommendations.pages.saving_advice.why_important.spending_more')).html_safe %>
-                </div>
-              <% else %>
-                <div class="alert alert-success mt-3 mb-0">
-                  <%= t('views.recommendations.pages.saving_advice.why_important.positive_flow_html').html_safe %>
-                </div>
-              <% end %>
-            </div>
-
-            <h5 class="text-primary mb-3 mt-4"><%= t('views.recommendations.pages.saving_advice.why_important.opportunities_title') %></h5>
-
-            <div class="row g-3 mb-4">
-              <div class="col-md-6">
-                <div class="bg-white border rounded p-3">
-                  <h6 class="text-danger mb-2"><i class="bi bi-credit-card me-2"></i><%= t('views.recommendations.pages.saving_advice.why_important.subscriptions_title') %></h6>
-                  <p class="small text-muted mb-2"><%= t('views.recommendations.pages.saving_advice.why_important.subscriptions_desc') %></p>
-                  <p class="small mb-0"><strong><%= t('views.recommendations.pages.saving_advice.why_important.subscriptions_savings') %></strong></p>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="bg-white border rounded p-3">
-                  <h6 class="text-danger mb-2"><i class="bi bi-cup-straw me-2"></i><%= t('views.recommendations.pages.saving_advice.why_important.dining_title') %></h6>
-                  <p class="small text-muted mb-2"><%= t('views.recommendations.pages.saving_advice.why_important.dining_desc') %></p>
-                  <p class="small mb-0"><strong><%= t('views.recommendations.pages.saving_advice.why_important.dining_savings') %></strong></p>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="bg-white border rounded p-3">
-                  <h6 class="text-danger mb-2"><i class="bi bi-piggy-bank me-2"></i><%= t('views.recommendations.pages.saving_advice.why_important.impulse_title') %></h6>
-                  <p class="small text-muted mb-2"><%= t('views.recommendations.pages.saving_advice.why_important.impulse_desc') %></p>
-                  <p class="small mb-0"><strong><%= t('views.recommendations.pages.saving_advice.why_important.impulse_savings') %></strong></p>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="bg-white border rounded p-3">
-                  <h6 class="text-danger mb-2"><i class="bi bi-phone me-2"></i><%= t('views.recommendations.pages.saving_advice.why_important.contracts_title') %></h6>
-                  <p class="small text-muted mb-2"><%= t('views.recommendations.pages.saving_advice.why_important.contracts_desc') %></p>
-                  <p class="small mb-0"><strong><%= t('views.recommendations.pages.saving_advice.why_important.contracts_savings') %></strong></p>
-                </div>
-              </div>
-            </div>
-
-            <p class="mb-3"><%= t('views.recommendations.pages.saving_advice.why_important.potential_sum_html').html_safe %></p>
-
-            <p class="mb-0"><%= t('views.recommendations.pages.saving_advice.why_important.conscious_spending').html_safe %></p>
-
-          <% elsif @recommendation.slug == "tax-advisory" %>
-            <p class="mb-3"><%= t('views.recommendations.pages.tax_advisory.why_important.intro_html').html_safe %></p>
-
-            <h5 class="text-primary mb-3 mt-4"><%= t('views.recommendations.pages.tax_advisory.why_important.cost_title') %></h5>
-
-            <div class="bg-white border border-warning rounded p-4 mb-4">
-              <p class="mb-3"><%= t('views.recommendations.pages.tax_advisory.why_important.example_title_html').html_safe %></p>
-
-              <div class="table-responsive mb-3">
-                <table class="table table-sm mb-0">
-                  <thead>
-                    <tr class="text-muted">
-                      <th><%= t('views.recommendations.pages.tax_advisory.why_important.table_situation') %></th>
-                      <th class="text-end"><%= t('views.recommendations.pages.tax_advisory.why_important.table_irpf') %></th>
-                      <th class="text-end"><%= t('views.recommendations.pages.tax_advisory.why_important.table_savings') %></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr class="border-bottom">
-                      <td><strong><%= t('views.recommendations.pages.tax_advisory.why_important.without_planning') %></strong><br><span class="small text-muted"><%= t('views.recommendations.pages.tax_advisory.why_important.without_planning_desc') %></span></td>
-                      <td class="text-end text-danger"><strong>~€22.000/<%= t('views.recommendations.year') %></strong></td>
-                      <td class="text-end">—</td>
-                    </tr>
-                    <tr>
-                      <td><strong><%= t('views.recommendations.pages.tax_advisory.why_important.with_advisor') %></strong><br><span class="small text-muted"><%= t('views.recommendations.pages.tax_advisory.why_important.with_advisor_desc') %></span></td>
-                      <td class="text-end text-success"><strong>~€15.500/<%= t('views.recommendations.year') %></strong></td>
-                      <td class="text-end text-success"><strong>+€6.500/<%= t('views.recommendations.year') %></strong></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-
-              <div class="alert alert-success mb-0">
-                <p class="mb-2"><%= t('views.recommendations.pages.tax_advisory.why_important.savings_result_html').html_safe %></p>
-                <p class="small mb-0"><%= t('views.recommendations.pages.tax_advisory.why_important.savings_result_note_html').html_safe %></p>
-              </div>
-            </div>
-
-            <h5 class="text-primary mb-3 mt-4"><%= t('views.recommendations.pages.tax_advisory.why_important.areas_title') %></h5>
-
-            <div class="row g-3 mb-4">
-              <div class="col-md-6">
-                <div class="bg-light rounded p-4 h-100">
-                  <div class="d-flex align-items-center mb-3">
-                    <div class="bg-success bg-opacity-10 rounded-circle p-2 me-2">
-                      <i class="bi bi-percent text-success fs-4"></i>
-                    </div>
-                    <h6 class="mb-0"><%= t('views.recommendations.pages.tax_advisory.why_important.area1_title') %></h6>
-                  </div>
-                  <p class="small text-muted mb-2"><%= t('views.recommendations.pages.tax_advisory.why_important.area1_desc') %></p>
-                  <ul class="small mb-0">
-                    <% t('views.recommendations.pages.tax_advisory.why_important.area1_items').each do |item| %>
-                      <li><%= item %></li>
-                    <% end %>
-                  </ul>
-                </div>
-              </div>
-
-              <div class="col-md-6">
-                <div class="bg-light rounded p-4 h-100">
-                  <div class="d-flex align-items-center mb-3">
-                    <div class="bg-success bg-opacity-10 rounded-circle p-2 me-2">
-                      <i class="bi bi-gift text-success fs-4"></i>
-                    </div>
-                    <h6 class="mb-0"><%= t('views.recommendations.pages.tax_advisory.why_important.area2_title') %></h6>
-                  </div>
-                  <p class="small text-muted mb-2"><%= t('views.recommendations.pages.tax_advisory.why_important.area2_desc') %></p>
-                  <ul class="small mb-0">
-                    <% t('views.recommendations.pages.tax_advisory.why_important.area2_items').each do |item| %>
-                      <li><%= item %></li>
-                    <% end %>
-                  </ul>
-                </div>
-              </div>
-
-              <div class="col-md-6">
-                <div class="bg-light rounded p-4 h-100">
-                  <div class="d-flex align-items-center mb-3">
-                    <div class="bg-success bg-opacity-10 rounded-circle p-2 me-2">
-                      <i class="bi bi-building text-success fs-4"></i>
-                    </div>
-                    <h6 class="mb-0"><%= t('views.recommendations.pages.tax_advisory.why_important.area3_title') %></h6>
-                  </div>
-                  <p class="small text-muted mb-2"><%= t('views.recommendations.pages.tax_advisory.why_important.area3_desc') %></p>
-                  <ul class="small mb-0">
-                    <% t('views.recommendations.pages.tax_advisory.why_important.area3_items').each do |item| %>
-                      <li><%= item %></li>
-                    <% end %>
-                  </ul>
-                </div>
-              </div>
-
-              <div class="col-md-6">
-                <div class="bg-light rounded p-4 h-100">
-                  <div class="d-flex align-items-center mb-3">
-                    <div class="bg-success bg-opacity-10 rounded-circle p-2 me-2">
-                      <i class="bi bi-graph-up text-success fs-4"></i>
-                    </div>
-                    <h6 class="mb-0"><%= t('views.recommendations.pages.tax_advisory.why_important.area4_title') %></h6>
-                  </div>
-                  <p class="small text-muted mb-2"><%= t('views.recommendations.pages.tax_advisory.why_important.area4_desc') %></p>
-                  <ul class="small mb-0">
-                    <% t('views.recommendations.pages.tax_advisory.why_important.area4_items').each do |item| %>
-                      <li><%= item %></li>
-                    <% end %>
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            <h5 class="text-primary mb-3 mt-4"><%= t('views.recommendations.pages.tax_advisory.why_important.legal_title') %></h5>
-
-            <p class="mb-3"><%= t('views.recommendations.pages.tax_advisory.why_important.legal_intro_html').html_safe %></p>
-
-            <div class="row g-3 mb-4">
-              <div class="col-md-6">
-                <div class="bg-danger bg-opacity-10 border border-danger rounded p-3">
-                  <h6 class="text-danger mb-2"><i class="bi bi-x-circle me-2"></i><%= t('views.recommendations.pages.tax_advisory.why_important.evasion_title') %></h6>
-                  <ul class="small mb-0">
-                    <% t('views.recommendations.pages.tax_advisory.why_important.evasion_items').each do |item| %>
-                      <li><%= item %></li>
-                    <% end %>
-                  </ul>
-                </div>
-              </div>
-
-              <div class="col-md-6">
-                <div class="bg-success bg-opacity-10 border border-success rounded p-3">
-                  <h6 class="text-success mb-2"><i class="bi bi-check-circle me-2"></i><%= t('views.recommendations.pages.tax_advisory.why_important.optimization_title') %></h6>
-                  <ul class="small mb-0">
-                    <% t('views.recommendations.pages.tax_advisory.why_important.optimization_items').each do |item| %>
-                      <li><%= item %></li>
-                    <% end %>
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            <p class="mb-4"><%= t('views.recommendations.pages.tax_advisory.why_important.legal_conclusion_html').html_safe %></p>
-
-            <h5 class="text-success mb-3 mt-4"><%= t('views.recommendations.pages.tax_advisory.why_important.when_needed_title') %></h5>
-
-            <div class="bg-white border border-success rounded p-4 mb-4">
-              <p class="mb-3"><%= t('views.recommendations.pages.tax_advisory.why_important.when_needed_intro') %></p>
-              <ul class="mb-0">
-                <% t('views.recommendations.pages.tax_advisory.why_important.when_needed_items').each_with_index do |item, index| %>
-                  <li class="<%= index < 5 ? 'mb-2' : 'mb-0' %>"><strong><%= item[:condition] %></strong> <%= item[:explanation] %></li>
-                <% end %>
-              </ul>
-            </div>
-
-            <p class="mb-0"><%= t('views.recommendations.pages.tax_advisory.why_important.final_note_html').html_safe %></p>
-
-          <% elsif @recommendation.slug == "portfolio-optimization" %>
-            <p class="mb-3"><%= t('views.recommendations.pages.portfolio_optimization.why_important.intro_html').html_safe %></p>
-
-            <h5 class="text-primary mb-3 mt-4"><%= t('views.recommendations.pages.portfolio_optimization.why_important.conflict_title') %></h5>
-
-            <div class="bg-white border border-warning rounded p-4 mb-4">
-              <p class="mb-3"><%= t('views.recommendations.pages.portfolio_optimization.why_important.conflict_question_html').html_safe %></p>
-
-              <p class="mb-3"><%= t('views.recommendations.pages.portfolio_optimization.why_important.conflict_intro') %></p>
-
-              <ul class="mb-3">
-                <% t('views.recommendations.pages.portfolio_optimization.why_important.conflict_items').each do |item| %>
-                  <li class="mb-2"><strong><%= item[:title] %></strong> <%= item[:text] %></li>
-                <% end %>
-              </ul>
-
-              <div class="alert alert-warning mb-0">
-                <p class="mb-0"><strong><%= t('views.recommendations.pages.portfolio_optimization.why_important.conflict_result') %></strong></p>
-              </div>
-            </div>
-
-            <h5 class="text-primary mb-3 mt-4"><%= t('views.recommendations.pages.portfolio_optimization.why_important.warnings_title') %></h5>
-
-            <div class="row g-3 mb-4">
-              <div class="col-md-6">
-                <div class="bg-danger bg-opacity-10 border border-danger rounded p-3 h-100">
-                  <h6 class="text-danger mb-2"><i class="bi bi-exclamation-circle me-2"></i><%= t('views.recommendations.pages.portfolio_optimization.why_important.warning_complex_title') %></h6>
-                  <p class="small text-muted mb-2"><%= t('views.recommendations.pages.portfolio_optimization.why_important.warning_complex_desc') %></p>
-                  <p class="small mb-0"><strong><%= t('views.recommendations.problem') %>:</strong> <%= t('views.recommendations.pages.portfolio_optimization.why_important.warning_complex_problem') %></p>
-                </div>
-              </div>
-
-              <div class="col-md-6">
-                <div class="bg-danger bg-opacity-10 border border-danger rounded p-3 h-100">
-                  <h6 class="text-danger mb-2"><i class="bi bi-cash-stack me-2"></i><%= t('views.recommendations.pages.portfolio_optimization.why_important.warning_fees_title') %></h6>
-                  <p class="small text-muted mb-2"><%= t('views.recommendations.pages.portfolio_optimization.why_important.warning_fees_desc') %></p>
-                  <p class="small mb-0"><strong><%= t('views.recommendations.problem') %>:</strong> <%= t('views.recommendations.pages.portfolio_optimization.why_important.warning_fees_problem') %></p>
-                </div>
-              </div>
-
-              <div class="col-md-6">
-                <div class="bg-danger bg-opacity-10 border border-danger rounded p-3 h-100">
-                  <h6 class="text-danger mb-2"><i class="bi bi-pie-chart me-2"></i><%= t('views.recommendations.pages.portfolio_optimization.why_important.warning_concentration_title') %></h6>
-                  <p class="small text-muted mb-2"><%= t('views.recommendations.pages.portfolio_optimization.why_important.warning_concentration_desc') %></p>
-                  <p class="small mb-0"><strong><%= t('views.recommendations.problem') %>:</strong> <%= t('views.recommendations.pages.portfolio_optimization.why_important.warning_concentration_problem') %></p>
-                </div>
-              </div>
-
-              <div class="col-md-6">
-                <div class="bg-danger bg-opacity-10 border border-danger rounded p-3 h-100">
-                  <h6 class="text-danger mb-2"><i class="bi bi-graph-down me-2"></i><%= t('views.recommendations.pages.portfolio_optimization.why_important.warning_performance_title') %></h6>
-                  <p class="small text-muted mb-2"><%= t('views.recommendations.pages.portfolio_optimization.why_important.warning_performance_desc') %></p>
-                  <p class="small mb-0"><strong><%= t('views.recommendations.problem') %>:</strong> <%= t('views.recommendations.pages.portfolio_optimization.why_important.warning_performance_problem') %></p>
-                </div>
-              </div>
-            </div>
-
-            <h5 class="text-success mb-3 mt-4"><%= t('views.recommendations.pages.portfolio_optimization.why_important.second_opinion_title', default: 'What an independent second opinion provides') %></h5>
-
-            <div class="bg-success bg-opacity-10 border border-success rounded p-4 mb-4">
-              <p class="mb-3"><strong><i class="bi bi-shield-check text-success me-2"></i><%= t('views.recommendations.pages.portfolio_optimization.why_important.independent_advisor', default: 'An independent financial advisor:') %></strong></p>
-              <ul class="mb-0">
-                <% (t('views.recommendations.pages.portfolio_optimization.why_important.advisor_benefits', default: []) || []).each_with_index do |benefit, index| %>
-                  <li class="<%= index < 3 ? 'mb-2' : 'mb-0' %>"><strong><%= benefit[:title] %></strong> <%= benefit[:text] %></li>
-                <% end %>
-              </ul>
-            </div>
-
-            <h5 class="text-primary mb-3 mt-4"><%= t('views.recommendations.pages.portfolio_optimization.why_important.who_benefits_title', default: 'Who benefits from a portfolio review?') %></h5>
-
-            <div class="bg-white border border-primary rounded p-4 mb-4">
-              <p class="mb-3"><%= t('views.recommendations.pages.portfolio_optimization.why_important.who_benefits_intro', default: 'An independent second opinion is especially valuable if:') %></p>
-              <ul class="mb-0">
-                <% (t('views.recommendations.pages.portfolio_optimization.why_important.who_benefits_items', default: []) || []).each_with_index do |item, index| %>
-                  <li class="<%= index < 4 ? 'mb-2' : 'mb-0' %>"><strong><%= item[:condition] %></strong> <%= item[:explanation] %></li>
-                <% end %>
-              </ul>
-            </div>
-
-            <p class="mb-0"><%= t('views.recommendations.pages.portfolio_optimization.why_important.conclusion_html', default: 'A portfolio review can identify fee savings, diversification improvements, and elimination of unnecessarily complex products. <strong>It\'s a second opinion that can save you thousands in the long run</strong>.').html_safe %></p>
-
-          <% elsif @recommendation.slug == "mortgage-optimization" %>
-            <p class="mb-3"><%= t('views.recommendations.pages.mortgage_optimization.why_important.intro_html').html_safe %></p>
-
-            <h5 class="text-primary mb-3 mt-4"><%= t('views.recommendations.pages.mortgage_optimization.why_important.example_title') %></h5>
-
-            <div class="bg-white border border-info rounded p-4 mb-4">
-              <p class="mb-3"><strong><i class="bi bi-calculator me-2"></i><%= t('views.recommendations.pages.mortgage_optimization.why_important.example_intro_html').html_safe %></strong></p>
-
-              <div class="table-responsive">
-                <table class="table table-sm mb-0">
-                  <thead>
-                    <tr class="text-muted">
-                      <th><%= t('views.recommendations.pages.mortgage_optimization.why_important.scenario', default: 'Scenario') %></th>
-                      <th class="text-end"><%= t('views.recommendations.pages.mortgage_optimization.why_important.monthly_payment') %></th>
-                      <th class="text-end"><%= t('views.recommendations.pages.mortgage_optimization.why_important.total_interest') %></th>
-                      <th class="text-end"><%= t('views.recommendations.pages.mortgage_optimization.why_important.savings') %></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr class="border-bottom">
-                      <td><strong><%= t('views.recommendations.pages.mortgage_optimization.why_important.current_rate') %></strong></td>
-                      <td class="text-end"><strong>€843/<%= t('views.recommendations.months_unit', count: 1, default: 'month') %></strong></td>
-                      <td class="text-end"><strong>€103.600</strong></td>
-                      <td class="text-end">—</td>
-                    </tr>
-                    <tr>
-                      <td><strong><%= t('views.recommendations.pages.mortgage_optimization.why_important.optimized_rate') %></strong></td>
-                      <td class="text-end text-success"><strong>€790/<%= t('views.recommendations.months_unit', count: 1, default: 'month') %></strong></td>
-                      <td class="text-end text-success"><strong>€84.400</strong></td>
-                      <td class="text-end text-success"><strong>€19.200</strong></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-
-              <div class="alert alert-success mt-3 mb-2">
-                <p class="mb-0"><strong><i class="bi bi-piggy-bank me-2"></i><%= t('views.recommendations.pages.mortgage_optimization.why_important.savings_summary', default: 'Savings: €53/month less + €19,200 total over the life of the loan').html_safe %></strong></p>
-              </div>
-
-              <p class="small text-muted mb-0">
-                <strong><i class="bi bi-info-circle me-1"></i><%= t('views.recommendations.important') %>:</strong> <%= t('views.recommendations.pages.mortgage_optimization.why_important.disclaimer', default: 'These numbers are indicative only. Available interest rates change constantly based on the market and your credit profile. A mortgage broker can analyze your specific case and show you the real options available to you right now.') %>
-              </p>
-            </div>
-
-            <h5 class="text-primary mb-3 mt-4"><%= t('views.recommendations.pages.mortgage_optimization.why_important.bank_wont_call') %></h5>
-
-            <div class="bg-white border border-warning rounded p-4 mb-4">
-              <p class="mb-3"><%= t('views.recommendations.pages.mortgage_optimization.why_important.market_changes') %></p>
-
-              <ul class="mb-3">
-                <li class="mb-2"><strong><%= t('views.recommendations.pages.mortgage_optimization.why_important.option1_title') %>:</strong> <%= t('views.recommendations.pages.mortgage_optimization.why_important.option1_desc') %></li>
-                <li class="mb-2"><strong><%= t('views.recommendations.pages.mortgage_optimization.why_important.option2_title') %>:</strong> <%= t('views.recommendations.pages.mortgage_optimization.why_important.option2_desc') %></li>
-                <li class="mb-2"><strong><%= t('views.recommendations.pages.mortgage_optimization.why_important.option3_title') %>:</strong> <%= t('views.recommendations.pages.mortgage_optimization.why_important.option3_desc') %></li>
-              </ul>
-
-              <p class="mb-0"><%= t('views.recommendations.pages.mortgage_optimization.why_important.options_conclusion', default: '<strong>That\'s why it\'s important for YOU to analyze your situation periodically.</strong> A mortgage broker can do it for you at no cost or obligation.').html_safe %></p>
-            </div>
-
-            <h5 class="text-warning mb-3 mt-4"><%= t('views.recommendations.pages.mortgage_optimization.why_important.hidden_links_title', default: 'Watch out for hidden conditions') %></h5>
-
-            <div class="bg-white border border-danger rounded p-4 mb-4">
-              <p class="mb-3"><%= t('views.recommendations.pages.mortgage_optimization.why_important.hidden_links_intro', default: 'Even if you think you have a good interest rate, many mortgages include <strong>conditions and requirements</strong> that hide the true cost:').html_safe %></p>
-
-              <ul class="mb-3">
-                <% (t('views.recommendations.pages.mortgage_optimization.why_important.hidden_items', default: []) || []).each do |item| %>
-                  <li class="mb-2"><strong><%= item[:title] %>:</strong> <%= item[:text] %></li>
-                <% end %>
-              </ul>
-
-              <div class="alert alert-danger mb-0">
-                <p class="mb-0"><%= t('views.recommendations.pages.mortgage_optimization.why_important.hidden_warning', default: '<strong><i class="bi bi-exclamation-triangle me-2"></i>What looks like 2.0% can end up costing you like 2.8%</strong> when you add up all associated costs. A professional analysis shows you the real cost.').html_safe %></p>
-              </div>
-            </div>
-
-            <h5 class="text-success mb-3 mt-4"><%= t('views.recommendations.pages.mortgage_optimization.why_important.why_now_title', default: 'Why analyze it now?') %></h5>
-
-            <div class="bg-white border border-success rounded p-4 mb-4">
-              <ul class="mb-0">
-                <% (t('views.recommendations.pages.mortgage_optimization.why_important.why_now_items', default: []) || []).each_with_index do |item, index| %>
-                  <li class="<%= index < 4 ? 'mb-2' : 'mb-0' %>"><strong><i class="bi <%= item[:icon] %> text-success me-2"></i><%= item[:title] %>:</strong> <%= item[:text] %></li>
-                <% end %>
-              </ul>
-            </div>
-
-            <p class="mb-0"><%= t('views.recommendations.pages.mortgage_optimization.why_important.conclusion', default: 'Don\'t miss the opportunity to pay less each month for the same thing. <strong>Analyzing your situation is free, fast, and can only benefit you.</strong>').html_safe %></p>
-
-          <% elsif @recommendation.slug == "ac-llarg" %>
-            <p class="mb-3"><%= t('views.recommendations.pages.ac_llarg.why_important.intro_html').html_safe %></p>
-
-            <h5 class="text-warning mb-3 mt-4"><%= t('views.recommendations.pages.ac_llarg.why_important.inflation_title') %></h5>
-
-            <div class="bg-white border border-warning rounded p-4 mb-4">
-              <p class="mb-3"><strong><i class="bi bi-exclamation-triangle text-warning me-2"></i><%= t('views.recommendations.pages.ac_llarg.why_important.example_title') %></strong></p>
-
-              <div class="table-responsive">
-                <table class="table table-sm mb-0">
-                  <thead>
-                    <tr class="text-muted">
-                      <th><%= t('views.recommendations.pages.ac_llarg.why_important.strategy') %></th>
-                      <th class="text-end"><%= t('views.recommendations.pages.ac_llarg.why_important.final_capital') %></th>
-                      <th class="text-end"><%= t('views.recommendations.pages.ac_llarg.why_important.real_value') %></th>
-                      <th class="text-end"><%= t('views.recommendations.pages.ac_llarg.why_important.difference') %></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr class="border-bottom">
-                      <td><strong><%= t('views.recommendations.pages.ac_llarg.why_important.checking_account') %></strong></td>
-                      <td class="text-end">€10.000</td>
-                      <td class="text-end text-danger"><strong>€7.812</strong></td>
-                      <td class="text-end text-danger">-22%</td>
-                    </tr>
-                    <tr>
-                      <td><strong><%= t('views.recommendations.pages.ac_llarg.why_important.equity_investment') %></strong></td>
-                      <td class="text-end text-success"><strong>€21.589</strong></td>
-                      <td class="text-end text-success"><strong>€16.860</strong></td>
-                      <td class="text-end text-success">+116%</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-
-              <div class="alert alert-warning mt-3 mb-0">
-                <p class="mb-0"><%= t('views.recommendations.pages.ac_llarg.why_important.inflation_warning').html_safe %></p>
-              </div>
-            </div>
-
-            <h5 class="text-success mb-3 mt-4"><%= t('views.recommendations.pages.ac_llarg.why_important.long_term_safety_title') %></h5>
-
-            <div class="bg-white border border-success rounded p-4 mb-4">
-              <p class="mb-3"><strong><%= t('views.recommendations.pages.ac_llarg.why_important.historical_data') %></strong></p>
-
-              <ul class="mb-3">
-                <% t('views.recommendations.pages.ac_llarg.why_important.time_periods').each do |period| %>
-                  <li><strong><%= period[:years] %>:</strong> <%= period[:result] %></li>
-                <% end %>
-              </ul>
-
-              <div class="alert alert-success mb-0">
-                <p class="mb-0"><%= t('views.recommendations.pages.ac_llarg.why_important.conclusion_html').html_safe %></p>
-              </div>
-            </div>
-
-            <h5 class="text-primary mb-3 mt-4"><%= t('views.recommendations.pages.ac_llarg.why_important.dca_title') %></h5>
-
-            <div class="bg-white border border-info rounded p-4 mb-4">
-              <p class="mb-3"><%= t('views.recommendations.pages.ac_llarg.why_important.dca_intro_html').html_safe %></p>
-
-              <div class="row g-3 mb-3">
-                <div class="col-md-6">
-                  <div class="bg-light rounded p-3 h-100">
-                    <h6 class="text-primary mb-2"><i class="bi bi-shield-check me-2"></i><%= t('views.recommendations.pages.ac_llarg.why_important.timing_risk_title') %></h6>
-                    <p class="small mb-0"><%= t('views.recommendations.pages.ac_llarg.why_important.timing_risk_text') %></p>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="bg-light rounded p-3 h-100">
-                    <h6 class="text-primary mb-2"><i class="bi bi-graph-down me-2"></i><%= t('views.recommendations.pages.ac_llarg.why_important.dips_advantage_title') %></h6>
-                    <p class="small mb-0"><%= t('views.recommendations.pages.ac_llarg.why_important.dips_advantage_text') %></p>
-                  </div>
-                </div>
-              </div>
-
-              <p class="mb-0"><%= t('views.recommendations.pages.ac_llarg.why_important.recommended_strategy_html').html_safe %></p>
-            </div>
-
-            <h5 class="text-info mb-3 mt-4"><%= t('views.recommendations.pages.ac_llarg.why_important.disinvestment_title') %></h5>
-
-            <div class="bg-white border border-info rounded p-4 mb-4">
-              <p class="mb-3"><%= t('views.recommendations.pages.ac_llarg.why_important.disinvestment_intro_html').html_safe %></p>
-
-              <div class="alert alert-info mb-3">
-                <p class="mb-2"><strong><i class="bi bi-info-circle me-2"></i><%= t('views.recommendations.pages.ac_llarg.why_important.example_10years') %></strong></p>
-                <ul class="mb-0 small">
-                  <% t('views.recommendations.pages.ac_llarg.why_important.disinvestment_steps').each do |step| %>
-                    <li><strong><%= step[:years] %>:</strong> <%= step[:action] %></li>
-                  <% end %>
-                </ul>
-              </div>
-
-              <div class="row g-3">
-                <div class="col-md-6">
-                  <div class="bg-light rounded p-3 h-100">
-                    <h6 class="text-info mb-2"><i class="bi bi-shield-check me-2"></i><%= t('views.recommendations.pages.ac_llarg.why_important.why_disinvest_title') %></h6>
-                    <p class="small mb-0"><%= t('views.recommendations.pages.ac_llarg.why_important.why_disinvest_text') %></p>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="bg-light rounded p-3 h-100">
-                    <h6 class="text-info mb-2"><i class="bi bi-calendar-check me-2"></i><%= t('views.recommendations.pages.ac_llarg.why_important.when_disinvest_title') %></h6>
-                    <p class="small mb-0"><%= t('views.recommendations.pages.ac_llarg.why_important.when_disinvest_html').html_safe %></p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <p class="mb-0"><%= t('views.recommendations.pages.ac_llarg.why_important.final_message_html').html_safe %></p>
-
-          <% elsif @recommendation.slug == "ac-curt" %>
-            <p class="mb-3"><%= t('views.recommendations.pages.ac_curt.why_important.intro_html').html_safe %></p>
-
-            <h5 class="text-warning mb-3 mt-4"><%= t('views.recommendations.pages.ac_curt.why_important.balance_title') %></h5>
-
-            <div class="bg-white border border-warning rounded p-4 mb-4">
-              <p class="mb-3"><strong><i class="bi bi-exclamation-triangle text-warning me-2"></i><%= t('views.recommendations.pages.ac_curt.why_important.comparison_title') %></strong></p>
-
-              <div class="table-responsive">
-                <table class="table table-sm mb-0">
-                  <thead>
-                    <tr class="text-muted">
-                      <th><%= t('views.recommendations.pages.ac_curt.why_important.table_product') %></th>
-                      <th class="text-center"><%= t('views.recommendations.pages.ac_curt.why_important.table_return') %></th>
-                      <th class="text-end"><%= t('views.recommendations.pages.ac_curt.why_important.table_final_capital') %></th>
-                      <th class="text-center"><%= t('views.recommendations.pages.ac_curt.why_important.table_risk') %></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr class="border-bottom">
-                      <td><strong><%= t('views.recommendations.pages.ac_curt.why_important.checking_account') %></strong></td>
-                      <td class="text-center">0%</td>
-                      <td class="text-end text-danger">€10.000</td>
-                      <td class="text-center"><span class="badge bg-success"><%= t('views.recommendations.pages.ac_curt.why_important.risk_none') %></span></td>
-                    </tr>
-                    <tr class="border-bottom">
-                      <td><strong><%= t('views.recommendations.pages.ac_curt.why_important.deposit') %></strong></td>
-                      <td class="text-center">1.5%</td>
-                      <td class="text-end">€10.456</td>
-                      <td class="text-center"><span class="badge bg-success"><%= t('views.recommendations.pages.ac_curt.why_important.risk_none') %></span></td>
-                    </tr>
-                    <tr class="border-bottom">
-                      <td><strong><%= t('views.recommendations.pages.ac_curt.why_important.fixed_income') %></strong></td>
-                      <td class="text-center text-primary">3%</td>
-                      <td class="text-end text-primary"><strong>€10.927</strong></td>
-                      <td class="text-center"><span class="badge bg-warning"><%= t('views.recommendations.pages.ac_curt.why_important.risk_low') %></span></td>
-                    </tr>
-                    <tr>
-                      <td><strong><%= t('views.recommendations.pages.ac_curt.why_important.equities') %></strong></td>
-                      <td class="text-center">8%</td>
-                      <td class="text-end text-success">€12.597</td>
-                      <td class="text-center"><span class="badge bg-danger"><%= t('views.recommendations.pages.ac_curt.why_important.risk_high') %></span></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-
-              <div class="alert alert-info mt-3 mb-0">
-                <p class="mb-0"><%= t('views.recommendations.pages.ac_curt.why_important.comparison_result_html').html_safe %></p>
-              </div>
-            </div>
-
-            <h5 class="text-success mb-3 mt-4"><%= t('views.recommendations.pages.ac_curt.why_important.what_is_title') %></h5>
-
-            <div class="bg-white border border-success rounded p-4 mb-4">
-              <p class="mb-3"><%= t('views.recommendations.pages.ac_curt.why_important.what_is_intro_html').html_safe %></p>
-
-              <ul class="mb-3">
-                <% t('views.recommendations.pages.ac_curt.why_important.what_is_items').each do |item| %>
-                  <li><strong><%= item[:title] %>:</strong> <%= item[:text] %></li>
-                <% end %>
-              </ul>
-
-              <div class="alert alert-success mb-0">
-                <p class="mb-0"><%= t('views.recommendations.pages.ac_curt.why_important.ideal_for_html').html_safe %></p>
-              </div>
-            </div>
-
-            <h5 class="text-primary mb-3 mt-4"><%= t('views.recommendations.pages.ac_curt.why_important.regular_contributions_title') %></h5>
-
-            <div class="bg-white border border-info rounded p-4 mb-4">
-              <p class="mb-3"><%= t('views.recommendations.pages.ac_curt.why_important.regular_contributions_intro_html').html_safe %></p>
-
-              <div class="row g-3 mb-3">
-                <% t('views.recommendations.pages.ac_curt.why_important.contribution_benefits').each do |benefit| %>
-                  <div class="col-md-6">
-                    <div class="bg-light rounded p-3 h-100">
-                      <h6 class="text-primary mb-2"><i class="<%= benefit[:icon] %> me-2"></i><%= benefit[:title] %></h6>
-                      <p class="small mb-0"><%= benefit[:text] %></p>
-                    </div>
-                  </div>
-                <% end %>
-              </div>
-
-              <p class="mb-0"><%= t('views.recommendations.pages.ac_curt.why_important.recommended_strategy_html').html_safe %></p>
-            </div>
-
-            <p class="mb-0"><%= t('views.recommendations.pages.ac_curt.why_important.final_message_html').html_safe %></p>
-
-          <% elsif @recommendation.slug == "ac-jubil" %>
-            <p class="mb-3"><%= t('views.recommendations.pages.ac_jubil.why_important.intro_html').html_safe %></p>
-
-            <h5 class="text-primary mb-3 mt-4"><%= t('views.recommendations.pages.ac_jubil.why_important.pension_reality_title') %></h5>
-
-            <div class="bg-white border border-warning rounded p-4 mb-4">
-              <p class="mb-3"><strong><i class="bi bi-exclamation-triangle text-warning me-2"></i><%= t('views.recommendations.pages.ac_jubil.why_important.substitution_rate_title') %></strong></p>
-              <p class="mb-2"><%= t('views.recommendations.pages.ac_jubil.why_important.substitution_rate_intro').html_safe %></p>
-              <ul class="mb-3">
-                <% t('views.recommendations.pages.ac_jubil.why_important.substitution_rates').each do |rate| %>
-                  <li><strong><%= rate[:year] %>:</strong> <%= rate[:rate] %> → <%= rate[:example] %></li>
-                <% end %>
-              </ul>
-              <div class="alert alert-warning mb-0">
-                <p class="mb-0"><%= t('views.recommendations.pages.ac_jubil.why_important.substitution_warning_html').html_safe %></p>
-              </div>
-            </div>
-
-            <h5 class="text-success mb-3 mt-4"><%= t('views.recommendations.pages.ac_jubil.why_important.time_power_title') %></h5>
-
-            <div class="bg-white border border-success rounded p-4 mb-4">
-              <p class="mb-3"><strong><%= t('views.recommendations.pages.ac_jubil.why_important.time_example_title') %></strong></p>
-
-              <div class="table-responsive">
-                <table class="table table-sm mb-0">
-                  <thead>
-                    <tr class="text-muted">
-                      <th><%= t('views.recommendations.pages.ac_jubil.why_important.table_scenario') %></th>
-                      <th><%= t('views.recommendations.pages.ac_jubil.why_important.table_monthly_savings') %></th>
-                      <th><%= t('views.recommendations.pages.ac_jubil.why_important.table_years_investing') %></th>
-                      <th><%= t('views.recommendations.pages.ac_jubil.why_important.table_total_contributed') %></th>
-                      <th class="text-end"><%= t('views.recommendations.pages.ac_jubil.why_important.table_final_value') %></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <% t('views.recommendations.pages.ac_jubil.why_important.scenarios').each_with_index do |scenario, index| %>
-                      <tr class="<%= index < 2 ? 'border-bottom' : '' %>">
-                        <td><strong><%= scenario[:scenario] %></strong></td>
-                        <td><%= scenario[:monthly] %></td>
-                        <td><%= scenario[:years] %></td>
-                        <td><%= scenario[:contributed] %></td>
-                        <td class="text-end <%= scenario[:class] %>"><strong><%= scenario[:final] %></strong></td>
-                      </tr>
-                    <% end %>
-                  </tbody>
-                </table>
-              </div>
-
-              <div class="alert alert-info mt-3 mb-0">
-                <p class="mb-2"><strong><i class="bi bi-lightbulb me-2"></i><%= t('views.recommendations.pages.ac_jubil.why_important.delay_cost_title') %></strong></p>
-                <p class="small mb-0"><%= t('views.recommendations.pages.ac_jubil.why_important.delay_cost_text') %></p>
-              </div>
-            </div>
-
-            <h5 class="text-primary mb-3 mt-4"><%= t('views.recommendations.pages.ac_jubil.why_important.how_much_title') %></h5>
-
-            <p class="mb-3"><%= t('views.recommendations.pages.ac_jubil.why_important.how_much_intro_html').html_safe %></p>
-
-            <div class="alert alert-info mb-4">
-              <p class="mb-2"><strong><i class="bi bi-info-circle me-2"></i><%= t('views.recommendations.pages.ac_jubil.why_important.good_news_title') %></strong></p>
-              <p class="small mb-0"><%= t('views.recommendations.pages.ac_jubil.why_important.good_news_text_html').html_safe %></p>
-            </div>
-
-            <div class="row g-3 mb-4">
-              <% t('views.recommendations.pages.ac_jubil.why_important.expense_examples').each do |example| %>
-                <div class="col-md-4">
-                  <div class="bg-light rounded p-3 text-center">
-                    <p class="small text-muted mb-2"><%= t('views.recommendations.pages.ac_jubil.why_important.expense_labels.monthly') %></p>
-                    <h5 class="text-primary mb-2"><%= example[:monthly_expense] %></h5>
-                    <p class="small text-muted mb-2"><%= t('views.recommendations.pages.ac_jubil.why_important.expense_labels.need') %></p>
-                    <h4 class="text-success mb-2"><%= example[:need_100] %></h4>
-                    <p class="small text-success mb-0"><%= t('views.recommendations.pages.ac_jubil.why_important.expense_labels.with_pension') %> <%= example[:with_pension] %></p>
-                  </div>
-                </div>
-              <% end %>
-            </div>
-
-            <p class="mb-3"><%= t('views.recommendations.pages.ac_jubil.why_important.achievable_text_html').html_safe %></p>
-
-            <h5 class="text-primary mb-3 mt-4"><%= t('views.recommendations.pages.ac_jubil.why_important.not_rich_title') %></h5>
-
-            <p class="mb-0"><%= t('views.recommendations.pages.ac_jubil.why_important.not_rich_text_html').html_safe %></p>
-
-          <% else %>
-            <%= simple_format(@recommendation.content) if @recommendation.content.present? %>
-          <% end %>
-        </div>
-      </div>
-
-      <!-- 4.5 SIMULADOR INTERACTIVO (AC-CURT, AC-LLARG Y AC-JUBIL) -->
-      <% if @recommendation.slug == "ac-curt" || @recommendation.slug == "ac-llarg" || @recommendation.slug == "ac-jubil" %>
-        <% simulator_key = @recommendation.slug.underscore %>
-        <div class="mb-5">
-          <div class="bg-primary bg-opacity-10 rounded p-4 p-md-5">
-            <h3 class="mb-4">
-              <i class="bi bi-calculator text-primary me-2"></i>
-              <%= t("views.recommendations.simulator.title.#{simulator_key}") %>
-            </h3>
-            <p class="text-muted mb-4">
-              <%= t("views.recommendations.simulator.description.#{simulator_key}") %>
-            </p>
-
-            <div class="row">
-              <% if @recommendation.slug == "ac-llarg" %>
-                <div class="col-md-6 mb-4">
-                  <label for="initialContribution" class="form-label"><%= t('views.recommendations.simulator.labels.initial_contribution') %></label>
-                  <div class="d-flex align-items-center gap-3">
-                    <input type="range" class="form-range flex-grow-1" id="initialContribution" min="0" max="10000" step="500" value="<%= @simulator_data[:initial_contribution] %>">
-                    <div class="text-end" style="min-width: 90px;">
-                      <strong class="h5 text-primary mb-0"><span id="initialValue"><%= @simulator_data[:initial_contribution] %></span>€</strong>
-                    </div>
-                  </div>
-                  <small class="text-muted"><%= t('views.recommendations.simulator.labels.initial_contribution_help') %></small>
-                </div>
-              <% end %>
-
-              <div class="col-md-6 mb-4">
-                <label for="monthlyContribution" class="form-label"><%= t('views.recommendations.simulator.labels.monthly_contribution') %></label>
-                <div class="d-flex align-items-center gap-3">
-                  <input type="range" class="form-range flex-grow-1" id="monthlyContribution" min="50" max="1000" step="50" value="<%= @simulator_data[:monthly_contribution] %>">
-                  <div class="text-end" style="min-width: 90px;">
-                    <strong class="h5 text-primary mb-0"><span id="monthlyValue"><%= @simulator_data[:monthly_contribution] %></span>€</strong>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-6 mb-4">
-                <label for="years" class="form-label"><%= t('views.recommendations.simulator.labels.years_investing') %></label>
-                <div class="d-flex align-items-center gap-3">
-                  <% if @recommendation.slug == "ac-curt" %>
-                    <input type="range" class="form-range flex-grow-1" id="years" min="1" max="5" step="1" value="<%= @simulator_data[:years] %>">
-                  <% else %>
-                    <input type="range" class="form-range flex-grow-1" id="years" min="10" max="40" step="1" value="<%= @simulator_data[:years] %>">
-                  <% end %>
-                  <div class="text-end" style="min-width: 90px;">
-                    <strong class="h5 text-primary mb-0"><span id="yearsValue"><%= @simulator_data[:years] %></span> <%= t('views.recommendations.simulator.labels.years') %></strong>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-12 mb-4">
-                <label for="returnRate" class="form-label"><%= t('views.recommendations.simulator.labels.expected_return') %></label>
-                <div class="d-flex align-items-center gap-3">
-                  <% if @recommendation.slug == "ac-curt" %>
-                    <input type="range" class="form-range flex-grow-1" id="returnRate" min="0" max="6" step="0.5" value="<%= @simulator_data[:annual_return] %>">
-                  <% else %>
-                    <input type="range" class="form-range flex-grow-1" id="returnRate" min="4" max="12" step="0.5" value="<%= @simulator_data[:annual_return] %>">
-                  <% end %>
-                  <div class="text-end" style="min-width: 90px;">
-                    <strong class="h5 text-primary mb-0"><span id="returnValue"><%= @simulator_data[:annual_return] %></span>%</strong>
-                  </div>
-                </div>
-                <% if @recommendation.slug == "ac-curt" %>
-                  <small class="text-muted"><%= t('views.recommendations.simulator.labels.return_help.ac_curt') %></small>
-                <% else %>
-                  <small class="text-muted"><%= t('views.recommendations.simulator.labels.return_help.default') %></small>
-                <% end %>
-              </div>
-            </div>
-
-            <hr class="my-4">
-
-            <!-- Gráfico de evolución -->
-            <div class="mb-4">
-              <h5 class="text-center mb-3"><%= t('views.recommendations.simulator.chart.title') %></h5>
-              <div class="bg-white rounded p-3">
-                <canvas id="retirementChart" height="80"></canvas>
-              </div>
-              <p class="text-muted small text-center mt-2 mb-0">
-                <span class="text-primary">■</span> <%= t('views.recommendations.simulator.chart.savings_label') %>
-                <span class="ms-3 text-success">■</span> <%= t('views.recommendations.simulator.chart.investment_label') %>
-              </p>
-            </div>
-
-            <hr class="my-4">
-
-            <div class="row g-3">
-              <div class="col-md-4">
-                <div class="bg-white rounded p-3 text-center">
-                  <p class="small text-muted mb-2"><%= t('views.recommendations.simulator.results.final_capital') %></p>
-                  <h3 class="text-success mb-0"><span id="finalCapital">283,015</span>€</h3>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="bg-white rounded p-3 text-center">
-                  <p class="small text-muted mb-2"><%= t('views.recommendations.simulator.results.total_contributed') %></p>
-                  <h3 class="text-primary mb-0"><span id="totalContributed">72,000</span>€</h3>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="bg-white rounded p-3 text-center">
-                  <p class="small text-muted mb-2"><%= t('views.recommendations.simulator.results.profit') %></p>
-                  <h3 class="text-warning mb-0"><span id="profit">211,015</span>€</h3>
-                </div>
-              </div>
-            </div>
-
-            <div class="alert alert-info mt-4 mb-0">
-              <p class="small mb-0"><i class="bi bi-info-circle me-2"></i><%= t('views.recommendations.simulator.disclaimer_html').html_safe %></p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Chart.js CDN and i18n data -->
-        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-        <div id="simulator-i18n"
-             data-savings-label="<%= t('views.recommendations.simulator.chart.savings_label') %>"
-             data-investment-label="<%= t('views.recommendations.simulator.chart.investment_label') %>"
-             style="display: none;"></div>
-
-        <script>
-          let retirementChart = null;
-
-          function formatNumber(num) {
-            return Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-          }
-
-          function createOrUpdateChart(labels, savingsData, investmentData) {
-            const ctx = document.getElementById('retirementChart');
-            if (!ctx) return;
-
-            if (retirementChart) {
-              // Actualizar gráfico existente
-              retirementChart.data.labels = labels;
-              retirementChart.data.datasets[0].data = savingsData;
-              retirementChart.data.datasets[1].data = investmentData;
-              retirementChart.update();
-            } else {
-              // Crear nuevo gráfico
-              // Get translated labels from data attributes
-              const i18nData = document.getElementById('simulator-i18n');
-              const savingsLabel = i18nData ? i18nData.dataset.savingsLabel : 'Ahorro sin interés';
-              const investmentLabel = i18nData ? i18nData.dataset.investmentLabel : 'Inversión con interés compuesto';
-
-              retirementChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                  labels: labels,
-                  datasets: [
-                    {
-                      label: savingsLabel,
-                      data: savingsData,
-                      borderColor: '#0d6efd',
-                      backgroundColor: 'rgba(13, 110, 253, 0.1)',
-                      tension: 0.1,
-                      fill: true
-                    },
-                    {
-                      label: investmentLabel,
-                      data: investmentData,
-                      borderColor: '#198754',
-                      backgroundColor: 'rgba(25, 135, 84, 0.1)',
-                      tension: 0.1,
-                      fill: true
-                    }
-                  ]
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <div id="simulator-i18n"
+         data-savings-label="<%= t('views.recommendations.simulator.chart.savings_label') %>"
+         data-investment-label="<%= t('views.recommendations.simulator.chart.investment_label') %>"
+         data-volatility-range-label="<%= t('views.recommendations.simulator.chart.volatility_range_label') %>"
+         data-risk-warning="<%= t('views.recommendations.simulator.chart.risk_warning_short_term') %>"
+         data-slug="<%= @recommendation.slug %>"
+         style="display: none;"></div>
+
+    <script>
+      if (window._retirementChart) {
+        window._retirementChart.destroy();
+        window._retirementChart = null;
+      }
+      var retirementChart = null;
+
+      var VOLATILITY = {
+        'ac-curt': 0.04,
+        'ac-llarg': 0.16,
+        'ac-jubil': 0.16
+      };
+
+      function formatNumber(num) {
+        return Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+      }
+
+      function createOrUpdateChart(labels, savingsData, investmentData, lowerBandData, upperBandData) {
+        var ctx = document.getElementById('retirementChart');
+        if (!ctx) return;
+
+        if (retirementChart) {
+          retirementChart.data.labels = labels;
+          retirementChart.data.datasets[0].data = savingsData;
+          retirementChart.data.datasets[1].data = lowerBandData;
+          retirementChart.data.datasets[2].data = investmentData;
+          retirementChart.data.datasets[3].data = upperBandData;
+          retirementChart.update();
+        } else {
+          var i18nData = document.getElementById('simulator-i18n');
+          var savingsLabel = i18nData ? i18nData.dataset.savingsLabel : 'Savings';
+          var investmentLabel = i18nData ? i18nData.dataset.investmentLabel : 'Investment';
+          var rangeLabel = i18nData ? i18nData.dataset.volatilityRangeLabel : 'Probable range';
+
+          retirementChart = window._retirementChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: labels,
+              datasets: [
+                {
+                  label: savingsLabel,
+                  data: savingsData,
+                  borderColor: '#0d6efd',
+                  backgroundColor: 'rgba(13, 110, 253, 0.1)',
+                  tension: 0.1,
+                  fill: 'origin',
+                  borderWidth: 2,
+                  pointRadius: 0
                 },
-                options: {
-                  responsive: true,
-                  maintainAspectRatio: true,
-                  plugins: {
-                    legend: {
-                      display: false
-                    },
-                    tooltip: {
-                      callbacks: {
-                        label: function(context) {
-                          return context.dataset.label + ': ' + formatNumber(context.parsed.y) + '€';
-                        }
-                      }
-                    }
+                {
+                  label: rangeLabel + ' (min)',
+                  data: lowerBandData,
+                  borderColor: 'rgba(25, 135, 84, 0.25)',
+                  backgroundColor: 'transparent',
+                  tension: 0.1,
+                  fill: false,
+                  borderWidth: 1,
+                  borderDash: [4, 4],
+                  pointRadius: 0
+                },
+                {
+                  label: investmentLabel,
+                  data: investmentData,
+                  borderColor: '#198754',
+                  backgroundColor: 'transparent',
+                  tension: 0.1,
+                  fill: false,
+                  borderWidth: 2,
+                  pointRadius: 0
+                },
+                {
+                  label: rangeLabel + ' (max)',
+                  data: upperBandData,
+                  borderColor: 'rgba(25, 135, 84, 0.25)',
+                  backgroundColor: 'rgba(25, 135, 84, 0.08)',
+                  tension: 0.1,
+                  fill: 1,
+                  borderWidth: 1,
+                  borderDash: [4, 4],
+                  pointRadius: 0
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: { display: false },
+                tooltip: {
+                  filter: function(tooltipItem) {
+                    return tooltipItem.datasetIndex === 0 || tooltipItem.datasetIndex === 2;
                   },
-                  scales: {
-                    y: {
-                      beginAtZero: true,
-                      ticks: {
-                        callback: function(value) {
-                          return formatNumber(value) + '€';
-                        }
-                      }
-                    },
-                    x: {
-                      ticks: {
-                        maxTicksLimit: 10
-                      }
+                  callbacks: {
+                    label: function(context) {
+                      return context.dataset.label + ': ' + formatNumber(context.parsed.y) + '\u20AC';
                     }
                   }
                 }
-              });
-            }
-          }
-
-          function calculateRetirement() {
-            const monthly = parseFloat(document.getElementById('monthlyContribution').value);
-            const years = parseFloat(document.getElementById('years').value);
-            const annualReturn = parseFloat(document.getElementById('returnRate').value) / 100;
-            const monthlyReturn = annualReturn / 12;
-            const totalMonths = years * 12;
-
-            // Aportación inicial (solo para ac-llarg)
-            const initialInput = document.getElementById('initialContribution');
-            const initial = initialInput ? parseFloat(initialInput.value) : 0;
-
-            // Calcular valor final con interés compuesto
-            let futureValue = 0;
-
-            // Valor futuro de la aportación inicial
-            if (initial > 0) {
-              futureValue += initial * Math.pow(1 + monthlyReturn, totalMonths);
-            }
-
-            // Valor futuro de las aportaciones mensuales
-            if (monthlyReturn === 0) {
-              futureValue += monthly * totalMonths;
-            } else {
-              futureValue += monthly * (Math.pow(1 + monthlyReturn, totalMonths) - 1) / monthlyReturn;
-            }
-
-            const totalContributed = initial + (monthly * totalMonths);
-            const profit = futureValue - totalContributed;
-
-            // Generar datos para el gráfico (cada año)
-            const labels = [];
-            const savingsData = [];
-            const investmentData = [];
-
-            for (let year = 0; year <= years; year++) {
-              labels.push(year === 0 ? 'Inicio' : `Año ${year}`);
-
-              // Ahorro simple (sin interés)
-              savingsData.push(initial + (monthly * 12 * year));
-
-              // Inversión con interés compuesto
-              let invested = 0;
-              if (year === 0) {
-                invested = initial;
-              } else {
-                const monthsElapsed = year * 12;
-
-                // Valor futuro de la aportación inicial
-                let initialGrown = initial * Math.pow(1 + monthlyReturn, monthsElapsed);
-
-                // Valor futuro de las aportaciones mensuales
-                let monthlyGrown = 0;
-                if (monthlyReturn === 0) {
-                  monthlyGrown = monthly * monthsElapsed;
-                } else {
-                  monthlyGrown = monthly * (Math.pow(1 + monthlyReturn, monthsElapsed) - 1) / monthlyReturn;
+              },
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  ticks: {
+                    callback: function(value) {
+                      return formatNumber(value) + '\u20AC';
+                    }
+                  }
+                },
+                x: {
+                  ticks: { maxTicksLimit: 10 }
                 }
-
-                invested = initialGrown + monthlyGrown;
               }
-              investmentData.push(Math.round(invested));
             }
+          });
+        }
+      }
 
-            // Actualizar valores mostrados
-            if (initialInput) {
-              document.getElementById('initialValue').textContent = initial;
+      function calculateRetirement() {
+        var monthly = parseFloat(document.getElementById('monthlyContribution').value);
+        var years = parseFloat(document.getElementById('years').value);
+        var annualReturn = parseFloat(document.getElementById('returnRate').value) / 100;
+        var monthlyReturn = annualReturn / 12;
+        var totalMonths = years * 12;
+        var initialInput = document.getElementById('initialContribution');
+        var initial = initialInput ? parseFloat(initialInput.value) : 0;
+
+        var i18nData = document.getElementById('simulator-i18n');
+        var slug = i18nData ? i18nData.dataset.slug : 'ac-llarg';
+        var sigma = VOLATILITY[slug] || 0.16;
+
+        var futureValue = 0;
+        if (initial > 0) {
+          futureValue += initial * Math.pow(1 + monthlyReturn, totalMonths);
+        }
+        if (monthlyReturn === 0) {
+          futureValue += monthly * totalMonths;
+        } else {
+          futureValue += monthly * (Math.pow(1 + monthlyReturn, totalMonths) - 1) / monthlyReturn;
+        }
+
+        var totalContributed = initial + (monthly * totalMonths);
+        var profit = futureValue - totalContributed;
+
+        var labels = [];
+        var savingsData = [];
+        var investmentData = [];
+        var upperBandData = [];
+        var lowerBandData = [];
+
+        for (var year = 0; year <= years; year++) {
+          labels.push(year === 0 ? 'Inicio' : 'A\u00F1o ' + year);
+          savingsData.push(initial + (monthly * 12 * year));
+          if (year === 0) {
+            investmentData.push(initial);
+            upperBandData.push(initial);
+            lowerBandData.push(initial);
+          } else {
+            var monthsElapsed = year * 12;
+            var initialGrown = initial * Math.pow(1 + monthlyReturn, monthsElapsed);
+            var monthlyGrown = 0;
+            if (monthlyReturn === 0) {
+              monthlyGrown = monthly * monthsElapsed;
+            } else {
+              monthlyGrown = monthly * (Math.pow(1 + monthlyReturn, monthsElapsed) - 1) / monthlyReturn;
             }
-            document.getElementById('monthlyValue').textContent = monthly;
-            document.getElementById('yearsValue').textContent = years;
-            document.getElementById('returnValue').textContent = (annualReturn * 100).toFixed(1);
-            document.getElementById('finalCapital').textContent = formatNumber(futureValue);
-            document.getElementById('totalContributed').textContent = formatNumber(totalContributed);
-            document.getElementById('profit').textContent = formatNumber(profit);
+            var expected = Math.round(initialGrown + monthlyGrown);
+            investmentData.push(expected);
 
-            // Actualizar gráfico
-            createOrUpdateChart(labels, savingsData, investmentData);
+            var volFactor = sigma * Math.sqrt(year);
+            upperBandData.push(Math.round(expected * Math.exp(volFactor)));
+            lowerBandData.push(Math.max(0, Math.round(expected * Math.exp(-volFactor))));
           }
+        }
 
-          // Inicializar cuando la página cargue (compatible con Turbo)
-          function initRetirementSimulator() {
-            const monthlyInput = document.getElementById('monthlyContribution');
-            const yearsInput = document.getElementById('years');
-            const rateInput = document.getElementById('returnRate');
-            const initialInput = document.getElementById('initialContribution');
+        document.getElementById('monthlyValue').textContent = monthly;
+        document.getElementById('yearsValue').textContent = years;
+        document.getElementById('returnValue').textContent = (annualReturn * 100).toFixed(1).replace('.', ',');
+        document.getElementById('finalCapital').textContent = formatNumber(futureValue);
+        document.getElementById('totalContributed').textContent = formatNumber(totalContributed);
+        document.getElementById('profit').textContent = formatNumber(profit);
 
-            if (monthlyInput && yearsInput && rateInput) {
-              // Event listeners
-              monthlyInput.addEventListener('input', calculateRetirement);
-              yearsInput.addEventListener('input', calculateRetirement);
-              rateInput.addEventListener('input', calculateRetirement);
-
-              // Event listener para aportación inicial (solo ac-llarg)
-              if (initialInput) {
-                initialInput.addEventListener('input', calculateRetirement);
-              }
-
-              // Calcular al cargar
-              calculateRetirement();
-            }
+        // Risk warning: only show when years >= 5 AND lower band < total contributed
+        var riskWarningEl = document.getElementById('riskWarning');
+        if (riskWarningEl && lowerBandData.length > 0) {
+          var finalLower = lowerBandData[lowerBandData.length - 1];
+          if (years >= 5 && finalLower < totalContributed) {
+            riskWarningEl.style.display = 'block';
+            var warningText = i18nData ? i18nData.dataset.riskWarning : '';
+            document.getElementById('riskWarningText').textContent = warningText;
+          } else {
+            riskWarningEl.style.display = 'none';
           }
+        }
 
-          // Escuchar eventos de Turbo y DOMContentLoaded (para compatibilidad)
-          document.addEventListener('turbo:load', initRetirementSimulator);
-          document.addEventListener('turbo:frame-load', initRetirementSimulator);
-          document.addEventListener('DOMContentLoaded', initRetirementSimulator);
-        </script>
-      <% end %>
+        createOrUpdateChart(labels, savingsData, investmentData, lowerBandData, upperBandData);
+      }
 
-      <!-- 5. CÓMO EJECUTARLO (PASO A PASO) -->
-      <div class="mb-5">
-        <h3 class="mb-4">
-          <i class="bi bi-list-ol text-primary me-2"></i>
-          <%= t('views.recommendations.steps_section_title') %>
-        </h3>
+      function initRetirementSimulator() {
+        var monthlyInput = document.getElementById('monthlyContribution');
+        var yearsInput = document.getElementById('years');
+        var rateInput = document.getElementById('returnRate');
+        var initialInput = document.getElementById('initialContribution');
 
-        <% if @recommendation.slug == "better-bank-account" %>
-          <!-- Pasos para cuenta bancaria - Formato lineal -->
-          <div class="d-flex flex-column gap-3">
-            <% t('views.recommendations.pages.better_bank_account.steps').each_with_index do |step, index| %>
-              <% unless index == 0 %>
-                <hr class="my-2">
-              <% end %>
-              <div class="d-flex align-items-start">
-                <div class="<%= step[:optional] ? 'bg-light text-muted' : 'bg-success text-white' %> rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px; min-width: 40px;">
-                  <strong><%= index + 1 %></strong>
-                </div>
-                <div class="flex-grow-1">
-                  <h5 class="mb-1"><%= step[:title] %> <span class="text-muted small">· <%= step[:time] %></span></h5>
-                  <p class="text-muted mb-0"><%= step[:description] %></p>
-                </div>
-              </div>
-            <% end %>
-          </div>
+        if (monthlyInput && yearsInput && rateInput) {
+          if (!monthlyInput.dataset.bound) {
+            monthlyInput.dataset.bound = '1';
+            monthlyInput.addEventListener('input', calculateRetirement);
+            yearsInput.addEventListener('input', calculateRetirement);
+            rateInput.addEventListener('input', calculateRetirement);
+            if (initialInput) initialInput.addEventListener('input', calculateRetirement);
+          }
+          calculateRetirement();
+        }
+      }
 
-        <% elsif @recommendation.slug == "emergency-deposit" %>
-          <!-- Pasos para fondo de emergencia - Formato lineal -->
-          <% steps = t('views.recommendations.pages.emergency_deposit.steps') %>
-          <div class="d-flex flex-column gap-3">
-            <% steps.each_with_index do |step, index| %>
-              <% unless index == 0 %>
-                <hr class="my-2">
-              <% end %>
-              <div class="d-flex align-items-start">
-                <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px; min-width: 40px;">
-                  <strong><%= index + 1 %></strong>
-                </div>
-                <div class="flex-grow-1">
-                  <h5 class="mb-<%= index == 0 ? '2' : '1' %>">
-                    <%= step[:title] %>
-                    <% if step[:time].present? %>
-                      <span class="text-muted small">· <%= step[:time] %></span>
-                    <% end %>
-                  </h5>
-                  <p class="text-muted mb-<%= (index == 0 || step[:important].present?) ? '2' : '0' %>"><%= step[:description] %></p>
-                  <% if index == 0 %>
-                    <div class="bg-light rounded p-3">
-                      <div class="row">
-                        <div class="col-md-6 mb-2 mb-md-0">
-                          <p class="mb-1 small text-muted"><%= step[:monthly_expenses_label] %></p>
-                          <h5 class="text-primary mb-0"><%= number_to_currency(current_user.monthly_expenses, unit: '€', precision: 0) %></h5>
-                        </div>
-                        <div class="col-md-6">
-                          <p class="mb-1 small text-muted"><%= step[:target_label] %></p>
-                          <h5 class="text-success mb-0"><%= number_to_currency(current_user.emergency_fund_target, unit: '€', precision: 0) %></h5>
-                        </div>
-                      </div>
-                    </div>
-                  <% elsif step[:important].present? %>
-                    <p class="text-muted small mb-0"><strong><%= t('views.recommendations.important') %>:</strong> <%= step[:important] %></p>
-                  <% end %>
-                </div>
-              </div>
-            <% end %>
-          </div>
+      document.addEventListener('turbo:load', initRetirementSimulator);
+      document.addEventListener('turbo:frame-load', initRetirementSimulator);
+      document.addEventListener('DOMContentLoaded', initRetirementSimulator);
+    </script>
 
-        <% elsif @recommendation.slug == "saving-advice" %>
-          <!-- Steps for savings and expense control -->
-          <div class="alert alert-info mb-4">
-            <h5 class="mb-2"><i class="bi bi-lightbulb me-2"></i><%= t('views.recommendations.pages.saving_advice.steps_alert.title') %></h5>
-            <p class="mb-0"><%= t('views.recommendations.pages.saving_advice.steps_alert.text') %></p>
-          </div>
+  <% elsif @recommendation.slug == "emergency-deposit" %>
+    <!-- ========== EMERGENCY FUND: Motivational text ========== -->
+    <p class="rec-body-text">
+      <%= t('views.recommendations.pages.emergency_deposit.motivational_text') %>
+    </p>
 
-          <div class="d-flex flex-column gap-3">
-            <% t('views.recommendations.pages.saving_advice.steps').each_with_index do |step, index| %>
-              <% unless index == 0 %>
-                <hr class="my-2">
-              <% end %>
-              <div class="d-flex align-items-start">
-                <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px; min-width: 40px;">
-                  <strong><%= index + 1 %></strong>
-                </div>
-                <div class="flex-grow-1">
-                  <h5 class="mb-1"><%= step[:title] %><% if step[:time] %> <span class="text-muted small">· <%= step[:time] %></span><% end %></h5>
-                  <p class="text-muted mb-2"><%= step[:description] %></p>
-
-                  <% if step[:important] %>
-                    <div class="bg-light rounded p-3 mb-2">
-                      <p class="small mb-0"><strong>Importante:</strong> <%= step[:important] %></p>
-                    </div>
-                  <% end %>
-
-                  <% if step[:categories] %>
-                    <ul class="mb-3 text-muted">
-                      <% step[:categories].each do |cat| %>
-                        <li><strong class="text-<%= cat[:type] %>"><%= cat[:name] %>:</strong> <%= cat[:description] %></li>
-                      <% end %>
-                    </ul>
-                  <% end %>
-
-                  <% if step[:items] %>
-                    <ul class="mb-2 text-muted small">
-                      <% step[:items].each do |item| %>
-                        <li><%= item %></li>
-                      <% end %>
-                    </ul>
-                  <% end %>
-
-                  <% if step[:goal] %>
-                    <div class="bg-success bg-opacity-10 border border-success rounded p-3">
-                      <p class="small mb-0"><strong><%= step[:goal_label] %></strong> <%= step[:goal] %></p>
-                    </div>
-                  <% end %>
-
-                  <% if step[:note] %>
-                    <p class="text-muted small mb-0"><%= step[:note] %></p>
-                  <% end %>
-                </div>
-              </div>
-            <% end %>
-          </div>
-
-        <% elsif @recommendation.slug == "tax-advisory" %>
-          <!-- Steps for working with a tax advisor -->
-          <div class="alert alert-info mb-4">
-            <h5 class="mb-2"><i class="bi bi-lightbulb me-2"></i><%= t('views.recommendations.pages.tax_advisory.steps_alert.title') %></h5>
-            <p class="mb-0"><%= t('views.recommendations.pages.tax_advisory.steps_alert.text_html').html_safe %></p>
-          </div>
-
-          <div class="d-flex flex-column gap-3">
-            <% t('views.recommendations.pages.tax_advisory.steps').each_with_index do |step, index| %>
-              <% unless index == 0 %>
-                <hr class="my-2">
-              <% end %>
-              <div class="d-flex align-items-start">
-                <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px; min-width: 40px;">
-                  <strong><%= index + 1 %></strong>
-                </div>
-                <div class="flex-grow-1">
-                  <h5 class="mb-1"><%= step[:title] %><% if step[:time] %> <span class="text-muted small">· <%= step[:time] %></span><% end %></h5>
-                  <p class="text-muted mb-2"><%= step[:description] %></p>
-
-                  <% if step[:items] %>
-                    <ul class="text-muted small mb-<%= step[:example_box] || step[:has_cta] || step[:success_alert_html] ? '2' : '0' %>">
-                      <% step[:items].each do |item| %>
-                        <li><%= item.html_safe %></li>
-                      <% end %>
-                    </ul>
-                  <% end %>
-
-                  <% if step[:example_box] %>
-                    <div class="bg-light rounded p-3">
-                      <p class="small mb-1"><strong><%= step[:example_box][:title] %></strong></p>
-                      <p class="small text-muted mb-0"><%= step[:example_box][:text] %></p>
-                    </div>
-                  <% end %>
-
-                  <% if step[:execution_options] %>
-                    <% step[:execution_options].each_with_index do |option, opt_index| %>
-                      <div class="bg-light rounded p-3 <%= opt_index < step[:execution_options].length - 1 ? 'mb-2' : '' %>">
-                        <p class="small mb-2"><strong><%= option[:title] %></strong></p>
-                        <p class="small text-muted mb-0"><%= option[:description].html_safe %></p>
-                      </div>
-                    <% end %>
-                  <% end %>
-
-                  <% if step[:has_cta] %>
-                    <% if @affiliate_link.present? %>
-                      <a href="<%= @affiliate_link %>" target="_blank" class="btn btn-success btn-sm">
-                        <i class="bi bi-calendar-check me-2"></i>
-                        <%= step[:cta_text] %>
-                      </a>
-                    <% else %>
-                      <button class="btn btn-outline-secondary btn-sm" disabled>
-                        <i class="bi bi-clock me-2"></i>
-                        <%= t('views.recommendations.coming_soon') %>
-                      </button>
-                    <% end %>
-                  <% end %>
-
-                  <% if step[:success_alert_html] %>
-                    <div class="alert alert-success mb-0">
-                      <p class="small mb-0"><%= step[:success_alert_html].html_safe %></p>
-                    </div>
-                  <% end %>
-                </div>
-              </div>
-            <% end %>
-          </div>
-
-        <% elsif @recommendation.slug == "portfolio-optimization" %>
-          <!-- Steps for portfolio optimization -->
-          <div class="alert alert-info mb-4">
-            <h5 class="mb-2"><i class="bi bi-lightbulb me-2"></i><%= t('views.recommendations.pages.portfolio_optimization.steps_alert.title') %></h5>
-            <p class="mb-0"><%= t('views.recommendations.pages.portfolio_optimization.steps_alert.text_html').html_safe %></p>
-          </div>
-
-          <div class="d-flex flex-column gap-3">
-            <% t('views.recommendations.pages.portfolio_optimization.steps').each_with_index do |step, index| %>
-              <% unless index == 0 %>
-                <hr class="my-2">
-              <% end %>
-              <div class="d-flex align-items-start">
-                <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px; min-width: 40px;">
-                  <strong><%= index + 1 %></strong>
-                </div>
-                <div class="flex-grow-1">
-                  <h5 class="mb-1"><%= step[:title] %><% if step[:time] %> <span class="text-muted small">· <%= step[:time] %></span><% end %></h5>
-                  <p class="text-muted mb-2"><%= step[:description] %></p>
-
-                  <% if step[:items] %>
-                    <ul class="text-muted small mb-<%= step[:example_box] || step[:has_cta] || step[:info_alert_html] ? '2' : '0' %>">
-                      <% step[:items].each do |item| %>
-                        <li><%= item.html_safe %></li>
-                      <% end %>
-                    </ul>
-                  <% end %>
-
-                  <% if step[:example_box] %>
-                    <div class="bg-light rounded p-3">
-                      <p class="small mb-1"><strong><%= step[:example_box][:title] %></strong></p>
-                      <p class="small text-muted mb-0"><%= step[:example_box][:text] %></p>
-                    </div>
-                  <% end %>
-
-                  <% if step[:has_cta] %>
-                    <% if @affiliate_link.present? %>
-                      <a href="<%= @affiliate_link %>" target="_blank" class="btn btn-success btn-sm">
-                        <i class="bi bi-calendar-check me-2"></i>
-                        <%= step[:cta_text] %>
-                      </a>
-                    <% else %>
-                      <button class="btn btn-outline-secondary btn-sm" disabled>
-                        <i class="bi bi-clock me-2"></i>
-                        <%= t('views.recommendations.coming_soon') %>
-                      </button>
-                    <% end %>
-                  <% end %>
-
-                  <% if step[:info_alert_html] %>
-                    <div class="alert alert-info mb-0">
-                      <p class="small mb-0"><%= step[:info_alert_html].html_safe %></p>
-                    </div>
-                  <% end %>
-
-                  <% if step[:improvement_list] %>
-                    <div class="bg-light rounded p-3 mb-3">
-                      <p class="small mb-2"><strong><%= step[:improvement_list][:title] %></strong></p>
-                      <ul class="small text-muted mb-0">
-                        <% step[:improvement_list][:items].each do |item| %>
-                          <li><%= item.html_safe %></li>
-                        <% end %>
-                      </ul>
-                    </div>
-                    <p class="text-muted small mb-0"><%= step[:note] %></p>
-                  <% end %>
-
-                  <% if step[:decision_options] %>
-                    <% step[:decision_options].each_with_index do |option, opt_index| %>
-                      <div class="bg-light rounded p-3 <%= opt_index < step[:decision_options].length - 1 ? 'mb-2' : '' %>">
-                        <p class="small mb-2"><strong><%= option[:title] %></strong></p>
-                        <p class="small text-muted mb-0"><%= option[:description] %></p>
-                      </div>
-                    <% end %>
-                  <% end %>
-                </div>
-              </div>
-            <% end %>
-          </div>
-
-        <% elsif @recommendation.slug == "ac-llarg" %>
-          <!-- Steps for long-term investment -->
-          <div class="alert alert-info mb-4">
-            <h5 class="mb-2"><i class="bi bi-graph-up me-2"></i><%= t('views.recommendations.pages.ac_llarg.steps_alert.title') %></h5>
-            <p class="mb-0"><%= t('views.recommendations.pages.ac_llarg.steps_alert.text_html').html_safe %></p>
-          </div>
-
-          <div class="d-flex flex-column gap-3">
-            <% t('views.recommendations.pages.ac_llarg.steps').each_with_index do |step, index| %>
-              <% unless index == 0 %>
-                <hr class="my-2">
-              <% end %>
-              <div class="d-flex align-items-start">
-                <div class="<%= step[:optional] ? 'bg-light text-muted' : 'bg-success text-white' %> rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px; min-width: 40px;">
-                  <strong><%= index + 1 %></strong>
-                </div>
-                <div class="flex-grow-1">
-                  <h5 class="mb-1"><%= step[:title] %><% if step[:time] %> <span class="text-muted small">· <%= step[:time] %></span><% end %></h5>
-                  <p class="text-muted mb-2"><%= step[:description] %></p>
-
-                  <% if step[:items] %>
-                    <ul class="text-muted small mb-3">
-                      <% step[:items].each do |item| %>
-                        <li><%= item.html_safe %></li>
-                      <% end %>
-                    </ul>
-                  <% end %>
-
-                  <% if step[:has_cta] %>
-                    <% if @affiliate_link.present? %>
-                      <a href="<%= @affiliate_link %>" target="_blank" class="btn btn-success btn-sm">
-                        <i class="bi bi-box-arrow-up-right me-2"></i>
-                        <%= step[:cta_text] %>
-                      </a>
-                    <% else %>
-                      <button class="btn btn-outline-secondary btn-sm" disabled>
-                        <i class="bi bi-clock me-2"></i>
-                        <%= t('views.recommendations.coming_soon_button') %>
-                      </button>
-                    <% end %>
-                  <% end %>
-
-                  <% if step[:contribution_options] %>
-                    <div class="row g-2 mb-3">
-                      <% step[:contribution_options].each do |option| %>
-                        <div class="col-md-6">
-                          <div class="bg-white border rounded p-3 h-100">
-                            <h6 class="<%= option[:type] == 'initial' ? 'text-primary' : 'text-success' %> small mb-2"><i class="<%= option[:icon] %> me-1"></i><%= option[:title] %></h6>
-                            <p class="small text-muted mb-0"><%= option[:description] %></p>
-                          </div>
-                        </div>
-                      <% end %>
-                    </div>
-                  <% end %>
-
-                  <% if step[:conclusion_html] %>
-                    <p class="text-muted small mb-0"><%= step[:conclusion_html].html_safe %></p>
-                  <% end %>
-
-                  <% if step[:tip_html] %>
-                    <div class="alert alert-info mb-0">
-                      <p class="small mb-0"><strong><i class="bi bi-lightbulb me-2"></i></strong><%= step[:tip_html].html_safe %></p>
-                    </div>
-                  <% end %>
-
-                  <% if step[:success_tip_html] %>
-                    <div class="alert alert-success mb-0">
-                      <p class="small mb-0"><strong><i class="bi bi-shield-check me-2"></i></strong><%= step[:success_tip_html].html_safe %></p>
-                    </div>
-                  <% end %>
-
-                  <% if step[:note_html] %>
-                    <p class="text-muted small mt-2 mb-0"><%= step[:note_html].html_safe %></p>
-                  <% end %>
-                </div>
-              </div>
-            <% end %>
-          </div>
-
-        <% elsif @recommendation.slug == "ac-curt" %>
-          <!-- Steps for medium-term investment (fixed income) -->
-          <div class="alert alert-info mb-4">
-            <h5 class="mb-2"><i class="bi bi-bar-chart me-2"></i><%= t('views.recommendations.pages.ac_curt.steps_alert.title') %></h5>
-            <p class="mb-0"><%= t('views.recommendations.pages.ac_curt.steps_alert.text_html').html_safe %></p>
-          </div>
-
-          <div class="d-flex flex-column gap-3">
-            <% t('views.recommendations.pages.ac_curt.steps').each_with_index do |step, index| %>
-              <% unless index == 0 %>
-                <hr class="my-2">
-              <% end %>
-              <div class="d-flex align-items-start">
-                <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px; min-width: 40px;">
-                  <strong><%= index + 1 %></strong>
-                </div>
-                <div class="flex-grow-1">
-                  <h5 class="mb-1"><%= step[:title] %><% if step[:time] %> <span class="text-muted small">· <%= step[:time] %></span><% end %></h5>
-                  <p class="text-muted mb-2"><%= step[:description] %></p>
-
-                  <% if step[:items] %>
-                    <ul class="text-muted small mb-3">
-                      <% step[:items].each do |item| %>
-                        <li><%= item.html_safe %></li>
-                      <% end %>
-                    </ul>
-                  <% end %>
-
-                  <% if step[:contribution_options] %>
-                    <div class="row g-2 mb-3">
-                      <% step[:contribution_options].each do |option| %>
-                        <div class="col-md-6">
-                          <div class="bg-white border rounded p-3 h-100">
-                            <h6 class="<%= option[:type] == 'initial' ? 'text-primary' : 'text-success' %> small mb-2"><i class="bi <%= option[:icon] %> me-1"></i><%= option[:title] %></h6>
-                            <p class="small text-muted mb-0"><%= option[:description] %></p>
-                          </div>
-                        </div>
-                      <% end %>
-                    </div>
-                  <% end %>
-
-                  <% if step[:has_cta] %>
-                    <% if @affiliate_link.present? %>
-                      <a href="<%= @affiliate_link %>" target="_blank" class="btn btn-success btn-sm">
-                        <i class="bi bi-box-arrow-up-right me-2"></i>
-                        <%= step[:cta_text] %>
-                      </a>
-                    <% else %>
-                      <button class="btn btn-outline-secondary btn-sm" disabled>
-                        <i class="bi bi-clock me-2"></i>
-                        <%= t('views.recommendations.coming_soon') %>
-                      </button>
-                    <% end %>
-                  <% end %>
-
-                  <% if step[:note_html] %>
-                    <p class="text-muted small mt-2 mb-0"><%= step[:note_html].html_safe %></p>
-                  <% end %>
-
-                  <% if step[:ideal_note_html] %>
-                    <p class="text-muted small mb-0"><%= step[:ideal_note_html].html_safe %></p>
-                  <% end %>
-
-                  <% if step[:tip_html] %>
-                    <div class="alert alert-info mb-0">
-                      <p class="small mb-0"><%= step[:tip_html].html_safe %></p>
-                    </div>
-                  <% end %>
-
-                  <% if step[:success_alert_html] %>
-                    <div class="alert alert-success mb-0">
-                      <p class="small mb-0"><%= step[:success_alert_html].html_safe %></p>
-                    </div>
-                  <% end %>
-
-                  <% if step[:info_alert_html] %>
-                    <div class="alert alert-info mb-0">
-                      <p class="small mb-0"><%= step[:info_alert_html].html_safe %></p>
-                    </div>
-                  <% end %>
-                </div>
-              </div>
-            <% end %>
-          </div>
-
-        <% elsif @recommendation.slug == "mortgage-optimization" %>
-          <!-- Steps for mortgage optimization with broker -->
-          <div class="alert alert-success mb-4">
-            <h5 class="mb-2"><i class="bi bi-gift me-2"></i><%= t('views.recommendations.pages.mortgage_optimization.steps_alert.title') %></h5>
-            <p class="mb-0"><%= t('views.recommendations.pages.mortgage_optimization.steps_alert.text_html').html_safe %></p>
-          </div>
-
-          <div class="d-flex flex-column gap-3">
-            <% t('views.recommendations.pages.mortgage_optimization.steps').each_with_index do |step, index| %>
-              <% unless index == 0 %>
-                <hr class="my-2">
-              <% end %>
-              <div class="d-flex align-items-start">
-                <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px; min-width: 40px;">
-                  <strong><%= index + 1 %></strong>
-                </div>
-                <div class="flex-grow-1">
-                  <h5 class="mb-1"><%= step[:title] %><% if step[:time] %> <span class="text-muted small">· <%= step[:time] %></span><% end %></h5>
-                  <p class="text-muted mb-2"><%= step[:description] %></p>
-
-                  <% if step[:items] && !step[:decision_options] %>
-                    <ul class="text-muted small mb-<%= step[:has_cta] || step[:success_alert] ? '3' : '2' %>">
-                      <% step[:items].each do |item| %>
-                        <li><%= item.html_safe %></li>
-                      <% end %>
-                    </ul>
-                  <% end %>
-
-                  <% if step[:has_cta] %>
-                    <% if @affiliate_link.present? %>
-                      <a href="<%= @affiliate_link %>" target="_blank" class="btn btn-success">
-                        <i class="bi bi-calendar-check me-2"></i>
-                        <%= step[:cta_text] %>
-                      </a>
-                    <% else %>
-                      <button class="btn btn-outline-secondary" disabled>
-                        <i class="bi bi-clock me-2"></i>
-                        <%= t('views.recommendations.coming_soon') %>
-                      </button>
-                    <% end %>
-                  <% end %>
-
-                  <% if step[:note] %>
-                    <p class="text-muted small <%= step[:has_cta] ? 'mt-3' : '' %> mb-0"><%= step[:note].html_safe %></p>
-                  <% end %>
-
-                  <% if step[:decision_options] %>
-                    <div class="row g-2 mb-3">
-                      <% step[:decision_options].each_with_index do |option, opt_index| %>
-                        <div class="col-md-6">
-                          <div class="bg-white border<%= option[:color] == 'success' ? ' border-success' : '' %> rounded p-3">
-                            <h6 class="text-<%= option[:color] %> small mb-2"><i class="<%= option[:icon] %> me-1"></i><%= option[:title] %></h6>
-                            <p class="small text-muted mb-0"><%= option[:description].html_safe %></p>
-                          </div>
-                        </div>
-                      <% end %>
-                    </div>
-                  <% end %>
-
-                  <% if step[:success_alert] %>
-                    <div class="alert alert-success mb-0">
-                      <p class="small mb-2"><strong><i class="bi bi-shield-check me-2"></i><%= step[:success_alert][:title] %></strong></p>
-                      <p class="small mb-0"><%= step[:success_alert][:text].html_safe %></p>
-                    </div>
-                  <% end %>
-                </div>
-              </div>
-            <% end %>
-          </div>
-
-        <% elsif @recommendation.slug == "debt-optimization" %>
-          <!-- Pasos para eliminación de deudas - Método Snowball -->
-          <% steps_data = t('views.recommendations.pages.debt_optimization') %>
-          <div class="alert alert-info mb-4">
-            <h5 class="mb-2"><i class="bi bi-snow me-2"></i><%= steps_data[:steps_alert][:title] %></h5>
-            <p class="mb-0"><%= steps_data[:steps_alert][:text] %></p>
-          </div>
-
-          <div class="d-flex flex-column gap-3">
-            <% steps_data[:steps].each_with_index do |step, index| %>
-              <% unless index == 0 %>
-                <hr class="my-2">
-              <% end %>
-              <div class="d-flex align-items-start">
-                <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px; min-width: 40px;">
-                  <strong><%= index + 1 %></strong>
-                </div>
-                <div class="flex-grow-1">
-                  <h5 class="mb-1"><%= step[:title] %></h5>
-                  <p class="text-muted mb-2"><%= step[:description] %></p>
-                  <% if step[:example_items].present? %>
-                    <div class="bg-light rounded p-3">
-                      <p class="mb-1 small"><strong><%= step[:example_title] %></strong></p>
-                      <ul class="mb-0 small text-muted">
-                        <% step[:example_items].each do |item| %>
-                          <li><%= item.html_safe %></li>
-                        <% end %>
-                      </ul>
-                      <% if step[:conclusion].present? %>
-                        <p class="mt-2 mb-0 small"><strong><%= step[:conclusion] %></strong></p>
-                      <% end %>
-                    </div>
-                  <% end %>
-                  <% if step[:victory_title].present? %>
-                    <div class="alert alert-success mb-0">
-                      <p class="mb-1 small"><strong><%= step[:victory_title] %></strong></p>
-                      <p class="mb-0 small"><%= step[:victory_text] %></p>
-                    </div>
-                  <% end %>
-                  <% if step[:note].present? %>
-                    <p class="text-muted small mt-2 mb-0"><strong>Nota:</strong> <%= step[:note] %></p>
-                  <% end %>
-                </div>
-              </div>
-            <% end %>
-          </div>
-
-          <div class="alert alert-warning mt-4 mb-0">
-            <h6 class="mb-2"><i class="bi bi-exclamation-triangle me-2"></i><%= steps_data[:steps_warning][:title] %></h6>
-            <ul class="mb-0 small">
-              <% steps_data[:steps_warning][:items].each do |item| %>
-                <li><%= item.html_safe %></li>
-              <% end %>
-            </ul>
-          </div>
-
-        <% else %>
-          <!-- Contenido genérico para otras recomendaciones -->
-          <%= simple_format(@recommendation.content) if @recommendation.content.present? %>
-        <% end %>
+    <!-- ========== EMERGENCY FUND SIMULATOR (new) ========== -->
+    <%
+      monthly_expenses = current_user.monthly_expenses || 0
+      current_savings = current_user.liquid_assets || 0
+      emergency_target = monthly_expenses * 4
+      cash_flow = current_user.monthly_cash_flow || 0
+      remaining = [emergency_target - current_savings, 0].max
+      progress_pct = emergency_target > 0 ? [(current_savings.to_f / emergency_target * 100).round(0), 100].min : 0
+      months_needed = (cash_flow > 0 && remaining > 0) ? (remaining.to_f / cash_flow).ceil : 0
+    %>
+    <div class="rec-simulator">
+      <div class="rec-simulator__title">
+        <i class="bi bi-shield-check"></i>
+        <%= t('views.recommendations.simulators.emergency.title') %>
       </div>
 
-      <!-- 6. CTA #2 -->
-      <div class="mb-5">
-        <div class="bg-success bg-opacity-10 rounded p-4 p-md-5 text-center">
-          <h4 class="mb-3">
-            <%= t("views.recommendations.cta2_titles.#{slug_key}", default: t('views.recommendations.cta2_titles.default')) %>
-          </h4>
-          <p class="text-muted mb-4">
-            <%= t("views.recommendations.pages.#{slug_key}.cta2_description", default: t('views.recommendations.final_cta_description')) %>
-          </p>
-          <% if @affiliate_link.present? %>
-            <a href="<%= @affiliate_link %>" target="_blank" class="btn btn-baifinanzas-success btn-lg px-5 py-3">
-              <i class="bi <%= @recommendation.slug == 'saving-advice' ? 'bi-cart-check' : ((@recommendation.slug == 'tax-advisory' || @recommendation.slug == 'portfolio-optimization') ? 'bi-calendar-check' : 'bi-download') %> me-2"></i>
-              <%= t("views.recommendations.ctas.#{slug_key}", default: t('views.recommendations.ctas.default')) %>
-            </a>
-          <% else %>
-            <button class="btn btn-outline-secondary btn-lg px-5 py-3" disabled>
-              <i class="bi bi-clock me-2"></i>
-              <%= t('views.recommendations.coming_soon_button') %>
-            </button>
-          <% end %>
+      <div class="rec-simulator__result" style="margin-top: 0;">
+        <div class="rec-simulator__result-label"><%= t('views.recommendations.simulators.emergency.target') %></div>
+        <div class="rec-simulator__highlight"><%= number_to_currency(emergency_target, unit: "\u20AC", precision: 0) %></div>
+      </div>
+
+      <div class="rec-simulator__results-grid rec-simulator__results-grid--trio" style="margin-top: 0.75rem;">
+        <div class="rec-simulator__result">
+          <div class="rec-simulator__result-label"><%= t('views.recommendations.simulators.emergency.current') %></div>
+          <div style="font-size: 1.125rem; font-weight: 700; color: #3b82f6;"><%= number_to_currency(current_savings, unit: "\u20AC", precision: 0) %></div>
+        </div>
+        <div class="rec-simulator__result">
+          <div class="rec-simulator__result-label"><%= t('views.recommendations.simulators.emergency.remaining') %></div>
+          <div style="font-size: 1.125rem; font-weight: 700; color: #ef4444;"><%= number_to_currency(remaining, unit: "\u20AC", precision: 0) %></div>
+        </div>
+        <div class="rec-simulator__result">
+          <div class="rec-simulator__result-label"><%= t('views.recommendations.simulators.emergency.time_estimate') %></div>
+          <div style="font-size: 1.125rem; font-weight: 700; color: #165668;">
+            <% if remaining <= 0 %>
+              <i class="bi bi-check-circle text-success"></i>
+            <% elsif months_needed > 0 %>
+              <%= months_needed %> <%= t('views.recommendations.simulators.emergency.months') %>
+            <% else %>
+              &mdash;
+            <% end %>
+          </div>
         </div>
       </div>
 
-      <!-- 7. FAQ (PREGUNTAS FRECUENTES) -->
-      <div class="mb-5">
-        <h3 class="mb-4">
-          <i class="bi bi-question-circle text-primary me-2"></i>
-          <%= t('views.recommendations.faq_title') %>
-        </h3>
+      <!-- Progress bar -->
+      <div class="rec-simulator__progress-wrap">
+        <div class="rec-simulator__label"><%= t('views.recommendations.simulators.emergency.progress') %>: <%= progress_pct %>%</div>
+        <div class="progress" style="height: 8px;">
+          <div class="progress-bar bg-success" style="width: <%= progress_pct %>%"></div>
+        </div>
+      </div>
 
-        <% if @recommendation.slug == "better-bank-account" %>
-          <!-- FAQ para cuenta bancaria -->
-          <div class="accordion" id="faqAccordion">
-            <% t('views.recommendations.pages.better_bank_account.faq.items').each_with_index do |faq, index| %>
-              <div class="accordion-item border-0 mb-3 shadow-sm">
-                <h2 class="accordion-header">
-                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq<%= index + 1 %>">
-                    <%= faq[:question] %>
-                  </button>
-                </h2>
-                <div id="faq<%= index + 1 %>" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                  <div class="accordion-body">
-                    <%= faq[:answer].html_safe %>
-                  </div>
-                </div>
-              </div>
-            <% end %>
+      <div style="margin-top: 0.75rem; font-size: 0.8125rem; color: #6b7280;">
+        <i class="bi bi-arrow-repeat me-1"></i>
+        <%= t('views.recommendations.simulators.emergency.cash_flow_label') %>:
+        <strong class="<%= cash_flow > 0 ? 'text-success' : 'text-danger' %>"><%= number_to_currency(cash_flow, unit: "\u20AC", precision: 0) %></strong>
+        <% if remaining <= 0 %>
+          &mdash; <span class="text-success"><%= t('views.recommendations.simulators.emergency.complete') %></span>
+        <% elsif cash_flow <= 0 %>
+          &mdash; <span class="text-danger"><%= t('views.recommendations.simulators.emergency.no_savings') %></span>
+        <% end %>
+      </div>
+    </div>
+
+  <% elsif @recommendation.slug == "mortgage-optimization" %>
+    <!-- ========== MORTGAGE OPTIMIZATION: Motivational text ========== -->
+    <p class="rec-body-text">
+      <%= t('views.recommendations.pages.mortgage_optimization.motivational_text') %>
+    </p>
+
+    <!-- ========== MORTGAGE OPTIMIZATION SIMULATOR (new) ========== -->
+    <div class="rec-simulator" id="mortgageSimulator">
+      <div class="rec-simulator__title">
+        <i class="bi bi-house-door"></i>
+        <%= t('views.recommendations.simulators.mortgage.title') %>
+      </div>
+
+      <div class="rec-simulator__label"><%= t('views.recommendations.simulators.mortgage.current_payment') %></div>
+      <div class="rec-simulator__row">
+        <input type="range" class="app-slider__input rec-simulator__slider" id="mortCurrentPayment"
+               min="300" max="2000" step="50" value="850">
+        <div class="rec-simulator__value"><span id="mortCurrentPaymentVal">850</span>&euro;</div>
+      </div>
+
+      <div class="rec-simulator__label"><%= t('views.recommendations.simulators.mortgage.current_rate') %></div>
+      <div class="rec-simulator__row">
+        <input type="range" class="app-slider__input rec-simulator__slider" id="mortCurrentRate"
+               min="1" max="6" step="0.1" value="3.5">
+        <div class="rec-simulator__value"><span id="mortCurrentRateVal">3.5</span>%</div>
+      </div>
+
+      <div class="rec-simulator__label"><%= t('views.recommendations.simulators.mortgage.years_remaining') %></div>
+      <div class="rec-simulator__row">
+        <input type="range" class="app-slider__input rec-simulator__slider" id="mortYears"
+               min="5" max="30" step="1" value="20">
+        <div class="rec-simulator__value"><span id="mortYearsVal">20</span></div>
+      </div>
+
+      <div class="rec-simulator__label"><%= t('views.recommendations.simulators.mortgage.new_rate') %></div>
+      <div class="rec-simulator__row">
+        <input type="range" class="app-slider__input rec-simulator__slider" id="mortNewRate"
+               min="0.5" max="5" step="0.1" value="2.5">
+        <div class="rec-simulator__value"><span id="mortNewRateVal">2.5</span>%</div>
+      </div>
+
+      <div class="rec-simulator__results-grid rec-simulator__results-grid--trio">
+        <div class="rec-simulator__result">
+          <div class="rec-simulator__result-label"><%= t('views.recommendations.simulators.mortgage.new_payment') %></div>
+          <div class="rec-simulator__highlight"><span id="mortNewPayment">0</span>&euro;</div>
+        </div>
+        <div class="rec-simulator__result">
+          <div class="rec-simulator__result-label"><%= t('views.recommendations.simulators.mortgage.monthly_savings') %></div>
+          <div class="rec-simulator__highlight" style="color: #10b981;"><span id="mortMonthlySavings">0</span>&euro;</div>
+        </div>
+        <div class="rec-simulator__result">
+          <div class="rec-simulator__result-label"><%= t('views.recommendations.simulators.mortgage.total_savings') %></div>
+          <div class="rec-simulator__highlight" style="color: #10b981;"><span id="mortTotalSavings">0</span>&euro;</div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function initMortgageSimulator() {
+        var paymentEl = document.getElementById('mortCurrentPayment');
+        var rateEl = document.getElementById('mortCurrentRate');
+        var yearsEl = document.getElementById('mortYears');
+        var newRateEl = document.getElementById('mortNewRate');
+
+        if (!paymentEl || !rateEl || !yearsEl || !newRateEl) return;
+
+        function formatNum(num) {
+          return Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+
+        function calculateMortgage() {
+          var currentPayment = parseFloat(paymentEl.value);
+          var currentRate = parseFloat(rateEl.value) / 100;
+          var years = parseInt(yearsEl.value);
+          var newRate = parseFloat(newRateEl.value) / 100;
+          var totalMonths = years * 12;
+
+          // Calculate outstanding principal from current payment & rate
+          var monthlyCurrentRate = currentRate / 12;
+          var principal = 0;
+          if (monthlyCurrentRate > 0 && totalMonths > 0) {
+            principal = currentPayment * (1 - Math.pow(1 + monthlyCurrentRate, -totalMonths)) / monthlyCurrentRate;
+          } else if (totalMonths > 0) {
+            principal = currentPayment * totalMonths;
+          }
+
+          // Calculate new payment
+          var monthlyNewRate = newRate / 12;
+          var newPayment = 0;
+          if (monthlyNewRate > 0 && totalMonths > 0) {
+            newPayment = principal * monthlyNewRate * Math.pow(1 + monthlyNewRate, totalMonths) / (Math.pow(1 + monthlyNewRate, totalMonths) - 1);
+          } else if (totalMonths > 0) {
+            newPayment = principal / totalMonths;
+          }
+
+          if (!isFinite(newPayment) || isNaN(newPayment)) newPayment = 0;
+
+          var monthlySavings = currentPayment - newPayment;
+          var totalSavings = monthlySavings * totalMonths;
+
+          document.getElementById('mortCurrentPaymentVal').textContent = currentPayment;
+          document.getElementById('mortCurrentRateVal').textContent = (currentRate * 100).toFixed(1).replace('.', ',');
+          document.getElementById('mortYearsVal').textContent = years;
+          document.getElementById('mortNewRateVal').textContent = (newRate * 100).toFixed(1).replace('.', ',');
+          document.getElementById('mortNewPayment').textContent = formatNum(newPayment);
+          document.getElementById('mortMonthlySavings').textContent = formatNum(Math.max(monthlySavings, 0));
+          document.getElementById('mortTotalSavings').textContent = formatNum(Math.max(totalSavings, 0));
+        }
+
+        paymentEl.addEventListener('input', calculateMortgage);
+        rateEl.addEventListener('input', calculateMortgage);
+        yearsEl.addEventListener('input', calculateMortgage);
+        newRateEl.addEventListener('input', calculateMortgage);
+        calculateMortgage();
+      }
+
+      document.addEventListener('turbo:load', initMortgageSimulator);
+      document.addEventListener('turbo:frame-load', initMortgageSimulator);
+      document.addEventListener('DOMContentLoaded', initMortgageSimulator);
+    </script>
+
+  <% elsif @recommendation.slug == "better-bank-account" %>
+    <!-- ========== BANK ACCOUNT: Motivational text ========== -->
+    <p class="rec-body-text">
+      <%= t('views.recommendations.pages.better_bank_account.motivational_text') %>
+    </p>
+
+    <!-- ========== BANK ACCOUNT SIMULATOR (new) ========== -->
+    <div class="rec-simulator" id="bankSimulator">
+      <div class="rec-simulator__title">
+        <i class="bi bi-bank"></i>
+        <%= t('views.recommendations.simulators.bank_account.title') %>
+      </div>
+
+      <div class="rec-simulator__label"><%= t('views.recommendations.simulators.bank_account.average_balance') %></div>
+      <div class="rec-simulator__row">
+        <input type="range" class="app-slider__input rec-simulator__slider" id="bankBalance"
+               min="1000" max="50000" step="1000" value="5000">
+        <div class="rec-simulator__value"><span id="bankBalanceVal">5.000</span>&euro;</div>
+      </div>
+
+      <div class="rec-simulator__label"><%= t('views.recommendations.simulators.bank_account.remuneration_rate') %></div>
+      <div class="rec-simulator__row">
+        <input type="range" class="app-slider__input rec-simulator__slider" id="bankRate"
+               min="0.5" max="5" step="0.25" value="2.5">
+        <div class="rec-simulator__value"><span id="bankRateVal">2,5</span>%</div>
+      </div>
+
+      <p class="rec-simulator__note"><%= t('views.recommendations.simulators.bank_account.rate_note') %></p>
+
+      <div class="rec-comparison" style="margin-top: 1rem;">
+        <div class="rec-comparison__row">
+          <div class="rec-comparison__label"><%= t('views.recommendations.simulators.bank_account.current_return') %></div>
+          <div class="rec-comparison__bar" style="background: #e5e7eb; color: #6b7280; width: 10%;">0&euro;</div>
+        </div>
+        <div class="rec-comparison__row">
+          <div class="rec-comparison__label"><%= t('views.recommendations.simulators.bank_account.optimized_return') %></div>
+          <div class="rec-comparison__bar" id="bankOptimizedBar" style="background: #10b981; width: 30%;"><span id="bankAnnualGain">125</span>&euro;/<%= t('views.recommendations.year') %></div>
+        </div>
+      </div>
+
+      <div class="rec-simulator__results-grid">
+        <div class="rec-simulator__result">
+          <div class="rec-simulator__result-label"><%= t('views.recommendations.simulators.bank_account.annual_loss') %></div>
+          <div class="rec-simulator__highlight" style="color: #ef4444;"><span id="bankAnnualLoss">125</span>&euro;</div>
+        </div>
+        <div class="rec-simulator__result">
+          <div class="rec-simulator__result-label"><%= t('views.recommendations.simulators.bank_account.in_5_years') %></div>
+          <div class="rec-simulator__highlight" style="color: #ef4444;"><span id="bank5YearLoss">625</span>&euro;</div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function initBankSimulator() {
+        var balanceEl = document.getElementById('bankBalance');
+        var rateEl = document.getElementById('bankRate');
+        if (!balanceEl || !rateEl) return;
+
+        function formatNum(num) {
+          return Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+
+        function calculateBank() {
+          var balance = parseFloat(balanceEl.value);
+          var rate = parseFloat(rateEl.value) / 100;
+          var annualGain = balance * rate;
+          var loss5y = annualGain * 5;
+
+          document.getElementById('bankBalanceVal').textContent = formatNum(balance);
+          document.getElementById('bankRateVal').textContent = rateEl.value.replace('.', ',');
+          document.getElementById('bankAnnualGain').textContent = formatNum(annualGain);
+          document.getElementById('bankAnnualLoss').textContent = formatNum(annualGain);
+          document.getElementById('bank5YearLoss').textContent = formatNum(loss5y);
+
+          var pct = Math.min(Math.max((balance / 50000) * 100, 15), 100);
+          document.getElementById('bankOptimizedBar').style.width = pct + '%';
+        }
+
+        balanceEl.addEventListener('input', calculateBank);
+        rateEl.addEventListener('input', calculateBank);
+        calculateBank();
+      }
+
+      document.addEventListener('turbo:load', initBankSimulator);
+      document.addEventListener('turbo:frame-load', initBankSimulator);
+      document.addEventListener('DOMContentLoaded', initBankSimulator);
+    </script>
+
+  <% elsif @recommendation.slug == "debt-optimization" %>
+    <!-- ========== DEBT OPTIMIZATION ========== -->
+    <p class="rec-body-text">
+      <%= t('views.recommendations.pages.debt_optimization.motivational_text') %>
+    </p>
+
+    <p class="rec-body-text">
+      <%= t('views.recommendations.pages.debt_optimization.debt_types_explanation') %>
+    </p>
+
+    <!-- Debt cost simulator -->
+    <%
+      user_debt = current_user.expensive_debt rescue 0
+      default_debt = user_debt > 0 ? [user_debt.round(-2), 50000].min : 5000
+    %>
+    <div class="rec-simulator" id="debtSimulator">
+      <div class="rec-simulator__title">
+        <i class="bi bi-calculator"></i>
+        <%= t('views.recommendations.pages.debt_optimization.simulator.title') %>
+      </div>
+
+      <div class="rec-simulator__label"><%= t('views.recommendations.pages.debt_optimization.simulator.debt_amount') %></div>
+      <div class="rec-simulator__row">
+        <input type="range" class="app-slider__input rec-simulator__slider" id="debtAmount"
+               min="500" max="50000" step="500" value="<%= default_debt %>">
+        <div class="rec-simulator__value"><span id="debtAmountVal"><%= default_debt.to_i.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1.').reverse %></span>&euro;</div>
+      </div>
+
+      <div class="rec-simulator__label"><%= t('views.recommendations.pages.debt_optimization.simulator.interest_rate') %></div>
+      <div class="rec-simulator__row">
+        <input type="range" class="app-slider__input rec-simulator__slider" id="debtRate"
+               min="6" max="20" step="0.5" value="18">
+        <div class="rec-simulator__value"><span id="debtRateVal">18,0</span>%</div>
+      </div>
+
+      <div class="rec-simulator__label"><%= t('views.recommendations.pages.debt_optimization.simulator.time_period') %></div>
+      <div class="rec-simulator__row">
+        <input type="range" class="app-slider__input rec-simulator__slider" id="debtYears"
+               min="1" max="10" step="1" value="3">
+        <div class="rec-simulator__value"><span id="debtYearsVal">3</span> <%= t('views.recommendations.simulator.labels.years') %></div>
+      </div>
+
+      <div class="rec-simulator__results-grid">
+        <div class="rec-simulator__result">
+          <div class="rec-simulator__result-label"><%= t('views.recommendations.pages.debt_optimization.simulator.total_interest') %></div>
+          <div class="rec-simulator__highlight" style="color: #ef4444;"><span id="debtTotalInterest">0</span>&euro;</div>
+        </div>
+        <div class="rec-simulator__result">
+          <div class="rec-simulator__result-label"><%= t('views.recommendations.pages.debt_optimization.simulator.total_payback') %></div>
+          <div class="rec-simulator__highlight"><span id="debtTotalPayback">0</span>&euro;</div>
+        </div>
+      </div>
+
+      <p class="rec-simulator__note"><%= t('views.recommendations.pages.debt_optimization.simulator.note') %></p>
+    </div>
+
+    <script>
+      function initDebtSimulator() {
+        var amountEl = document.getElementById('debtAmount');
+        var rateEl = document.getElementById('debtRate');
+        var yearsEl = document.getElementById('debtYears');
+        if (!amountEl || !rateEl || !yearsEl) return;
+
+        function formatNum(num) {
+          return Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+
+        function calculateDebt() {
+          var principal = parseFloat(amountEl.value);
+          var annualRate = parseFloat(rateEl.value) / 100;
+          var years = parseInt(yearsEl.value);
+
+          // Compound interest: what the debt grows to
+          var totalOwed = principal * Math.pow(1 + annualRate, years);
+          var totalInterest = totalOwed - principal;
+
+          document.getElementById('debtAmountVal').textContent = formatNum(principal);
+          document.getElementById('debtRateVal').textContent = rateEl.value.replace('.', ',');
+          document.getElementById('debtYearsVal').textContent = years;
+          document.getElementById('debtTotalInterest').textContent = formatNum(totalInterest);
+          document.getElementById('debtTotalPayback').textContent = formatNum(totalOwed);
+        }
+
+        amountEl.addEventListener('input', calculateDebt);
+        rateEl.addEventListener('input', calculateDebt);
+        yearsEl.addEventListener('input', calculateDebt);
+        calculateDebt();
+      }
+
+      document.addEventListener('turbo:load', initDebtSimulator);
+      document.addEventListener('turbo:frame-load', initDebtSimulator);
+      document.addEventListener('DOMContentLoaded', initDebtSimulator);
+    </script>
+
+  <% elsif @recommendation.slug == "saving-advice" %>
+    <!-- ========== SAVING ADVICE: Motivational text ========== -->
+    <p class="rec-body-text">
+      <%= t('views.recommendations.pages.saving_advice.motivational_text') %>
+    </p>
+
+    <!-- ========== SAVING ADVICE: User situation + tips ========== -->
+    <div class="rec-simulator">
+      <div class="rec-simulator__title">
+        <i class="bi bi-wallet2"></i>
+        <%= t('views.recommendations.pages.saving_advice.why_important.current_situation') %>
+      </div>
+
+      <div class="rec-simulator__results-grid rec-simulator__results-grid--trio">
+        <div class="rec-simulator__result">
+          <div class="rec-simulator__result-label"><%= t('views.recommendations.pages.saving_advice.why_important.monthly_income') %></div>
+          <div style="font-size: 1.125rem; font-weight: 700; color: #10b981;"><%= number_to_currency(current_user.monthly_income, unit: "\u20AC", precision: 0) %></div>
+        </div>
+        <div class="rec-simulator__result">
+          <div class="rec-simulator__result-label"><%= t('views.recommendations.pages.saving_advice.why_important.monthly_expenses') %></div>
+          <div style="font-size: 1.125rem; font-weight: 700; color: #ef4444;"><%= number_to_currency(current_user.monthly_expenses, unit: "\u20AC", precision: 0) %></div>
+        </div>
+        <div class="rec-simulator__result">
+          <div class="rec-simulator__result-label"><%= t('views.recommendations.pages.saving_advice.why_important.cash_flow') %></div>
+          <div style="font-size: 1.125rem; font-weight: 700;" class="<%= current_user.monthly_cash_flow > 0 ? 'text-success' : 'text-danger' %>">
+            <%= number_to_currency(current_user.monthly_cash_flow, unit: "\u20AC", precision: 0) %>
           </div>
+        </div>
+      </div>
+    </div>
 
-        <% elsif @recommendation.slug == "emergency-deposit" %>
-          <!-- FAQ para fondo de emergencia -->
-          <div class="accordion" id="faqAccordion">
-            <% t('views.recommendations.pages.emergency_deposit.faq.items').each_with_index do |faq, index| %>
-              <div class="accordion-item border-0 mb-3 shadow-sm">
-                <h2 class="accordion-header">
-                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq<%= index + 1 %>">
-                    <%= faq[:question] %>
-                  </button>
-                </h2>
-                <div id="faq<%= index + 1 %>" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                  <div class="accordion-body">
-                    <%= faq[:answer].html_safe %>
-                  </div>
-                </div>
-              </div>
-            <% end %>
+    <div class="rec-edu-cards">
+      <div class="rec-edu-card">
+        <div class="rec-edu-card__title">
+          <i class="bi bi-credit-card text-danger"></i>
+          <%= t('views.recommendations.pages.saving_advice.why_important.subscriptions_title') %>
+        </div>
+        <p class="rec-edu-card__text">
+          <%= t('views.recommendations.pages.saving_advice.why_important.subscriptions_desc') %>
+          <br><strong><%= t('views.recommendations.pages.saving_advice.why_important.subscriptions_savings') %></strong>
+        </p>
+      </div>
+      <div class="rec-edu-card">
+        <div class="rec-edu-card__title">
+          <i class="bi bi-cup-straw text-danger"></i>
+          <%= t('views.recommendations.pages.saving_advice.why_important.dining_title') %>
+        </div>
+        <p class="rec-edu-card__text">
+          <%= t('views.recommendations.pages.saving_advice.why_important.dining_desc') %>
+          <br><strong><%= t('views.recommendations.pages.saving_advice.why_important.dining_savings') %></strong>
+        </p>
+      </div>
+      <div class="rec-edu-card">
+        <div class="rec-edu-card__title">
+          <i class="bi bi-piggy-bank text-danger"></i>
+          <%= t('views.recommendations.pages.saving_advice.why_important.impulse_title') %>
+        </div>
+        <p class="rec-edu-card__text">
+          <%= t('views.recommendations.pages.saving_advice.why_important.impulse_desc') %>
+          <br><strong><%= t('views.recommendations.pages.saving_advice.why_important.impulse_savings') %></strong>
+        </p>
+      </div>
+    </div>
+
+  <% elsif @recommendation.slug == "tax-advisory" %>
+    <!-- ========== TAX ADVISORY ========== -->
+    <p class="rec-body-text">
+      <%= t('views.recommendations.pages.tax_advisory.motivational_text') %>
+    </p>
+
+    <!-- Tax savings simulator -->
+    <div class="rec-simulator" id="taxSimulator">
+      <div class="rec-simulator__title">
+        <i class="bi bi-calculator"></i>
+        <%= t('views.recommendations.pages.tax_advisory.simulator.title') %>
+      </div>
+
+      <div class="rec-simulator__label"><%= t('views.recommendations.pages.tax_advisory.simulator.annual_income') %></div>
+      <div class="rec-simulator__row">
+        <input type="range" class="app-slider__input rec-simulator__slider" id="taxIncome"
+               min="30000" max="300000" step="5000" value="80000">
+        <div class="rec-simulator__value"><span id="taxIncomeVal">80.000</span>&euro;</div>
+      </div>
+
+      <div class="rec-simulator__label"><%= t('views.recommendations.pages.tax_advisory.simulator.current_rate') %></div>
+      <div class="rec-simulator__row">
+        <input type="range" class="app-slider__input rec-simulator__slider" id="taxCurrentRate"
+               min="20" max="50" step="1" value="37">
+        <div class="rec-simulator__value"><span id="taxCurrentRateVal">37</span>%</div>
+      </div>
+
+      <div class="rec-simulator__label"><%= t('views.recommendations.pages.tax_advisory.simulator.optimized_rate') %></div>
+      <div class="rec-simulator__row">
+        <input type="range" class="app-slider__input rec-simulator__slider" id="taxOptimizedRate"
+               min="15" max="45" step="1" value="30">
+        <div class="rec-simulator__value"><span id="taxOptimizedRateVal">30</span>%</div>
+      </div>
+
+      <div class="rec-simulator__results-grid rec-simulator__results-grid--trio">
+        <div class="rec-simulator__result">
+          <div class="rec-simulator__result-label"><%= t('views.recommendations.pages.tax_advisory.simulator.annual_savings') %></div>
+          <div class="rec-simulator__highlight" style="color: #10b981;"><span id="taxAnnualSavings">0</span>&euro;/<%= t('views.recommendations.year') %></div>
+        </div>
+        <div class="rec-simulator__result">
+          <div class="rec-simulator__result-label"><%= t('views.recommendations.pages.tax_advisory.simulator.net_increase') %></div>
+          <div class="rec-simulator__highlight" style="color: #10b981;"><span id="taxNetIncrease">0</span>%</div>
+        </div>
+        <div class="rec-simulator__result">
+          <div class="rec-simulator__result-label"><%= t('views.recommendations.pages.tax_advisory.simulator.in_5_years') %></div>
+          <div class="rec-simulator__highlight" style="color: #10b981;"><span id="tax5YearSavings">0</span>&euro;</div>
+        </div>
+      </div>
+
+      <p class="rec-simulator__note"><%= t('views.recommendations.pages.tax_advisory.simulator.note') %></p>
+    </div>
+
+    <script>
+      function initTaxSimulator() {
+        var incomeEl = document.getElementById('taxIncome');
+        var currentRateEl = document.getElementById('taxCurrentRate');
+        var optimizedRateEl = document.getElementById('taxOptimizedRate');
+        if (!incomeEl || !currentRateEl || !optimizedRateEl) return;
+
+        function formatNum(num) {
+          return Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+
+        function calculateTax() {
+          var income = parseFloat(incomeEl.value);
+          var currentRate = parseFloat(currentRateEl.value) / 100;
+          var optimizedRate = parseFloat(optimizedRateEl.value) / 100;
+
+          var currentTax = income * currentRate;
+          var optimizedTax = income * optimizedRate;
+          var annualSavings = Math.max(currentTax - optimizedTax, 0);
+          var currentNet = income - currentTax;
+          var optimizedNet = income - optimizedTax;
+          var netIncrease = currentNet > 0 ? ((optimizedNet - currentNet) / currentNet * 100) : 0;
+
+          document.getElementById('taxIncomeVal').textContent = formatNum(income);
+          document.getElementById('taxCurrentRateVal').textContent = Math.round(currentRate * 100);
+          document.getElementById('taxOptimizedRateVal').textContent = Math.round(optimizedRate * 100);
+          document.getElementById('taxAnnualSavings').textContent = formatNum(annualSavings);
+          document.getElementById('taxNetIncrease').textContent = netIncrease.toFixed(1).replace('.', ',');
+          document.getElementById('tax5YearSavings').textContent = formatNum(annualSavings * 5);
+        }
+
+        incomeEl.addEventListener('input', calculateTax);
+        currentRateEl.addEventListener('input', calculateTax);
+        optimizedRateEl.addEventListener('input', calculateTax);
+        calculateTax();
+      }
+
+      document.addEventListener('turbo:load', initTaxSimulator);
+      document.addEventListener('turbo:frame-load', initTaxSimulator);
+      document.addEventListener('DOMContentLoaded', initTaxSimulator);
+    </script>
+
+  <% elsif @recommendation.slug == "portfolio-optimization" %>
+    <!-- ========== PORTFOLIO OPTIMIZATION ========== -->
+    <p class="rec-body-text">
+      <%= t('views.recommendations.pages.portfolio_optimization.motivational_text') %>
+    </p>
+
+    <div class="rec-section">
+      <h4 class="rec-section__title"><%= t('views.recommendations.pages.portfolio_optimization.why_important.warnings_title') %></h4>
+      <p class="rec-body-text">
+        &bull; <strong><%= t('views.recommendations.pages.portfolio_optimization.why_important.warning_complex_title') %></strong>: <%= t('views.recommendations.pages.portfolio_optimization.why_important.warning_complex_problem') %><br>
+        &bull; <strong><%= t('views.recommendations.pages.portfolio_optimization.why_important.warning_fees_title') %></strong>: <%= t('views.recommendations.pages.portfolio_optimization.why_important.warning_fees_problem') %><br>
+        &bull; <strong><%= t('views.recommendations.pages.portfolio_optimization.why_important.warning_concentration_title') %></strong>: <%= t('views.recommendations.pages.portfolio_optimization.why_important.warning_concentration_problem') %><br>
+        &bull; <strong><%= t('views.recommendations.pages.portfolio_optimization.why_important.warning_performance_title') %></strong>: <%= t('views.recommendations.pages.portfolio_optimization.why_important.warning_performance_problem') %>
+      </p>
+    </div>
+
+    <div class="rec-section">
+      <h4 class="rec-section__title"><%= t('views.recommendations.pages.portfolio_optimization.why_important.second_opinion_title', default: 'Lo que te aporta una segunda opinion independiente') %></h4>
+      <p class="rec-body-text">
+        <% (t('views.recommendations.pages.portfolio_optimization.why_important.advisor_benefits', default: []) || []).first(4).each do |benefit| %>
+          &bull; <strong><%= benefit[:title] %></strong> <%= benefit[:text] %><br>
+        <% end %>
+      </p>
+    </div>
+
+    <!-- Commission cost simulator -->
+    <div class="rec-simulator" id="portfolioSimulator">
+      <div class="rec-simulator__title">
+        <i class="bi bi-calculator"></i>
+        <%= t('views.recommendations.pages.portfolio_optimization.simulator.title') %>
+      </div>
+
+      <p class="rec-simulator__note" style="font-style: normal; color: #6b7280; margin-bottom: 0.75rem;">
+        <%= t('views.recommendations.pages.portfolio_optimization.simulator.intro') %>
+      </p>
+
+      <div class="rec-simulator__label"><%= t('views.recommendations.pages.portfolio_optimization.simulator.invested_amount') %></div>
+      <div class="rec-simulator__row">
+        <input type="range" class="app-slider__input rec-simulator__slider" id="portfolioAmount"
+               min="10000" max="500000" step="5000" value="100000">
+        <div class="rec-simulator__value"><span id="portfolioAmountVal">100.000</span>&euro;</div>
+      </div>
+
+      <div class="rec-simulator__label"><%= t('views.recommendations.pages.portfolio_optimization.simulator.commission_rate') %></div>
+      <div class="rec-simulator__row">
+        <input type="range" class="app-slider__input rec-simulator__slider" id="portfolioCommission"
+               min="0.5" max="3" step="0.1" value="1.5">
+        <div class="rec-simulator__value"><span id="portfolioCommissionVal">1,5</span>%</div>
+      </div>
+
+      <div class="rec-simulator__results-grid">
+        <div class="rec-simulator__result">
+          <div class="rec-simulator__result-label"><%= t('views.recommendations.pages.portfolio_optimization.simulator.annual_cost') %></div>
+          <div class="rec-simulator__highlight" style="color: #ef4444;"><span id="portfolioAnnualCost">0</span>&euro;/<%= t('views.recommendations.year') %></div>
+        </div>
+        <div class="rec-simulator__result">
+          <div class="rec-simulator__result-label"><%= t('views.recommendations.pages.portfolio_optimization.simulator.cost_10_years') %></div>
+          <div class="rec-simulator__highlight" style="color: #ef4444;"><span id="portfolio10YearCost">0</span>&euro;</div>
+        </div>
+      </div>
+
+      <p class="rec-simulator__note"><%= t('views.recommendations.pages.portfolio_optimization.simulator.note') %></p>
+    </div>
+
+    <script>
+      function initPortfolioSimulator() {
+        var amountEl = document.getElementById('portfolioAmount');
+        var commissionEl = document.getElementById('portfolioCommission');
+        if (!amountEl || !commissionEl) return;
+
+        function formatNum(num) {
+          return Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+
+        function calculatePortfolio() {
+          var amount = parseFloat(amountEl.value);
+          var commission = parseFloat(commissionEl.value) / 100;
+          var annualCost = amount * commission;
+          var cost10y = annualCost * 10;
+
+          document.getElementById('portfolioAmountVal').textContent = formatNum(amount);
+          document.getElementById('portfolioCommissionVal').textContent = commissionEl.value.replace('.', ',');
+          document.getElementById('portfolioAnnualCost').textContent = formatNum(annualCost);
+          document.getElementById('portfolio10YearCost').textContent = formatNum(cost10y);
+        }
+
+        amountEl.addEventListener('input', calculatePortfolio);
+        commissionEl.addEventListener('input', calculatePortfolio);
+        calculatePortfolio();
+      }
+
+      document.addEventListener('turbo:load', initPortfolioSimulator);
+      document.addEventListener('turbo:frame-load', initPortfolioSimulator);
+      document.addEventListener('DOMContentLoaded', initPortfolioSimulator);
+    </script>
+
+  <% elsif @recommendation.slug == "ac-diposit" %>
+    <!-- ========== SHORT-TERM DEPOSIT ========== -->
+    <p class="rec-body-text">
+      <%= t('views.recommendations.pages.ac_diposit.motivational_text') %>
+    </p>
+
+    <div class="rec-simulator">
+      <div class="rec-simulator__title">
+        <i class="bi bi-safe"></i>
+        <%= t('views.recommendations.pages.ac_diposit.key_points.title') %>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 0.75rem;">
+        <div>
+          <div style="font-weight: 700; font-size: 0.9375rem; margin-bottom: 0.25rem;">
+            <i class="bi bi-lock" style="color: #165668; margin-right: 0.25rem;"></i>
+            <%= t('views.recommendations.pages.ac_diposit.key_points.discipline.title') %>
           </div>
+          <p class="rec-body-text" style="margin-bottom: 0;"><%= t('views.recommendations.pages.ac_diposit.key_points.discipline.text') %></p>
+        </div>
 
-        <% elsif @recommendation.slug == "debt-optimization" %>
-          <!-- FAQ para eliminación de deudas -->
-          <div class="accordion" id="faqAccordion">
-            <% t('views.recommendations.pages.debt_optimization.faq.items').each_with_index do |faq, index| %>
-              <div class="accordion-item border-0 mb-3 shadow-sm">
-                <h2 class="accordion-header">
-                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq<%= index + 1 %>">
-                    <%= faq[:question] %>
-                  </button>
-                </h2>
-                <div id="faq<%= index + 1 %>" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                  <div class="accordion-body">
-                    <%= faq[:answer].html_safe %>
-                  </div>
-                </div>
-              </div>
-            <% end %>
+        <div>
+          <div style="font-weight: 700; font-size: 0.9375rem; margin-bottom: 0.25rem;">
+            <i class="bi bi-eye" style="color: #165668; margin-right: 0.25rem;"></i>
+            <%= t('views.recommendations.pages.ac_diposit.key_points.clarity.title') %>
           </div>
+          <p class="rec-body-text" style="margin-bottom: 0;"><%= t('views.recommendations.pages.ac_diposit.key_points.clarity.text') %></p>
+        </div>
 
-        <% elsif @recommendation.slug == "saving-advice" %>
-          <!-- FAQ for savings -->
-          <div class="accordion" id="faqAccordion">
-            <% t('views.recommendations.pages.saving_advice.faq.items').each_with_index do |faq, index| %>
-              <div class="accordion-item border-0 mb-3 shadow-sm">
-                <h2 class="accordion-header">
-                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq<%= index + 1 %>">
-                    <%= faq[:question] %>
-                  </button>
-                </h2>
-                <div id="faq<%= index + 1 %>" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                  <div class="accordion-body">
-                    <%= faq[:answer] %>
-                  </div>
-                </div>
-              </div>
-            <% end %>
+        <div>
+          <div style="font-weight: 700; font-size: 0.9375rem; margin-bottom: 0.25rem;">
+            <i class="bi bi-graph-up-arrow" style="color: #165668; margin-right: 0.25rem;"></i>
+            <%= t('views.recommendations.pages.ac_diposit.key_points.small_return.title') %>
           </div>
+          <p class="rec-body-text" style="margin-bottom: 0;"><%= t('views.recommendations.pages.ac_diposit.key_points.small_return.text') %></p>
+        </div>
 
-        <% elsif @recommendation.slug == "tax-advisory" %>
-          <!-- FAQ for tax optimization -->
-          <div class="accordion" id="faqAccordion">
-            <% t('views.recommendations.pages.tax_advisory.faq.items').each_with_index do |faq, index| %>
-              <div class="accordion-item border-0 mb-3 shadow-sm">
-                <h2 class="accordion-header">
-                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq<%= index + 1 %>">
-                    <%= faq[:question] %>
-                  </button>
-                </h2>
-                <div id="faq<%= index + 1 %>" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                  <div class="accordion-body">
-                    <%= (faq[:answer_html] || faq[:answer]).html_safe %>
-                  </div>
-                </div>
-              </div>
-            <% end %>
+        <div>
+          <div style="font-weight: 700; font-size: 0.9375rem; margin-bottom: 0.25rem;">
+            <i class="bi bi-shield-check" style="color: #165668; margin-right: 0.25rem;"></i>
+            <%= t('views.recommendations.pages.ac_diposit.key_points.protection.title') %>
           </div>
+          <p class="rec-body-text" style="margin-bottom: 0;"><%= t('views.recommendations.pages.ac_diposit.key_points.protection.text') %></p>
+        </div>
+      </div>
+    </div>
 
-        <% elsif @recommendation.slug == "portfolio-optimization" %>
-          <!-- FAQ para optimización de cartera -->
-          <div class="accordion" id="faqAccordion">
-            <% t('views.recommendations.pages.portfolio_optimization.faq.items').each_with_index do |faq, index| %>
-              <div class="accordion-item border-0 mb-3 shadow-sm">
-                <h2 class="accordion-header">
-                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq<%= index + 1 %>">
-                    <%= faq[:question] %>
-                  </button>
-                </h2>
-                <div id="faq<%= index + 1 %>" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                  <div class="accordion-body">
-                    <%= (faq[:answer_html] || faq[:answer]).html_safe %>
-                  </div>
-                </div>
-              </div>
-            <% end %>
-          </div>
+  <% else %>
+    <!-- ========== GENERIC CONTENT ========== -->
+    <% if @recommendation.content.present? %>
+      <div class="rec-edu-cards">
+        <div class="rec-edu-card">
+          <p class="rec-edu-card__text"><%= simple_format(@recommendation.content) %></p>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
 
-        <% elsif @recommendation.slug == "mortgage-optimization" %>
-          <!-- FAQ para optimización de hipoteca -->
-          <div class="accordion" id="faqAccordion">
-            <% t('views.recommendations.pages.mortgage_optimization.faq.items').each_with_index do |faq, index| %>
-              <div class="accordion-item border-0 mb-3 shadow-sm">
-                <h2 class="accordion-header">
-                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq<%= index + 1 %>">
-                    <%= faq[:question] %>
-                  </button>
-                </h2>
-                <div id="faq<%= index + 1 %>" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                  <div class="accordion-body">
-                    <%= (faq[:answer_html] || faq[:answer]).html_safe %>
-                  </div>
-                </div>
-              </div>
-            <% end %>
-          </div>
+  <div class="rec-divider"></div>
 
-        <% elsif @recommendation.slug == "ac-llarg" %>
-          <!-- FAQ for long-term investment -->
-          <div class="accordion" id="faqAccordion">
-            <% t('views.recommendations.pages.ac_llarg.faq.items').each_with_index do |faq, index| %>
-              <div class="accordion-item border-0 mb-3 shadow-sm">
-                <h2 class="accordion-header">
-                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq<%= index + 1 %>">
-                    <%= faq[:question] %>
-                  </button>
-                </h2>
-                <div id="faq<%= index + 1 %>" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                  <div class="accordion-body">
-                    <%= faq[:answer_html].html_safe %>
-                  </div>
-                </div>
-              </div>
-            <% end %>
-          </div>
+  <!-- 6. FAQ (Accordion, collapsed) -->
+  <div class="rec-faq">
+    <div class="rec-faq__title">
+      <i class="bi bi-question-circle"></i>
+      <%= t('views.recommendations.faq_title') %>
+    </div>
 
-        <% elsif @recommendation.slug == "ac-curt" %>
-          <!-- FAQ for medium-term investment (fixed income) -->
-          <div class="accordion" id="faqAccordion">
-            <% t('views.recommendations.pages.ac_curt.faq.items').each_with_index do |faq, index| %>
-              <div class="accordion-item border-0 mb-3 shadow-sm">
-                <h2 class="accordion-header">
-                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq<%= index + 1 %>">
-                    <%= faq[:question] %>
-                  </button>
-                </h2>
-                <div id="faq<%= index + 1 %>" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                  <div class="accordion-body">
-                    <%= (faq[:answer_html] || faq[:answer]).html_safe %>
-                  </div>
-                </div>
-              </div>
-            <% end %>
-          </div>
+    <%
+      faq_items = begin
+        t("views.recommendations.pages.#{slug_key}.faq.items", default: nil)
+      rescue
+        nil
+      end
+    %>
 
-        <% elsif @recommendation.slug == "ac-jubil" %>
-          <!-- FAQ for retirement -->
-          <div class="accordion" id="faqAccordion">
-            <% t('views.recommendations.pages.ac_jubil.faq.items').each_with_index do |faq, index| %>
-              <div class="accordion-item border-0 mb-3 shadow-sm">
-                <h2 class="accordion-header">
-                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq<%= index + 1 %>">
-                    <%= faq[:question] %>
-                  </button>
-                </h2>
-                <div id="faq<%= index + 1 %>" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                  <div class="accordion-body">
-                    <%= (faq[:answer_html] || faq[:answer]).html_safe %>
-                  </div>
-                </div>
-              </div>
-            <% end %>
-          </div>
-
-        <% else %>
-          <!-- FAQ genérico -->
-          <div class="accordion" id="faqAccordion">
-            <div class="accordion-item border-0 mb-3 shadow-sm">
-              <h2 class="accordion-header">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
-                  ¿Pregunta frecuente 1?
-                </button>
-              </h2>
-              <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                <div class="accordion-body">
-                  Respuesta 1...
-                </div>
+    <% if faq_items.present? %>
+      <div class="accordion" id="recFaqAccordion">
+        <% faq_items.each_with_index do |faq, index| %>
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed" type="button"
+                      data-bs-toggle="collapse" data-bs-target="#recFaq<%= index %>">
+                <%= faq[:question] %>
+              </button>
+            </h2>
+            <div id="recFaq<%= index %>" class="accordion-collapse collapse" data-bs-parent="#recFaqAccordion">
+              <div class="accordion-body">
+                <%= (faq[:answer_html] || faq[:answer]).html_safe %>
               </div>
             </div>
           </div>
         <% end %>
       </div>
-
-      <!-- 8. CTA #3 (FINAL) -->
-      <div class="mb-5">
-        <div class="rounded p-5 text-center text-white" style="background: linear-gradient(135deg, #1EDD88 0%, #16a34a 100%);">
-          <h3 class="mb-3">
-            <%= t("views.recommendations.pages.#{slug_key}.cta3_title", default: t('views.recommendations.final_cta_title')) %>
-          </h3>
-          <p class="mb-4 lead">
-            <%= t("views.recommendations.pages.#{slug_key}.cta3_description", default: t('views.recommendations.final_cta_description')) %>
-          </p>
-          <% if @affiliate_link.present? %>
-            <a href="<%= @affiliate_link %>" target="_blank" class="btn btn-light btn-lg px-5 py-3">
-              <i class="bi <%= @recommendation.slug == 'saving-advice' ? 'bi-cart-check' : (@recommendation.slug == 'tax-advisory' ? 'bi-calendar-check' : 'bi-box-arrow-up-right') %> me-2"></i>
-              <%= t("views.recommendations.ctas.#{slug_key}", default: t('views.recommendations.ctas.default')) %>
-            </a>
-          <% else %>
-            <button class="btn btn-outline-light btn-lg px-5 py-3" disabled>
-              <i class="bi bi-clock me-2"></i>
-              <%= t('views.recommendations.coming_soon_button') %>
-            </button>
-          <% end %>
-        </div>
-      </div>
-
-      <!-- 9. DISCLAIMER + MARCAR COMO COMPLETADO -->
-      <div class="mb-4">
-        <div class="bg-light rounded p-4">
-          <h6 class="text-muted mb-3"><i class="bi bi-info-circle me-2"></i><%= t('views.recommendations.legal_info_title') %></h6>
-          <p class="small text-muted mb-3">
-            <%= t('views.recommendations.legal_affiliate_disclosure') %>
-          </p>
-          <p class="small text-muted mb-0">
-            <strong><%= t('views.recommendations.important') %>:</strong> <%= t('views.recommendations.legal_disclaimer') %>
-          </p>
-        </div>
-      </div>
-
-      <!-- Checkbox para marcar como completado -->
-      <div class="text-center py-4">
-        <div class="form-check d-inline-block">
-          <input class="form-check-input" type="checkbox" id="markCompleted"
-                 data-recommendation="<%= @recommendation.slug.underscore.gsub('-', '_') %>">
-          <label class="form-check-label" for="markCompleted">
-            <strong><%= t('views.recommendations.completed_action') %></strong>
-          </label>
-        </div>
-        <p class="text-muted small mt-2 mb-0">
-          <%= t('views.recommendations.completed_action_description') %>
-        </p>
-      </div>
-
-    </div>
+    <% end %>
   </div>
+
+  <!-- 7. COMPLETED -->
+  <label class="rec-completed" for="markCompleted">
+    <input class="form-check-input rec-completed__checkbox" type="checkbox" id="markCompleted"
+           data-recommendation="<%= @recommendation.slug.underscore.gsub('-', '_') %>">
+    <div>
+      <div class="rec-completed__label"><%= t('views.recommendations.completed_action') %></div>
+      <div class="rec-completed__sublabel"><%= t('views.recommendations.completed_action_description') %></div>
+    </div>
+  </label>
+
+  <!-- 8. CTA FINAL (bottom of page) -->
+  <div style="margin-top: 1.5rem; margin-bottom: 1rem;">
+    <p style="text-align: center; margin-bottom: 0.75rem; font-size: 0.9375rem; font-weight: 600; color: #1a1a1a;">
+      <%= t("views.recommendations.cta2_titles.#{slug_key}", default: t('views.recommendations.cta2_titles.default')) %>
+    </p>
+    <% if @affiliate_link.present? %>
+      <a href="<%= @affiliate_link %>" target="_blank"
+         style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; width: 100%; padding: 1rem 1.5rem; font-size: 1.0625rem; font-weight: 700; color: #fff; background: linear-gradient(135deg, #1d7a8c, #165668); border-radius: 12px; text-decoration: none; box-shadow: 0 4px 16px rgba(22,86,104,0.4); letter-spacing: 0.02em;">
+        <i class="bi bi-box-arrow-up-right"></i>
+        <%= t("views.recommendations.ctas.#{slug_key}", default: t('views.recommendations.ctas.default')) %>
+      </a>
+    <% else %>
+      <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; width: 100%; padding: 1rem 1.5rem; font-size: 1.0625rem; font-weight: 700; color: #9ca3af; background: #f3f4f6; border-radius: 12px;">
+        <i class="bi bi-clock"></i>
+        <%= t('views.recommendations.coming_soon_button') %>
+      </div>
+    <% end %>
+    <p style="text-align: center; font-size: 0.75rem; color: #9ca3af; margin-top: 0.5rem;"><%= t('views.recommendations.process_secure') %></p>
+  </div>
+
+  <!-- 9. LEGAL (bottom, fine print) -->
+  <div class="rec-legal">
+    <p class="mb-2"><%= t('views.recommendations.legal_affiliate_disclosure') %></p>
+    <p class="mb-0"><strong><%= t('views.recommendations.important') %>:</strong> <%= t('views.recommendations.legal_disclaimer') %></p>
+  </div>
+
 </div>
 
-<style>
-.btn-baifinanzas-success {
-  background: #1EDD88;
-  border: none;
-  color: white;
-  padding: 0.75rem 2rem;
-  border-radius: 0.5rem;
-  font-weight: 600;
-  transition: all 0.3s ease;
-}
-
-.btn-baifinanzas-success:hover {
-  background: #16a34a;
-  transform: translateY(-1px);
-  color: white;
-  box-shadow: 0 4px 8px rgba(30, 221, 136, 0.3);
-}
-</style>
-
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  const checkbox = document.getElementById('markCompleted');
+(function() {
+  function initCompletedCheckbox() {
+    var checkbox = document.getElementById('markCompleted');
+    if (!checkbox) return;
 
-  if (checkbox) {
-    const recKey = checkbox.dataset.recommendation;
+    var recKey = checkbox.dataset.recommendation;
 
-    // Verificar si ya está completado al cargar la página
+    // Check if already completed
     fetch('/api/user_actions/check?recommendation=' + recKey)
-      .then(response => response.json())
-      .then(data => {
-        if (data.completed) {
-          checkbox.checked = true;
-        }
-      })
-      .catch(err => console.log('No se pudo verificar el estado'));
+      .then(function(r) { return r.json(); })
+      .then(function(data) { if (data.completed) checkbox.checked = true; })
+      .catch(function() {});
 
-    // Manejar el cambio
     checkbox.addEventListener('change', function() {
-      if (this.checked) {
-        // Marcar como completado
-        fetch('/api/user_actions/complete', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-Token': document.querySelector('[name="csrf-token"]').content
-          },
-          body: JSON.stringify({
-            recommendation: recKey
-          })
-        })
-        .then(response => response.json())
-        .then(data => {
-          if (data.success) {
-            // Mostrar mensaje de éxito
-            const successMsg = document.createElement('div');
-            successMsg.className = 'alert alert-success mt-3';
-            successMsg.innerHTML = '<i class="bi bi-check-circle me-2"></i>¡Genial! Hemos actualizado tu progreso en el dashboard.';
-            checkbox.closest('.text-center').appendChild(successMsg);
-            setTimeout(() => successMsg.remove(), 3000);
-          }
-        })
-        .catch(err => {
-          console.error('Error:', err);
-          checkbox.checked = false;
-        });
-      } else {
-        // Desmarcar
-        fetch('/api/user_actions/uncomplete', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-Token': document.querySelector('[name="csrf-token"]').content
-          },
-          body: JSON.stringify({
-            recommendation: recKey
-          })
-        })
-        .then(response => response.json())
-        .then(data => {
-          if (data.success) {
-            const infoMsg = document.createElement('div');
-            infoMsg.className = 'alert alert-info mt-3';
-            infoMsg.innerHTML = '<i class="bi bi-info-circle me-2"></i>Hemos actualizado tu progreso.';
-            checkbox.closest('.text-center').appendChild(infoMsg);
-            setTimeout(() => infoMsg.remove(), 3000);
-          }
-        })
-        .catch(err => console.error('Error:', err));
-      }
+      var url = this.checked ? '/api/user_actions/complete' : '/api/user_actions/uncomplete';
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': document.querySelector('[name="csrf-token"]').content
+        },
+        body: JSON.stringify({ recommendation: recKey })
+      }).catch(function(err) {
+        console.error('Error:', err);
+        checkbox.checked = !checkbox.checked;
+      });
     });
   }
-});
+
+  document.addEventListener('turbo:load', initCompletedCheckbox);
+  document.addEventListener('DOMContentLoaded', initCompletedCheckbox);
+})();
 </script>

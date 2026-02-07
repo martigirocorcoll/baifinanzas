@@ -1,10 +1,80 @@
-// Define variables for your color scheme
+// BaiFinanzas Color System - Professional Teal Theme
+// Based on N26/Fintonic style - Light mode, clean and professional
 
-// For example:
-$red: #FD1015;
-$blue: #0D6EFD;
-$yellow: #FFC65A;
-$orange: #E67E22;
-$green: #1EDD88;
-$gray: #0E0000;
-$light-gray: #F4F4F4;
+// ============================================
+// BRAND COLORS
+// ============================================
+// Main brand color - Teal profundo
+// Transmits: intelligence, control, seriousness without being a bank, calm with depth
+$brand-primary: #165668;
+$brand-primary-light: #1d7a8c;
+$brand-primary-dark: #0f3d4a;
+
+// ============================================
+// TEXT COLORS
+// ============================================
+$text-primary: #1a1a1a;      // Main text - almost black
+$text-secondary: #6b7280;    // Secondary text - gray
+$text-muted: #9ca3af;        // Disabled/muted text
+$text-inverse: #ffffff;      // Text on dark backgrounds
+
+// ============================================
+// BACKGROUND COLORS
+// ============================================
+$bg-primary: #ffffff;        // Main background - white
+$bg-secondary: #f9fafb;      // Secondary background - very light gray
+$bg-tertiary: #f3f4f6;       // Tertiary background - light gray
+
+// ============================================
+// BORDER COLORS
+// ============================================
+$border-light: #e5e7eb;      // Subtle borders
+$border-medium: #d1d5db;     // More visible borders
+
+// ============================================
+// SEMANTIC COLORS
+// ============================================
+$success: #10b981;           // Green - positive actions, completed
+$warning: #f59e0b;           // Amber - warnings, attention
+$danger: #ef4444;            // Red - errors, delete, negative
+$info: #3b82f6;              // Blue - informational
+
+// ============================================
+// FINANCIAL LEVEL COLORS
+// ============================================
+$level-critical: #ef4444;    // Level 1 - Critical situation
+$level-building: #f59e0b;    // Level 2-3 - Building/improving
+$level-stable: #10b981;      // Level 4 - Stable
+$level-growth: #165668;      // Level 5 - Growth
+$level-freedom: #165668;     // Level 6 - Financial freedom
+
+// ============================================
+// LEGACY MAPPINGS (for backward compatibility)
+// ============================================
+// These map old variable names to new colors
+$red: $danger;
+$blue: $brand-primary;
+$yellow: $warning;
+$orange: $warning;
+$green: $success;
+$gray: $text-primary;
+$light-gray: $bg-secondary;
+
+// ============================================
+// ADDITIONAL UI COLORS
+// ============================================
+$card-bg: $bg-primary;
+$card-border: $border-light;
+$card-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+$card-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.12);
+
+// Gradient tokens
+$brand-gradient: linear-gradient(135deg, $brand-primary, $brand-primary-light);
+$brand-gradient-subtle: linear-gradient(135deg, rgba($brand-primary, 0.08), rgba($brand-primary-light, 0.04));
+
+$input-bg: $bg-primary;
+$input-border: $border-medium;
+$input-focus-border: $brand-primary;
+
+$link-color: $brand-primary;
+$link-hover-color: $brand-primary-dark;

@@ -1,4 +1,5 @@
 class PygsController < ApplicationController
+  layout 'app'
   before_action :authenticate_user!
   before_action :set_pyg, only: %i[show edit update]
 

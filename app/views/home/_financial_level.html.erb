@@ -1,0 +1,79 @@
+<%# Financial Level Card %>
+<div class="app-card">
+  <div class="app-card__header">
+    <h2 class="app-card__title">
+      <i class="bi bi-mountain"></i>
+      <%= t('home.financial_level.title', default: 'Tu nivel financiero') %>
+    </h2>
+  </div>
+
+  <div class="app-card__body">
+    <%# Key metrics at the top %>
+    <div class="row g-2">
+      <div class="col-6">
+        <div class="metric-box">
+          <small class="metric-box__label"><%= t('home.financial_level.monthly_savings', default: 'Ahorro mensual') %></small>
+          <strong class="metric-box__value <%= @monthly_cash_flow >= 0 ? 'text-success' : 'text-danger' %>">
+            <%= number_to_currency(@monthly_cash_flow, unit: "\u20AC", precision: 0) %>
+          </strong>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="metric-box">
+          <small class="metric-box__label"><%= t('home.financial_level.net_worth', default: 'Patrimonio neto') %></small>
+          <strong class="metric-box__value <%= @net_worth >= 0 ? 'text-brand' : 'text-danger' %>">
+            <%= number_to_currency(@net_worth, unit: "\u20AC", precision: 0) %>
+          </strong>
+        </div>
+      </div>
+    </div>
+
+    <%# Divider %>
+    <hr class="my-3">
+
+    <%# Level badge + info button %>
+    <div class="d-flex align-items-center justify-content-between mb-2">
+      <span class="level-badge level-badge--pill level-badge--<%= @financial_level[:number] %>">
+        <i class="<%= @financial_level[:icon] %>"></i>
+        <%= @financial_level[:name] %>
+      </span>
+      <a href="#" class="text-muted" data-bs-toggle="modal" data-bs-target="#levelGuideModal" aria-label="<%= t('home.financial_level.see_requirements', default: 'Ver requisitos') %>">
+        <i class="bi bi-info-circle" style="font-size: 1.25rem;"></i>
+      </a>
+    </div>
+
+    <%# Level description %>
+    <div class="app-explanation mb-3">
+      <i class="bi bi-info-circle app-explanation__icon"></i>
+      <p class="app-explanation__text"><%= @financial_level[:description] %></p>
+    </div>
+
+    <%# Progress bar (level 1-6) %>
+    <div class="progress-level">
+      <div class="progress-level__bar progress-level__bar--<%= @financial_level[:number] %>"
+           style="width: <%= (@financial_level[:number] / 6.0 * 100).round %>%">
+      </div>
+    </div>
+    <div class="d-flex justify-content-between mt-2">
+      <small class="text-muted">
+        <%= t('home.financial_level.level_x_of_6', level: @financial_level[:number], default: "Nivel #{@financial_level[:number]} de 6") %>
+      </small>
+      <% if @next_level %>
+        <small class="text-muted">
+          <%= t('home.financial_level.next', default: 'Siguiente:') %> <%= @next_level[:name] %>
+        </small>
+      <% end %>
+    </div>
+
+    <%# Profile completion warning %>
+    <% unless current_user.has_complete_financial_data? %>
+      <div class="app-note mt-4 mb-0 d-flex align-items-center">
+        <i class="bi bi-exclamation-circle text-warning me-2"></i>
+        <div class="flex-grow-1">
+          <small><%= t('home.financial_level.complete_profile_for_accuracy', default: 'Completa tu perfil para un nivel mas preciso') %></small>
+        </div>
+        <%= link_to t('home.financial_level.complete', default: 'Completar'), edit_pyg_path, class: 'btn btn-sm btn-outline-primary' %>
+      </div>
+    <% end %>
+  </div>
+</div>

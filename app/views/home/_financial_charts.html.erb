@@ -1,0 +1,103 @@
+<%# Financial Overview - metrics + charts + edit links (teal bg) %>
+<%
+  income = @income || 0
+  expenses = @expenses || 0
+  cash_flow = income - expenses
+  pyg_max = [income, expenses, 1].max
+
+  total_assets = @total_assets || 0
+  total_debts = @total_debts || 0
+  net_worth_val = total_assets - total_debts
+  balance_max = [total_assets, total_debts, 1].max
+%>
+
+<%# Profile completion warning %>
+<% unless current_user.has_complete_financial_data? %>
+  <div class="home-bottom__warning">
+    <i class="bi bi-exclamation-triangle"></i>
+    <span><%= t('home.financial_level.complete_profile_for_accuracy') %></span>
+    <%= link_to edit_pyg_path, class: 'home-bottom__warning-link' do %>
+      <%= t('home.financial_level.complete') %> <i class="bi bi-arrow-right"></i>
+    <% end %>
+  </div>
+<% end %>
+
+<%# PyG Chart %>
+<div class="home-bottom__card">
+  <div class="home-bottom__card-header">
+    <h3 class="home-bottom__card-title">
+      <i class="bi bi-bar-chart-line"></i>
+      <%= t('home.charts.pyg_title') %>
+    </h3>
+    <%= link_to edit_pyg_path, class: 'home-bottom__card-action' do %>
+      <i class="bi bi-pencil"></i> <%= t('home.charts.edit_pyg') %>
+    <% end %>
+  </div>
+
+  <div class="financial-chart">
+    <div class="financial-chart__bar-row">
+      <span class="financial-chart__bar-label"><%= t('home.charts.income') %></span>
+      <div class="financial-chart__bar-track">
+        <div class="financial-chart__bar-fill financial-chart__bar-fill--green"
+             style="width: <%= (income.to_f / pyg_max * 100).round(1) %>%"></div>
+      </div>
+      <span class="financial-chart__bar-amount"><%= number_to_currency(income, unit: "\u20AC", precision: 0) %></span>
+    </div>
+
+    <div class="financial-chart__bar-row">
+      <span class="financial-chart__bar-label"><%= t('home.charts.expenses') %></span>
+      <div class="financial-chart__bar-track">
+        <div class="financial-chart__bar-fill financial-chart__bar-fill--red"
+             style="width: <%= (expenses.to_f / pyg_max * 100).round(1) %>%"></div>
+      </div>
+      <span class="financial-chart__bar-amount"><%= number_to_currency(expenses, unit: "\u20AC", precision: 0) %></span>
+    </div>
+
+    <div class="financial-chart__result">
+      <span class="financial-chart__result-label"><%= t('home.charts.savings_capacity') %></span>
+      <span class="financial-chart__result-value <%= cash_flow >= 0 ? 'text-success' : 'text-danger' %>">
+        <%= number_to_currency(cash_flow, unit: "\u20AC", precision: 0) %><%= t('home.objectives.per_month') %>
+      </span>
+    </div>
+  </div>
+</div>
+
+<%# Balance Chart %>
+<div class="home-bottom__card">
+  <div class="home-bottom__card-header">
+    <h3 class="home-bottom__card-title">
+      <i class="bi bi-wallet2"></i>
+      <%= t('home.charts.balance_title') %>
+    </h3>
+    <%= link_to edit_balance_path, class: 'home-bottom__card-action' do %>
+      <i class="bi bi-pencil"></i> <%= t('home.charts.edit_balance') %>
+    <% end %>
+  </div>
+
+  <div class="financial-chart">
+    <div class="financial-chart__bar-row">
+      <span class="financial-chart__bar-label"><%= t('home.charts.assets') %></span>
+      <div class="financial-chart__bar-track">
+        <div class="financial-chart__bar-fill financial-chart__bar-fill--green"
+             style="width: <%= (total_assets.to_f / balance_max * 100).round(1) %>%"></div>
+      </div>
+      <span class="financial-chart__bar-amount"><%= number_to_currency(total_assets, unit: "\u20AC", precision: 0) %></span>
+    </div>
+
+    <div class="financial-chart__bar-row">
+      <span class="financial-chart__bar-label"><%= t('home.charts.debts') %></span>
+      <div class="financial-chart__bar-track">
+        <div class="financial-chart__bar-fill financial-chart__bar-fill--red"
+             style="width: <%= (total_debts.to_f / balance_max * 100).round(1) %>%"></div>
+      </div>
+      <span class="financial-chart__bar-amount"><%= number_to_currency(total_debts, unit: "\u20AC", precision: 0) %></span>
+    </div>
+
+    <div class="financial-chart__result">
+      <span class="financial-chart__result-label"><%= t('home.charts.net_worth') %></span>
+      <span class="financial-chart__result-value <%= net_worth_val >= 0 ? 'text-success' : 'text-danger' %>">
+        <%= number_to_currency(net_worth_val, unit: "\u20AC", precision: 0) %>
+      </span>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,233 @@
+<% content_for :header do %>
+  <%= render "shared/app_header",
+      title: @title,
+      back_path: calculators_path %>
+<% end %>
+
+<div class="app-container">
+  <p class="text-muted mb-4">
+    <%= t('calculators.early_repayment.intro',
+        default: 'Tienes dinero extra? Compara si es mejor amortizar tu hipoteca o invertirlo.') %>
+  </p>
+
+  <%# Inputs %>
+  <div class="app-form__group">
+    <label class="app-form__label"><%= t('calculators.early_repayment.outstanding_capital', default: 'Capital pendiente de hipoteca') %></label>
+    <div class="app-form__input-group">
+      <span class="app-form__input-prefix">&euro;</span>
+      <input type="number" class="app-form__input" id="outstandingCapital" value="150000" min="0" step="5000">
+    </div>
+  </div>
+
+  <div class="app-form__group">
+    <label class="app-form__label">
+      <%= t('calculators.early_repayment.remaining_years', default: 'Anos restantes') %>
+      <span class="text-brand fw-semibold ms-2" id="yearsDisplay">20 anos</span>
+    </label>
+    <div class="app-slider">
+      <input type="range" class="app-slider__input" id="remainingYears" min="1" max="35" value="20">
+      <div class="app-slider__labels"><span>1</span><span>35</span></div>
+    </div>
+  </div>
+
+  <div class="app-form__group">
+    <label class="app-form__label">
+      <%= t('calculators.early_repayment.mortgage_rate', default: 'Tipo de interes hipoteca') %>
+      <span class="text-brand fw-semibold ms-2" id="mortgageRateDisplay">3.5%</span>
+    </label>
+    <div class="app-slider">
+      <input type="range" class="app-slider__input" id="mortgageRate" min="0.5" max="7" value="3.5" step="0.1">
+      <div class="app-slider__labels"><span>0.5%</span><span>7%</span></div>
+    </div>
+  </div>
+
+  <div class="app-form__group">
+    <label class="app-form__label"><%= t('calculators.early_repayment.annual_amount', default: 'Cantidad anual disponible') %></label>
+    <div class="app-form__input-group">
+      <span class="app-form__input-prefix">&euro;</span>
+      <input type="number" class="app-form__input" id="annualAmount" value="5000" min="0" step="500">
+    </div>
+  </div>
+
+  <div class="app-divider"></div>
+
+  <%# Scenario A: Amortize %>
+  <div class="app-card">
+    <h4 class="app-card__title mb-3">
+      <span class="badge bg-primary me-2">A</span>
+      <%= t('calculators.early_repayment.scenario_a', default: 'Amortizar cada ano') %>
+    </h4>
+    <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+      <span class="text-muted"><%= t('calculators.early_repayment.years_saved', default: 'Anos que te ahorras') %></span>
+      <strong class="text-success" id="yearsSaved">6 anos</strong>
+    </div>
+    <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+      <span class="text-muted"><%= t('calculators.early_repayment.interest_saved', default: 'Intereses ahorrados') %></span>
+      <strong class="text-success" id="interestSaved">&euro;18,340</strong>
+    </div>
+    <div class="d-flex justify-content-between align-items-center py-2">
+      <span class="text-muted"><%= t('calculators.early_repayment.finish_year', default: 'Terminas la hipoteca en') %></span>
+      <span id="finishYear">2038</span>
+    </div>
+  </div>
+
+  <%# Scenario B: Invest %>
+  <div class="app-card mt-3">
+    <h4 class="app-card__title mb-3">
+      <span class="badge bg-warning text-dark me-2">B</span>
+      <%= t('calculators.early_repayment.scenario_b', default: 'Invertir y amortizar al final') %>
+    </h4>
+    <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+      <span class="text-muted"><%= t('calculators.early_repayment.investment_value', default: 'Valor de la inversion') %></span>
+      <strong class="text-brand" id="investmentValue">&euro;228,810</strong>
+    </div>
+    <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+      <span class="text-muted"><%= t('calculators.early_repayment.total_contributed', default: 'Total aportado') %></span>
+      <span id="totalContributed">&euro;100,000</span>
+    </div>
+    <div class="d-flex justify-content-between align-items-center py-2">
+      <span class="text-muted"><%= t('calculators.early_repayment.investment_profit', default: 'Beneficio de la inversion') %></span>
+      <strong class="text-success" id="investmentProfit">&euro;128,810</strong>
+    </div>
+  </div>
+
+
+  <%# Investment return slider %>
+  <div class="app-card mt-3">
+    <div class="app-form__group mb-0">
+      <label class="app-form__label">
+        <%= t('calculators.early_repayment.investment_return', default: 'Rentabilidad de inversion') %>
+        <span class="text-brand fw-semibold ms-2" id="investReturnDisplay">8%</span>
+      </label>
+      <div class="app-slider">
+        <input type="range" class="app-slider__input" id="investReturn" min="1" max="15" value="8" step="0.5">
+        <div class="app-slider__labels"><span>1%</span><span>15%</span></div>
+      </div>
+    </div>
+  </div>
+
+  <%# Disclaimer %>
+  <div class="app-disclaimer mt-4">
+    <i class="bi bi-info-circle me-1"></i>
+    <%= t('calculators.early_repayment.disclaimer',
+        default: 'Calculo orientativo. No tiene en cuenta deducciones fiscales ni comisiones de amortizacion anticipada.') %>
+  </div>
+</div>
+
+<script>
+function initEarlyRepayment() {
+  var i18n = {
+    yearsSuffix: '<%= j t("calculators.early_repayment.js.years_suffix", default: " anos") %>',
+    investBetter: '<%= j t("calculators.early_repayment.js.invest_better", default: "Invertir te podria dejar mas que amortizar.") %>',
+    repayBetter: '<%= j t("calculators.early_repayment.js.repay_better", default: "Amortizar te ahorra mas que invertir con estos parametros.") %>'
+  };
+
+  var capitalEl = document.getElementById('outstandingCapital');
+  var yearsEl = document.getElementById('remainingYears');
+  var mortgageRateEl = document.getElementById('mortgageRate');
+  var annualEl = document.getElementById('annualAmount');
+  var investReturnEl = document.getElementById('investReturn');
+
+  function formatCurrency(value) {
+    return new Intl.NumberFormat('es-ES', {
+      style: 'currency', currency: 'EUR',
+      minimumFractionDigits: 0, maximumFractionDigits: 0
+    }).format(value);
+  }
+
+  function monthlyPayment(principal, annualRate, years) {
+    if (annualRate === 0) return principal / (years * 12);
+    var r = annualRate / 12;
+    var n = years * 12;
+    return principal * (r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+  }
+
+  function calculate() {
+    var capital = parseFloat(capitalEl.value) || 0;
+    var years = parseInt(yearsEl.value) || 20;
+    var mortgageRate = (parseFloat(mortgageRateEl.value) || 3.5) / 100;
+    var annualAmount = parseFloat(annualEl.value) || 0;
+    var investReturn = (parseFloat(investReturnEl.value) || 8) / 100;
+
+    document.getElementById('yearsDisplay').textContent = years + i18n.yearsSuffix;
+    document.getElementById('mortgageRateDisplay').textContent = mortgageRateEl.value + '%';
+    document.getElementById('investReturnDisplay').textContent = investReturnEl.value + '%';
+
+    // Original mortgage
+    var originalMonthly = monthlyPayment(capital, mortgageRate, years);
+    var originalTotalInterest = (originalMonthly * years * 12) - capital;
+
+    // ═══════════════════════════
+    // SCENARIO A: Amortize yearly
+    // ═══════════════════════════
+    var remainingCapital = capital;
+    var monthlyRate = mortgageRate / 12;
+    var monthsPaid = 0;
+    var totalPaidA = 0;
+    var yearCount = 0;
+
+    while (remainingCapital > 0 && yearCount < years + 10) {
+      // Pay 12 months of mortgage
+      for (var m = 0; m < 12 && remainingCapital > 0; m++) {
+        var interestPayment = remainingCapital * monthlyRate;
+        var principalPayment = Math.min(originalMonthly - interestPayment, remainingCapital);
+        remainingCapital -= principalPayment;
+        totalPaidA += originalMonthly;
+        monthsPaid++;
+      }
+      yearCount++;
+
+      // Annual amortization
+      if (remainingCapital > 0 && annualAmount > 0) {
+        var amortization = Math.min(annualAmount, remainingCapital);
+        remainingCapital -= amortization;
+        totalPaidA += amortization;
+      }
+    }
+
+    var yearsSaved = years - Math.ceil(monthsPaid / 12);
+    var interestWithAmort = totalPaidA - capital;
+    var interestSaved = originalTotalInterest - interestWithAmort;
+    var finishYear = new Date().getFullYear() + Math.ceil(monthsPaid / 12);
+
+    document.getElementById('yearsSaved').textContent = Math.max(0, yearsSaved) + i18n.yearsSuffix;
+    document.getElementById('interestSaved').textContent = formatCurrency(Math.round(Math.max(0, interestSaved)));
+    document.getElementById('finishYear').textContent = finishYear;
+
+    // ═══════════════════════════
+    // SCENARIO B: Invest instead
+    // ═══════════════════════════
+    var investmentValue = 0;
+    var monthlyInvestReturn = investReturn / 12;
+    var totalInvested = 0;
+
+    for (var y = 0; y < years; y++) {
+      investmentValue = (investmentValue + annualAmount) * (1 + investReturn);
+      totalInvested += annualAmount;
+    }
+
+    var investmentProfit = investmentValue - totalInvested;
+
+    document.getElementById('investmentValue').textContent = formatCurrency(Math.round(investmentValue));
+    document.getElementById('totalContributed').textContent = formatCurrency(Math.round(totalInvested));
+    document.getElementById('investmentProfit').textContent = formatCurrency(Math.round(investmentProfit));
+
+    // ═══════════════════════════
+    // RECOMMENDATION
+    // ═══════════════════════════
+    var benefitAmortize = interestSaved;
+    var benefitInvest = investmentProfit;
+    var diff = benefitInvest - benefitAmortize;
+  }
+
+  [capitalEl, yearsEl, mortgageRateEl, annualEl, investReturnEl].forEach(function(el) {
+    if (el.dataset.bound) return;
+    el.dataset.bound = '1';
+    el.addEventListener('input', calculate);
+  });
+
+  calculate();
+}
+document.addEventListener('DOMContentLoaded', initEarlyRepayment);
+document.addEventListener('turbo:load', initEarlyRepayment);
+</script>

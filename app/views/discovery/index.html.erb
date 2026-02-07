@@ -1,0 +1,127 @@
+<div class="discovery-page">
+  <div class="app-container" style="animation: none;">
+    <%# Filter chips %>
+    <div class="discovery-filters" style="padding-top: 0.5rem;">
+      <button class="filter-chip active" data-filter="all">
+        <%= t('discovery.filters.all') %>
+      </button>
+      <button class="filter-chip" data-filter="video">
+        <%= t('discovery.filters.videos') %>
+      </button>
+      <button class="filter-chip" data-filter="article">
+        <%= t('discovery.filters.articles') %>
+      </button>
+      <button class="filter-chip" data-filter="news">
+        <%= t('discovery.filters.news') %>
+      </button>
+    </div>
+
+    <%# Feed %>
+    <div id="feed">
+      <% @feed_items.each do |item| %>
+        <div data-type="<%= item[:type] %>">
+          <% case item[:type] %>
+          <% when 'video' %>
+            <div class="discovery-card">
+              <div class="discovery-card__topline">
+                <span class="discovery-card__badge">VIDEO</span>
+                <span class="discovery-card__meta"><%= item[:influencer_name] %></span>
+              </div>
+              <h6 class="discovery-card__title"><%= item[:title] %></h6>
+              <% if item[:url].present? %>
+                <% youtube_id = item[:url].match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([^&?\/]+)/)&.[](1) %>
+                <% if youtube_id %>
+                  <div class="discovery-card__embed">
+                    <div class="ratio ratio-16x9">
+                      <iframe src="https://www.youtube.com/embed/<%= youtube_id %>"
+                              title="<%= item[:title] %>"
+                              frameborder="0"
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                              allowfullscreen loading="lazy">
+                      </iframe>
+                    </div>
+                  </div>
+                <% else %>
+                  <a href="<%= item[:url] %>" target="_blank" class="btn-app btn-app--secondary btn-app--sm" style="margin-top: 0.5rem;">
+                    <i class="bi bi-play-circle"></i>
+                    <%= t('discovery.watch_video') %>
+                  </a>
+                <% end %>
+              <% end %>
+            </div>
+
+          <% when 'article' %>
+            <% category_label = case item[:category]
+                when 'inversion' then t('discovery.categories.investment')
+                when 'ahorro' then t('discovery.categories.savings')
+                when 'deudas' then t('discovery.categories.debt')
+                when 'presupuesto' then t('discovery.categories.budget')
+                when 'conceptos' then t('discovery.categories.concepts')
+                else item[:category]&.capitalize
+              end %>
+            <%= link_to discovery_article_path(slug: item[:slug]), class: "discovery-card", style: "text-decoration: none;" do %>
+              <div class="discovery-card__topline">
+                <span class="discovery-card__badge"><%= t('discovery.badges.article') %></span>
+                <span class="discovery-card__meta"><%= category_label %> &middot; <%= item[:read_time] %> min</span>
+              </div>
+              <h6 class="discovery-card__title"><%= item[:title] %></h6>
+              <p class="discovery-card__content"><%= item[:excerpt] %></p>
+            <% end %>
+
+          <% when 'news' %>
+            <div class="discovery-card">
+              <div class="discovery-card__topline">
+                <span class="discovery-card__badge"><%= t('discovery.badges.news') %></span>
+                <span class="discovery-card__meta"><%= time_ago_in_words(item[:published_at]) %></span>
+              </div>
+              <h6 class="discovery-card__title"><%= item[:title] %></h6>
+              <p class="discovery-card__content"><%= item[:content] %></p>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+
+      <% if @feed_items.empty? %>
+        <div class="empty-state">
+          <i class="bi bi-collection-play empty-state__icon"></i>
+          <h4 class="empty-state__title">
+            <%= t('discovery.no_content') %>
+          </h4>
+          <p class="empty-state__description">
+            <%= t('discovery.no_content_description') %>
+          </p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<script>
+function initDiscoveryFilters() {
+  var filterChips = document.querySelectorAll('.filter-chip');
+  var feedItems = document.querySelectorAll('[data-type]');
+
+  filterChips.forEach(function(chip) {
+    if (chip.dataset.bound) return;
+    chip.dataset.bound = '1';
+    chip.addEventListener('click', function() {
+      filterChips.forEach(function(c) {
+        c.classList.remove('active');
+      });
+      this.classList.add('active');
+
+      var filter = this.dataset.filter;
+      feedItems.forEach(function(item) {
+        if (filter === 'all' || item.dataset.type === filter) {
+          item.style.display = 'block';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    });
+  });
+}
+
+document.addEventListener('DOMContentLoaded', initDiscoveryFilters);
+document.addEventListener('turbo:load', initDiscoveryFilters);
+</script>

@@ -1,0 +1,133 @@
+<div class="app-container">
+  <%# User info header %>
+  <% user_name = @user.email.split('@').first.capitalize %>
+  <% initials = user_name[0..1].upcase %>
+  <div class="text-center mb-4">
+    <div class="profile-avatar profile-avatar--initials mb-3">
+      <span><%= initials %></span>
+    </div>
+    <h2 class="h5 mb-1"><%= user_name %></h2>
+    <p class="text-muted small mb-2"><%= @user.email %></p>
+    <span class="level-badge level-badge--pill level-badge--<%= @financial_level %>">
+      <%= t("financial.levels.#{@financial_level_key}.name") %>
+    </span>
+  </div>
+
+  <%# Level + stats summary %>
+  <div class="profile-stats">
+    <div class="profile-stats__item">
+      <span class="profile-stats__value"><%= @actions_completed %>/<%= @actions_total %></span>
+      <span class="profile-stats__label"><%= t('profile.actions_completed') %></span>
+    </div>
+    <div class="profile-stats__divider"></div>
+    <div class="profile-stats__item">
+      <span class="profile-stats__value"><%= @objectives_count %></span>
+      <span class="profile-stats__label"><%= t('profile.objectives_created') %></span>
+    </div>
+    <div class="profile-stats__divider"></div>
+    <div class="profile-stats__item">
+      <span class="profile-stats__value"><%= @member_since.strftime('%b %y') %></span>
+      <span class="profile-stats__label"><%= t('profile.member_since') %></span>
+    </div>
+  </div>
+
+  <%# Go to plan link %>
+  <%= link_to authenticated_root_path, class: 'profile-plan-link' do %>
+    <i class="bi bi-list-check"></i>
+    <span><%= t('profile.go_to_plan') %></span>
+    <i class="bi bi-arrow-right ms-auto"></i>
+  <% end %>
+
+  <%# Profile completion %>
+  <% if @profile_completion < 100 %>
+    <div class="app-card bg-warning bg-opacity-10 border-warning mb-4">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <span class="fw-semibold"><%= t('profile.completion') %></span>
+        <span class="fw-semibold"><%= @profile_completion %>%</span>
+      </div>
+      <div class="progress" style="height: 6px;">
+        <div class="progress-bar bg-warning" style="width: <%= @profile_completion %>%"></div>
+      </div>
+      <p class="text-muted small mt-2 mb-0">
+        <%= t('profile.complete_for_better_recommendations') %>
+      </p>
+    </div>
+  <% end %>
+
+  <%# Menu sections %>
+  <div class="app-section">
+    <h3 class="app-section__title"><%= t('profile.financial_data') %></h3>
+
+    <%= link_to edit_pyg_path, class: 'profile-menu-item' do %>
+      <div class="profile-menu-item__icon-wrap">
+        <i class="bi bi-cash-stack text-brand"></i>
+      </div>
+      <div class="profile-menu-item__content">
+        <h4 class="profile-menu-item__title"><%= t('profile.income_expenses', default: 'Ingresos y gastos') %></h4>
+        <% if @has_pyg %>
+          <p class="profile-menu-item__subtitle text-success mb-0"><i class="bi bi-check-circle me-1"></i><%= t('profile.completed', default: 'Completado') %></p>
+        <% else %>
+          <p class="profile-menu-item__subtitle mb-0"><%= t('profile.pending', default: 'Pendiente') %></p>
+        <% end %>
+      </div>
+      <i class="bi bi-chevron-right profile-menu-item__arrow"></i>
+    <% end %>
+
+    <%= link_to edit_balance_path, class: 'profile-menu-item' do %>
+      <div class="profile-menu-item__icon-wrap">
+        <i class="bi bi-bank text-brand"></i>
+      </div>
+      <div class="profile-menu-item__content">
+        <h4 class="profile-menu-item__title"><%= t('profile.assets_debts', default: 'Activos y deudas') %></h4>
+        <% if @has_balance %>
+          <p class="profile-menu-item__subtitle text-success mb-0"><i class="bi bi-check-circle me-1"></i><%= t('profile.completed', default: 'Completado') %></p>
+        <% else %>
+          <p class="profile-menu-item__subtitle mb-0"><%= t('profile.pending', default: 'Pendiente') %></p>
+        <% end %>
+      </div>
+      <i class="bi bi-chevron-right profile-menu-item__arrow"></i>
+    <% end %>
+  </div>
+
+  <div class="app-section">
+    <h3 class="app-section__title"><%= t('profile.account', default: 'Cuenta') %></h3>
+
+    <%= link_to edit_profile_path, class: 'profile-menu-item' do %>
+      <div class="profile-menu-item__icon-wrap">
+        <i class="bi bi-person-gear text-brand"></i>
+      </div>
+      <div class="profile-menu-item__content">
+        <h4 class="profile-menu-item__title"><%= t('profile.personal_data', default: 'Datos personales') %></h4>
+        <p class="profile-menu-item__subtitle mb-0"><%= t('profile.name_email_password', default: 'Nombre, email, contrasena') %></p>
+      </div>
+      <i class="bi bi-chevron-right profile-menu-item__arrow"></i>
+    <% end %>
+
+    <%= link_to profile_settings_path, class: 'profile-menu-item' do %>
+      <div class="profile-menu-item__icon-wrap">
+        <i class="bi bi-gear text-brand"></i>
+      </div>
+      <div class="profile-menu-item__content">
+        <h4 class="profile-menu-item__title"><%= t('profile.settings', default: 'Configuracion') %></h4>
+        <p class="profile-menu-item__subtitle mb-0"><%= t('profile.language_notifications', default: 'Idioma, notificaciones') %></p>
+      </div>
+      <i class="bi bi-chevron-right profile-menu-item__arrow"></i>
+    <% end %>
+  </div>
+
+  <%# Logout %>
+  <div class="mt-4">
+    <%= button_to destroy_user_session_path,
+        method: :delete,
+        class: 'btn-app btn-app--secondary btn-app--block',
+        data: { turbo: false } do %>
+      <i class="bi bi-box-arrow-right"></i>
+      <%= t('profile.logout', default: 'Cerrar sesion') %>
+    <% end %>
+  </div>
+
+  <%# Version info %>
+  <p class="text-center text-muted small mt-4">
+    BaiFinanzas v1.0.0
+  </p>
+</div>

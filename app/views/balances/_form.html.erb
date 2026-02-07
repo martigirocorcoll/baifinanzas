@@ -1,155 +1,123 @@
-<div class="container py-5">
-  <!-- Indicador de Progreso -->
-  <div class="text-center mb-4">
-    <span class="badge bg-primary px-4 py-2 fs-6">
-      <i class="bi bi-list-check me-2"></i><%= t('views.balance_form.step_indicator') %>
-    </span>
-  </div>
+<div class="app-container">
+  <%= simple_form_for @balance,
+        url: balance_path,
+        html: { method: @balance.new_record? ? :post : :patch } do |f| %>
 
-  <!-- Card Principal -->
-  <div class="card shadow-lg border-0 mx-auto" style="max-width: 1100px;">
-    <div class="card-body p-4 p-md-5">
+    <%# Title %>
+    <div class="text-center mb-4">
+      <h2 style="font-size: 1.25rem; font-weight: 700; color: #1a1a1a; margin-bottom: 0.5rem;"><%= t('views.balance_form.title') %></h2>
+      <p class="text-muted" style="font-size: 0.875rem;">
+        <%= t('views.balance_form.description') %>
+        <strong><%= t('views.balance_form.note') %></strong>
+      </p>
+    </div>
 
-      <%= simple_form_for @balance,
-            url: balance_path,
-            html: { method: @balance.new_record? ? :post : :patch } do |f| %>
+    <% asset_fields = %w[valor_inmuebles dinero_cuenta_corriente dinero_cuenta_ahorro_depos
+                         dinero_inversiones_f dinero_planes_pensiones valor_coches_vehiculos valor_otros_activos]
+       debt_fields = %w[hipoteca_inmuebles deuda_tarjeta_credito prestamos_personales prestamos_coches otras_deudas]
+    %>
 
-        <!-- Título y Descripción -->
-        <div class="text-center mb-4">
-          <h2 class="mb-3 text-primary fw-bold"><%= t('views.balance_form.title') %></h2>
-          <p class="text-muted">
-            <%= t('views.balance_form.description') %>
-            <strong><%= t('views.balance_form.note') %></strong>
-          </p>
-        </div>
+    <%# Assets section %>
+    <div class="app-form__section">
+      <h3 class="app-form__section-title">
+        <i class="bi bi-wallet2"></i>
+        <%= t('views.balance_form.assets_section') %>
+      </h3>
 
-        <% asset_fields = %w[valor_inmuebles dinero_cuenta_corriente dinero_cuenta_ahorro_depos
-                             dinero_inversiones_f dinero_planes_pensiones valor_coches_vehiculos valor_otros_activos]
-           asset_colors = %w[success info info primary warning secondary dark]
-
-           debt_fields = %w[hipoteca_inmuebles deuda_tarjeta_credito prestamos_personales prestamos_coches otras_deudas]
-           debt_colors = %w[danger danger warning dark muted]
-        %>
-
-        <div class="row gx-4">
-          <!-- Sección ACTIVOS con background -->
-          <div class="col-12 col-lg-6 mb-4">
-            <div class="card bg-success bg-opacity-10 border-success border-2 h-100">
-              <div class="card-body p-4">
-                <h3 class="h5 mb-3 text-success fw-bold">
-                  <i class="bi bi-wallet2 me-2"></i><%= t('views.balance_form.assets_section') %>
-                </h3>
-                <% asset_fields.each_with_index do |field, index| %>
-                  <div class="mb-3">
-                    <label class="form-label d-flex align-items-center fw-semibold">
-                      <span class="badge bg-<%= asset_colors[index] %> me-2" style="width:10px;height:10px;border-radius:50%;"></span>
-                      <%= t("views.balance_form.assets.#{field}") %>
-                      <i class="bi bi-info-circle text-muted ms-1" data-bs-toggle="tooltip" title="<%= t("views.balance_form.assets.#{field}_hint") %>"></i>
-                    </label>
-                    <div class="input-group">
-                      <%= f.input_field field,
-                            type: "text",
-                            class: "form-control text-end euro-input",
-                            placeholder: "0",
-                            data: { field: field } %>
-                      <span class="input-group-text bg-success text-white">€</span>
-                    </div>
-                  </div>
-                <% end %>
-                <div class="mt-4 p-3 bg-white rounded">
-                  <p class="text-muted mb-1 small"><%= t('views.balance_form.total_assets') %></p>
-                  <p class="h5 mb-0 text-success fw-bold" id="total-assets">
-                    €0
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Sección PASIVOS con background -->
-          <div class="col-12 col-lg-6 mb-4">
-            <div class="card bg-danger bg-opacity-10 border-danger border-2 h-100">
-              <div class="card-body p-4">
-                <h3 class="h5 mb-3 text-danger fw-bold">
-                  <i class="bi bi-credit-card me-2"></i><%= t('views.balance_form.debts_section') %>
-                </h3>
-                <% debt_fields.each_with_index do |field, index| %>
-                  <div class="mb-3">
-                    <label class="form-label d-flex align-items-center fw-semibold">
-                      <span class="badge bg-<%= debt_colors[index] %> me-2" style="width:10px;height:10px;border-radius:50%;"></span>
-                      <%= t("views.balance_form.debts.#{field}") %>
-                      <i class="bi bi-info-circle text-muted ms-1" data-bs-toggle="tooltip" title="<%= t("views.balance_form.debts.#{field}_hint") %>"></i>
-                    </label>
-                    <div class="input-group">
-                      <%= f.input_field field,
-                            type: "text",
-                            class: "form-control text-end euro-input",
-                            placeholder: "0",
-                            data: { field: field } %>
-                      <span class="input-group-text bg-danger text-white">€</span>
-                    </div>
-                  </div>
-                <% end %>
-                <div class="mt-4 p-3 bg-white rounded">
-                  <p class="text-muted mb-1 small"><%= t('views.balance_form.total_debts') %></p>
-                  <p class="h5 mb-0 text-danger fw-bold" id="total-liabilities">
-                    €0
-                  </p>
-                </div>
-              </div>
-            </div>
+      <% asset_fields.each do |field| %>
+        <div class="app-form__group">
+          <label class="app-form__label">
+            <%= t("views.balance_form.assets.#{field}") %>
+            <i class="bi bi-info-circle text-muted ms-1" style="font-size: 0.75rem;" data-bs-toggle="tooltip" title="<%= t("views.balance_form.assets.#{field}_hint") %>"></i>
+          </label>
+          <div class="app-form__input-group">
+            <%= f.input_field field,
+                  type: "text",
+                  class: "app-form__input euro-input",
+                  placeholder: "0",
+                  data: { field: field },
+                  style: "text-align: right;" %>
+            <span class="app-form__input-suffix">&euro;</span>
           </div>
         </div>
-
-        <!-- RESUMEN - Patrimonio Neto (Calculado en tiempo real) -->
-        <div class="card bg-light border-0 mb-4">
-          <div class="card-body p-4">
-            <div class="d-flex justify-content-between align-items-center">
-              <div>
-                <p class="text-muted mb-1"><%= t('views.balance_form.net_worth_title') %></p>
-                <p class="fw-bold mb-0 fs-5"><%= t('views.balance_form.net_worth_formula') %></p>
-              </div>
-              <div class="text-end">
-                <p class="h3 mb-0 fw-bold text-success" id="net-worth-amount">
-                  €0
-                </p>
-                <small class="text-muted" id="net-worth-label"
-                       data-prompt="<%= t('views.balance_form.net_worth_prompt') %>"
-                       data-positive="<%= t('views.balance_form.net_worth_positive') %>"
-                       data-negative="<%= t('views.balance_form.net_worth_negative') %>"
-                       data-balanced="<%= t('views.balance_form.net_worth_balanced') %>">
-                  <%= t('views.balance_form.net_worth_prompt') %>
-                </small>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- BOTÓN -->
-        <div class="text-center">
-          <%= f.button :submit, class: "btn btn-lg btn-success px-5 shadow" do %>
-            <i class="bi bi-arrow-right-circle me-2"></i>
-            <%= @balance.new_record? ? t('views.balance_form.submit_new') : t('views.balance_form.submit_update') %>
-          <% end %>
-        </div>
-
       <% end %>
 
-      <!-- Enlace para corregir PyG -->
-      <div class="text-center mt-3">
-        <%= link_to edit_pyg_path, class: "text-muted text-decoration-none" do %>
-          <i class="bi bi-pencil me-1"></i>
-          <small><%= t('views.balance_form.edit_pyg_link') %></small>
-        <% end %>
+      <div style="background: #fff; border-radius: 8px; padding: 0.75rem; margin-top: 0.5rem;">
+        <p class="text-muted mb-1" style="font-size: 0.75rem;"><%= t('views.balance_form.total_assets') %></p>
+        <p class="mb-0 fw-bold text-success" id="total-assets" style="font-size: 1.125rem;">&euro;0</p>
       </div>
-
     </div>
-  </div>
+
+    <%# Debts section %>
+    <div class="app-form__section app-form__section--expenses">
+      <h3 class="app-form__section-title">
+        <i class="bi bi-credit-card"></i>
+        <%= t('views.balance_form.debts_section') %>
+      </h3>
+
+      <% debt_fields.each do |field| %>
+        <div class="app-form__group">
+          <label class="app-form__label">
+            <%= t("views.balance_form.debts.#{field}") %>
+            <i class="bi bi-info-circle text-muted ms-1" style="font-size: 0.75rem;" data-bs-toggle="tooltip" title="<%= t("views.balance_form.debts.#{field}_hint") %>"></i>
+          </label>
+          <div class="app-form__input-group">
+            <%= f.input_field field,
+                  type: "text",
+                  class: "app-form__input euro-input",
+                  placeholder: "0",
+                  data: { field: field },
+                  style: "text-align: right;" %>
+            <span class="app-form__input-suffix">&euro;</span>
+          </div>
+        </div>
+      <% end %>
+
+      <div style="background: #fff; border-radius: 8px; padding: 0.75rem; margin-top: 0.5rem;">
+        <p class="text-muted mb-1" style="font-size: 0.75rem;"><%= t('views.balance_form.total_debts') %></p>
+        <p class="mb-0 fw-bold text-danger" id="total-liabilities" style="font-size: 1.125rem;">&euro;0</p>
+      </div>
+    </div>
+
+    <%# Net worth summary %>
+    <div class="app-card" style="border-left: 3px solid #165668;">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <p class="text-muted mb-1" style="font-size: 0.8125rem;"><%= t('views.balance_form.net_worth_title') %></p>
+          <p class="fw-bold mb-0" style="font-size: 0.9375rem;"><%= t('views.balance_form.net_worth_formula') %></p>
+        </div>
+        <div class="text-end">
+          <p class="mb-0 fw-bold text-success" id="net-worth-amount" style="font-size: 1.25rem;">&euro;0</p>
+          <small class="text-muted" id="net-worth-label"
+                 data-prompt="<%= t('views.balance_form.net_worth_prompt') %>"
+                 data-positive="<%= t('views.balance_form.net_worth_positive') %>"
+                 data-negative="<%= t('views.balance_form.net_worth_negative') %>"
+                 data-balanced="<%= t('views.balance_form.net_worth_balanced') %>">
+            <%= t('views.balance_form.net_worth_prompt') %>
+          </small>
+        </div>
+      </div>
+    </div>
+
+    <%# Submit %>
+    <div style="margin-top: 1.5rem;">
+      <%= f.button :submit, class: "btn-app btn-app--primary btn-app--block" do %>
+        <i class="bi bi-arrow-right-circle"></i>
+        <%= @balance.new_record? ? t('views.balance_form.submit_new') : t('views.balance_form.submit_update') %>
+      <% end %>
+    </div>
+
+  <% end %>
 </div>
 
 <script>
-document.addEventListener('turbo:load', function() {
-  // Tooltips
+function initBalanceForm() {
+  // Dispose existing tooltips before re-init
+  document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(function(el) {
+    var existing = bootstrap.Tooltip.getInstance(el);
+    if (existing) existing.dispose();
+  });
+
   const tooltipTriggerList = [...document.querySelectorAll('[data-bs-toggle="tooltip"]')];
   tooltipTriggerList.forEach(el => new bootstrap.Tooltip(el));
 
@@ -159,7 +127,8 @@ document.addEventListener('turbo:load', function() {
   const netWorthAmountEl = document.getElementById('net-worth-amount');
   const netWorthLabelEl = document.getElementById('net-worth-label');
 
-  // Get translated labels from data attributes
+  if (!netWorthAmountEl || !netWorthLabelEl) return;
+
   const labels = {
     prompt: netWorthLabelEl.dataset.prompt,
     positive: netWorthLabelEl.dataset.positive,
@@ -167,174 +136,121 @@ document.addEventListener('turbo:load', function() {
     balanced: netWorthLabelEl.dataset.balanced
   };
 
-  // Formatear número con separadores europeos (1.234,56)
   function formatNumber(value) {
     if (!value || value === '0') return '0';
-
-    // Eliminar todo excepto números y coma
     let num = value.replace(/[^\d,]/g, '');
-
-    // Separar parte entera y decimal
     let parts = num.split(',');
     let integerPart = parts[0];
     let decimalPart = parts[1] || '';
-
-    // Añadir puntos como separador de miles
     integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-
-    // Retornar formateado
     return decimalPart ? `${integerPart},${decimalPart}` : integerPart;
   }
 
-  // Convertir formato europeo a número para cálculos
   function parseEuroNumber(value) {
     if (!value || value === '0' || value === '') return 0;
-    // Quitar puntos (separador de miles) y reemplazar coma por punto (decimal)
     const num = parseFloat(value.replace(/\./g, '').replace(',', '.'));
     return isNaN(num) ? 0 : num;
   }
 
-  // Convertir formato europeo a número para enviar al servidor
   function unformatNumber(value) {
     if (!value || value === '0') return '0';
-    // Quitar puntos (separador de miles) y reemplazar coma por punto (decimal)
     return value.replace(/\./g, '').replace(',', '.');
   }
 
-  // Calcular totales y patrimonio neto en tiempo real
   function updateBalances() {
-    // Campos de activos
     const assetFields = [
       'valor_inmuebles', 'dinero_cuenta_corriente', 'dinero_cuenta_ahorro_depos',
       'dinero_inversiones_f', 'dinero_planes_pensiones', 'valor_coches_vehiculos',
       'valor_otros_activos'
     ];
-
-    // Campos de pasivos (deudas)
     const liabilityFields = [
       'hipoteca_inmuebles', 'deuda_tarjeta_credito', 'prestamos_personales',
       'prestamos_coches', 'otras_deudas'
     ];
 
-    // Calcular total activos
     let totalAssets = 0;
     assetFields.forEach(fieldName => {
       const input = document.querySelector(`[data-field="${fieldName}"]`);
-      if (input) {
-        totalAssets += parseEuroNumber(input.value);
-      }
+      if (input) totalAssets += parseEuroNumber(input.value);
     });
 
-    // Calcular total pasivos
     let totalLiabilities = 0;
     liabilityFields.forEach(fieldName => {
       const input = document.querySelector(`[data-field="${fieldName}"]`);
-      if (input) {
-        totalLiabilities += parseEuroNumber(input.value);
-      }
+      if (input) totalLiabilities += parseEuroNumber(input.value);
     });
 
-    // Calcular patrimonio neto
     const netWorth = totalAssets - totalLiabilities;
-
-    // Formatear con Intl
     const formatCurrency = (amount) => new Intl.NumberFormat('es-ES', {
-      style: 'currency',
-      currency: 'EUR',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 2
+      style: 'currency', currency: 'EUR', minimumFractionDigits: 0, maximumFractionDigits: 2
     }).format(Math.abs(amount));
 
-    // Actualizar displays
     totalAssetsEl.textContent = formatCurrency(totalAssets);
     totalLiabilitiesEl.textContent = formatCurrency(totalLiabilities);
     netWorthAmountEl.textContent = formatCurrency(netWorth);
 
-    // Actualizar color y label del patrimonio neto
     if (netWorth > 0) {
-      netWorthAmountEl.className = 'h3 mb-0 fw-bold text-success';
+      netWorthAmountEl.className = 'mb-0 fw-bold text-success';
+      netWorthAmountEl.style.fontSize = '1.25rem';
       netWorthLabelEl.textContent = labels.positive;
     } else if (netWorth < 0) {
-      netWorthAmountEl.className = 'h3 mb-0 fw-bold text-danger';
+      netWorthAmountEl.className = 'mb-0 fw-bold text-danger';
+      netWorthAmountEl.style.fontSize = '1.25rem';
       netWorthLabelEl.textContent = labels.negative;
     } else {
-      netWorthAmountEl.className = 'h3 mb-0 fw-bold text-muted';
+      netWorthAmountEl.className = 'mb-0 fw-bold text-muted';
+      netWorthAmountEl.style.fontSize = '1.25rem';
       netWorthLabelEl.textContent = labels.balanced;
     }
   }
 
-  // Aplicar formato a cada input
   euroInputs.forEach(input => {
-    // Formatear valor inicial si existe
-    if (input.value && input.value !== '0') {
-      input.value = formatNumber(input.value);
-    }
+    if (input.dataset.bound) return;
+    input.dataset.bound = '1';
+    if (input.value && input.value !== '0') input.value = formatNumber(input.value);
 
-    // Formatear mientras escribe
     input.addEventListener('input', function(e) {
       let cursorPosition = this.selectionStart;
-      let oldValue = this.value;
-      let oldLength = oldValue.length;
-
-      // Solo permitir números y coma
+      let oldLength = this.value.length;
       this.value = this.value.replace(/[^\d,]/g, '');
-
-      // Limitar a una sola coma
       let parts = this.value.split(',');
-      if (parts.length > 2) {
-        this.value = parts[0] + ',' + parts.slice(1).join('');
-      }
-
-      // Formatear
+      if (parts.length > 2) this.value = parts[0] + ',' + parts.slice(1).join('');
       this.value = formatNumber(this.value);
-
-      // Ajustar posición del cursor
       let newLength = this.value.length;
       cursorPosition = cursorPosition + (newLength - oldLength);
       this.setSelectionRange(cursorPosition, cursorPosition);
-
-      // Actualizar balances en tiempo real
       updateBalances();
     });
 
-    // Al hacer blur, asegurar formato correcto
     input.addEventListener('blur', function() {
-      if (!this.value || this.value === '') {
-        this.value = '0';
-      }
+      if (!this.value || this.value === '') this.value = '0';
       updateBalances();
     });
   });
 
-  // Calcular balance inicial si hay valores
   updateBalances();
 
-  // Antes de enviar el formulario, convertir a formato numérico
   const form = document.querySelector('form');
-  form.addEventListener('submit', function(e) {
-    euroInputs.forEach(input => {
-      // Crear un input hidden con el valor sin formato
-      const hiddenInput = document.createElement('input');
-      hiddenInput.type = 'hidden';
-      hiddenInput.name = input.name;
-      hiddenInput.value = unformatNumber(input.value);
-
-      // Deshabilitar el input visible y añadir el hidden
-      input.disabled = true;
-      this.appendChild(hiddenInput);
+  if (form && !form.dataset.bound) {
+    form.dataset.bound = '1';
+    form.addEventListener('submit', function(e) {
+      document.querySelectorAll('.euro-input').forEach(input => {
+        const hiddenInput = document.createElement('input');
+        hiddenInput.type = 'hidden';
+        hiddenInput.name = input.name;
+        hiddenInput.value = unformatNumber(input.value);
+        input.disabled = true;
+        this.appendChild(hiddenInput);
+      });
     });
-  });
-});
+  }
+}
+document.addEventListener('turbo:load', initBalanceForm);
+if (document.readyState !== 'loading') { initBalanceForm(); } else { document.addEventListener('DOMContentLoaded', initBalanceForm); }
 </script>
 
 <style>
-  /* Quitar las flechas de los inputs numéricos */
-  .euro-input {
-    -moz-appearance: textfield;
-  }
+  .euro-input { -moz-appearance: textfield; }
   .euro-input::-webkit-outer-spin-button,
-  .euro-input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
+  .euro-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 </style>

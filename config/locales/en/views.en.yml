@@ -12,10 +12,14 @@ en:
     # Landing page
     landing:
       hero:
-        title_html: "Create your personalized financial plan <span class='text-success'>for free</span>"
-        subtitle: "Analyze your finances, discover your financial health level, and get a concrete plan to achieve your economic goals."
-        cta: "Start my plan"
-        quote: "The best time to start was yesterday and the second best is today"
+        title_html: "Your personalized financial plan, <span style='color: #165668;'>100% free</span>"
+        subtitle: "Download the app, answer 4 questions and discover your financial level with a personalized action plan to achieve your goals."
+        cta: "Download app"
+        download_on: "Download on"
+        get_it_on: "Get it on"
+        badge_free: "100% free"
+        badge_secure: "Secure data"
+        badge_quick: "2 min setup"
       cards:
         balance:
           title: "Monthly Balance"
@@ -32,7 +36,7 @@ en:
       features:
         title: "How do I adapt my finances to my situation?"
         subtitle: "That's the question we get asked the most. With this app we want to give you the solution."
-        cta: "Start your free financial plan"
+        cta: "Download app for free"
         dashboard:
           health_title: "Financial Health"
           health_level: "Level: Investing in Goals"
@@ -93,7 +97,7 @@ en:
           answer_2: "When you change a goal, the app will automatically recalculate your plan and provide you with new recommendations tailored to your new financial goals."
       cta_final:
         prompt: "Ready to start your journey toward financial freedom?"
-        button: "Create my free financial plan"
+        button: "Download app for free"
       # Footer (under landing for shared footer)
       footer:
         back_to_top: "Back to top"
@@ -120,7 +124,7 @@ en:
       testimonials:
         title: "Our users love our app"
         cta_prompt: "Do you want to be next to reach your financial goals?"
-        cta_button: "Start your free financial plan"
+        cta_button: "Download app for free"
         items:
           marc:
             quote: "Thanks to the app, I managed to get out of debt in 9 months. The personalized plan helped me organize my finances and now I can finally save for my goals. Amazing that it's free!"
@@ -141,7 +145,7 @@ en:
       # How it works section
       how_it_works:
         title: "How does it work?"
-        cta_button: "Start my plan now"
+        cta_button: "Download app for free"
         steps:
           step1:
             title: "Complete your Monthly Balance"
@@ -294,8 +298,8 @@ en:
     investment_types:
       ac_diposit: "Short-term deposit"
       ac_curt: "Medium-term fixed income"
-      ac_llarg: "Long-term index funds"
-      ac_jubil: "Pension plan"
+      ac_llarg: "Long-term global equities"
+      ac_jubil: "Global equities for retirement"
 
     # Devise
     devise:
@@ -593,24 +597,42 @@ en:
           title: "Invest for the medium term with balanced security and returns"
           description_html: "For goals between <strong>2 and 5 years</strong>, you need balance: more returns than a deposit, but less risk than equities. Fixed income funds allow you to obtain moderate returns (≈3% annually) with much lower volatility than the stock market. It's the perfect middle ground for goals like a home down payment, home renovation, or any medium-term project. You have enough time for your money to grow above inflation, but not so much to take on equity volatility."
         ac_jubil:
-          title: "Plan your retirement and secure your financial freedom"
-          description: "Retirement may seem far away, but every year you wait costs you tens of thousands of euros in lost compound interest. With public pensions uncertain, you need your own plan. Discover how to create a retirement cushion that works for you for decades, leveraging the power of compound interest and tax advantages."
+          title: "Plan your retirement with global equity funds"
+          description: "Planning for retirement is not optional, it is essential. The public pension system is very difficult to sustain as it stands: there are more retirees every year and fewer workers contributing. Every year you wait costs you tens of thousands of euros in lost compound interest. Start as soon as possible with global equity funds and let time do the work for you."
         tax_advisory:
           title: "Optimize your taxes and pay only what's fair"
           description: "As your wealth and income grow, taxes become your largest annual expense. The difference between paying what's fair and overpaying can amount to thousands (or tens of thousands) of euros each year. Good tax planning isn't tax evasion, it's intelligently structuring your finances to comply with the law while paying only what's required. Discover how a specialized tax advisor can help you optimize your income tax, plan inheritances, and choose the best structure for your investments and businesses."
         portfolio_optimization:
           title: "Optimize your investment portfolio with an independent second opinion"
           description: "If you already have an investment portfolio, it's essential to ensure it's well-structured and aligned with your goals. Banks and private banking services often recommend their own products, which aren't always the most suitable for you. An independent second opinion helps you identify conflicts of interest, hidden risks in complex products, and opportunities for improvement. Receive a free analysis of your current situation and discover if your portfolio is truly optimized or if there's room for improvement."
+        ac_diposit:
+          title: "Separate your short-term savings and protect your goal"
+          description: "When you have a goal less than 2 years away, the most important thing is not to chase returns, but to protect your money and not spend it by accident. Keeping your savings in the same account you use daily is the easiest way to spend them without noticing. A separate deposit or account gives you discipline, clarity, and some returns along the way."
         mortgage_optimization:
           title: "Reduce your mortgage costs and save thousands of euros"
           description_html: "Your mortgage is probably your largest monthly expense for 20-30 years. A reduction of just 0.5 points in the interest rate can save you tens of thousands of euros over the life of the loan. The mortgage market constantly changes, but your bank won't call you to offer better conditions. The question is simple: <strong>are you paying more than necessary for your mortgage?</strong> A mortgage broker can analyze your current situation at no cost and show you if you can pay less each month for the same thing. If you can save, why wouldn't you?"
+
+      # Short subtitles (1 line, value proposition)
+      subtitles:
+        better_bank_account: "Eliminate fees and put your money to work from day 1."
+        emergency_deposit: "Protect your stability with a safety cushion that works for you."
+        debt_optimization: "Every month that passes, your debts cost you more. Act now."
+        saving_advice: "Free up 10-30% of your income without sacrificing quality of life."
+        ac_diposit: "Separate your money, protect your short-term goal."
+        ac_llarg: "Time and compound interest are your best allies."
+        ac_curt: "More returns than a deposit, less risk than equities."
+        ac_jubil: "Every year you wait costs you thousands in lost compound interest."
+        tax_advisory: "The difference between paying fair and overpaying is thousands of euros."
+        portfolio_optimization: "An independent second opinion can save you thousands long term."
+        mortgage_optimization: "0.5 points less on your rate = tens of thousands saved."
 
       # CTA buttons
       ctas:
         better_bank_account: "Open fee-free account"
         emergency_deposit: "View recommended deposits"
-        debt_optimization: "Get the recommended book"
-        saving_advice: "View recommended workbook"
+        debt_optimization: "Get out of debt now"
+        saving_advice: "Discover how to save"
+        ac_diposit: "Open short-term deposit"
         ac_llarg: "Start investing now"
         ac_curt: "Open investment account"
         ac_jubil: "Start securing your retirement"
@@ -618,6 +640,38 @@ en:
         portfolio_optimization: "Request free analysis"
         mortgage_optimization: "Compare mortgage offers"
         default: "View recommended product"
+
+      # Inline simulator labels
+      simulators:
+        emergency:
+          title: "Your emergency fund"
+          target: "Target (4 months of expenses)"
+          current: "Current savings"
+          remaining: "You still need"
+          time_estimate: "Estimated time"
+          months: "months"
+          progress: "Progress"
+          cash_flow_label: "Your monthly cash flow"
+          no_savings: "No savings capacity currently"
+          complete: "Your fund is covered"
+        mortgage:
+          title: "How much you can save on your mortgage"
+          current_payment: "Current payment"
+          current_rate: "Current rate"
+          years_remaining: "Years remaining"
+          new_rate: "New rate"
+          new_payment: "New payment"
+          monthly_savings: "Monthly savings"
+          total_savings: "Total savings"
+        bank_account:
+          title: "How much you lose with a non-interest account"
+          average_balance: "Average account balance"
+          remuneration_rate: "Interest rate"
+          rate_note: "The rate is illustrative. Adjust it based on the offer you find."
+          current_return: "Checking account (0%)"
+          optimized_return: "Interest-bearing account"
+          annual_loss: "You leave on the table per year"
+          in_5_years: "In 5 years you lose"
 
       # Secondary CTA titles
       cta2_titles:
@@ -628,6 +682,7 @@ en:
         tax_advisory: "Request your free tax consultation"
         portfolio_optimization: "Request your free portfolio analysis"
         mortgage_optimization: "Compare offers and start saving"
+        ac_diposit: "Ready to protect your short-term savings?"
         ac_llarg: "Ready to grow your wealth?"
         ac_curt: "Ready to invest with balance?"
         ac_jubil: "Ready to secure your retirement?"
@@ -649,6 +704,7 @@ en:
       # Page-specific content
       pages:
         better_bank_account:
+          motivational_text: "There is no reason to keep your money in an account that pays you nothing, when there are accounts on the market that do. Even if it is not your main or definitive account, opening one is the first step to taking advantage of returns on your money."
           why_important:
             intro_html: "Unlike other steps that require habit changes or more complex decisions, this is a one-time action with perpetual benefit: <strong>invest 20 minutes once and save forever</strong>."
             first_step_ideal: "It's the ideal first step because:"
@@ -689,6 +745,7 @@ en:
                 answer: "No problem. Fee-free accounts have no commitment period or cancellation penalty. You can close it whenever you want at no cost. Also, many of these accounts offer welcome bonuses for setting up direct deposit or maintaining a balance during the first few months. Take advantage of these bonuses first and then decide whether to keep it or close it."
 
         emergency_deposit:
+          motivational_text: "An emergency fund is the foundation of any solid financial plan. Without one, any unexpected event can force you into debt or sell investments at the worst time. Having it gives you peace of mind and freedom to make better decisions."
           why_important:
             intro: "The emergency fund is your financial safety net. Without it, any unexpected event (a car breakdown, a health issue, or temporary job loss) can completely destabilize your situation."
             benefits_title: "Having an emergency fund allows you to:"
@@ -728,7 +785,42 @@ en:
               - question: "What if I have debts? Should I pay them first or create the fund first?"
                 answer: "If you have expensive debts (credit cards with high interest), balance both things: first create a small 1-month expense fund, then attack the debts, and when you reduce them, complete your fund. A small safety fund allows you to start paying debts without incurring more debt if an unexpected event comes."
 
+        ac_diposit:
+          motivational_text: "When saving for something specific in the short term, the most important thing is not to mix it with your everyday money. If you leave it in your checking account, it is very easy to spend it by accident on purchases, bills, or unexpected expenses. Separating it into a deposit or separate account gives you clarity on how much you have saved, discipline not to touch it, and some returns while you wait."
+          key_points:
+            title: "Why separate your short-term savings"
+            discipline:
+              title: "Automatic discipline"
+              text: "By keeping it elsewhere, you remove the temptation to spend it. You don't depend on willpower, you depend on structure."
+            clarity:
+              title: "Total clarity"
+              text: "You know exactly how much you have saved towards your goal. No mixing with daily expenses or other transactions."
+            small_return:
+              title: "Some extra returns"
+              text: "Although not much, your money earns interest while it waits. Better than having it sitting in a 0% account."
+            protection:
+              title: "Protection from yourself"
+              text: "The biggest risk for short-term savings is not inflation or the market, it is spending it too early. Separating it is the best protection."
+          faq:
+            items:
+              - question: "If it's short term, is it worth moving it elsewhere?"
+                answer: "Yes. Even if it's a short time, having it separate greatly reduces the risk of spending it by accident. Also, opening an account or deposit takes minutes and the benefit is immediate: clarity and discipline."
+              - question: "Can I access the money if I need it earlier?"
+                answer: "It depends on the product. Demand deposits and interest-bearing accounts let you access your money at any time. If you choose a fixed-term deposit, there may be an early cancellation penalty. For short-term goals, we recommend products with immediate availability."
+              - question: "How much return can I expect?"
+                answer: "In deposits and interest-bearing accounts, current returns are between 1% and 3% annually. It's not much, but it's better than 0%. Returns here are not the main goal, they're a bonus. What matters is separating and protecting your savings."
+
         debt_optimization:
+          motivational_text: "Eliminating expensive debt is the best investment you can make. Every euro you put towards paying off high-interest debt saves you a guaranteed 15-25% per year, something no other financial product can offer."
+          debt_types_explanation: "Bad debt (credit cards, personal loans, consumer financing) has high interest rates and generates no value. Acceptable debt, like a mortgage, usually has a low interest rate and finances an asset that can appreciate. The priority is to eliminate bad debt as soon as possible."
+          simulator:
+            title: "How much your debt costs you"
+            debt_amount: "Outstanding debt"
+            interest_rate: "Interest rate (APR)"
+            time_period: "If you don't pay it off in..."
+            total_interest: "You pay just in interest"
+            total_payback: "Total you end up paying"
+            note: "Illustrative calculation with annual compound interest. Actual terms may vary."
           why_important:
             intro: "Expensive debts (credit cards, personal loans, consumer financing) are the biggest enemy of your financial freedom."
             compound_interest_title: "Compound interest working AGAINST you:"
@@ -799,6 +891,7 @@ en:
                 answer: "It depends on your amount of debt and your payment capacity. But here's an encouraging fact: most people who follow this method with discipline eliminate their expensive debts in 12-24 months. Quick wins (first debt eliminated in 3-6 months) keep you motivated to continue. The important thing is to start TODAY. Every month you wait is another month paying interest you could avoid."
 
         saving_advice:
+          motivational_text: "Most people can free up between 10% and 30% of their income without sacrificing quality of life. The first step is not investing or finding financial products, but knowing where your money goes and generating a positive cash flow every month."
           why_important:
             intro_html: "If you're in a critical situation, the first problem isn't \"where to invest\" or \"what financial products to use\". <strong>The problem is generating positive cash flow</strong>. If you spend all (or more than) what you earn, it's impossible to move forward."
             good_news_html: "The good news: <strong>most people can free up between 10% and 30% of their income without radically changing their lifestyle</strong>. The problem isn't that you don't have money, it's that you don't know where it goes."
@@ -880,6 +973,16 @@ en:
                 answer: "You probably tried the restrictive approach: \"I'm going to spend less on everything\". That doesn't work because it requires constant willpower. Our method is different: first you OBSERVE (track without judging), then you IDENTIFY specific expenses you don't value, and finally you ELIMINATE them permanently (cancel subscriptions, automate savings, implement simple rules). It's not willpower, it's a SYSTEM. Systems work better than motivation."
 
         tax_advisory:
+          motivational_text: "If this recommendation appears in your plan, it is because your income and wealth profile means that tax optimization can have a real impact. The difference between paying what is fair and overpaying can be thousands of euros every year, and a specialized advisor knows exactly where those opportunities are."
+          simulator:
+            title: "How much you can save on taxes"
+            annual_income: "Gross annual income"
+            current_rate: "Current effective rate"
+            optimized_rate: "Optimized effective rate"
+            annual_savings: "You save per year"
+            net_increase: "More net in your pocket"
+            in_5_years: "In 5 years you save"
+            note: "Illustrative simulation. Actual savings depend on your personal situation, income type and wealth. Consult a tax advisor for a detailed analysis."
           why_important:
             intro_html: "As your wealth and income grow, <strong>taxes become your largest annual expense</strong>. You probably pay more in taxes than in housing, transportation, and food combined. And unlike those expenses, taxes can be legally optimized with the right strategy."
             cost_title: "The real cost of not optimizing"
@@ -1010,6 +1113,15 @@ en:
                 answer_html: "<p class=\"mb-3\"><strong>It's very specific to each case</strong>, as it depends on your particular situation: income, wealth, current structure, family, region, etc. There's no universal figure.</p><p class=\"mb-3\">However, in many cases the savings are <strong>substantial enough to consider tax advice a mandatory step for anyone with a certain tax burden</strong>. We're talking about savings that can represent thousands of euros annually, or tens of thousands in complex planning like inheritances.</p><p class=\"mb-0\">If you have annual income above €60k, significant wealth (>€200k), you're self-employed or a business owner, or expect to receive/give significant inheritances, it's very likely a tax advisor will find relevant optimizations in your case. The initial consultation will show you the estimated savings specific to your situation.</p>"
 
         portfolio_optimization:
+          motivational_text: "An independent review of your portfolio is always a good idea. Your bank, including private banking, has its own interests and tends to recommend its own products. An independent advisor works for you, not for an institution, and can detect inefficiencies that are costing you money without you even knowing."
+          simulator:
+            title: "How much you pay in fees"
+            intro: "Investment fees in banking products exist even when hidden. What the bank charges is what the client stops earning."
+            invested_amount: "Invested assets"
+            commission_rate: "Total annual fees"
+            annual_cost: "You pay per year in fees"
+            cost_10_years: "In 10 years you will have paid"
+            note: "Fees include management, custody, and hidden product costs. The typical range in banking is between 1.5% and 2.5% per year."
           why_important:
             intro_html: "If you already have invested assets, it's essential to make sure your portfolio is well-structured. The problem is that <strong>most bank and private banking investment services have an inherent conflict of interest</strong>: they earn more when they sell you their own products, not when they offer you the best solutions on the market."
             conflict_title: "The banking conflict of interest"
@@ -1129,6 +1241,7 @@ en:
                 answer_html: "<p class=\"mb-3\"><strong>From €50,000 invested</strong> the analysis starts to make sense, because differences in fees and structure become significant.</p><p class=\"mb-3\">Practical example:</p><p class=\"mb-2\"><strong>With €50,000 invested:</strong></p><ul class=\"mb-3\"><li>Expensive fund (1.8% TER): €900/year in fees</li><li>Efficient fund (0.3% TER): €150/year in fees</li><li><strong>Annual savings: €750</strong></li><li>In 20 years: <strong>€15,000 saved in fees alone</strong> (not counting compound interest)</li></ul><p class=\"mb-3\"><strong>With €200,000 or more:</strong> Analysis is practically mandatory. Differences in fees, structure, and risk can represent tens of thousands of euros in the long term.</p><p class=\"mb-0\">That said, the initial analysis is free, so even if you have less wealth, you can request it without problem. The advisor will tell you if it makes sense to optimize or if your current situation is already good.</p>"
 
         mortgage_optimization:
+          motivational_text: "Your mortgage is not something you sign and forget. The market changes and, when rates drop, you can renegotiate or switch to get better terms. Every half point you save means thousands of euros in the long run. The best approach is to review it periodically with an expert who knows the current market offers."
           why_important:
             intro_html: "Your mortgage is probably your largest monthly expense for decades. <strong>A small reduction in interest rate can mean thousands of euros in savings</strong>. The question is simple: are you paying more than you need to?"
             example_title: "Illustrative example of potential savings"
@@ -1238,6 +1351,7 @@ en:
                 answer_html: "<p class=\"mb-3\"><strong>Yes, your bank CAN refuse to improve your interest rate.</strong> They are not legally obligated to offer you better conditions just because you ask or because the market has changed.</p><div class=\"bg-light rounded p-3 mb-3\"><h6 class=\"text-warning mb-2\"><i class=\"bi bi-exclamation-triangle me-2\"></i>The reality</h6><p class=\"mb-2\">If you simply call your bank and ask them to lower your rate \"just because\":</p><ul class=\"small mb-0\"><li>They'll probably say no</li><li>Or they'll give you a very small, insufficient improvement</li><li>They have no incentive to reduce their profit margin</li></ul></div><div class=\"bg-success bg-opacity-10 rounded p-3 mb-3\"><h6 class=\"text-success mb-2\"><i class=\"bi bi-shield-check me-2\"></i>But here's the key</h6><p class=\"mb-2\"><strong>Your bank CANNOT prevent you from switching to another institution.</strong></p><p class=\"mb-2\">Subrogation is a right you have as a client:</p><ul class=\"small mb-0\"><li>If another bank offers you better conditions, you can switch</li><li>Your current bank cannot block it</li><li>The process is regulated by law</li><li><strong>It's your decision, not the bank's</strong></li></ul></div><p class=\"mb-0\"><strong>That's why the mortgage broker is valuable:</strong> It doesn't depend on your bank's willingness. The broker compares ALL market options and helps you get the best one, whether staying (if your bank improves) or switching (if there are better offers outside). <strong>The decision power is always yours.</strong></p>"
 
         ac_llarg:
+          motivational_text: "With a horizon of more than 5 years, you can consider equities: global equity funds that replicate worldwide markets. Historically, this is the most profitable type of investment (~8% annual average). It has volatility, meaning the value goes up and down, but over a long period the drops recover and growth prevails. The key is to start, contribute regularly, and not panic sell. The chart shows the range of what could happen based on your timeframe."
           why_important:
             intro_html: "When your goal is <strong>more than 5 years away</strong>, you have a huge advantage: time. Time allows your money to grow exponentially thanks to compound interest, and also gives you room to absorb normal market fluctuations."
             inflation_title: "The cost of not investing: inflation"
@@ -1318,6 +1432,7 @@ en:
                 answer_html: "<p class=\"mb-2\"><strong>Yes, you have full liquidity.</strong> Unlike a pension plan, investment funds allow you to withdraw your money whenever you want (usually in 2-3 business days).</p><p class=\"mb-2\">But remember: <strong>this strategy works because you have time</strong>. If you withdraw money at a bad market moment (crisis), you could have losses. That's why:</p><ul class=\"mb-0\"><li>Only invest money you won't need for 5+ years</li><li>Have a separate emergency fund (3-6 months of expenses) for unexpected events</li><li>If you have to withdraw money early, it's better but not ideal</li></ul>"
 
         ac_curt:
+          motivational_text: "For goals 2-5 years away, fixed income is your best ally. These are loans you make to governments and companies: they repay your money with agreed interest over a set period. Returns are moderate but predictable (2-3% annual). It makes no sense to take on stock market volatility without enough time horizon, because a drop right when you need the money could make you lose. A real 2-3% already beats inflation and protects your goal. Also, keeping your savings in a separate investment account helps you not spend it: out of sight, out of mind. The chart shows how the uncertainty range is narrow: that means safety."
           why_important:
             intro_html: "For goals between 2 and 5 years, <strong>you need a balance between return and safety</strong>. You don't have enough time to handle stock market volatility, but you do have time to get better returns than a traditional deposit."
             balance_title: "The perfect middle ground: Better than a deposit, safer than stocks"
@@ -1421,6 +1536,7 @@ en:
                 answer_html: "<p class=\"mb-2\"><strong>Yes, you have full liquidity.</strong> Fixed income funds allow you to withdraw your money whenever you want (usually in 2-3 business days).</p><p class=\"mb-2\">But keep in mind:</p><ul class=\"mb-2\"><li>If you withdraw when the fund is temporarily negative (due to interest rate rises), you materialize the loss</li><li>If you wait, the fund recovers over time (bonds mature and return the capital)</li></ul><p class=\"mb-0\"><strong>Recommendation:</strong> Only invest money you can leave for 2+ years. If you think you might need liquidity sooner, better to leave it in a savings account or deposit (even if you earn less).</p>"
 
         ac_jubil:
+          motivational_text: "Saving for retirement is not optional, it is essential. The public pension system is very difficult to sustain as it stands: there are more retirees every year and fewer workers contributing, and the pension you receive will be much lower than your last salary. The good news is that retirement is the longest-term goal there is, and that is a huge advantage. You can invest in global equity funds because you have decades ahead to absorb any downturn. Time is your greatest ally: starting early matters far more than contributing a lot. Try increasing the investment period in the simulator and you'll see how with much smaller monthly contributions you can reach the same goal."
           why_important:
             intro_html: "Retirement may seem far away, but <strong>the reality is that public pensions probably won't be enough</strong> to maintain your current standard of living. And every year you wait, you lose the most valuable opportunity you have: time."
             pension_reality_title: "The reality of the Spanish pension system"
@@ -1526,11 +1642,13 @@ en:
           title: "Capital evolution: Savings vs Investment"
           savings_label: "Savings without interest"
           investment_label: "Investment with compound interest"
+          volatility_range_label: "Probable range"
+          risk_warning_short_term: "With this timeframe, you could end up with less than you contributed"
         results:
           final_capital: "Estimated final capital"
           total_contributed: "Total contributed"
           profit: "Profit generated"
-        disclaimer_html: "<strong>Note:</strong> This is an indicative simulation based on historical returns. Actual results may vary. Investing in index funds carries risks and capital is not guaranteed."
+        disclaimer_html: "<strong>Note:</strong> This is an indicative simulation based on historical returns. Actual results may vary. Investing in equity funds carries risks and capital is not guaranteed."
 
       # Common labels for all pages
       labels:

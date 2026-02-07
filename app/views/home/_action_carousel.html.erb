@@ -1,0 +1,105 @@
+<%# Action Plan Carousel %>
+<div class="home-section__header">
+  <h2 class="home-section__title">
+    <i class="bi bi-list-check"></i>
+    <%= t('home.action_plan.title') %>
+  </h2>
+  <span class="home-section__counter"><%= @completed_count %>/<%= @total_count %></span>
+</div>
+
+<%# Progress bar %>
+<div class="progress mb-3" style="height: 6px;">
+  <div class="progress-bar bg-success" role="progressbar"
+       style="width: <%= @progress_percentage %>%"
+       aria-valuenow="<%= @progress_percentage %>"
+       aria-valuemin="0"
+       aria-valuemax="100">
+  </div>
+</div>
+
+<% if @carousel_actions.any? %>
+  <div class="carousel-wrap">
+    <div class="carousel" id="actionCarousel" data-first-uncompleted="<%= @first_uncompleted_index %>">
+      <% @carousel_actions.each_with_index do |action, index| %>
+        <% is_completed = action[:completed] %>
+
+        <div class="carousel__card action-card <%= 'action-card--completed' if is_completed %>">
+          <%# Toggle checkbox - top right %>
+          <%= button_to is_completed ? uncomplete_action_path : complete_action_path,
+              method: :post,
+              params: { action_type: action[:type], action_key: action[:key] },
+              class: "toggle-check #{is_completed ? 'toggle-check--done' : 'toggle-check--pending'}",
+              data: { turbo: false } do %>
+            <i class="bi <%= is_completed ? 'bi-check-circle-fill' : 'bi-circle' %>"></i>
+            <%= is_completed ? t('home.action_carousel.done') : t('home.action_carousel.pending') %>
+          <% end %>
+
+          <%# Step pill + Title (context first) %>
+          <div class="action-card__step-pill">
+            <% if is_completed %>
+              <i class="bi bi-check-circle-fill"></i>
+            <% else %>
+              <span class="action-card__step-num"><%= index + 1 %></span>
+            <% end %>
+            <%= t('home.action_carousel.step_of', step: index + 1, total: @total_count) %>
+          </div>
+
+          <h3 class="action-card__title"><%= action[:title] %></h3>
+
+          <%# Video %>
+          <% if action[:video_url].present? %>
+            <div class="action-card__video">
+              <iframe src="<%= action[:video_url] %>"
+                      title="<%= action[:title] %>"
+                      frameborder="0"
+                      loading="lazy"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowfullscreen>
+              </iframe>
+            </div>
+          <% end %>
+
+          <%# CTAs %>
+          <div class="action-card__ctas">
+            <% affiliate_link = current_user.get_affiliate_link(action[:key]) %>
+            <% cta_href = affiliate_link.present? ? affiliate_link : (action[:slug].present? ? recommendation_path(action[:slug]) : '#') %>
+            <% cta_label = t("home.action_carousel.cta.#{action[:key]}", default: t('home.action_carousel.take_action')) %>
+            <%= link_to cta_href,
+                class: 'btn-app btn-app--primary btn-app--sm action-card__cta-primary',
+                target: affiliate_link.present? ? '_blank' : nil do %>
+              <%= cta_label %>
+            <% end %>
+
+            <% if action[:slug].present? %>
+              <%= link_to recommendation_path(action[:slug]),
+                  class: 'btn-app btn-app--outline btn-app--sm action-card__cta-secondary' do %>
+                <%= t('home.action_carousel.see_detail') %>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <%# Dot indicators %>
+    <div class="carousel__dots" id="actionDots">
+      <% @carousel_actions.each_with_index do |action, index| %>
+        <button class="carousel__dot <%= 'carousel__dot--completed' if action[:completed] %>"
+                data-index="<%= index %>"
+                aria-label="<%= t('home.action_carousel.step_of', step: index + 1, total: @total_count) %>">
+        </button>
+      <% end %>
+    </div>
+  </div>
+<% else %>
+  <%# All completed state %>
+  <div class="empty-state py-4">
+    <i class="bi bi-trophy empty-state__icon text-warning" style="font-size: 2.5rem;"></i>
+    <h4 class="empty-state__title mt-2">
+      <%= t('home.action_plan.all_completed_title') %>
+    </h4>
+    <p class="empty-state__description">
+      <%= t('home.action_plan.all_completed_description') %>
+    </p>
+  </div>
+<% end %>

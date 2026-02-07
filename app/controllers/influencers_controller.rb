@@ -101,7 +101,7 @@ class InfluencersController < ApplicationController
           :name,
           :ac_compte, :ac_cdiposit, :ac_saving, :ac_deute, :ac_mortgage,
           :ac_curt, :ac_llarg, :ac_jubil, :ac_portfolio, :ac_fiscal,
-          :video_compte, :video_cdiposit, :video_saving, :video_deute, :video_mortgage,
+          :video_compte, :video_cdiposit, :video_diposit, :video_saving, :video_deute, :video_mortgage,
           :video_curt, :video_llarg, :video_jubil, :video_portfolio, :video_fiscal
         )
       end

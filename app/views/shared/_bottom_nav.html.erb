@@ -1,0 +1,33 @@
+<%# Bottom Navigation - Tab Bar for App Layout %>
+<%# 4 tabs: Home, Discovery, Calculadoras, Perfil %>
+
+<% home_active = current_page?(home_path) || current_page?(authenticated_root_path) %>
+<% discovery_active = current_page?(discovery_path) %>
+<% calcs_active = request.path.start_with?('/calculators') || request.path.start_with?("/#{I18n.locale}/calculators") %>
+<% profile_active = request.path.include?('profile') %>
+
+<nav class="bottom-nav" aria-label="<%= t('navigation.bottom_nav.label', default: 'Main navigation') %>">
+  <%= link_to home_path,
+      class: "bottom-nav__item #{home_active ? 'bottom-nav__item--active' : ''}" do %>
+    <i class="bi bi-house<%= '-fill' if home_active %> bottom-nav__icon"></i>
+    <span class="bottom-nav__label"><%= t('navigation.bottom_nav.home', default: 'Inicio') %></span>
+  <% end %>
+
+  <%= link_to discovery_path,
+      class: "bottom-nav__item #{discovery_active ? 'bottom-nav__item--active' : ''}" do %>
+    <i class="bi bi-play-circle<%= '-fill' if discovery_active %> bottom-nav__icon"></i>
+    <span class="bottom-nav__label"><%= t('navigation.bottom_nav.discovery', default: 'Discovery') %></span>
+  <% end %>
+
+  <%= link_to calculators_path,
+      class: "bottom-nav__item #{calcs_active ? 'bottom-nav__item--active' : ''}" do %>
+    <i class="bi bi-calculator<%= '-fill' if calcs_active %> bottom-nav__icon"></i>
+    <span class="bottom-nav__label"><%= t('navigation.bottom_nav.calculators', default: 'Calculadoras') %></span>
+  <% end %>
+
+  <%= link_to profile_path,
+      class: "bottom-nav__item #{profile_active ? 'bottom-nav__item--active' : ''}" do %>
+    <i class="bi bi-person<%= '-fill' if profile_active %> bottom-nav__icon"></i>
+    <span class="bottom-nav__label"><%= t('navigation.bottom_nav.profile', default: 'Perfil') %></span>
+  <% end %>
+</nav>

@@ -1,91 +1,36 @@
-<% content_for :title, "Bienvenido a BaiFinanzas" %>
-
-<div class="container min-vh-100 d-flex align-items-center justify-content-center py-5">
-  <div class="row justify-content-center w-100">
-    <div class="col-lg-8 col-xl-7">
-
-      <!-- Welcome Card -->
-      <div class="card shadow-lg border-0">
-        <div class="card-body p-4 p-md-5 text-center">
-
-          <!-- Success Icon -->
-          <div class="mb-4">
-            <div class="bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
-              <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
-            </div>
-          </div>
-
-          <!-- Welcome Message -->
-          <h1 class="display-5 fw-bold mb-3">
-            ¡Bienvenido a BaiFinanzas!
-          </h1>
-          <p class="fs-5 text-muted mb-4">
-            Estás a solo <strong class="text-success">3 pasos</strong> de tener tu plan financiero personalizado
-          </p>
-
-          <!-- Steps -->
-          <div class="row g-3 mb-5 text-start">
-            <div class="col-12">
-              <div class="d-flex align-items-start p-3 bg-light rounded">
-                <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-3 flex-shrink-0" style="width: 40px; height: 40px;">
-                  <strong>1</strong>
-                </div>
-                <div>
-                  <h5 class="mb-1">Cuenta de pérdidas y ganancias</h5>
-                  <p class="text-muted small mb-0">Cuéntanos tus ingresos y gastos mensuales</p>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-12">
-              <div class="d-flex align-items-start p-3 bg-light rounded">
-                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3 flex-shrink-0" style="width: 40px; height: 40px;">
-                  <strong>2</strong>
-                </div>
-                <div>
-                  <h5 class="mb-1">Balance patrimonial</h5>
-                  <p class="text-muted small mb-0">Dinos qué activos y deudas tienes</p>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-12">
-              <div class="d-flex align-items-start p-3 bg-light rounded">
-                <div class="bg-warning text-white rounded-circle d-flex align-items-center justify-content-center me-3 flex-shrink-0" style="width: 40px; height: 40px;">
-                  <strong>3</strong>
-                </div>
-                <div>
-                  <h5 class="mb-1">Tu plan personalizado</h5>
-                  <p class="text-muted small mb-0">Descubre tu nivel de salud financiera y recibe recomendaciones</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Time estimation -->
-          <div class="alert alert-info d-inline-flex align-items-center mb-4">
-            <i class="bi bi-clock me-2"></i>
-            <span><strong>Tiempo estimado:</strong> 5-10 minutos</span>
-          </div>
-
-          <!-- CTA Button -->
-          <div class="d-grid">
-            <%= link_to new_pyg_path, class: "btn btn-success btn-lg" do %>
-              <i class="bi bi-arrow-right-circle me-2"></i>Empezar ahora
-            <% end %>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- Additional info -->
-      <div class="text-center mt-4">
-        <p class="text-muted small">
-          <i class="bi bi-shield-check me-1"></i>
-          Tus datos están seguros y son 100% privados
-        </p>
-      </div>
-
+<%# Welcome page - no header, full screen %>
+<div class="app-container d-flex flex-column justify-content-center" style="min-height: 100vh; padding-bottom: 100px;">
+  <div class="text-center">
+    <div class="mb-4">
+      <span style="font-size: 4rem;">🎉</span>
     </div>
+
+    <h1 class="h3 mb-3"><%= t('onboarding.welcome.title', default: 'Bienvenido a BaiFinanzas!') %></h1>
+
+    <p class="text-muted mb-4">
+      <%= t('onboarding.welcome.description',
+          default: 'Vamos a crear tu plan financiero personalizado en 2 minutos.') %>
+    </p>
+
+    <%# Progress indicator %>
+    <div class="d-flex justify-content-center align-items-center gap-2 mb-5">
+      <div class="rounded-circle bg-brand" style="width: 10px; height: 10px;"></div>
+      <div class="bg-light rounded" style="width: 40px; height: 2px;"></div>
+      <div class="rounded-circle bg-light" style="width: 10px; height: 10px;"></div>
+      <div class="bg-light rounded" style="width: 40px; height: 2px;"></div>
+      <div class="rounded-circle bg-light" style="width: 10px; height: 10px;"></div>
+    </div>
+
+    <div class="text-center mb-4">
+      <small class="text-muted">
+        <i class="bi bi-clock me-1"></i>
+        <%= t('onboarding.welcome.time', default: 'Solo 4 preguntas') %>
+      </small>
+    </div>
+
+    <%= link_to onboarding_basic_path, class: 'btn-app btn-app--primary btn-app--lg btn-app--block' do %>
+      <%= t('onboarding.welcome.start', default: 'Empezar') %>
+      <i class="bi bi-arrow-right ms-2"></i>
+    <% end %>
   </div>
 </div>

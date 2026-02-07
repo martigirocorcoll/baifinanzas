@@ -1,128 +1,106 @@
-<div class="container py-5">
-  <!-- Indicador de Progreso -->
-  <div class="text-center mb-4">
-    <span class="badge bg-primary px-4 py-2 fs-6">
-      <i class="bi bi-list-check me-2"></i><%= t('views.pyg_form.step_indicator') %>
-    </span>
-  </div>
+<div class="app-container">
+  <%= simple_form_for @pyg,
+        url: pyg_path,
+        html: { method: @pyg.new_record? ? :post : :patch } do |f| %>
 
-  <!-- Card Principal -->
-  <div class="card shadow-lg border-0 mx-auto" style="max-width: 900px;">
-    <div class="card-body p-4 p-md-5">
+    <%# Title %>
+    <div class="text-center mb-4">
+      <h2 style="font-size: 1.25rem; font-weight: 700; color: #1a1a1a; margin-bottom: 0.5rem;"><%= t('views.pyg_form.title') %></h2>
+      <p class="text-muted" style="font-size: 0.875rem;">
+        <%= t('views.pyg_form.description') %>
+        <strong><%= t('views.pyg_form.note') %></strong>
+      </p>
+    </div>
 
-      <%= simple_form_for @pyg,
-            url: pyg_path,
-            html: { method: @pyg.new_record? ? :post : :patch } do |f| %>
-
-        <!-- Título y Descripción -->
-        <div class="text-center mb-4">
-          <h2 class="mb-3 text-primary fw-bold"><%= t('views.pyg_form.title') %></h2>
-          <p class="text-muted">
-            <%= t('views.pyg_form.description') %>
-            <strong><%= t('views.pyg_form.note') %></strong>
-          </p>
+    <%# Income section %>
+    <div class="app-form__section">
+      <h3 class="app-form__section-title">
+        <i class="bi bi-cash-coin"></i>
+        <%= t('views.pyg_form.income_section') %>
+      </h3>
+      <div class="app-form__group">
+        <label class="app-form__label"><%= t('views.pyg_form.income_label') %></label>
+        <div class="app-form__input-group">
+          <%= f.input_field :ingresos_mensual,
+                type: "text",
+                class: "app-form__input euro-input",
+                placeholder: "0",
+                data: { field: "ingresos_mensual" },
+                style: "text-align: right;" %>
+          <span class="app-form__input-suffix">&euro;</span>
         </div>
+        <p class="app-form__hint"><%= t('views.pyg_form.income_help') %></p>
+      </div>
+    </div>
 
-        <!-- Sección INGRESOS con background -->
-        <div class="card bg-success bg-opacity-10 border-success border-2 mb-4">
-          <div class="card-body p-4">
-            <h3 class="h5 mb-3 text-success fw-bold">
-              <i class="bi bi-cash-coin me-2"></i><%= t('views.pyg_form.income_section') %>
-            </h3>
-            <div class="row">
-              <div class="col-12">
-                <label class="form-label fw-semibold"><%= t('views.pyg_form.income_label') %></label>
-                <div class="input-group input-group-lg">
-                  <%= f.input_field :ingresos_mensual,
-                        type: "text",
-                        class: "form-control text-end euro-input",
-                        placeholder: "0",
-                        data: { field: "ingresos_mensual" } %>
-                  <span class="input-group-text bg-success text-white fw-bold">€</span>
-                </div>
-                <small class="text-muted"><%= t('views.pyg_form.income_help') %></small>
-              </div>
-            </div>
+    <%# Expenses section %>
+    <div class="app-form__section app-form__section--expenses">
+      <h3 class="app-form__section-title">
+        <i class="bi bi-cart3"></i>
+        <%= t('views.pyg_form.expenses_section') %>
+      </h3>
+
+      <% expense_fields = %w[gasto_compra alquiler_hipoteca gastos_utilities gastos_seguros
+                             gastos_transporte restaurantes_y_ocio cuota_hipoteca cuota_coche
+                             otras_cuotas suscripciones cuidado_personal otros_gastos] %>
+
+      <% expense_fields.each do |field| %>
+        <div class="app-form__group">
+          <label class="app-form__label"><%= t("views.pyg_form.expenses.#{field}") %></label>
+          <div class="app-form__input-group">
+            <%= f.input_field field,
+                  type: "text",
+                  class: "app-form__input euro-input",
+                  placeholder: "0",
+                  data: { field: field },
+                  style: "text-align: right;" %>
+            <span class="app-form__input-suffix">&euro;</span>
           </div>
         </div>
-
-        <!-- Sección GASTOS con background -->
-        <div class="card bg-danger bg-opacity-10 border-danger border-2 mb-4">
-          <div class="card-body p-4">
-            <h3 class="h5 mb-3 text-danger fw-bold">
-              <i class="bi bi-cart3 me-2"></i><%= t('views.pyg_form.expenses_section') %>
-            </h3>
-            <div class="row gx-3 gy-3">
-              <% expense_fields = %w[gasto_compra alquiler_hipoteca gastos_utilities gastos_seguros
-                                     gastos_transporte restaurantes_y_ocio cuota_hipoteca cuota_coche
-                                     otras_cuotas suscripciones cuidado_personal otros_gastos]
-                 colors = %w[primary success warning danger info secondary primary dark muted info secondary dark]
-              %>
-
-              <% expense_fields.each_with_index do |field, index| %>
-                <div class="col-12 col-md-6">
-                  <label for="pyg_<%= field %>" class="form-label d-flex align-items-center fw-semibold">
-                    <span class="badge bg-<%= colors[index] %> me-2"
-                          style="width:10px; height:10px; border-radius:50%;"></span>
-                    <%= t("views.pyg_form.expenses.#{field}") %>
-                  </label>
-                  <div class="input-group">
-                    <%= f.input_field field,
-                          type: "text",
-                          class: "form-control text-end euro-input",
-                          placeholder: "0",
-                          data: { field: field } %>
-                    <span class="input-group-text bg-danger text-white">€</span>
-                  </div>
-                </div>
-              <% end %>
-            </div>
-          </div>
-        </div>
-
-        <!-- RESUMEN - Diferencia (Calculado en tiempo real) -->
-        <div class="card bg-light border-0 mb-4">
-          <div class="card-body p-4">
-            <div class="d-flex justify-content-between align-items-center">
-              <div>
-                <p class="text-muted mb-1"><%= t('views.pyg_form.balance_section') %></p>
-                <p class="fw-bold mb-0 fs-5"><%= t('views.pyg_form.balance_description') %></p>
-              </div>
-              <div class="text-end">
-                <p class="h3 mb-0 fw-bold text-success" id="balance-amount">
-                  €0
-                </p>
-                <small class="text-muted" id="balance-label"
-                       data-prompt="<%= t('views.pyg_form.balance_prompt') %>"
-                       data-savings="<%= t('views.pyg_form.savings_label') %>"
-                       data-deficit="<%= t('views.pyg_form.deficit_label') %>"
-                       data-balanced="<%= t('views.pyg_form.balanced_label') %>">
-                  <%= t('views.pyg_form.balance_prompt') %>
-                </small>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- BOTÓN -->
-        <div class="text-center">
-          <%= f.button :submit, class: "btn btn-lg btn-success px-5 shadow" do %>
-            <i class="bi bi-arrow-right-circle me-2"></i>
-            <%= @pyg.new_record? ? t('views.pyg_form.submit_new') : t('views.pyg_form.submit_update') %>
-          <% end %>
-        </div>
-
       <% end %>
     </div>
-  </div>
+
+    <%# Balance summary %>
+    <div class="app-card" style="border-left: 3px solid #165668;">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <p class="text-muted mb-1" style="font-size: 0.8125rem;"><%= t('views.pyg_form.balance_section') %></p>
+          <p class="fw-bold mb-0" style="font-size: 0.9375rem;"><%= t('views.pyg_form.balance_description') %></p>
+        </div>
+        <div class="text-end">
+          <p class="mb-0 fw-bold text-success" id="balance-amount" style="font-size: 1.25rem;">
+            &euro;0
+          </p>
+          <small class="text-muted" id="balance-label"
+                 data-prompt="<%= t('views.pyg_form.balance_prompt') %>"
+                 data-savings="<%= t('views.pyg_form.savings_label') %>"
+                 data-deficit="<%= t('views.pyg_form.deficit_label') %>"
+                 data-balanced="<%= t('views.pyg_form.balanced_label') %>">
+            <%= t('views.pyg_form.balance_prompt') %>
+          </small>
+        </div>
+      </div>
+    </div>
+
+    <%# Submit %>
+    <div style="margin-top: 1.5rem;">
+      <%= f.button :submit, class: "btn-app btn-app--primary btn-app--block" do %>
+        <i class="bi bi-arrow-right-circle"></i>
+        <%= @pyg.new_record? ? t('views.pyg_form.submit_new') : t('views.pyg_form.submit_update') %>
+      <% end %>
+    </div>
+
+  <% end %>
 </div>
 
 <script>
-document.addEventListener('turbo:load', function() {
+function initPygForm() {
   const euroInputs = document.querySelectorAll('.euro-input');
   const balanceAmount = document.getElementById('balance-amount');
   const balanceLabel = document.getElementById('balance-label');
   const ingresosInput = document.querySelector('[data-field="ingresos_mensual"]');
+
+  if (!balanceAmount || !balanceLabel || !ingresosInput) return;
 
   // Get translated labels from data attributes
   const labels = {
@@ -132,46 +110,29 @@ document.addEventListener('turbo:load', function() {
     balanced: balanceLabel.dataset.balanced
   };
 
-  // Formatear número con separadores europeos (1.234,56)
   function formatNumber(value) {
     if (!value || value === '0') return '0';
-
-    // Eliminar todo excepto números y coma
     let num = value.replace(/[^\d,]/g, '');
-
-    // Separar parte entera y decimal
     let parts = num.split(',');
     let integerPart = parts[0];
     let decimalPart = parts[1] || '';
-
-    // Añadir puntos como separador de miles
     integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-
-    // Retornar formateado
     return decimalPart ? `${integerPart},${decimalPart}` : integerPart;
   }
 
-  // Convertir formato europeo a número para cálculos
   function parseEuroNumber(value) {
     if (!value || value === '0' || value === '') return 0;
-    // Quitar puntos (separador de miles) y reemplazar coma por punto (decimal)
     const num = parseFloat(value.replace(/\./g, '').replace(',', '.'));
     return isNaN(num) ? 0 : num;
   }
 
-  // Convertir formato europeo a número para enviar al servidor
   function unformatNumber(value) {
     if (!value || value === '0') return '0';
-    // Quitar puntos (separador de miles) y reemplazar coma por punto (decimal)
     return value.replace(/\./g, '').replace(',', '.');
   }
 
-  // Calcular balance mensual en tiempo real
   function updateBalance() {
-    // Obtener ingresos
     const ingresos = parseEuroNumber(ingresosInput.value);
-
-    // Obtener todos los gastos
     const expenseFields = [
       'gasto_compra', 'alquiler_hipoteca', 'gastos_utilities', 'gastos_seguros',
       'gastos_transporte', 'restaurantes_y_ocio', 'cuota_hipoteca', 'cuota_coche',
@@ -181,109 +142,78 @@ document.addEventListener('turbo:load', function() {
     let totalGastos = 0;
     expenseFields.forEach(fieldName => {
       const input = document.querySelector(`[data-field="${fieldName}"]`);
-      if (input) {
-        totalGastos += parseEuroNumber(input.value);
-      }
+      if (input) totalGastos += parseEuroNumber(input.value);
     });
 
-    // Calcular diferencia
     const diferencia = ingresos - totalGastos;
-
-    // Actualizar display
     const formattedAmount = new Intl.NumberFormat('es-ES', {
-      style: 'currency',
-      currency: 'EUR',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 2
+      style: 'currency', currency: 'EUR', minimumFractionDigits: 0, maximumFractionDigits: 2
     }).format(Math.abs(diferencia));
 
     balanceAmount.textContent = formattedAmount;
 
-    // Actualizar color y label
     if (diferencia > 0) {
-      balanceAmount.className = 'h3 mb-0 fw-bold text-success';
+      balanceAmount.className = 'mb-0 fw-bold text-success';
+      balanceAmount.style.fontSize = '1.25rem';
       balanceLabel.textContent = labels.savings;
     } else if (diferencia < 0) {
-      balanceAmount.className = 'h3 mb-0 fw-bold text-danger';
+      balanceAmount.className = 'mb-0 fw-bold text-danger';
+      balanceAmount.style.fontSize = '1.25rem';
       balanceLabel.textContent = labels.deficit;
     } else {
-      balanceAmount.className = 'h3 mb-0 fw-bold text-muted';
+      balanceAmount.className = 'mb-0 fw-bold text-muted';
+      balanceAmount.style.fontSize = '1.25rem';
       balanceLabel.textContent = labels.balanced;
     }
   }
 
-  // Aplicar formato a cada input
   euroInputs.forEach(input => {
-    // Formatear valor inicial si existe
-    if (input.value && input.value !== '0') {
-      input.value = formatNumber(input.value);
-    }
+    if (input.dataset.bound) return;
+    input.dataset.bound = '1';
+    if (input.value && input.value !== '0') input.value = formatNumber(input.value);
 
-    // Formatear mientras escribe
     input.addEventListener('input', function(e) {
       let cursorPosition = this.selectionStart;
-      let oldValue = this.value;
-      let oldLength = oldValue.length;
-
-      // Solo permitir números y coma
+      let oldLength = this.value.length;
       this.value = this.value.replace(/[^\d,]/g, '');
-
-      // Limitar a una sola coma
       let parts = this.value.split(',');
-      if (parts.length > 2) {
-        this.value = parts[0] + ',' + parts.slice(1).join('');
-      }
-
-      // Formatear
+      if (parts.length > 2) this.value = parts[0] + ',' + parts.slice(1).join('');
       this.value = formatNumber(this.value);
-
-      // Ajustar posición del cursor
       let newLength = this.value.length;
       cursorPosition = cursorPosition + (newLength - oldLength);
       this.setSelectionRange(cursorPosition, cursorPosition);
-
-      // Actualizar balance en tiempo real
       updateBalance();
     });
 
-    // Al hacer blur, asegurar formato correcto
     input.addEventListener('blur', function() {
-      if (!this.value || this.value === '') {
-        this.value = '0';
-      }
+      if (!this.value || this.value === '') this.value = '0';
       updateBalance();
     });
   });
 
-  // Calcular balance inicial si hay valores
   updateBalance();
 
-  // Antes de enviar el formulario, convertir a formato numérico
   const form = document.querySelector('form');
-  form.addEventListener('submit', function(e) {
-    euroInputs.forEach(input => {
-      // Crear un input hidden con el valor sin formato
-      const hiddenInput = document.createElement('input');
-      hiddenInput.type = 'hidden';
-      hiddenInput.name = input.name;
-      hiddenInput.value = unformatNumber(input.value);
-
-      // Deshabilitar el input visible y añadir el hidden
-      input.disabled = true;
-      this.appendChild(hiddenInput);
+  if (form && !form.dataset.bound) {
+    form.dataset.bound = '1';
+    form.addEventListener('submit', function(e) {
+      document.querySelectorAll('.euro-input').forEach(input => {
+        const hiddenInput = document.createElement('input');
+        hiddenInput.type = 'hidden';
+        hiddenInput.name = input.name;
+        hiddenInput.value = unformatNumber(input.value);
+        input.disabled = true;
+        this.appendChild(hiddenInput);
+      });
     });
-  });
-});
+  }
+}
+document.addEventListener('turbo:load', initPygForm);
+if (document.readyState !== 'loading') { initPygForm(); } else { document.addEventListener('DOMContentLoaded', initPygForm); }
 </script>
 
 <style>
-  /* Quitar las flechas de los inputs numéricos */
-  .euro-input {
-    -moz-appearance: textfield;
-  }
+  .euro-input { -moz-appearance: textfield; }
   .euro-input::-webkit-outer-spin-button,
-  .euro-input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
+  .euro-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 </style>

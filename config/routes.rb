@@ -9,6 +9,36 @@ Rails.application.routes.draw do
 
   # Todas las rutas con scope de locale
   scope "/:locale", locale: /es|en/ do
+    # ============================================
+    # APP NAVIGATION (Tab Bar routes)
+    # ============================================
+    # Home (Dashboard + Plan + Objectives)
+    get "home", to: "home#index", as: :home
+
+    # Discovery (Content feed: videos, articles, news)
+    get "discovery", to: "discovery#index", as: :discovery
+    get "discovery/articles/:slug", to: "discovery#show_article", as: :discovery_article
+
+    # Calculators (Financial tools)
+    get "calculators", to: "calculators#index", as: :calculators
+    get "calculators/compound_interest", to: "calculators#compound_interest", as: :calculator_compound_interest
+    get "calculators/mortgage", to: "calculators#mortgage", as: :calculator_mortgage
+    get "calculators/emergency_fund", to: "calculators#emergency_fund", as: :calculator_emergency_fund
+    get "calculators/financial_freedom", to: "calculators#financial_freedom", as: :calculator_financial_freedom
+    get "calculators/investment_goal", to: "calculators#investment_goal", as: :calculator_investment_goal
+    get "calculators/early_repayment", to: "calculators#early_repayment", as: :calculator_early_repayment
+    get "calculators/investment_returns", to: "calculators#investment_returns", as: :calculator_investment_returns
+
+    # Profile
+    get "profile", to: "profiles#show", as: :profile
+    get "profile/edit", to: "profiles#edit", as: :edit_profile
+    patch "profile", to: "profiles#update"
+    get "profile/settings", to: "profiles#settings", as: :profile_settings
+    patch "profile/settings", to: "profiles#update_settings"
+
+    # ============================================
+    # EXISTING ROUTES
+    # ============================================
     # Recomendaciones ampliadas
     resources :recommendations, only: [:index, :show], param: :slug
 
@@ -19,14 +49,17 @@ Rails.application.routes.draw do
       post 'user_actions/uncomplete', to: 'user_actions#uncomplete'
     end
 
-    # Dashboard
+    # Dashboard (legacy - will redirect to home)
     get "dashboard/index"
     post "dashboard/complete_action", to: "dashboard#complete_action", as: :complete_action
     post "dashboard/uncomplete_action", to: "dashboard#uncomplete_action", as: :uncomplete_action
 
     # Onboarding flow
     get "onboarding/welcome", to: "onboarding#welcome", as: :onboarding_welcome
+    get "onboarding/basic", to: "onboarding#basic", as: :onboarding_basic
+    post "onboarding/basic", to: "onboarding#save_basic"
     get "onboarding/processing", to: "onboarding#processing", as: :onboarding_processing
+    get "onboarding/complete", to: "onboarding#complete", as: :onboarding_complete
 
     # Devise for Users (with custom registrations controller)
     devise_for :users, controllers: {
@@ -38,7 +71,7 @@ Rails.application.routes.draw do
 
     # Página pública
     authenticated :user do
-      root to: "dashboard#index", as: :authenticated_root
+      root to: "home#index", as: :authenticated_root
     end
     unauthenticated do
       root to: "pages#home", as: :unauthenticated_root
@@ -59,7 +92,11 @@ Rails.application.routes.draw do
     resource  :balance, only: %i[index show new create edit update]
 
     # Objetivos (1:N)
-    resources :objectives
+    resources :objectives do
+      member do
+        patch :update_progress
+      end
+    end
   end
 
   # Redirecciones para URLs antiguas sin locale

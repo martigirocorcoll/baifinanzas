@@ -4,9 +4,15 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :track_referral
 
+  helper_method :turbo_native_app?
+
   # Include locale in all generated URLs
   def default_url_options
     { locale: I18n.locale }
+  end
+
+  def turbo_native_app?
+    request.user_agent&.include?("Turbo Native")
   end
 
   protected
