@@ -1,38 +1,54 @@
-<!-- Toast Notifications (top in Turbo Native to avoid tab bar, bottom-right otherwise) -->
-<div class="toast-container position-fixed end-0 p-3 <%= turbo_native_app? ? 'top-0' : 'bottom-0' %>" style="z-index: 9999;">
-  <% if flash[:success] %>
-    <div class="toast show align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="5000">
-      <div class="d-flex">
-        <div class="toast-body">
-          <i class="bi bi-check-circle me-2"></i>
-          <%= flash[:success] %>
-        </div>
-        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-      </div>
+<% if turbo_native_app? %>
+  <%# Inline alerts for Turbo Native - rendered inside page flow, no positioning issues %>
+  <% if flash[:success] || notice %>
+    <div class="alert alert-success alert-dismissible fade show m-3 mb-0" role="alert">
+      <i class="bi bi-check-circle me-2"></i>
+      <%= flash[:success] || notice %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
   <% end %>
-
-  <% if notice %>
-    <div class="toast show align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="5000">
-      <div class="d-flex">
-        <div class="toast-body">
-          <i class="bi bi-check-circle me-2"></i>
-          <%= notice %>
-        </div>
-        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-      </div>
-    </div>
-  <% end %>
-
   <% if alert %>
-    <div class="toast show align-items-center text-bg-warning border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="5000">
-      <div class="d-flex">
-        <div class="toast-body">
-          <i class="bi bi-exclamation-triangle me-2"></i>
-          <%= alert %>
-        </div>
-        <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-      </div>
+    <div class="alert alert-warning alert-dismissible fade show m-3 mb-0" role="alert">
+      <i class="bi bi-exclamation-triangle me-2"></i>
+      <%= alert %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
   <% end %>
-</div>
+<% else %>
+  <%# Toast notifications for web - positioned bottom-right %>
+  <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 9999;">
+    <% if flash[:success] %>
+      <div class="toast show align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="5000">
+        <div class="d-flex">
+          <div class="toast-body">
+            <i class="bi bi-check-circle me-2"></i>
+            <%= flash[:success] %>
+          </div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+      </div>
+    <% end %>
+    <% if notice %>
+      <div class="toast show align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="5000">
+        <div class="d-flex">
+          <div class="toast-body">
+            <i class="bi bi-check-circle me-2"></i>
+            <%= notice %>
+          </div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+      </div>
+    <% end %>
+    <% if alert %>
+      <div class="toast show align-items-center text-bg-warning border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="5000">
+        <div class="d-flex">
+          <div class="toast-body">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            <%= alert %>
+          </div>
+          <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% end %>
