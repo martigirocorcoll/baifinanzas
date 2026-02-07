@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
   before_action :track_referral
 
   helper_method :turbo_native_app?
+  layout :layout_for_devise
 
   # Include locale in all generated URLs
   def default_url_options
@@ -47,7 +48,16 @@ class ApplicationController < ActionController::Base
   def after_sign_in_path_for(resource)
     return authenticated_root_path unless resource.is_a?(User)
 
-    # Route based on role
+    # In Turbo Native, always go to app home (admin/influencer panels are web-only)
+    if turbo_native_app?
+      if resource.pyg&.has_data?
+        return authenticated_root_path
+      else
+        return onboarding_welcome_path
+      end
+    end
+
+    # Web: route based on role
     return admin_root_path if resource.admin?
     return influencer_dashboard_path if resource.influencer?
 
@@ -56,6 +66,14 @@ class ApplicationController < ActionController::Base
       authenticated_root_path
     else
       onboarding_welcome_path
+    end
+  end
+
+  def layout_for_devise
+    if devise_controller? && turbo_native_app?
+      "app"
+    else
+      "application"
     end
   end
 

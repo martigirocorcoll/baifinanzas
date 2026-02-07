@@ -7,6 +7,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private var tabBarController: UITabBarController!
     private var navigators: [Navigator] = []
 
+    private let tabConfigs: [(title: String, icon: String, iconActive: String, path: String)] = [
+        ("Inicio",        "house",       "house.fill",       "/es/home"),
+        ("Discovery",     "play.circle", "play.circle.fill", "/es/discovery"),
+        ("Calculadoras",  "function",    "function",         "/es/calculators"),
+        ("Perfil",        "person",      "person.fill",      "/es/profile")
+    ]
+
     func scene(
         _ scene: UIScene,
         willConnectTo session: UISceneSession,
@@ -38,17 +45,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     private func configureNavigators() {
-        let tabs: [(title: String, icon: String, iconActive: String, path: String)] = [
-            ("Inicio",        "house",       "house.fill",       "/es/home"),
-            ("Discovery",     "play.circle", "play.circle.fill", "/es/discovery"),
-            ("Calculadoras",  "function",    "function",         "/es/calculators"),
-            ("Perfil",        "person",      "person.fill",      "/es/profile")
-        ]
-
         var viewControllers: [UIViewController] = []
 
-        for (index, tab) in tabs.enumerated() {
-            let navigator = Navigator()
+        for (index, tab) in tabConfigs.enumerated() {
+            let url = Server.url(path: tab.path)
+            let navigator = Navigator(configuration: .init(
+                name: "tab-\(index)",
+                startLocation: url
+            ))
             navigator.delegate = self
             navigators.append(navigator)
 
@@ -61,10 +65,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             navController.tabBarItem.tag = index
 
             viewControllers.append(navController)
-
-            // Visit the tab's root URL
-            let url = Server.url(path: tab.path)
-            navigator.route(url)
+            navigator.start()
         }
 
         tabBarController.viewControllers = viewControllers
@@ -78,16 +79,10 @@ extension SceneDelegate: NavigatorDelegate {
     func handle(proposal: VisitProposal) -> ProposalResult {
         let url = proposal.url
 
-        // Handle sign-out: reload the first tab (home -> will redirect to sign_in)
+        // Handle sign-out: reload all tabs
         if url.path.contains("/sign_out") {
-            for (index, navigator) in navigators.enumerated() {
-                let tabPath = ["/es/home", "/es/discovery", "/es/calculators", "/es/profile"][index]
-                if index == 0 {
-                    navigator.route(Server.url(path: tabPath))
-                } else {
-                    navigator.clearAll()
-                    navigator.route(Server.url(path: tabPath))
-                }
+            for navigator in navigators {
+                navigator.start()
             }
             tabBarController.selectedIndex = 0
             return .reject

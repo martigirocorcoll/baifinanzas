@@ -25,22 +25,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // MARK: - Hotwire Configuration
 
     private func configureHotwire() {
-        // User agent substring that triggers turbo_native_app? in Rails
-        Hotwire.config.userAgent = "Turbo Native iOS"
+        // User agent prefix that triggers turbo_native_app? in Rails
+        Hotwire.config.applicationUserAgentPrefix = "Turbo Native iOS"
 
         // Path configuration: local fallback + remote server
         Hotwire.config.pathConfiguration.matchQueryStrings = false
 
         // Load bundled path configuration as fallback
         if let localURL = Bundle.main.url(forResource: "path-configuration", withExtension: "json") {
-            Hotwire.config.pathConfiguration.sources = [
+            Hotwire.loadPathConfiguration(from: [
                 .file(localURL),
                 .server(Server.pathConfigurationURL)
-            ]
+            ])
         } else {
-            Hotwire.config.pathConfiguration.sources = [
+            Hotwire.loadPathConfiguration(from: [
                 .server(Server.pathConfigurationURL)
-            ]
+            ])
         }
 
         #if DEBUG
