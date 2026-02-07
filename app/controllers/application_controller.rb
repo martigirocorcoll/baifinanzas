@@ -45,21 +45,17 @@ class ApplicationController < ActionController::Base
   end
 
   def after_sign_in_path_for(resource)
-    if resource.is_a?(Influencer)
-      influencer_path(resource)
-    elsif resource.is_a?(User)
-      # Check if user has financial data (using has_data? method)
-      pyg_has_data = resource.pyg&.has_data?
+    return authenticated_root_path unless resource.is_a?(User)
 
-      # If user has no data in PyG, they're new → go to welcome
-      if !pyg_has_data
-        onboarding_welcome_path
-      else
-        # Existing user with data logging in → go to dashboard
-        authenticated_root_path
-      end
-    else
+    # Route based on role
+    return admin_root_path if resource.admin?
+    return influencer_dashboard_path if resource.influencer?
+
+    # Regular user: check onboarding
+    if resource.pyg&.has_data?
       authenticated_root_path
+    else
+      onboarding_welcome_path
     end
   end
 

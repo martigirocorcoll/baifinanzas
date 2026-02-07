@@ -17,6 +17,7 @@ class PygsController < ApplicationController
   def create
     @pyg = current_user.build_pyg(pyg_params)
     if @pyg.save
+      current_user.update_column(:pyg_completed, true)
       # Redirect to balance if not filled yet (onboarding flow)
       balance_has_data = current_user.balance&.has_data?
 
@@ -37,7 +38,7 @@ class PygsController < ApplicationController
   # PATCH/PUT /pyg
   def update
     if @pyg.update(pyg_params)
-      # Always show processing screen when updating financial data
+      current_user.update_column(:pyg_completed, true)
       redirect_to onboarding_processing_path, notice: t('controllers.pygs.updated')
     else
       render :edit, status: :unprocessable_entity

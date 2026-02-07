@@ -1,0 +1,102 @@
+<% content_for(:page_title, "Editar Influencer: #{@influencer.name}") %>
+
+<%= link_to admin_influencer_path(@influencer), class: "btn btn-sm btn-outline-secondary mb-3" do %>
+  <i class="bi bi-arrow-left me-1"></i> Volver
+<% end %>
+
+<%= form_with(model: [:admin, @influencer]) do |f| %>
+  <% if @influencer.errors.any? %>
+    <div class="alert alert-danger">
+      <ul class="mb-0">
+        <% @influencer.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="row g-3">
+    <div class="col-md-6">
+      <div class="card border-0 shadow-sm mb-3">
+        <div class="card-header bg-white border-bottom">
+          <h6 class="mb-0">Datos Basicos</h6>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <%= f.label :name, "Nombre", class: "form-label fw-semibold" %>
+            <%= f.text_field :name, class: "form-control" %>
+          </div>
+          <div class="mb-3">
+            <%= f.label :email, "Email", class: "form-label fw-semibold" %>
+            <%= f.email_field :email, class: "form-control" %>
+          </div>
+        </div>
+      </div>
+
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white border-bottom">
+          <h6 class="mb-0"><i class="bi bi-link-45deg me-1"></i> Enlaces Afiliados</h6>
+        </div>
+        <div class="card-body">
+          <%= f.label :ac_compte, "Cuenta bancaria", class: "form-label small" %>
+          <%= f.text_field :ac_compte, class: "form-control form-control-sm mb-2" %>
+          <%= f.label :ac_cdiposit, "Deposito emergencia", class: "form-label small" %>
+          <%= f.text_field :ac_cdiposit, class: "form-control form-control-sm mb-2" %>
+          <%= f.label :ac_saving, "Ahorro", class: "form-label small" %>
+          <%= f.text_field :ac_saving, class: "form-control form-control-sm mb-2" %>
+          <%= f.label :ac_deute, "Deudas", class: "form-label small" %>
+          <%= f.text_field :ac_deute, class: "form-control form-control-sm mb-2" %>
+          <%= f.label :ac_mortgage, "Hipoteca", class: "form-label small" %>
+          <%= f.text_field :ac_mortgage, class: "form-control form-control-sm mb-2" %>
+          <%= f.label :ac_curt, "Inversion CP", class: "form-label small" %>
+          <%= f.text_field :ac_curt, class: "form-control form-control-sm mb-2" %>
+          <%= f.label :ac_llarg, "Inversion LP", class: "form-label small" %>
+          <%= f.text_field :ac_llarg, class: "form-control form-control-sm mb-2" %>
+          <%= f.label :ac_jubil, "Jubilacion", class: "form-label small" %>
+          <%= f.text_field :ac_jubil, class: "form-control form-control-sm mb-2" %>
+          <%= f.label :ac_portfolio, "Portfolio", class: "form-label small" %>
+          <%= f.text_field :ac_portfolio, class: "form-control form-control-sm mb-2" %>
+          <%= f.label :ac_fiscal, "Fiscal", class: "form-label small" %>
+          <%= f.text_field :ac_fiscal, class: "form-control form-control-sm mb-2" %>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card border-0 shadow-sm mb-3">
+        <div class="card-header bg-white border-bottom">
+          <h6 class="mb-0"><i class="bi bi-camera-video me-1"></i> Videos</h6>
+        </div>
+        <div class="card-body">
+          <%= f.label :video_compte, "Cuenta bancaria", class: "form-label small" %>
+          <%= f.text_field :video_compte, class: "form-control form-control-sm mb-2" %>
+          <%= f.label :video_cdiposit, "Deposito emergencia", class: "form-label small" %>
+          <%= f.text_field :video_cdiposit, class: "form-control form-control-sm mb-2" %>
+          <%= f.label :video_diposit, "Deposito CP", class: "form-label small" %>
+          <%= f.text_field :video_diposit, class: "form-control form-control-sm mb-2" %>
+          <%= f.label :video_saving, "Ahorro", class: "form-label small" %>
+          <%= f.text_field :video_saving, class: "form-control form-control-sm mb-2" %>
+          <%= f.label :video_deute, "Deudas", class: "form-label small" %>
+          <%= f.text_field :video_deute, class: "form-control form-control-sm mb-2" %>
+          <%= f.label :video_mortgage, "Hipoteca", class: "form-label small" %>
+          <%= f.text_field :video_mortgage, class: "form-control form-control-sm mb-2" %>
+          <%= f.label :video_curt, "Inversion CP", class: "form-label small" %>
+          <%= f.text_field :video_curt, class: "form-control form-control-sm mb-2" %>
+          <%= f.label :video_llarg, "Inversion LP", class: "form-label small" %>
+          <%= f.text_field :video_llarg, class: "form-control form-control-sm mb-2" %>
+          <%= f.label :video_jubil, "Jubilacion", class: "form-label small" %>
+          <%= f.text_field :video_jubil, class: "form-control form-control-sm mb-2" %>
+          <%= f.label :video_portfolio, "Portfolio", class: "form-label small" %>
+          <%= f.text_field :video_portfolio, class: "form-control form-control-sm mb-2" %>
+          <%= f.label :video_fiscal, "Fiscal", class: "form-label small" %>
+          <%= f.text_field :video_fiscal, class: "form-control form-control-sm mb-2" %>
+        </div>
+      </div>
+
+      <div class="d-grid gap-2">
+        <%= f.submit "Guardar cambios", class: "btn btn-primary btn-lg" %>
+        <%= link_to "Cancelar", admin_influencer_path(@influencer), class: "btn btn-outline-secondary" %>
+      </div>
+    </div>
+  </div>
+<% end %>

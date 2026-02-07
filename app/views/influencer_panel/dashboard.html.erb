@@ -1,0 +1,79 @@
+<% content_for(:page_title, "Dashboard") %>
+
+<%# Stats Cards %>
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="card border-0 shadow-sm">
+      <div class="card-body text-center">
+        <i class="bi bi-people-fill fs-2 mb-2" style="color: #165668;"></i>
+        <h2 class="mb-0"><%= @referred_users_count %></h2>
+        <p class="text-muted mb-0">Usuarios Referidos</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card border-0 shadow-sm">
+      <div class="card-body text-center">
+        <i class="bi bi-link-45deg fs-2 mb-2" style="color: #165668;"></i>
+        <h2 class="mb-0"><%= @configured_links %><small class="text-muted">/10</small></h2>
+        <p class="text-muted mb-0">Enlaces Configurados</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card border-0 shadow-sm">
+      <div class="card-body text-center">
+        <i class="bi bi-camera-video-fill fs-2 mb-2" style="color: #165668;"></i>
+        <h2 class="mb-0"><%= @configured_videos %><small class="text-muted">/11</small></h2>
+        <p class="text-muted mb-0">Videos Configurados</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%# Referral Code %>
+<div class="card border-0 shadow-sm mb-4">
+  <div class="card-header bg-white border-bottom">
+    <h6 class="mb-0"><i class="bi bi-share me-1"></i> Tu Codigo de Referido</h6>
+  </div>
+  <div class="card-body">
+    <div class="row g-3">
+      <div class="col-md-4">
+        <label class="form-label fw-semibold small">Codigo unico</label>
+        <div class="input-group">
+          <input type="text" class="form-control" value="<%= @influencer.code %>" id="referralCode" readonly>
+          <button class="btn btn-outline-secondary" type="button" onclick="navigator.clipboard.writeText(document.getElementById('referralCode').value)">
+            <i class="bi bi-clipboard"></i>
+          </button>
+        </div>
+      </div>
+      <div class="col-md-8">
+        <label class="form-label fw-semibold small">Enlace de referido</label>
+        <div class="input-group">
+          <input type="text" class="form-control" value="<%= @referral_link %>" id="referralLink" readonly>
+          <button class="btn btn-outline-secondary" type="button" onclick="navigator.clipboard.writeText(document.getElementById('referralLink').value)">
+            <i class="bi bi-clipboard"></i>
+          </button>
+        </div>
+        <small class="text-muted">Comparte este enlace con tus seguidores</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%# Quick Actions %>
+<div class="card border-0 shadow-sm">
+  <div class="card-header bg-white border-bottom">
+    <h6 class="mb-0"><i class="bi bi-lightning me-1"></i> Acciones Rapidas</h6>
+  </div>
+  <div class="card-body">
+    <div class="d-flex gap-2 flex-wrap">
+      <%= link_to influencer_links_path, class: "btn btn-outline-primary" do %>
+        <i class="bi bi-pencil me-1"></i> Editar Enlaces Afiliados
+      <% end %>
+      <%= link_to influencer_videos_path, class: "btn btn-outline-primary" do %>
+        <i class="bi bi-pencil me-1"></i> Editar Videos
+      <% end %>
+    </div>
+  </div>
+</div>

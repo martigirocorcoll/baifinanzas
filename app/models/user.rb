@@ -4,7 +4,11 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
+  # Referral: which influencer referred this user
   belongs_to :influencer, optional: true
+
+  # If this user IS an influencer, their profile data
+  has_one :influencer_profile, class_name: "Influencer", foreign_key: "user_id", dependent: :nullify
 
   has_one  :pyg,     dependent: :destroy
   has_one  :balance, dependent: :destroy
@@ -15,8 +19,25 @@ class User < ApplicationRecord
   after_create :build_default_financials
   after_create :assign_influencer_from_referral
 
+  # Role helpers
   def admin?
-    admin == true
+    role == "admin"
+  end
+
+  def influencer?
+    role == "influencer"
+  end
+
+  def regular?
+    role == "user"
+  end
+
+  def profile_complete?
+    pyg_completed? && balance_completed?
+  end
+
+  def onboarding_only?
+    has_basic_financial_data? && !profile_complete?
   end
 
   # Check if user has completed basic onboarding (4 fields minimum)

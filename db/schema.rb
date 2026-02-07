@@ -10,9 +10,38 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_02_06_203841) do
+ActiveRecord::Schema[7.2].define(version: 2026_02_07_120001) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "app_news", force: :cascade do |t|
+    t.string "title", null: false
+    t.text "content"
+    t.datetime "published_at"
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["active"], name: "index_app_news_on_active"
+    t.index ["published_at"], name: "index_app_news_on_published_at"
+  end
+
+  create_table "articles", force: :cascade do |t|
+    t.string "slug", null: false
+    t.string "title", null: false
+    t.text "excerpt"
+    t.text "body"
+    t.string "category"
+    t.integer "read_time", default: 5
+    t.string "author", default: "BaiFinanzas"
+    t.datetime "published_at"
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["active"], name: "index_articles_on_active"
+    t.index ["category"], name: "index_articles_on_category"
+    t.index ["published_at"], name: "index_articles_on_published_at"
+    t.index ["slug"], name: "index_articles_on_slug", unique: true
+  end
 
   create_table "balances", force: :cascade do |t|
     t.bigint "user_id", null: false
@@ -65,11 +94,13 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_06_203841) do
     t.string "video_saving"
     t.string "video_mortgage"
     t.string "video_diposit"
+    t.bigint "user_id"
     t.index ["ac_compte"], name: "index_influencers_on_ac_compte"
     t.index ["code"], name: "index_influencers_on_code", unique: true
     t.index ["default"], name: "index_influencers_on_default"
     t.index ["email"], name: "index_influencers_on_email", unique: true
     t.index ["reset_password_token"], name: "index_influencers_on_reset_password_token", unique: true
+    t.index ["user_id"], name: "index_influencers_on_user_id", unique: true
   end
 
   create_table "objectives", force: :cascade do |t|
@@ -142,12 +173,15 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_06_203841) do
     t.bigint "influencer_id"
     t.bigint "pyg_id"
     t.bigint "balance_id"
-    t.boolean "admin", default: false, null: false
+    t.string "role", default: "user", null: false
+    t.boolean "pyg_completed", default: false, null: false
+    t.boolean "balance_completed", default: false, null: false
     t.index ["balance_id"], name: "index_users_on_balance_id", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["influencer_id"], name: "index_users_on_influencer_id"
     t.index ["pyg_id"], name: "index_users_on_pyg_id", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["role"], name: "index_users_on_role"
   end
 
   add_foreign_key "balances", "users"

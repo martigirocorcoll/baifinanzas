@@ -4,11 +4,39 @@ Rails.application.routes.draw do
   get  "service-worker", to: "rails/pwa#service_worker", as: :pwa_service_worker
   get  "manifest",       to: "rails/pwa#manifest",        as: :pwa_manifest
 
+  # Native app endpoints (sin locale)
+  get "native/config", to: "native#config", as: :native_config
+  get "native/tabs",   to: "native#tabs",   as: :native_tabs
+
   # Root sin locale - redirige al locale por defecto
   root to: redirect("/#{I18n.default_locale}", status: 302)
 
   # Todas las rutas con scope de locale
   scope "/:locale", locale: /es|en/ do
+    # ============================================
+    # ADMIN PANEL (requires admin? User)
+    # ============================================
+    namespace :admin do
+      root to: "dashboard#index"
+      resources :users, only: [:index, :show, :update]
+      resources :articles
+      resources :app_news, only: [:index, :new, :create, :edit, :update, :destroy]
+      resources :influencers do
+        member do
+          post :toggle_default
+        end
+      end
+    end
+
+    # ============================================
+    # INFLUENCER PANEL (requires Influencer auth)
+    # ============================================
+    get "influencer", to: "influencer_panel#dashboard", as: :influencer_dashboard
+    get "influencer/links", to: "influencer_panel#links", as: :influencer_links
+    patch "influencer/links", to: "influencer_panel#update_links"
+    get "influencer/videos", to: "influencer_panel#videos", as: :influencer_videos
+    patch "influencer/videos", to: "influencer_panel#update_videos"
+
     # ============================================
     # APP NAVIGATION (Tab Bar routes)
     # ============================================
@@ -66,10 +94,9 @@ Rails.application.routes.draw do
       registrations: 'users/registrations'
     }
 
-    # Devise for Influencers (solo login, no registro público)
-    devise_for :influencers, path: 'influencers', skip: [:registrations]
+    # Influencer auth removed - influencers now login as Users with role 'influencer'
 
-    # Página pública
+    # Pagina publica
     authenticated :user do
       root to: "home#index", as: :authenticated_root
     end
@@ -80,12 +107,9 @@ Rails.application.routes.draw do
     # Cambio de idioma
     get "set_locale/:new_locale", to: "locales#update", as: :set_locale
 
-    # CRUD de Influencers (show = dashboard cuando está autenticado)
-    resources :influencers do
-      member do
-        post :toggle_default
-      end
-    end
+    # Legal pages (public, no auth required)
+    get "privacy", to: "pages#privacy", as: :privacy
+    get "terms",   to: "pages#terms",   as: :terms
 
     # Recursos financieros del usuario (1:1)
     resource  :pyg,     only: %i[show new create edit update]
@@ -99,10 +123,14 @@ Rails.application.routes.draw do
     end
   end
 
-  # Redirecciones para URLs antiguas sin locale
+  # Redirecciones para URLs sin locale
+  get '/admin', to: redirect("/#{I18n.default_locale}/admin")
+  get '/influencer', to: redirect("/#{I18n.default_locale}/influencer")
   get '/dashboard', to: redirect("/#{I18n.default_locale}/dashboard/index")
   get '/dashboard/index', to: redirect("/#{I18n.default_locale}/dashboard/index")
   get '/objectives', to: redirect("/#{I18n.default_locale}/objectives")
   get '/pyg', to: redirect("/#{I18n.default_locale}/pyg")
   get '/balance', to: redirect("/#{I18n.default_locale}/balance")
+  get '/privacy', to: redirect("/#{I18n.default_locale}/privacy")
+  get '/terms', to: redirect("/#{I18n.default_locale}/terms")
 end

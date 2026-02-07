@@ -7,23 +7,26 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="theme-color" content="#165668">
+    <% if turbo_native_app? %>
+      <meta name="turbo-native" content="true">
+    <% end %>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
     <%= yield :head %>
 
     <link rel="manifest" href="/manifest.json">
-    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icons/icon-512x512.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="/icon.png">
+    <link rel="apple-touch-icon" href="/icons/icon-512x512.png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="app-layout">
-    <%# App Header - only show if content_for(:header) is provided %>
-    <% if content_for?(:header) %>
+  <body class="app-layout<%= ' turbo-native' if turbo_native_app? %>">
+    <%# App Header - only show if content_for(:header) is provided AND not in Turbo Native %>
+    <% if content_for?(:header) && !turbo_native_app? %>
       <%= yield :header %>
     <% end %>
 
@@ -35,7 +38,9 @@
       <%= yield %>
     </main>
 
-    <%# Bottom Navigation - Tab Bar %>
-    <%= render "shared/bottom_nav" %>
+    <%# Bottom Navigation - Tab Bar (hidden in Turbo Native, native app has its own) %>
+    <% unless turbo_native_app? %>
+      <%= render "shared/bottom_nav" %>
+    <% end %>
   </body>
 </html>

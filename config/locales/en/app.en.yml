@@ -29,6 +29,18 @@ en:
       edit_income_expenses: "Income & expenses"
       edit_assets_debts: "Assets & debts"
 
+    profile_banner:
+      title: "Complete your profile for accurate analysis"
+      description: "Your financial level is based on approximate onboarding data. Fill in the detailed forms to receive personalized advice."
+      complete_pyg: "Detail income and expenses"
+      pyg_time: "2 min - 13 categories"
+      pyg_done: "Income and expenses completed"
+      complete_balance: "Detail assets and debts"
+      balance_time: "2 min - 12 categories"
+      balance_done: "Assets and debts completed"
+      plan_locked: "Your personalized action plan will unlock when you complete your financial profile."
+      objectives_locked: "Financial objectives unlock when you complete your profile."
+
     financial_level:
       title: "Your financial level"
       see_requirements: "See requirements"

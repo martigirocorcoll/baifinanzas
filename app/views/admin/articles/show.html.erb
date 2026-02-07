@@ -1,0 +1,44 @@
+<% content_for(:page_title, "Articulo: #{@article.title}") %>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <%= link_to admin_articles_path, class: "btn btn-sm btn-outline-secondary" do %>
+    <i class="bi bi-arrow-left me-1"></i> Volver
+  <% end %>
+  <div class="d-flex gap-2">
+    <%= link_to edit_admin_article_path(@article), class: "btn btn-sm btn-primary" do %>
+      <i class="bi bi-pencil me-1"></i> Editar
+    <% end %>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-md-8">
+    <div class="card border-0 shadow-sm">
+      <div class="card-body">
+        <h4><%= @article.title %></h4>
+        <p class="text-muted"><%= @article.excerpt %></p>
+        <hr>
+        <div class="article-preview">
+          <%= raw @article.body %>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-white border-bottom">
+        <h6 class="mb-0">Metadatos</h6>
+      </div>
+      <div class="card-body">
+        <table class="table table-sm mb-0">
+          <tr><td class="text-muted">Slug</td><td><code><%= @article.slug %></code></td></tr>
+          <tr><td class="text-muted">Categoria</td><td><%= @article.category %></td></tr>
+          <tr><td class="text-muted">Lectura</td><td><%= @article.read_time %> min</td></tr>
+          <tr><td class="text-muted">Autor</td><td><%= @article.author %></td></tr>
+          <tr><td class="text-muted">Estado</td><td><%= @article.active? ? "Activo" : "Inactivo" %></td></tr>
+          <tr><td class="text-muted">Publicado</td><td><%= @article.published_at&.strftime("%d/%m/%Y %H:%M") %></td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

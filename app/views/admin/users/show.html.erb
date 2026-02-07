@@ -1,0 +1,352 @@
+<% content_for(:page_title, "Usuario: #{@user.email}") %>
+
+<%= link_to admin_users_path, class: "btn btn-sm btn-outline-secondary mb-3" do %>
+  <i class="bi bi-arrow-left me-1"></i> Volver a usuarios
+<% end %>
+
+<%# ============================================ %>
+<%# ROW 1: Info + Role + Level %>
+<%# ============================================ %>
+<div class="row g-3 mb-3">
+  <%# User Info & Role Change %>
+  <div class="col-md-5">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-header bg-white border-bottom">
+        <h6 class="mb-0"><i class="bi bi-person me-1"></i> Informacion del Usuario</h6>
+      </div>
+      <div class="card-body">
+        <table class="table table-sm mb-3">
+          <tr><td class="text-muted" style="width:40%">Email</td><td><%= @user.email %></td></tr>
+          <tr><td class="text-muted">Telefono</td><td><%= @user.phone || "-" %></td></tr>
+          <tr><td class="text-muted">Pais</td><td><%= @user.country || "-" %></td></tr>
+          <tr><td class="text-muted">Registro</td><td><%= @user.created_at.strftime("%d/%m/%Y %H:%M") %></td></tr>
+          <tr>
+            <td class="text-muted">Referido por</td>
+            <td>
+              <% if @user.influencer %>
+                <%= link_to @user.influencer.name, admin_influencer_path(@user.influencer), class: "text-decoration-none" %>
+              <% else %>
+                -
+              <% end %>
+            </td>
+          </tr>
+          <% if @user.influencer_profile %>
+            <tr>
+              <td class="text-muted">Perfil Influencer</td>
+              <td><%= link_to @user.influencer_profile.name, admin_influencer_path(@user.influencer_profile), class: "text-decoration-none" %></td>
+            </tr>
+          <% end %>
+        </table>
+
+        <%# Role Change Form %>
+        <div class="border-top pt-3">
+          <label class="form-label fw-semibold mb-2"><i class="bi bi-shield me-1"></i> Cambiar Rol</label>
+          <%= form_with(model: @user, url: admin_user_path(@user), method: :patch, local: true, class: "d-flex gap-2 align-items-center") do |f| %>
+            <%= f.select :role, [["Usuario", "user"], ["Influencer", "influencer"], ["Admin", "admin"]], {}, class: "form-select form-select-sm", style: "width: auto;" %>
+            <%= f.submit "Actualizar", class: "btn btn-sm btn-primary" %>
+          <% end %>
+          <small class="text-muted mt-1 d-block">
+            Rol actual:
+            <% case @user.role %>
+            <% when "admin" %>
+              <span class="badge bg-danger">Admin</span>
+            <% when "influencer" %>
+              <span class="badge bg-info text-dark">Influencer</span>
+            <% else %>
+              <span class="badge bg-secondary">Usuario</span>
+            <% end %>
+          </small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%# Financial Level %>
+  <div class="col-md-3">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-header bg-white border-bottom">
+        <h6 class="mb-0"><i class="bi bi-graph-up me-1"></i> Nivel Financiero</h6>
+      </div>
+      <div class="card-body text-center">
+        <% if @user.pyg&.has_data? %>
+          <% level = @user.financial_health_level_number %>
+          <% colors = { 1 => "danger", 2 => "warning", 3 => "info", 4 => "primary", 5 => "success", 6 => "success" } %>
+          <% level_names = { 1 => "Critico", 2 => "Fondo Emergencia", 3 => "Pagando Deudas", 4 => "Estable", 5 => "Crecimiento", 6 => "Libertad Financiera" } %>
+          <div class="display-4 mb-2">
+            <span class="badge bg-<%= colors[level] %> rounded-pill px-4"><%= level %></span>
+          </div>
+          <p class="fw-semibold mb-1"><%= level_names[level] %></p>
+          <p class="text-muted small mb-0">Nivel <%= level %> de 6</p>
+        <% else %>
+          <div class="py-3">
+            <i class="bi bi-exclamation-circle text-muted" style="font-size: 2rem;"></i>
+            <p class="text-muted mb-0 mt-2">Sin datos financieros</p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <%# Key Metrics %>
+  <div class="col-md-4">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-header bg-white border-bottom">
+        <h6 class="mb-0"><i class="bi bi-speedometer2 me-1"></i> Metricas Clave</h6>
+      </div>
+      <div class="card-body">
+        <% if @user.pyg&.has_data? %>
+          <div class="mb-2 d-flex justify-content-between">
+            <span class="text-muted">Patrimonio Neto</span>
+            <span class="fw-semibold <%= @user.net_worth >= 0 ? 'text-success' : 'text-danger' %>">
+              <%= number_to_currency(@user.net_worth, unit: "EUR ", precision: 0) %>
+            </span>
+          </div>
+          <div class="mb-2 d-flex justify-content-between">
+            <span class="text-muted">Cash Flow Mensual</span>
+            <span class="fw-semibold <%= @user.monthly_cash_flow >= 0 ? 'text-success' : 'text-danger' %>">
+              <%= number_to_currency(@user.monthly_cash_flow, unit: "EUR ", precision: 0) %>
+            </span>
+          </div>
+          <div class="mb-2 d-flex justify-content-between">
+            <span class="text-muted">Activos Totales</span>
+            <span><%= number_to_currency(@user.total_assets, unit: "EUR ", precision: 0) %></span>
+          </div>
+          <div class="mb-2 d-flex justify-content-between">
+            <span class="text-muted">Deuda Total</span>
+            <span class="<%= @user.total_debt > 0 ? 'text-danger' : '' %>">
+              <%= number_to_currency(@user.total_debt, unit: "EUR ", precision: 0) %>
+            </span>
+          </div>
+          <div class="mb-2 d-flex justify-content-between">
+            <span class="text-muted">Liquidez</span>
+            <span><%= number_to_currency(@user.liquid_assets, unit: "EUR ", precision: 0) %></span>
+          </div>
+          <div class="d-flex justify-content-between">
+            <span class="text-muted">Fondo Emergencia</span>
+            <span>
+              <% if @user.has_emergency_fund? %>
+                <span class="badge bg-success">Completo</span>
+              <% elsif @user.has_partial_emergency_fund? %>
+                <span class="badge bg-warning text-dark">Parcial</span>
+              <% else %>
+                <span class="badge bg-danger">Sin fondo</span>
+              <% end %>
+            </span>
+          </div>
+        <% else %>
+          <p class="text-muted mb-0">Sin datos disponibles</p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%# ============================================ %>
+<%# ROW 2: PyG (Ingresos y Gastos) %>
+<%# ============================================ %>
+<% if @user.pyg&.has_data? %>
+<div class="row g-3 mb-3">
+  <div class="col-md-6">
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-white border-bottom">
+        <h6 class="mb-0"><i class="bi bi-cash-stack me-1"></i> Ingresos y Gastos (PyG)</h6>
+      </div>
+      <div class="card-body p-0">
+        <table class="table table-sm mb-0">
+          <thead class="table-light">
+            <tr><th colspan="2" class="text-success">Ingresos</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="ps-3">Ingresos mensuales</td>
+              <td class="text-end pe-3 fw-semibold text-success"><%= number_to_currency(@user.pyg.ingresos_mensual, unit: "EUR ", precision: 0) %></td>
+            </tr>
+          </tbody>
+          <thead class="table-light">
+            <tr><th colspan="2" class="text-danger">Gastos</th></tr>
+          </thead>
+          <tbody>
+            <% pyg = @user.pyg %>
+            <% expense_items = [
+              ["Compra / Alimentacion", pyg.gasto_compra],
+              ["Alquiler / Hipoteca", pyg.alquiler_hipoteca],
+              ["Suministros", pyg.gastos_utilities],
+              ["Seguros", pyg.gastos_seguros],
+              ["Transporte", pyg.gastos_transporte],
+              ["Restaurantes y Ocio", pyg.restaurantes_y_ocio],
+              ["Cuota Hipoteca", pyg.cuota_hipoteca],
+              ["Cuota Coche", pyg.cuota_coche],
+              ["Otras Cuotas", pyg.otras_cuotas],
+              ["Suscripciones", pyg.suscripciones],
+              ["Cuidado Personal", pyg.cuidado_personal],
+              ["Otros Gastos", pyg.otros_gastos]
+            ] %>
+            <% expense_items.each do |label, value| %>
+              <% next if (value || 0) == 0 %>
+              <tr>
+                <td class="ps-3"><%= label %></td>
+                <td class="text-end pe-3"><%= number_to_currency(value, unit: "EUR ", precision: 0) %></td>
+              </tr>
+            <% end %>
+            <tr class="table-light fw-semibold">
+              <td class="ps-3">Total Gastos</td>
+              <td class="text-end pe-3 text-danger"><%= number_to_currency(@user.monthly_expenses, unit: "EUR ", precision: 0) %></td>
+            </tr>
+            <tr class="fw-bold">
+              <td class="ps-3">Cash Flow Mensual</td>
+              <td class="text-end pe-3 <%= @user.monthly_cash_flow >= 0 ? 'text-success' : 'text-danger' %>">
+                <%= number_to_currency(@user.monthly_cash_flow, unit: "EUR ", precision: 0) %>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <%# Balance %>
+  <div class="col-md-6">
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-white border-bottom">
+        <h6 class="mb-0"><i class="bi bi-wallet2 me-1"></i> Balance (Activos y Deudas)</h6>
+      </div>
+      <div class="card-body p-0">
+        <% if @user.balance&.has_data? %>
+          <% bal = @user.balance %>
+          <table class="table table-sm mb-0">
+            <thead class="table-light">
+              <tr><th colspan="2" class="text-success">Activos</th></tr>
+            </thead>
+            <tbody>
+              <% asset_items = [
+                ["Inmuebles", bal.valor_inmuebles],
+                ["Cuenta Corriente", bal.dinero_cuenta_corriente],
+                ["Ahorro / Depositos", bal.dinero_cuenta_ahorro_depos],
+                ["Inversiones (Fondos)", bal.dinero_inversiones_f],
+                ["Planes de Pensiones", bal.dinero_planes_pensiones],
+                ["Vehiculos", bal.valor_coches_vehiculos],
+                ["Otros Activos", bal.valor_otros_activos]
+              ] %>
+              <% asset_items.each do |label, value| %>
+                <% next if (value || 0) == 0 %>
+                <tr>
+                  <td class="ps-3"><%= label %></td>
+                  <td class="text-end pe-3"><%= number_to_currency(value, unit: "EUR ", precision: 0) %></td>
+                </tr>
+              <% end %>
+              <tr class="table-light fw-semibold">
+                <td class="ps-3">Total Activos</td>
+                <td class="text-end pe-3 text-success"><%= number_to_currency(@user.total_assets, unit: "EUR ", precision: 0) %></td>
+              </tr>
+            </tbody>
+            <thead class="table-light">
+              <tr><th colspan="2" class="text-danger">Deudas</th></tr>
+            </thead>
+            <tbody>
+              <% debt_items = [
+                ["Hipoteca Inmuebles", bal.hipoteca_inmuebles],
+                ["Tarjeta de Credito", bal.deuda_tarjeta_credito],
+                ["Prestamos Personales", bal.prestamos_personales],
+                ["Prestamos Coches", bal.prestamos_coches],
+                ["Otras Deudas", bal.otras_deudas]
+              ] %>
+              <% debt_items.each do |label, value| %>
+                <% next if (value || 0) == 0 %>
+                <tr>
+                  <td class="ps-3"><%= label %></td>
+                  <td class="text-end pe-3"><%= number_to_currency(value, unit: "EUR ", precision: 0) %></td>
+                </tr>
+              <% end %>
+              <tr class="table-light fw-semibold">
+                <td class="ps-3">Total Deudas</td>
+                <td class="text-end pe-3 text-danger"><%= number_to_currency(@user.total_debt, unit: "EUR ", precision: 0) %></td>
+              </tr>
+              <tr class="fw-bold">
+                <td class="ps-3">Patrimonio Neto</td>
+                <td class="text-end pe-3 <%= @user.net_worth >= 0 ? 'text-success' : 'text-danger' %>">
+                  <%= number_to_currency(@user.net_worth, unit: "EUR ", precision: 0) %>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        <% else %>
+          <div class="p-3 text-muted">Sin datos de balance</div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+<% end %>
+
+<%# ============================================ %>
+<%# ROW 3: Objectives + Recommendations %>
+<%# ============================================ %>
+<div class="row g-3">
+  <%# Objectives %>
+  <div class="col-md-6">
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-white border-bottom">
+        <h6 class="mb-0"><i class="bi bi-bullseye me-1"></i> Objetivos (<%= @user.objectives.count %>)</h6>
+      </div>
+      <div class="card-body">
+        <% if @user.objectives.any? %>
+          <% @user.objectives.each do |obj| %>
+            <div class="border rounded p-2 mb-2">
+              <div class="d-flex justify-content-between align-items-center mb-1">
+                <span class="fw-semibold"><%= obj.title %></span>
+                <span class="badge bg-primary"><%= number_to_currency(obj.target_amount, unit: "EUR ", precision: 0) %></span>
+              </div>
+              <div class="d-flex gap-3">
+                <small class="text-muted">
+                  <i class="bi bi-calendar3 me-1"></i><%= obj.target_date&.strftime("%d/%m/%Y") || "-" %>
+                </small>
+                <small class="text-muted">
+                  <i class="bi bi-piggy-bank me-1"></i><%= number_to_currency(obj.monthly_savings_needed, unit: "EUR ", precision: 0) %>/mes
+                </small>
+                <% if obj.respond_to?(:current_amount) && obj.current_amount.present? && obj.current_amount > 0 %>
+                  <small class="text-muted">
+                    <i class="bi bi-check-circle me-1"></i>Actual: <%= number_to_currency(obj.current_amount, unit: "EUR ", precision: 0) %>
+                  </small>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        <% else %>
+          <p class="text-muted mb-0">Sin objetivos definidos</p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <%# Recommendations / Action Plan %>
+  <div class="col-md-6">
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-white border-bottom">
+        <h6 class="mb-0"><i class="bi bi-list-check me-1"></i> Plan de Accion</h6>
+      </div>
+      <div class="card-body">
+        <% if @user.pyg&.has_data? %>
+          <% @user.action_plan.select { |a| a[:type] == 'recommendation' }.each do |action| %>
+            <div class="d-flex align-items-center gap-2 mb-2">
+              <% if action[:completed] %>
+                <i class="bi bi-check-circle-fill text-success"></i>
+              <% else %>
+                <i class="bi bi-circle text-muted"></i>
+              <% end %>
+              <span class="<%= action[:completed] ? 'text-decoration-line-through text-muted' : '' %>">
+                <%= action[:title] %>
+              </span>
+            </div>
+          <% end %>
+          <% completed_count = @user.action_plan.count { |a| a[:completed] } %>
+          <% total_count = @user.action_plan.count { |a| a[:type] == 'recommendation' } %>
+          <div class="mt-2 pt-2 border-top">
+            <small class="text-muted"><%= completed_count %>/<%= total_count %> completadas</small>
+          </div>
+        <% else %>
+          <p class="text-muted mb-0">Sin plan de accion (falta onboarding)</p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

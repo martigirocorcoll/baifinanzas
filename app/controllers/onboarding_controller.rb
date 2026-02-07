@@ -27,19 +27,19 @@ class OnboardingController < ApplicationController
     # Parse and save basic data
     # Monthly income
     if params[:ingresos_mensual].present?
-      @pyg.ingresos_mensual = params[:ingresos_mensual].to_f
+      @pyg.ingresos_mensual = params[:ingresos_mensual].to_i
     end
 
     # Monthly expenses (total, will be distributed later)
     if params[:gastos_mensual].present?
-      total_expenses = params[:gastos_mensual].to_f
+      total_expenses = params[:gastos_mensual].to_i
       # Distribute roughly across categories for now
-      @pyg.gasto_compra = (total_expenses * 0.25).round(2)
-      @pyg.alquiler_hipoteca = (total_expenses * 0.35).round(2)
-      @pyg.gastos_utilities = (total_expenses * 0.10).round(2)
-      @pyg.gastos_transporte = (total_expenses * 0.10).round(2)
-      @pyg.restaurantes_y_ocio = (total_expenses * 0.10).round(2)
-      @pyg.otros_gastos = (total_expenses * 0.10).round(2)
+      @pyg.gasto_compra = (total_expenses * 0.25).round
+      @pyg.alquiler_hipoteca = (total_expenses * 0.35).round
+      @pyg.gastos_utilities = (total_expenses * 0.10).round
+      @pyg.gastos_transporte = (total_expenses * 0.10).round
+      @pyg.restaurantes_y_ocio = (total_expenses * 0.10).round
+      @pyg.otros_gastos = (total_expenses * 0.10).round
       # Set others to 0
       @pyg.gastos_seguros ||= 0
       @pyg.cuota_hipoteca ||= 0
@@ -51,10 +51,10 @@ class OnboardingController < ApplicationController
 
     # Total savings
     if params[:ahorros_totales].present?
-      total_savings = params[:ahorros_totales].to_f
+      total_savings = params[:ahorros_totales].to_i
       # Distribute between checking and savings accounts
-      @balance.dinero_cuenta_corriente = (total_savings * 0.3).round(2)
-      @balance.dinero_cuenta_ahorro_depos = (total_savings * 0.7).round(2)
+      @balance.dinero_cuenta_corriente = (total_savings * 0.3).round
+      @balance.dinero_cuenta_ahorro_depos = (total_savings * 0.7).round
       # Set others to 0 if not set
       @balance.valor_inmuebles ||= 0
       @balance.dinero_inversiones_f ||= 0
@@ -65,7 +65,7 @@ class OnboardingController < ApplicationController
 
     # Total debt
     if params[:deudas_totales].present?
-      total_debt = params[:deudas_totales].to_f
+      total_debt = params[:deudas_totales].to_i
       # Put all debt in "otras_deudas" for now
       @balance.otras_deudas = total_debt
       # Set others to 0 if not set
@@ -76,7 +76,7 @@ class OnboardingController < ApplicationController
     end
 
     if @pyg.save && @balance.save
-      redirect_to onboarding_complete_path
+      redirect_to onboarding_processing_path
     else
       flash.now[:alert] = t('onboarding.save_error', default: 'Error saving your data. Please try again.')
       render :basic, status: :unprocessable_entity

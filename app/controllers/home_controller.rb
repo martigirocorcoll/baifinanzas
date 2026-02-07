@@ -20,6 +20,11 @@ class HomeController < ApplicationController
 
     # Chart data
     load_chart_data
+
+    # Profile completion flags
+    @pyg_completed = current_user.pyg_completed?
+    @balance_completed = current_user.balance_completed?
+    @profile_complete = current_user.profile_complete?
   end
 
   private

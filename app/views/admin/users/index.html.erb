@@ -1,0 +1,62 @@
+<% content_for(:page_title, "Usuarios") %>
+
+<div class="card border-0 shadow-sm">
+  <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center">
+    <h6 class="mb-0">Total: <%= @users.count %> usuarios</h6>
+  </div>
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>Email</th>
+            <th class="text-center">Rol</th>
+            <th class="text-center">Nivel</th>
+            <th>Influencer</th>
+            <th>Registro</th>
+            <th class="text-end">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @users.each do |user| %>
+            <tr>
+              <td><%= user.email %></td>
+              <td class="text-center">
+                <% case user.role %>
+                <% when "admin" %>
+                  <span class="badge bg-danger"><i class="bi bi-shield-fill me-1"></i>Admin</span>
+                <% when "influencer" %>
+                  <span class="badge bg-info text-dark"><i class="bi bi-star-fill me-1"></i>Influencer</span>
+                <% else %>
+                  <span class="badge bg-secondary">Usuario</span>
+                <% end %>
+              </td>
+              <td class="text-center">
+                <% if user.pyg&.has_data? %>
+                  <% level = user.financial_health_level_number %>
+                  <% colors = { 1 => "danger", 2 => "warning", 3 => "info", 4 => "primary", 5 => "success", 6 => "success" } %>
+                  <span class="badge bg-<%= colors[level] %>"><%= level %></span>
+                <% else %>
+                  <span class="badge bg-secondary">-</span>
+                <% end %>
+              </td>
+              <td>
+                <% if user.influencer %>
+                  <small><%= user.influencer.name %></small>
+                <% else %>
+                  <small class="text-muted">-</small>
+                <% end %>
+              </td>
+              <td><small><%= user.created_at.strftime("%d/%m/%Y") %></small></td>
+              <td class="text-end">
+                <%= link_to admin_user_path(user), class: "btn btn-sm btn-outline-primary" do %>
+                  <i class="bi bi-eye"></i> Ver
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

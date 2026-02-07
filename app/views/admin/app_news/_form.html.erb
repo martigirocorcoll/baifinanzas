@@ -1,0 +1,57 @@
+<%= form_with(model: [:admin, news_item], class: "needs-validation") do |f| %>
+  <% if news_item.errors.any? %>
+    <div class="alert alert-danger">
+      <h6><%= news_item.errors.count %> error(es):</h6>
+      <ul class="mb-0">
+        <% news_item.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="row g-3">
+    <div class="col-md-8">
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white border-bottom">
+          <h6 class="mb-0">Contenido</h6>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <%= f.label :title, "Titulo", class: "form-label fw-semibold" %>
+            <%= f.text_field :title, class: "form-control", placeholder: "Titulo de la noticia", required: true %>
+          </div>
+
+          <div class="mb-3">
+            <%= f.label :content, "Contenido", class: "form-label fw-semibold" %>
+            <%= f.text_area :content, class: "form-control", rows: 6, placeholder: "Texto de la noticia..." %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm mb-3">
+        <div class="card-header bg-white border-bottom">
+          <h6 class="mb-0">Configuracion</h6>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <%= f.label :published_at, "Fecha de publicacion", class: "form-label fw-semibold" %>
+            <%= f.datetime_local_field :published_at, class: "form-control" %>
+          </div>
+
+          <div class="form-check form-switch mb-3">
+            <%= f.check_box :active, class: "form-check-input", role: "switch" %>
+            <%= f.label :active, "Activa (visible en Discovery)", class: "form-check-label" %>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-grid gap-2">
+        <%= f.submit news_item.persisted? ? "Guardar cambios" : "Crear noticia", class: "btn btn-primary btn-lg" %>
+        <%= link_to "Cancelar", admin_app_news_index_path, class: "btn btn-outline-secondary" %>
+      </div>
+    </div>
+  </div>
+<% end %>

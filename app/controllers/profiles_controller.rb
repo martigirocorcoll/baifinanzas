@@ -5,8 +5,8 @@ class ProfilesController < ApplicationController
     @user = current_user
     @financial_level = current_user.financial_health_level_number
     @financial_level_key = current_user.financial_health_level_key
-    @has_pyg = current_user.pyg.present? && current_user.pyg.ingresos_mensual.present?
-    @has_balance = current_user.balance.present? && current_user.total_assets > 0
+    @has_pyg = current_user.pyg_completed?
+    @has_balance = current_user.balance_completed?
 
     # Profile completion percentage
     @profile_completion = calculate_profile_completion
@@ -58,25 +58,18 @@ class ProfilesController < ApplicationController
 
   def calculate_profile_completion
     completion = 0
-    total_steps = 4
 
     # Step 1: Basic user info (25%)
     completion += 25 if current_user.email.present?
 
-    # Step 2: PyG data (25%)
-    if current_user.pyg.present? && current_user.pyg.ingresos_mensual.present?
-      completion += 25
-    end
+    # Step 2: Detailed PyG (25%)
+    completion += 25 if current_user.pyg_completed?
 
-    # Step 3: Balance data (25%)
-    if current_user.balance.present? && current_user.total_assets > 0
-      completion += 25
-    end
+    # Step 3: Detailed Balance (25%)
+    completion += 25 if current_user.balance_completed?
 
     # Step 4: At least one objective (25%)
-    if current_user.objectives.any?
-      completion += 25
-    end
+    completion += 25 if current_user.objectives.any?
 
     completion
   end

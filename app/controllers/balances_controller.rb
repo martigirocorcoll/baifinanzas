@@ -13,7 +13,7 @@ class BalancesController < ApplicationController
   def create
     @balance = current_user.build_balance(balance_params)
     if @balance.save
-      # Onboarding completed! Show processing screen before dashboard
+      current_user.update_column(:balance_completed, true)
       redirect_to onboarding_processing_path
     else
       render :new, status: :unprocessable_entity
@@ -25,7 +25,7 @@ class BalancesController < ApplicationController
 
   def update
     if @balance.update(balance_params)
-      # Always show processing screen when updating financial data
+      current_user.update_column(:balance_completed, true)
       redirect_to onboarding_processing_path, notice: t('controllers.balances.updated')
     else
       render :edit, status: :unprocessable_entity

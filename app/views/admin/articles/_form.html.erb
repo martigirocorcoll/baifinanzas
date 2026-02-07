@@ -1,0 +1,84 @@
+<%= form_with(model: [:admin, article], class: "needs-validation") do |f| %>
+  <% if article.errors.any? %>
+    <div class="alert alert-danger">
+      <h6><%= article.errors.count %> error(es):</h6>
+      <ul class="mb-0">
+        <% article.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="row g-3">
+    <div class="col-md-8">
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white border-bottom">
+          <h6 class="mb-0">Contenido</h6>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <%= f.label :title, "Titulo", class: "form-label fw-semibold" %>
+            <%= f.text_field :title, class: "form-control", placeholder: "Titulo del articulo", required: true %>
+          </div>
+
+          <div class="mb-3">
+            <%= f.label :slug, "Slug (URL)", class: "form-label fw-semibold" %>
+            <%= f.text_field :slug, class: "form-control", placeholder: "mi-articulo", required: true %>
+            <small class="text-muted">URL amigable. Ej: fondos-indexados</small>
+          </div>
+
+          <div class="mb-3">
+            <%= f.label :excerpt, "Extracto", class: "form-label fw-semibold" %>
+            <%= f.text_area :excerpt, class: "form-control", rows: 3, placeholder: "Breve descripcion del articulo..." %>
+          </div>
+
+          <div class="mb-3">
+            <%= f.label :body, "Contenido (HTML)", class: "form-label fw-semibold" %>
+            <%= f.text_area :body, class: "form-control font-monospace", rows: 15, placeholder: "<h5>Seccion</h5><p>Contenido...</p>" %>
+            <small class="text-muted">Acepta HTML: h5, p, ul/ol, li, strong, em</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm mb-3">
+        <div class="card-header bg-white border-bottom">
+          <h6 class="mb-0">Configuracion</h6>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <%= f.label :category, "Categoria", class: "form-label fw-semibold" %>
+            <%= f.select :category, [["Inversion", "inversion"], ["Ahorro", "ahorro"], ["Deudas", "deudas"], ["Presupuesto", "presupuesto"], ["Conceptos", "conceptos"]], {}, class: "form-select" %>
+          </div>
+
+          <div class="mb-3">
+            <%= f.label :read_time, "Tiempo de lectura (min)", class: "form-label fw-semibold" %>
+            <%= f.number_field :read_time, class: "form-control", min: 1, max: 30 %>
+          </div>
+
+          <div class="mb-3">
+            <%= f.label :author, "Autor", class: "form-label fw-semibold" %>
+            <%= f.text_field :author, class: "form-control" %>
+          </div>
+
+          <div class="mb-3">
+            <%= f.label :published_at, "Fecha de publicacion", class: "form-label fw-semibold" %>
+            <%= f.datetime_local_field :published_at, class: "form-control" %>
+          </div>
+
+          <div class="form-check form-switch mb-3">
+            <%= f.check_box :active, class: "form-check-input", role: "switch" %>
+            <%= f.label :active, "Activo (visible en Discovery)", class: "form-check-label" %>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-grid gap-2">
+        <%= f.submit article.persisted? ? "Guardar cambios" : "Crear articulo", class: "btn btn-primary btn-lg" %>
+        <%= link_to "Cancelar", admin_articles_path, class: "btn btn-outline-secondary" %>
+      </div>
+    </div>
+  </div>
+<% end %>

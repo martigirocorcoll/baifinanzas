@@ -29,6 +29,18 @@ es:
       edit_income_expenses: "Ingresos y gastos"
       edit_assets_debts: "Activos y deudas"
 
+    profile_banner:
+      title: "Completa tu perfil para un analisis preciso"
+      description: "Tu nivel financiero se basa en datos aproximados del onboarding. Rellena los formularios detallados para recibir consejos personalizados."
+      complete_pyg: "Detallar ingresos y gastos"
+      pyg_time: "2 min - 13 categorias"
+      pyg_done: "Ingresos y gastos completados"
+      complete_balance: "Detallar activos y deudas"
+      balance_time: "2 min - 12 categorias"
+      balance_done: "Activos y deudas completados"
+      plan_locked: "Tu plan de accion personalizado se desbloqueara cuando completes tu perfil financiero."
+      objectives_locked: "Los objetivos financieros se desbloquean al completar tu perfil."
+
     financial_level:
       title: "Tu nivel financiero"
       see_requirements: "Ver requisitos"

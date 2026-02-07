@@ -1,20 +1,20 @@
 <% content_for :header do %>
   <%= render "shared/app_header",
-       title: truncate(@article[:title], length: 30),
+       title: truncate(@article.title, length: 30),
        back_path: discovery_path,
        back_label: t('discovery.back_to_feed', default: 'Discovery') %>
 <% end %>
 
 <div class="app-container">
-  <% category_label = case @article[:category]
+  <% category_label = case @article.category
       when 'inversion' then t('discovery.categories.investment', default: 'Inversion')
       when 'ahorro' then t('discovery.categories.savings', default: 'Ahorro')
       when 'deudas' then t('discovery.categories.debt', default: 'Deudas')
       when 'presupuesto' then t('discovery.categories.budget', default: 'Presupuesto')
       when 'conceptos' then t('discovery.categories.concepts', default: 'Conceptos')
-      else @article[:category]&.capitalize
+      else @article.category&.capitalize
     end %>
-  <% category_color = case @article[:category]
+  <% category_color = case @article.category
       when 'inversion' then '#3b82f6'
       when 'ahorro' then '#10b981'
       when 'deudas' then '#ef4444'
@@ -27,15 +27,15 @@
     <%= category_label %>
   </span>
 
-  <h2 class="mb-2" style="font-size: 1.375rem; font-weight: 700; line-height: 1.3;"><%= @article[:title] %></h2>
+  <h2 class="mb-2" style="font-size: 1.375rem; font-weight: 700; line-height: 1.3;"><%= @article.title %></h2>
 
   <p class="text-muted small mb-3">
-    <%= t('discovery.by', default: 'Por') %> <%= @article[:author] %> &middot; <%= @article[:read_time] %> min <%= t('discovery.read_time', default: 'de lectura') %>
+    <%= t('discovery.by', default: 'Por') %> <%= @article.author %> &middot; <%= @article.read_time %> min <%= t('discovery.read_time', default: 'de lectura') %>
   </p>
 
   <hr class="mb-4">
 
   <div class="article-body">
-    <%= raw @article[:body] %>
+    <%= raw @article.body %>
   </div>
 </div>

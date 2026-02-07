@@ -2,34 +2,139 @@
 <%= render 'home/hero' %>
 
 <div class="app-container">
-  <%# Action Plan Carousel %>
-  <div class="home-section">
-    <%= render 'home/action_carousel' %>
-  </div>
+  <% unless @profile_complete %>
+    <%# ============================================ %>
+    <%# PROFILE INCOMPLETE: Big CTA + locked sections %>
+    <%# ============================================ %>
+    <div class="mb-3" style="background: #fff; border: 2px solid #f59e0b; border-radius: 16px; padding: 1.25rem; box-shadow: 0 2px 12px rgba(245,158,11,0.12);">
+      <%# Header %>
+      <div class="d-flex align-items-center gap-3 mb-3">
+        <div style="background: #fef3c7; border-radius: 50%; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+          <i class="bi bi-shield-exclamation" style="color: #d97706; font-size: 1.4rem;"></i>
+        </div>
+        <div>
+          <h4 class="mb-0" style="font-size: 1.05rem; font-weight: 700; color: #1a1a1a;">
+            <%= t('home.profile_banner.title', default: 'Completa tu perfil para un analisis preciso') %>
+          </h4>
+        </div>
+      </div>
 
-  <% if @can_invest %>
-    <%# Objectives Carousel %>
-    <div class="home-section">
-      <%= render 'home/objectives_carousel' %>
+      <p style="font-size: 0.9rem; color: #6b7280; line-height: 1.5; margin-bottom: 1rem;">
+        <%= t('home.profile_banner.description', default: 'Tu nivel financiero se basa en datos aproximados del onboarding. Rellena los formularios detallados para recibir consejos personalizados.') %>
+      </p>
+
+      <%# Action buttons %>
+      <div class="d-flex flex-column gap-2">
+        <% unless @pyg_completed %>
+          <%= link_to edit_pyg_path, style: "display: flex; align-items: center; gap: 0.75rem; padding: 0.85rem 1rem; background: #fffbeb; border: 1.5px solid #fcd34d; border-radius: 12px; text-decoration: none; transition: background 0.15s;" do %>
+            <div style="background: #fef3c7; border-radius: 10px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+              <i class="bi bi-cash-stack" style="color: #d97706; font-size: 1.1rem;"></i>
+            </div>
+            <div style="flex: 1;">
+              <span style="font-weight: 600; font-size: 0.9rem; color: #92400e; display: block;"><%= t('home.profile_banner.complete_pyg', default: 'Detallar ingresos y gastos') %></span>
+              <span style="font-size: 0.78rem; color: #b45309;"><%= t('home.profile_banner.pyg_time', default: '2 min - 13 categorias') %></span>
+            </div>
+            <i class="bi bi-chevron-right" style="color: #d97706; font-size: 1rem;"></i>
+          <% end %>
+        <% else %>
+          <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.85rem 1rem; background: #f0fdf4; border: 1.5px solid #bbf7d0; border-radius: 12px;">
+            <div style="background: #dcfce7; border-radius: 10px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+              <i class="bi bi-check-lg" style="color: #16a34a; font-size: 1.1rem;"></i>
+            </div>
+            <span style="font-weight: 600; font-size: 0.9rem; color: #166534;"><%= t('home.profile_banner.pyg_done', default: 'Ingresos y gastos completados') %></span>
+          </div>
+        <% end %>
+
+        <% unless @balance_completed %>
+          <%= link_to edit_balance_path, style: "display: flex; align-items: center; gap: 0.75rem; padding: 0.85rem 1rem; background: #fffbeb; border: 1.5px solid #fcd34d; border-radius: 12px; text-decoration: none; transition: background 0.15s;" do %>
+            <div style="background: #fef3c7; border-radius: 10px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+              <i class="bi bi-bank" style="color: #d97706; font-size: 1.1rem;"></i>
+            </div>
+            <div style="flex: 1;">
+              <span style="font-weight: 600; font-size: 0.9rem; color: #92400e; display: block;"><%= t('home.profile_banner.complete_balance', default: 'Detallar activos y deudas') %></span>
+              <span style="font-size: 0.78rem; color: #b45309;"><%= t('home.profile_banner.balance_time', default: '2 min - 12 categorias') %></span>
+            </div>
+            <i class="bi bi-chevron-right" style="color: #d97706; font-size: 1rem;"></i>
+          <% end %>
+        <% else %>
+          <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.85rem 1rem; background: #f0fdf4; border: 1.5px solid #bbf7d0; border-radius: 12px;">
+            <div style="background: #dcfce7; border-radius: 10px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+              <i class="bi bi-check-lg" style="color: #16a34a; font-size: 1.1rem;"></i>
+            </div>
+            <span style="font-weight: 600; font-size: 0.9rem; color: #166534;"><%= t('home.profile_banner.balance_done', default: 'Activos y deudas completados') %></span>
+          </div>
+        <% end %>
+      </div>
     </div>
+
+    <%# Action Plan placeholder (locked) %>
+    <div class="home-section">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h3 class="home-section__title mb-0" style="opacity: 0.5;">
+          <i class="bi bi-lock-fill me-1" style="font-size: 0.85rem;"></i>
+          <%= t('home.action_plan.title', default: 'Tu plan de accion') %>
+        </h3>
+      </div>
+      <div style="background: #f3f4f6; border-radius: 12px; padding: 2rem 1.25rem; text-center; text-align: center;">
+        <i class="bi bi-list-check" style="font-size: 2.5rem; color: #d1d5db;"></i>
+        <p style="color: #9ca3af; font-size: 0.9rem; margin-top: 0.75rem; margin-bottom: 0;">
+          <%= t('home.profile_banner.plan_locked', default: 'Tu plan de accion personalizado se desbloqueara cuando completes tu perfil financiero.') %>
+        </p>
+      </div>
+    </div>
+
+    <%# Objectives placeholder (locked) %>
+    <div class="home-section">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h3 class="home-section__title mb-0" style="opacity: 0.5;">
+          <i class="bi bi-lock-fill me-1" style="font-size: 0.85rem;"></i>
+          <%= t('home.objectives.title', default: 'Objetivos') %>
+        </h3>
+      </div>
+      <div style="background: #f3f4f6; border-radius: 12px; padding: 2rem 1.25rem; text-align: center;">
+        <i class="bi bi-bullseye" style="font-size: 2.5rem; color: #d1d5db;"></i>
+        <p style="color: #9ca3af; font-size: 0.9rem; margin-top: 0.75rem; margin-bottom: 0;">
+          <%= t('home.profile_banner.objectives_locked', default: 'Los objetivos financieros se desbloquean al completar tu perfil.') %>
+        </p>
+      </div>
+    </div>
+
+  <% else %>
+    <%# ============================================ %>
+    <%# PROFILE COMPLETE: Full experience %>
+    <%# ============================================ %>
+
+    <%# Action Plan Carousel %>
+    <div class="home-section">
+      <%= render 'home/action_carousel' %>
+    </div>
+
+    <% if @can_invest %>
+      <%# Objectives Carousel %>
+      <div class="home-section">
+        <%= render 'home/objectives_carousel' %>
+      </div>
+    <% end %>
   <% end %>
 </div>
 
-<%# Bottom teal section: savings + metrics + charts %>
-<div class="teal-section home-bottom-section">
-  <div class="app-container" style="animation: none;">
-    <% if @can_invest %>
-      <%= render 'home/savings_inline' %>
-      <div style="margin-bottom: 1rem;"></div>
-    <% end %>
-    <%= render 'home/financial_charts' %>
+<% if @profile_complete %>
+  <%# Bottom teal section: savings + metrics + charts %>
+  <div class="teal-section home-bottom-section">
+    <div class="app-container" style="animation: none;">
+      <% if @can_invest %>
+        <%= render 'home/savings_inline' %>
+        <div style="margin-bottom: 1rem;"></div>
+      <% end %>
+      <%= render 'home/financial_charts' %>
+    </div>
   </div>
-</div>
+<% end %>
 
 <%# Level Guide Modal %>
 <%= render 'home/level_guide_modal' %>
 
-<% if @can_invest %>
+<% if @profile_complete && @can_invest %>
   <%# Objective Form Modal %>
   <%= render 'home/objective_modal' %>
 <% end %>

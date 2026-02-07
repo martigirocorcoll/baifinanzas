@@ -1,0 +1,66 @@
+<% content_for(:page_title, "Videos") %>
+
+<%= form_with(model: @influencer, url: influencer_videos_path, method: :patch) do |f| %>
+  <div class="card border-0 shadow-sm">
+    <div class="card-header bg-white border-bottom">
+      <h6 class="mb-0">Editar Videos de Recomendacion</h6>
+      <small class="text-muted">Introduce la URL de YouTube o enlace externo para cada video. Deja en blanco si no tienes video.</small>
+    </div>
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <div class="mb-3">
+            <%= f.label :video_compte, "Cuenta bancaria", class: "form-label fw-semibold small" %>
+            <%= f.text_field :video_compte, class: "form-control", placeholder: "https://youtube.com/..." %>
+          </div>
+          <div class="mb-3">
+            <%= f.label :video_cdiposit, "Deposito emergencia", class: "form-label fw-semibold small" %>
+            <%= f.text_field :video_cdiposit, class: "form-control", placeholder: "https://youtube.com/..." %>
+          </div>
+          <div class="mb-3">
+            <%= f.label :video_diposit, "Deposito corto plazo", class: "form-label fw-semibold small" %>
+            <%= f.text_field :video_diposit, class: "form-control", placeholder: "https://youtube.com/..." %>
+          </div>
+          <div class="mb-3">
+            <%= f.label :video_saving, "Ahorro", class: "form-label fw-semibold small" %>
+            <%= f.text_field :video_saving, class: "form-control", placeholder: "https://youtube.com/..." %>
+          </div>
+          <div class="mb-3">
+            <%= f.label :video_deute, "Deudas", class: "form-label fw-semibold small" %>
+            <%= f.text_field :video_deute, class: "form-control", placeholder: "https://youtube.com/..." %>
+          </div>
+          <div class="mb-3">
+            <%= f.label :video_mortgage, "Hipoteca", class: "form-label fw-semibold small" %>
+            <%= f.text_field :video_mortgage, class: "form-control", placeholder: "https://youtube.com/..." %>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="mb-3">
+            <%= f.label :video_curt, "Inversion corto plazo", class: "form-label fw-semibold small" %>
+            <%= f.text_field :video_curt, class: "form-control", placeholder: "https://youtube.com/..." %>
+          </div>
+          <div class="mb-3">
+            <%= f.label :video_llarg, "Inversion largo plazo", class: "form-label fw-semibold small" %>
+            <%= f.text_field :video_llarg, class: "form-control", placeholder: "https://youtube.com/..." %>
+          </div>
+          <div class="mb-3">
+            <%= f.label :video_jubil, "Jubilacion", class: "form-label fw-semibold small" %>
+            <%= f.text_field :video_jubil, class: "form-control", placeholder: "https://youtube.com/..." %>
+          </div>
+          <div class="mb-3">
+            <%= f.label :video_portfolio, "Portfolio", class: "form-label fw-semibold small" %>
+            <%= f.text_field :video_portfolio, class: "form-control", placeholder: "https://youtube.com/..." %>
+          </div>
+          <div class="mb-3">
+            <%= f.label :video_fiscal, "Fiscal", class: "form-label fw-semibold small" %>
+            <%= f.text_field :video_fiscal, class: "form-control", placeholder: "https://youtube.com/..." %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer bg-white d-flex justify-content-between">
+      <%= link_to "Cancelar", influencer_dashboard_path, class: "btn btn-outline-secondary" %>
+      <%= f.submit "Guardar Videos", class: "btn btn-primary" %>
+    </div>
+  </div>
+<% end %>

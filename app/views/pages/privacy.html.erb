@@ -1,0 +1,61 @@
+<% content_for(:title, t("pages.privacy.title", default: "Privacy Policy") + " - BaiFinanzas") %>
+
+<div class="container py-4" style="max-width: 720px;">
+  <h1 class="mb-4" style="color: #165668; font-weight: 700;">
+    <%= t("pages.privacy.title", default: "Privacy Policy") %>
+  </h1>
+  <p class="text-muted mb-4">
+    <%= t("pages.privacy.last_updated", default: "Last updated") %>: 7 Feb 2026
+  </p>
+
+  <div class="policy-content" style="line-height: 1.7; color: #333;">
+    <h2 style="font-size: 1.25rem; font-weight: 600; color: #165668; margin-top: 2rem;">
+      1. <%= t("pages.privacy.section1_title", default: "Information We Collect") %>
+    </h2>
+    <p><%= t("pages.privacy.section1_body", default: "BaiFinanzas collects the following information to provide personalized financial health recommendations:") %></p>
+    <ul>
+      <li><%= t("pages.privacy.data_account", default: "Account information: email address, country, language preference") %></li>
+      <li><%= t("pages.privacy.data_financial", default: "Financial data: income, expenses, savings, and debts (entered voluntarily by the user)") %></li>
+      <li><%= t("pages.privacy.data_objectives", default: "Financial objectives and goals") %></li>
+      <li><%= t("pages.privacy.data_usage", default: "App usage data: pages visited, features used, calculator interactions") %></li>
+    </ul>
+
+    <h2 style="font-size: 1.25rem; font-weight: 600; color: #165668; margin-top: 2rem;">
+      2. <%= t("pages.privacy.section2_title", default: "How We Use Your Information") %>
+    </h2>
+    <p><%= t("pages.privacy.section2_body", default: "We use your information to:") %></p>
+    <ul>
+      <li><%= t("pages.privacy.use_recommendations", default: "Generate personalized financial recommendations and action plans") %></li>
+      <li><%= t("pages.privacy.use_calculators", default: "Pre-fill calculators with your financial data for convenience") %></li>
+      <li><%= t("pages.privacy.use_progress", default: "Track your financial health progress over time") %></li>
+      <li><%= t("pages.privacy.use_improve", default: "Improve our services and develop new features") %></li>
+    </ul>
+
+    <h2 style="font-size: 1.25rem; font-weight: 600; color: #165668; margin-top: 2rem;">
+      3. <%= t("pages.privacy.section3_title", default: "Data Storage and Security") %>
+    </h2>
+    <p><%= t("pages.privacy.section3_body", default: "Your financial data is stored securely using industry-standard encryption. We do not sell your personal information to third parties. Your data is stored on servers within the European Union.") %></p>
+
+    <h2 style="font-size: 1.25rem; font-weight: 600; color: #165668; margin-top: 2rem;">
+      4. <%= t("pages.privacy.section4_title", default: "Third-Party Services") %>
+    </h2>
+    <p><%= t("pages.privacy.section4_body", default: "BaiFinanzas may display affiliate links to financial products from third-party providers. When you click on these links, you will be redirected to the third party's website, which has its own privacy policy. We do not share your financial data with affiliate partners.") %></p>
+
+    <h2 style="font-size: 1.25rem; font-weight: 600; color: #165668; margin-top: 2rem;">
+      5. <%= t("pages.privacy.section5_title", default: "Your Rights") %>
+    </h2>
+    <p><%= t("pages.privacy.section5_body", default: "You have the right to:") %></p>
+    <ul>
+      <li><%= t("pages.privacy.right_access", default: "Access your personal data") %></li>
+      <li><%= t("pages.privacy.right_correct", default: "Correct inaccurate data") %></li>
+      <li><%= t("pages.privacy.right_delete", default: "Request deletion of your data") %></li>
+      <li><%= t("pages.privacy.right_export", default: "Export your data in a portable format") %></li>
+    </ul>
+
+    <h2 style="font-size: 1.25rem; font-weight: 600; color: #165668; margin-top: 2rem;">
+      6. <%= t("pages.privacy.section6_title", default: "Contact") %>
+    </h2>
+    <p><%= t("pages.privacy.section6_body", default: "If you have questions about this privacy policy or your data, please contact us at:") %></p>
+    <p><strong>support@baifinanzas.com</strong></p>
+  </div>
+</div>

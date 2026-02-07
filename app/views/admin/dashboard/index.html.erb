@@ -1,0 +1,151 @@
+<% content_for(:page_title, "Dashboard") %>
+
+<%# Stats Cards %>
+<div class="row g-3 mb-4">
+  <div class="col-md-3">
+    <div class="card border-0 shadow-sm">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <p class="text-muted mb-1 small">Usuarios totales</p>
+            <h3 class="mb-0"><%= @total_users %></h3>
+            <small class="text-success"><i class="bi bi-plus"></i> <%= @recent_users %> esta semana</small>
+          </div>
+          <div class="bg-primary bg-opacity-10 rounded-3 p-3">
+            <i class="bi bi-people-fill text-primary fs-4"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card border-0 shadow-sm">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <p class="text-muted mb-1 small">Influencers</p>
+            <h3 class="mb-0"><%= @total_influencers %></h3>
+          </div>
+          <div class="bg-warning bg-opacity-10 rounded-3 p-3">
+            <i class="bi bi-star-fill text-warning fs-4"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card border-0 shadow-sm">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <p class="text-muted mb-1 small">Articulos</p>
+            <h3 class="mb-0"><%= @total_articles %></h3>
+          </div>
+          <div class="bg-info bg-opacity-10 rounded-3 p-3">
+            <i class="bi bi-newspaper text-info fs-4"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card border-0 shadow-sm">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <p class="text-muted mb-1 small">Noticias</p>
+            <h3 class="mb-0"><%= @total_news %></h3>
+          </div>
+          <div class="bg-success bg-opacity-10 rounded-3 p-3">
+            <i class="bi bi-megaphone-fill text-success fs-4"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3">
+  <%# Financial Level Distribution %>
+  <div class="col-md-6">
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-white border-bottom">
+        <h6 class="mb-0"><i class="bi bi-bar-chart-fill me-1"></i> Distribucion por Nivel Financiero</h6>
+      </div>
+      <div class="card-body">
+        <% level_names = { 1 => "Critico", 2 => "Fondo Emergencia", 3 => "Pagando Deudas", 4 => "Estable", 5 => "Crecimiento", 6 => "Libertad Financiera" } %>
+        <% level_colors = { 1 => "danger", 2 => "warning", 3 => "info", 4 => "primary", 5 => "success", 6 => "success" } %>
+        <% total = @level_distribution.values.sum.to_f %>
+        <% (1..6).each do |level| %>
+          <% count = @level_distribution[level] || 0 %>
+          <% pct = total > 0 ? (count / total * 100).round(1) : 0 %>
+          <div class="d-flex align-items-center mb-2">
+            <span class="badge bg-<%= level_colors[level] %> me-2" style="width: 24px;"><%= level %></span>
+            <span class="small me-2" style="width: 140px;"><%= level_names[level] %></span>
+            <div class="progress flex-grow-1 me-2" style="height: 8px;">
+              <div class="progress-bar bg-<%= level_colors[level] %>" style="width: <%= pct %>%"></div>
+            </div>
+            <span class="small text-muted" style="width: 50px;"><%= count %> (<%= pct %>%)</span>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <%# Top Influencers %>
+  <div class="col-md-6">
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center">
+        <h6 class="mb-0"><i class="bi bi-trophy-fill me-1"></i> Top Influencers</h6>
+        <%= link_to "Ver todos", admin_influencers_path, class: "btn btn-sm btn-outline-primary" %>
+      </div>
+      <div class="card-body p-0">
+        <% if @top_influencers.any? %>
+          <div class="list-group list-group-flush">
+            <% @top_influencers.each_with_index do |inf, i| %>
+              <div class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                  <span class="badge bg-secondary me-2"><%= i + 1 %></span>
+                  <strong><%= inf.name %></strong>
+                  <% if inf.default? %>
+                    <span class="badge bg-success ms-1"><i class="bi bi-star-fill"></i></span>
+                  <% end %>
+                </div>
+                <span class="badge bg-primary rounded-pill"><%= inf.users_count %> usuarios</span>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <p class="text-muted text-center py-4 mb-0">No hay influencers registrados.</p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%# Quick Actions %>
+<div class="row g-3 mt-2">
+  <div class="col-12">
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-white border-bottom">
+        <h6 class="mb-0"><i class="bi bi-lightning-fill me-1"></i> Acciones Rapidas</h6>
+      </div>
+      <div class="card-body">
+        <div class="d-flex gap-2 flex-wrap">
+          <%= link_to new_admin_article_path, class: "btn btn-outline-primary" do %>
+            <i class="bi bi-plus-circle me-1"></i> Nuevo Articulo
+          <% end %>
+          <%= link_to new_admin_app_news_path, class: "btn btn-outline-info" do %>
+            <i class="bi bi-plus-circle me-1"></i> Nueva Noticia
+          <% end %>
+          <%= link_to new_admin_influencer_path, class: "btn btn-outline-warning" do %>
+            <i class="bi bi-plus-circle me-1"></i> Nuevo Influencer
+          <% end %>
+          <%= link_to admin_users_path, class: "btn btn-outline-secondary" do %>
+            <i class="bi bi-people me-1"></i> Ver Usuarios
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

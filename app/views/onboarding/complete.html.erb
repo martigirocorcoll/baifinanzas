@@ -7,7 +7,7 @@
     </div>
 
     <div class="mb-4">
-      <span style="font-size: 4rem;"><%= @financial_level[:icon].presence || '' %></span>
+      <i class="<%= @financial_level[:icon] %>" style="font-size: 4rem; color: var(--bs-primary);"></i>
     </div>
 
     <h1 class="h3 mb-3"><%= t('onboarding.complete.title', default: 'Tu plan esta listo!') %></h1>

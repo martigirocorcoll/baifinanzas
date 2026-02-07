@@ -1,0 +1,62 @@
+<% content_for(:page_title, "Enlaces Afiliados") %>
+
+<%= form_with(model: @influencer, url: influencer_links_path, method: :patch) do |f| %>
+  <div class="card border-0 shadow-sm">
+    <div class="card-header bg-white border-bottom">
+      <h6 class="mb-0">Editar Enlaces de Afiliados</h6>
+      <small class="text-muted">Introduce la URL de afiliado para cada producto. Deja en blanco si no tienes enlace.</small>
+    </div>
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <div class="mb-3">
+            <%= f.label :ac_compte, "Cuenta bancaria", class: "form-label fw-semibold small" %>
+            <%= f.text_field :ac_compte, class: "form-control", placeholder: "https://..." %>
+          </div>
+          <div class="mb-3">
+            <%= f.label :ac_cdiposit, "Deposito emergencia", class: "form-label fw-semibold small" %>
+            <%= f.text_field :ac_cdiposit, class: "form-control", placeholder: "https://..." %>
+          </div>
+          <div class="mb-3">
+            <%= f.label :ac_saving, "Ahorro", class: "form-label fw-semibold small" %>
+            <%= f.text_field :ac_saving, class: "form-control", placeholder: "https://..." %>
+          </div>
+          <div class="mb-3">
+            <%= f.label :ac_deute, "Deudas", class: "form-label fw-semibold small" %>
+            <%= f.text_field :ac_deute, class: "form-control", placeholder: "https://..." %>
+          </div>
+          <div class="mb-3">
+            <%= f.label :ac_mortgage, "Hipoteca", class: "form-label fw-semibold small" %>
+            <%= f.text_field :ac_mortgage, class: "form-control", placeholder: "https://..." %>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="mb-3">
+            <%= f.label :ac_curt, "Inversion corto plazo", class: "form-label fw-semibold small" %>
+            <%= f.text_field :ac_curt, class: "form-control", placeholder: "https://..." %>
+          </div>
+          <div class="mb-3">
+            <%= f.label :ac_llarg, "Inversion largo plazo", class: "form-label fw-semibold small" %>
+            <%= f.text_field :ac_llarg, class: "form-control", placeholder: "https://..." %>
+          </div>
+          <div class="mb-3">
+            <%= f.label :ac_jubil, "Jubilacion", class: "form-label fw-semibold small" %>
+            <%= f.text_field :ac_jubil, class: "form-control", placeholder: "https://..." %>
+          </div>
+          <div class="mb-3">
+            <%= f.label :ac_portfolio, "Portfolio", class: "form-label fw-semibold small" %>
+            <%= f.text_field :ac_portfolio, class: "form-control", placeholder: "https://..." %>
+          </div>
+          <div class="mb-3">
+            <%= f.label :ac_fiscal, "Fiscal", class: "form-label fw-semibold small" %>
+            <%= f.text_field :ac_fiscal, class: "form-control", placeholder: "https://..." %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer bg-white d-flex justify-content-between">
+      <%= link_to "Cancelar", influencer_dashboard_path, class: "btn btn-outline-secondary" %>
+      <%= f.submit "Guardar Enlaces", class: "btn btn-primary" %>
+    </div>
+  </div>
+<% end %>

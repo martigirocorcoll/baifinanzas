@@ -1,8 +1,8 @@
 class Influencer < ApplicationRecord
-  # Devise modules
-  devise :database_authenticatable, :rememberable, :validatable
+  # Owner: the User account that manages this influencer profile
+  belongs_to :user, optional: true
 
-  # Associations
+  # Referred users: users who signed up with this influencer's code
   has_many :users
 
   # Validations
