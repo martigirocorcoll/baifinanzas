@@ -92,8 +92,7 @@ body.app-layout {
   position: sticky;
   top: 0;
   z-index: 1000;
-  background-color: $bg-primary;
-  border-bottom: 1px solid $border-light;
+  background-color: $brand-primary;
   padding: 0.75rem 1rem;
   display: flex;
   align-items: center;
@@ -103,14 +102,14 @@ body.app-layout {
   &__title {
     font-size: 1.125rem;
     font-weight: 600;
-    color: $text-primary;
+    color: $text-inverse;
     margin: 0;
   }
 
   &__back {
     display: flex;
     align-items: center;
-    color: $text-primary;
+    color: $text-inverse;
     text-decoration: none;
     font-weight: 500;
 
@@ -120,7 +119,7 @@ body.app-layout {
     }
 
     &:hover {
-      color: $brand-primary;
+      color: rgba(255, 255, 255, 0.8);
     }
   }
 
@@ -131,12 +130,12 @@ body.app-layout {
   }
 
   &__action {
-    color: $text-secondary;
+    color: $text-inverse;
     font-size: 1.25rem;
     padding: 0.25rem;
 
     &:hover {
-      color: $brand-primary;
+      color: rgba(255, 255, 255, 0.8);
     }
   }
 }
@@ -1496,10 +1495,9 @@ body.app-layout {
 // PRIORITY 4: NICE-TO-HAVE POLISH
 // ============================================
 
-// App header shadow instead of border
+// App header shadow
 .app-header {
-  border-bottom: none;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 // Focus states for accessibility

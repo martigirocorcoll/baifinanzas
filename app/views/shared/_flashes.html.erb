@@ -1,19 +1,5 @@
 <% if turbo_native_app? %>
-  <%# Inline alerts for Turbo Native - rendered inside page flow, no positioning issues %>
-  <% if flash[:success] || notice %>
-    <div class="alert alert-success alert-dismissible fade show m-3 mb-0" role="alert">
-      <i class="bi bi-check-circle me-2"></i>
-      <%= flash[:success] || notice %>
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-  <% end %>
-  <% if alert %>
-    <div class="alert alert-warning alert-dismissible fade show m-3 mb-0" role="alert">
-      <i class="bi bi-exclamation-triangle me-2"></i>
-      <%= alert %>
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-  <% end %>
+  <%# No flash in Turbo Native - does not integrate well visually %>
 <% else %>
   <%# Toast notifications for web - positioned bottom-right %>
   <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 9999;">

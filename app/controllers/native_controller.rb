@@ -33,6 +33,28 @@ class NativeController < ApplicationController
           }
         },
         {
+          patterns: ["/home$"],
+          properties: {
+            context: "default",
+            presentation: "replace_root",
+            pull_to_refresh_enabled: true
+          }
+        },
+        {
+          patterns: ["/discovery/articles/.*"],
+          properties: {
+            context: "modal",
+            pull_to_refresh_enabled: false
+          }
+        },
+        {
+          patterns: ["/profile/settings"],
+          properties: {
+            context: "modal",
+            pull_to_refresh_enabled: false
+          }
+        },
+        {
           patterns: ["/new$", "/edit$"],
           properties: {
             context: "modal",

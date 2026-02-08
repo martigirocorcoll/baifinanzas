@@ -1,5 +1,18 @@
 import UIKit
+import WebKit
 import HotwireNative
+
+// Receives messages from injected JS to show/hide the tab bar
+class TabBarBridge: NSObject, WKScriptMessageHandler {
+    static let shared = TabBarBridge()
+    static let show = Notification.Name("ShowTabBar")
+    static let hide = Notification.Name("HideTabBar")
+
+    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        guard let msg = message.body as? String else { return }
+        NotificationCenter.default.post(name: msg == "show" ? Self.show : Self.hide, object: nil)
+    }
+}
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -12,8 +25,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 
-    // MARK: - UISceneSession Lifecycle
-
     func application(
         _ application: UIApplication,
         configurationForConnecting connectingSceneSession: UISceneSession,
@@ -22,16 +33,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
     }
 
-    // MARK: - Hotwire Configuration
-
     private func configureHotwire() {
-        // User agent prefix that triggers turbo_native_app? in Rails
         Hotwire.config.applicationUserAgentPrefix = "Turbo Native iOS"
-
-        // Path configuration: local fallback + remote server
         Hotwire.config.pathConfiguration.matchQueryStrings = false
 
-        // Load bundled path configuration as fallback
         if let localURL = Bundle.main.url(forResource: "path-configuration", withExtension: "json") {
             Hotwire.loadPathConfiguration(from: [
                 .file(localURL),
@@ -41,6 +46,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             Hotwire.loadPathConfiguration(from: [
                 .server(Server.pathConfigurationURL)
             ])
+        }
+
+        // Inject a script that tells the native app whether to show/hide tabs
+        Hotwire.config.makeCustomWebView = { configuration in
+            let script = WKUserScript(
+                source: """
+                    function notifyTabBar() {
+                        var h = window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.tabBar;
+                        if (!h) return;
+                        var p = window.location.pathname;
+                        var isAuth = (p.indexOf('sign_in') === -1 && p.indexOf('sign_up') === -1 && p.indexOf('password') === -1);
+                        h.postMessage(isAuth ? 'show' : 'hide');
+                    }
+                    notifyTabBar();
+                    document.addEventListener('turbo:load', notifyTabBar);
+                """,
+                injectionTime: .atDocumentEnd,
+                forMainFrameOnly: true
+            )
+            configuration.userContentController.addUserScript(script)
+            configuration.userContentController.add(TabBarBridge.shared, name: "tabBar")
+            return WKWebView(frame: .zero, configuration: configuration)
         }
 
         #if DEBUG

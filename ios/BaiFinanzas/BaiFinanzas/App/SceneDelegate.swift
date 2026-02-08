@@ -1,11 +1,14 @@
 import UIKit
 import HotwireNative
+import SafariServices
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
     private var tabBarController: UITabBarController!
     private var navigators: [Navigator] = []
+    private var tabStarted: [Bool] = []
+    private var isAuthenticated = false
 
     private let tabConfigs: [(title: String, icon: String, iconActive: String, path: String)] = [
         ("Inicio",        "house",       "house.fill",       "/es/home"),
@@ -13,6 +16,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         ("Calculadoras",  "function",    "function",         "/es/calculators"),
         ("Perfil",        "person",      "person.fill",      "/es/profile")
     ]
+
+    private let tabPaths = ["/home", "/discovery", "/calculators", "/profile"]
 
     func scene(
         _ scene: UIScene,
@@ -23,9 +28,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         window = UIWindow(windowScene: windowScene)
         tabBarController = UITabBarController()
+        tabBarController.delegate = self
 
         configureTabBar()
         configureNavigators()
+
+        // Listen for show/hide tab bar from the JS bridge
+        NotificationCenter.default.addObserver(forName: TabBarBridge.show, object: nil, queue: .main) { [weak self] _ in
+            guard let self = self else { return }
+            self.isAuthenticated = true
+            self.tabBarController.tabBar.isHidden = false
+        }
+        NotificationCenter.default.addObserver(forName: TabBarBridge.hide, object: nil, queue: .main) { [weak self] _ in
+            guard let self = self else { return }
+            self.isAuthenticated = false
+            self.tabBarController.tabBar.isHidden = true
+        }
 
         window?.rootViewController = tabBarController
         window?.makeKeyAndVisible()
@@ -46,6 +64,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     private func configureNavigators() {
         var viewControllers: [UIViewController] = []
+        tabStarted = Array(repeating: false, count: tabConfigs.count)
 
         for (index, tab) in tabConfigs.enumerated() {
             let url = Server.url(path: tab.path)
@@ -65,10 +84,36 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             navController.tabBarItem.tag = index
 
             viewControllers.append(navController)
-            navigator.start()
         }
 
+        // Only start the first tab
+        navigators[0].start()
+        tabStarted[0] = true
+
         tabBarController.viewControllers = viewControllers
+
+        // Hidden until JS bridge says "show"
+        tabBarController.tabBar.isHidden = true
+    }
+
+    private func ensureTabStarted(_ index: Int) {
+        guard index < tabStarted.count, !tabStarted[index] else { return }
+        navigators[index].start()
+        tabStarted[index] = true
+    }
+}
+
+// MARK: - UITabBarControllerDelegate
+
+extension SceneDelegate: UITabBarControllerDelegate {
+
+    func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
+        if !isAuthenticated && viewController.tabBarItem.tag != 0 { return false }
+        return true
+    }
+
+    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
+        ensureTabStarted(tabBarController.selectedIndex)
     }
 }
 
@@ -77,23 +122,42 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 extension SceneDelegate: NavigatorDelegate {
 
     func handle(proposal: VisitProposal) -> ProposalResult {
-        let url = proposal.url
+        let path = proposal.url.path
 
-        // Handle sign-out: reload all tabs
-        if url.path.contains("/sign_out") {
-            for navigator in navigators {
-                navigator.start()
-            }
+        // Sign-out: reset tabs
+        if path.contains("/sign_out") {
+            isAuthenticated = false
+            tabBarController.tabBar.isHidden = true
+            tabStarted = Array(repeating: false, count: tabConfigs.count)
+            navigators[0].start()
+            tabStarted[0] = true
             tabBarController.selectedIndex = 0
             return .reject
         }
 
-        // Check if URL matches a tab root - switch tab instead of pushing
-        let tabPaths = ["/home", "/discovery", "/calculators", "/profile"]
+        // External links: open in in-app browser (SFSafariViewController)
+        if proposal.url.host != Server.baseURL.host {
+            let safari = SFSafariViewController(url: proposal.url)
+            tabBarController.selectedViewController?.present(safari, animated: true)
+            return .reject
+        }
+
+        // Before auth: let everything through (sign-in flow)
+        if !isAuthenticated {
+            return .accept
+        }
+
+        // After auth: switch tabs only for cross-tab navigation
         for (index, tabPath) in tabPaths.enumerated() {
-            if url.path.hasSuffix(tabPath) && !url.path.contains("/calculators/") {
-                tabBarController.selectedIndex = index
-                return .reject
+            if path.hasSuffix(tabPath) && !path.contains("/calculators/") {
+                if index != tabBarController.selectedIndex {
+                    // Cross-tab: switch to that tab
+                    ensureTabStarted(index)
+                    tabBarController.selectedIndex = index
+                    return .reject
+                }
+                // Same tab: let path config handle it (e.g. replace_root for /home)
+                return .accept
             }
         }
 
