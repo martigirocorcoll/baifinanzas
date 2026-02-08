@@ -5,10 +5,10 @@
       <i class="bi bi-bullseye"></i>
       <%= t('home.objectives.title', default: 'Tus objetivos') %>
     </h2>
-    <a href="#" class="app-card__action" data-bs-toggle="modal" data-bs-target="#objectiveModal">
+    <%= link_to new_objective_path, class: 'app-card__action' do %>
       <i class="bi bi-plus-lg"></i>
       <%= t('home.objectives.new', default: 'Nuevo') %>
-    </a>
+    <% end %>
   </div>
 
   <div class="app-card__body">
@@ -79,9 +79,9 @@
             </div>
           </div>
 
-          <%# Current / target amount - tappable row %>
-          <a href="#" style="display: flex; align-items: center; justify-content: space-between; margin-top: 0.375rem; padding: 0.375rem 0.5rem; background: #f3f4f6; border-radius: 6px; text-decoration: none;"
-             data-bs-toggle="collapse" data-bs-target="#progressFormList<%= objective.id %>">
+          <%# Current / target amount - tappable row linking to update progress page %>
+          <%= link_to update_progress_objective_path(objective),
+              style: "display: flex; align-items: center; justify-content: space-between; margin-top: 0.375rem; padding: 0.375rem 0.5rem; background: #f3f4f6; border-radius: 6px; text-decoration: none;" do %>
             <span style="font-size: 0.8125rem; color: #374151; font-weight: 500;">
               <%= number_to_currency(objective.current_amount, unit: '€', precision: 0) %>
               <%= t('home.objectives.progress_of') %>
@@ -90,21 +90,7 @@
             <span style="font-size: 0.6875rem; color: #165668; font-weight: 600;">
               <i class="bi bi-pencil-square me-1"></i><%= t('home.objectives.update_progress') %>
             </span>
-          </a>
-
-          <%# Inline progress update form (collapsed) %>
-          <div class="collapse" id="progressFormList<%= objective.id %>">
-            <%= form_with url: update_progress_objective_path(objective), method: :patch, style: "display: flex; gap: 0.5rem; align-items: center; margin-top: 0.5rem;" do |f| %>
-              <div style="flex: 1;">
-                <input type="number" name="current_amount" value="<%= objective.current_amount %>"
-                       min="0" step="100" placeholder="<%= t('home.objectives.current_amount_label') %>"
-                       class="form-control form-control-sm" style="font-size: 0.8125rem;">
-              </div>
-              <button type="submit" class="btn btn-sm" style="background: #165668; color: #fff; font-size: 0.75rem; white-space: nowrap;">
-                <i class="bi bi-check-lg"></i>
-              </button>
-            <% end %>
-          </div>
+          <% end %>
 
           <%# Savings info %>
           <div class="objective-card__savings">
@@ -166,10 +152,10 @@
           <%= t('home.objectives.create_first',
               default: 'Crea tu primer objetivo financiero para empezar a planificar tu futuro.') %>
         </p>
-        <a href="#" class="btn-app btn-app--primary" data-bs-toggle="modal" data-bs-target="#objectiveModal">
+        <%= link_to new_objective_path, class: 'btn-app btn-app--primary' do %>
           <i class="bi bi-plus-lg"></i>
           <%= t('home.objectives.create_objective', default: 'Crear objetivo') %>
-        </a>
+        <% end %>
       </div>
     <% end %>
   </div>

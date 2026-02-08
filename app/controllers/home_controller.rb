@@ -27,6 +27,10 @@ class HomeController < ApplicationController
     @profile_complete = current_user.profile_complete?
   end
 
+  def level_guide
+    load_financial_health_data
+  end
+
   private
 
   def check_onboarding

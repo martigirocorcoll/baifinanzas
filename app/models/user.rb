@@ -358,7 +358,7 @@ class User < ApplicationRecord
     base_financial_recommendations.each do |rec_key|
       # Convertir rec_key a slug (better_bank_account → better-bank-account)
       slug = rec_key.dasherize
-      recommendation = Recommendation.find_by(slug: slug)
+      recommendation = RecommendationData.find_by_slug(slug)
 
       actions << {
         position: actions.length + 1,
@@ -371,7 +371,7 @@ class User < ApplicationRecord
         time_minutes: recommendation_time(rec_key),
         completed: completed_recommendations.include?(rec_key),
         video_url: get_video_url(slug),
-        recommendation: recommendation
+        recommendation: recommendation ? { slug: recommendation.slug, title: recommendation.title, description: recommendation.description } : nil
       }
     end
 

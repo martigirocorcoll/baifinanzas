@@ -214,7 +214,7 @@
                         <i class="<%= @current_task[:icon] %> me-2 text-muted"></i>
                         <span class="ms-2">
                           <% if @current_task[:type] == 'recommendation' && @current_task[:recommendation] %>
-                            <%= @current_task[:recommendation].title %>
+                            <%= @current_task[:recommendation][:title] %>
                           <% else %>
                             <%= @current_task[:title] %>
                           <% end %>
@@ -249,10 +249,10 @@
                     <% end %>
 
                     <!-- Descripción -->
-                    <% if @current_task[:recommendation]&.description.present? %>
+                    <% if @current_task.dig(:recommendation, :description).present? %>
                       <div class="mb-4">
                         <p class="text-muted" style="font-size: 1.05rem; line-height: 1.6;">
-                          <%= @current_task[:recommendation].description %>
+                          <%= @current_task[:recommendation][:description] %>
                         </p>
                       </div>
                     <% end %>

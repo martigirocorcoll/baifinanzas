@@ -4,11 +4,6 @@
 
 puts "🌱 Seeding database..."
 
-# Clear existing recommendations (but keep influencers as they may be referenced by users)
-Recommendation.destroy_all
-
-puts "✅ Recommendations cleared"
-
 # Create default influencer for testing (if doesn't exist)
 puts "🌱 Ensuring default influencer exists..."
 
@@ -25,23 +20,4 @@ Influencer.find_or_create_by!(email: "influencer@demo.com") do |inf|
 end
 
 puts "✅ Default influencer ready"
-
-# Create recommendations
-puts "🌱 Creating recommendations..."
-
-Recommendation.create!(
-  slug: "better-bank-account",
-  title: "Ten una mejor cuenta bancaria",
-  description: "Elimina las comisiones bancarias y optimiza el rendimiento de tu dinero en cuenta corriente. Una cuenta optimizada te ayuda a empezar con el pie correcto, es el paso más sencillo que puedes dar sin ningún tipo de riesgo y te enfoca a empezar el camino para mejorar tu situación financiera.",
-  active: true
-)
-
-Recommendation.create!(
-  slug: "emergency-deposit",
-  title: "Construye tu fondo de emergencia",
-  description: "Protege tu estabilidad financiera con un colchón de seguridad que te dé tranquilidad ante imprevistos. Un fondo de emergencia bien estructurado es la base de cualquier plan financiero sólido.",
-  active: true
-)
-
-puts "✅ Successfully created #{Recommendation.count} recommendations"
 puts "🎉 Seeding completed!"

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_02_07_120001) do
+ActiveRecord::Schema[7.2].define(version: 2026_02_08_102349) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -133,20 +133,6 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_07_120001) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_pygs_on_user_id", unique: true
-  end
-
-  create_table "recommendations", force: :cascade do |t|
-    t.string "slug"
-    t.string "title"
-    t.text "description"
-    t.text "content"
-    t.string "video_url"
-    t.string "image_url"
-    t.string "category"
-    t.boolean "active"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["slug"], name: "index_recommendations_on_slug", unique: true
   end
 
   create_table "user_actions", force: :cascade do |t|

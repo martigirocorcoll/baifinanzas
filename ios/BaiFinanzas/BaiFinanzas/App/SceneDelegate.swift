@@ -36,8 +36,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Listen for show/hide tab bar from the JS bridge
         NotificationCenter.default.addObserver(forName: TabBarBridge.show, object: nil, queue: .main) { [weak self] _ in
             guard let self = self else { return }
+            let wasAuthenticated = self.isAuthenticated
             self.isAuthenticated = true
             self.tabBarController.tabBar.isHidden = false
+
+            // First authentication: remove sign-in page from navigation stack
+            if !wasAuthenticated {
+                let nav = self.navigators[0].rootViewController
+                if nav.viewControllers.count > 1, let top = nav.viewControllers.last {
+                    nav.setViewControllers([top], animated: false)
+                }
+            }
         }
         NotificationCenter.default.addObserver(forName: TabBarBridge.hide, object: nil, queue: .main) { [weak self] _ in
             guard let self = self else { return }

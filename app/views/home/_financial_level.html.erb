@@ -37,9 +37,9 @@
         <i class="<%= @financial_level[:icon] %>"></i>
         <%= @financial_level[:name] %>
       </span>
-      <a href="#" class="text-muted" data-bs-toggle="modal" data-bs-target="#levelGuideModal" aria-label="<%= t('home.financial_level.see_requirements', default: 'Ver requisitos') %>">
+      <%= link_to level_guide_path, class: 'text-muted', aria: { label: t('home.financial_level.see_requirements', default: 'Ver requisitos') } do %>
         <i class="bi bi-info-circle" style="font-size: 1.25rem;"></i>
-      </a>
+      <% end %>
     </div>
 
     <%# Level description %>

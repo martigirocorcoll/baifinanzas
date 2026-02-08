@@ -55,6 +55,13 @@ class NativeController < ApplicationController
           }
         },
         {
+          patterns: ["/home/level-guide"],
+          properties: {
+            context: "modal",
+            pull_to_refresh_enabled: false
+          }
+        },
+        {
           patterns: ["/new$", "/edit$"],
           properties: {
             context: "modal",
@@ -83,7 +90,7 @@ class NativeController < ApplicationController
           }
         },
         {
-          patterns: ["/objectives/new", "/objectives/\\d+/edit"],
+          patterns: ["/objectives/new", "/objectives/\\d+/edit", "/objectives/\\d+/update_progress"],
           properties: {
             context: "modal",
             pull_to_refresh_enabled: false

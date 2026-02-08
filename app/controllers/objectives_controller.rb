@@ -68,11 +68,15 @@ class ObjectivesController < ApplicationController
     end
   end
 
-  # PATCH /objectives/1/update_progress
+  # GET/PATCH /objectives/1/update_progress
   def update_progress
-    amount = params[:current_amount].to_i
-    @objective.update_column(:current_amount, [amount, 0].max)
-    redirect_to home_path, notice: t('controllers.objectives.progress_updated')
+    if request.get?
+      render :update_progress
+    else
+      amount = params[:current_amount].to_i
+      @objective.update_column(:current_amount, [amount, 0].max)
+      redirect_to home_path, notice: t('controllers.objectives.progress_updated')
+    end
   end
 
   # DELETE /objectives/1 or /objectives/1.json

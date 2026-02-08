@@ -4,7 +4,7 @@ class RecommendationsController < ApplicationController
   before_action :set_recommendation, only: [:show]
 
   def index
-    @recommendations = Recommendation.active.order(:title)
+    @recommendations = RecommendationData.all
   end
 
   def show
@@ -27,7 +27,7 @@ class RecommendationsController < ApplicationController
   private
   
   def set_recommendation
-    @recommendation = Recommendation.active.find_by!(slug: params[:slug])
+    @recommendation = RecommendationData.find_by_slug!(params[:slug])
   rescue ActiveRecord::RecordNotFound
     redirect_to dashboard_index_path, alert: "Recomendación no encontrada"
   end

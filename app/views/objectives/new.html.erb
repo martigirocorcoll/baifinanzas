@@ -1,11 +1,118 @@
-<% content_for :title, "New objective" %>
+<% content_for :title, t('objectives.new.title', default: 'Nuevo objetivo') %>
 
-<h1>New objective</h1>
+<div style="padding: 1rem;">
+  <div class="app-card">
+    <div class="app-card__header">
+      <h2 class="app-card__title">
+        <i class="bi bi-bullseye"></i>
+        <%= t('objectives.new.title', default: 'Nuevo objetivo') %>
+      </h2>
+    </div>
+    <div class="app-card__body">
+      <%= form_with model: @objective, url: objectives_path do |f| %>
 
-<%= render "form", objective: @objective %>
+        <div class="app-form__group">
+          <%= f.label :title, t('objectives.form.title', default: 'Nombre del objetivo'), class: 'app-form__label' %>
+          <%= f.text_field :title,
+              class: 'app-form__input',
+              placeholder: t('objectives.form.title_placeholder', default: 'Ej: Comprar coche'),
+              required: true %>
+        </div>
 
-<br>
+        <div class="app-form__group">
+          <%= f.label :target_amount, t('objectives.form.amount', default: 'Cantidad objetivo'), class: 'app-form__label' %>
+          <div class="app-form__input-group">
+            <span class="app-form__input-prefix">&euro;</span>
+            <%= f.number_field :target_amount,
+                class: 'app-form__input',
+                placeholder: '15000',
+                min: 100,
+                step: 100,
+                required: true %>
+          </div>
+        </div>
 
-<div>
-  <%= link_to "Back to objectives", objectives_path %>
+        <div class="app-form__group">
+          <%= f.label :current_amount, t('objectives.form.current_amount', default: 'Ya aportado'), class: 'app-form__label' %>
+          <div class="app-form__input-group">
+            <span class="app-form__input-prefix">&euro;</span>
+            <%= f.number_field :current_amount,
+                class: 'app-form__input',
+                placeholder: '0',
+                min: 0,
+                step: 100,
+                value: 0 %>
+          </div>
+          <p class="app-form__hint">
+            <%= t('objectives.form.current_amount_hint', default: 'Si ya tienes algo ahorrado para este objetivo') %>
+          </p>
+        </div>
+
+        <div class="app-form__group">
+          <%= f.label :target_date, t('objectives.form.date', default: 'Fecha objetivo'), class: 'app-form__label' %>
+          <%= f.date_field :target_date,
+              class: 'app-form__input',
+              min: Date.tomorrow.to_s,
+              required: true %>
+          <p class="app-form__hint">
+            <%= t('objectives.form.date_hint', default: 'Cuando quieres alcanzar este objetivo?') %>
+          </p>
+        </div>
+
+        <%# Example objectives %>
+        <div class="mt-3 mb-4">
+          <p class="small text-muted mb-2"><%= t('objectives.form.examples', default: 'Ideas de objetivos:') %></p>
+          <div class="d-flex flex-wrap gap-2">
+            <button type="button" class="btn btn-outline-secondary btn-sm objective-example"
+                    data-title="<%= t('objectives.form.example_car_title') %>" data-amount="15000">
+              <i class="bi bi-car-front me-1"></i> <%= t('objectives.form.example_car') %>
+            </button>
+            <button type="button" class="btn btn-outline-secondary btn-sm objective-example"
+                    data-title="<%= t('objectives.form.example_travel_title') %>" data-amount="3000">
+              <i class="bi bi-airplane me-1"></i> <%= t('objectives.form.example_travel') %>
+            </button>
+            <button type="button" class="btn btn-outline-secondary btn-sm objective-example"
+                    data-title="<%= t('objectives.form.example_emergency_title') %>" data-amount="<%= (current_user.monthly_expenses * 4).round(-2) %>">
+              <i class="bi bi-shield me-1"></i> <%= t('objectives.form.example_emergency') %>
+            </button>
+            <button type="button" class="btn btn-outline-secondary btn-sm objective-example"
+                    data-title="<%= t('objectives.form.example_house_title') %>" data-amount="30000">
+              <i class="bi bi-house me-1"></i> <%= t('objectives.form.example_house') %>
+            </button>
+            <button type="button" class="btn btn-outline-secondary btn-sm objective-example"
+                    data-title="<%= t('objectives.form.example_retirement_title') %>" data-amount="300000"
+                    data-date="<%= (Date.current + 30.years).to_s %>">
+              <i class="bi bi-piggy-bank me-1"></i> <%= t('objectives.form.example_retirement') %>
+            </button>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 0.75rem; margin-top: 1.5rem;">
+          <%= link_to home_path, class: 'btn btn-light', style: 'flex: 1; text-align: center;' do %>
+            <%= t('common.cancel', default: 'Cancelar') %>
+          <% end %>
+          <%= f.submit t('objectives.form.create', default: 'Crear objetivo'), class: 'btn btn-primary', style: 'flex: 1;' %>
+        </div>
+      <% end %>
+    </div>
+  </div>
 </div>
+
+<script>
+function initObjectiveExamples() {
+  document.querySelectorAll('.objective-example').forEach(function(btn) {
+    if (btn.dataset.bound) return;
+    btn.dataset.bound = '1';
+    btn.addEventListener('click', function() {
+      var titleEl = document.querySelector('#objective_title');
+      var amountEl = document.querySelector('#objective_target_amount');
+      var dateEl = document.querySelector('#objective_target_date');
+      if (titleEl) titleEl.value = this.dataset.title;
+      if (amountEl) amountEl.value = this.dataset.amount;
+      if (dateEl && this.dataset.date) dateEl.value = this.dataset.date;
+    });
+  });
+}
+document.addEventListener('turbo:load', initObjectiveExamples);
+document.addEventListener('DOMContentLoaded', initObjectiveExamples);
+</script>

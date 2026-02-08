@@ -43,6 +43,7 @@ Rails.application.routes.draw do
     # ============================================
     # Home (Dashboard + Plan + Objectives)
     get "home", to: "home#index", as: :home
+    get "home/level-guide", to: "home#level_guide", as: :level_guide
 
     # Discovery (Content feed: videos, articles, news)
     get "discovery", to: "discovery#index", as: :discovery
@@ -119,6 +120,7 @@ Rails.application.routes.draw do
     # Objetivos (1:N)
     resources :objectives do
       member do
+        get :update_progress
         patch :update_progress
       end
     end
