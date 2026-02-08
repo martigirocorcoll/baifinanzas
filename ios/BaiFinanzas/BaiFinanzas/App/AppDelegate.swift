@@ -17,6 +17,9 @@ class TabBarBridge: NSObject, WKScriptMessageHandler {
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
+    // Shared process pool ensures cookies persist across app launches
+    static let sharedProcessPool = WKProcessPool()
+
     func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
@@ -50,6 +53,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         // Inject a script that tells the native app whether to show/hide tabs
         Hotwire.config.makeCustomWebView = { configuration in
+            // Use shared process pool + persistent data store for cookie persistence
+            configuration.processPool = AppDelegate.sharedProcessPool
+            configuration.websiteDataStore = .default()
+
             let script = WKUserScript(
                 source: """
                     function notifyTabBar() {

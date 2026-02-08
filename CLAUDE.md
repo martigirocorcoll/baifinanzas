@@ -302,3 +302,14 @@ Admin/Influencer:   layout "admin"   -> navbar web completa
 - Panel admin ampliado (gestionar articulos/novedades)
 - Email automation
 - Turbo Native compilacion iOS/Android
+
+---
+
+## PENDIENTE: Cambio de dominio
+
+Cuando se tenga un dominio definitivo (ej. `baifinanzas.com`) hay que actualizar:
+1. `ios/BaiFinanzas/BaiFinanzas/Configuration/Server.swift` - cambiar `baseURL`
+2. `public/.well-known/apple-app-site-association` - ya esta servido, pero verificar accesibilidad en nuevo dominio
+3. Xcode > Signing & Capabilities > Associated Domains - cambiar `webcredentials:DOMINIO`
+4. Apple Developer > Identifiers > configurar el Associated Domain con el nuevo dominio
+5. Heroku/hosting: asegurar que `/.well-known/apple-app-site-association` se sirve con `Content-Type: application/json`

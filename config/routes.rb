@@ -93,7 +93,8 @@ Rails.application.routes.draw do
 
     # Devise for Users (with custom registrations controller)
     devise_for :users, controllers: {
-      registrations: 'users/registrations'
+      registrations: 'users/registrations',
+      sessions: 'users/sessions'
     }
 
     # Influencer auth removed - influencers now login as Users with role 'influencer'

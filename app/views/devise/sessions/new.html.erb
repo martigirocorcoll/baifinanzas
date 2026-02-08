@@ -11,7 +11,7 @@
         <div class="mb-3">
           <%= f.input :email,
                 label: t('views.devise.login.email'),
-                input_html: { class: "form-control", autocomplete: "email", placeholder: "usuario@ejemplo.com" },
+                input_html: { class: "form-control", autocomplete: "username", placeholder: "usuario@ejemplo.com" },
                 label_html: { class: "form-label" },
                 wrapper: false %>
         </div>
@@ -24,7 +24,7 @@
                 wrapper: false %>
         </div>
 
-        <% if devise_mapping.rememberable? %>
+        <% if devise_mapping.rememberable? && !turbo_native_app? %>
           <div class="form-check mb-3">
             <%= f.input :remember_me,
                   as: :boolean,
