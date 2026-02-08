@@ -27,6 +27,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = scene as? UIWindowScene else { return }
 
         window = UIWindow(windowScene: windowScene)
+        window?.backgroundColor = UIColor(red: 22/255, green: 86/255, blue: 104/255, alpha: 1) // #165668
         tabBarController = UITabBarController()
         tabBarController.delegate = self
 
@@ -69,6 +70,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         tabBarController.tabBar.tintColor = teal
         tabBarController.tabBar.standardAppearance = appearance
         tabBarController.tabBar.scrollEdgeAppearance = appearance
+
+        // Navigation bar: teal background, white text/buttons
+        let navAppearance = UINavigationBarAppearance()
+        navAppearance.configureWithOpaqueBackground()
+        navAppearance.backgroundColor = teal
+        navAppearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+        navAppearance.shadowColor = .clear
+
+        UINavigationBar.appearance().standardAppearance = navAppearance
+        UINavigationBar.appearance().scrollEdgeAppearance = navAppearance
+        UINavigationBar.appearance().tintColor = .white // back button color
     }
 
     private func configureNavigators() {

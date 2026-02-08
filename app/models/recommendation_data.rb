@@ -5,6 +5,7 @@ module RecommendationData
     def title = I18n.t("financial.recommendations.#{slug_key}.title", default: "Recomendacion")
     def description = I18n.t("financial.recommendations.#{slug_key}.description", default: "")
     def icon = I18n.t("financial.recommendations.#{slug_key}.icon", default: "bi-check-circle")
+    def nav_title = I18n.t("financial.recommendations.#{slug_key}.nav_title", default: title)
     def content = nil
     def video_url = nil
 

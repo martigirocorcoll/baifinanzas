@@ -21,6 +21,7 @@ es:
 
   # Home
   home:
+    nav_title: "Inicio"
     hero:
       monthly_savings: "Ahorro mensual"
       see_details: "Ver detalles"
@@ -125,6 +126,7 @@ es:
 
   # Calculators
   calculators:
+    nav_title: "Calculadoras"
     title: "Calculadoras"
     description: "Herramientas para planificar tu futuro financiero"
     coming_soon: "Esta calculadora estara disponible muy pronto."
@@ -306,6 +308,7 @@ es:
 
   # Discovery
   discovery:
+    nav_title: "Explora"
     title: "Discovery"
     back_to_feed: "Discovery"
     badges:
@@ -377,6 +380,7 @@ es:
 
   # Profile
   profile:
+    nav_title: "Perfil"
     title: "Perfil"
     completion: "Perfil completado"
     complete_for_better_recommendations: "Completa tu perfil para obtener mejores recomendaciones."

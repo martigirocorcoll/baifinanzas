@@ -21,6 +21,7 @@ en:
 
   # Home
   home:
+    nav_title: "Home"
     hero:
       monthly_savings: "Monthly savings"
       see_details: "See details"
@@ -125,6 +126,7 @@ en:
 
   # Calculators
   calculators:
+    nav_title: "Calculators"
     title: "Calculators"
     description: "Tools to plan your financial future"
     coming_soon: "This calculator will be available soon."
@@ -306,6 +308,7 @@ en:
 
   # Discovery
   discovery:
+    nav_title: "Explore"
     title: "Discovery"
     back_to_feed: "Discovery"
     badges:
@@ -377,6 +380,7 @@ en:
 
   # Profile
   profile:
+    nav_title: "Profile"
     title: "Profile"
     completion: "Profile completed"
     complete_for_better_recommendations: "Complete your profile to get better recommendations."

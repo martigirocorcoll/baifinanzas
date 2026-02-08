@@ -1,3 +1,4 @@
+<% content_for :title, t('profile.nav_title', default: 'Perfil') %>
 <div class="app-container">
   <%# User info header %>
   <% user_name = @user.email.split('@').first.capitalize %>
