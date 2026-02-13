@@ -52,6 +52,24 @@ class HomeController < ApplicationController
     @monthly_cash_flow = current_user.monthly_cash_flow
     @net_worth = current_user.net_worth
 
+    # All levels for stepper
+    @levels = [
+      { number: 1, key: :critical },
+      { number: 2, key: :emergency_fund },
+      { number: 3, key: :paying_debt },
+      { number: 4, key: :stable },
+      { number: 5, key: :growth },
+      { number: 6, key: :financial_freedom }
+    ].map do |level|
+      level.merge(
+        name: t("financial.levels.#{level[:key]}.name"),
+        short_name: t("financial.levels.#{level[:key]}.short_name"),
+        description: t("financial.levels.#{level[:key]}.description"),
+        next_step: t("financial.levels.#{level[:key]}.next_step"),
+        icon: t("financial.levels.#{level[:key]}.bootstrap_icon")
+      )
+    end
+
     # Progress to next level
     @next_level = calculate_next_level_info
   end
@@ -69,6 +87,7 @@ class HomeController < ApplicationController
     @completed_count = completed.length
     @total_count = @recommendation_actions.count
     @progress_percentage = @total_count > 0 ? ((@completed_count.to_f / @total_count) * 100).round(0) : 0
+    @all_completed = @completed_count == @total_count && @total_count > 0
     @can_invest = current_user.can_invest_in_objectives?
   end
 
@@ -106,6 +125,11 @@ class HomeController < ApplicationController
 
     next_level_key = next_level_map[level_key]
 
+    # Skip paying_debt level if user has no expensive debt
+    if level_key == :emergency_fund && !current_user.has_expensive_debt?
+      next_level_key = :stable
+    end
+
     return nil if next_level_key.nil?
 
     {
@@ -123,10 +147,17 @@ class HomeController < ApplicationController
         completed: @monthly_cash_flow > 0
       }]
     when :emergency_fund
-      [{
-        text: t('financial.next_level.emergency_2_months'),
-        completed: current_user.has_partial_emergency_fund?
-      }]
+      if current_user.has_expensive_debt?
+        [{
+          text: t('financial.next_level.emergency_2_months'),
+          completed: current_user.has_partial_emergency_fund?
+        }]
+      else
+        [{
+          text: t('financial.next_level.emergency_4_months'),
+          completed: current_user.has_emergency_fund?
+        }]
+      end
     when :paying_debt
       [{
         text: t('financial.next_level.expensive_debt_under_40'),

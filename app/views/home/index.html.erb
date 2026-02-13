@@ -205,14 +205,47 @@
 
     setupCarousel('actionCarousel', 'actionDots');
     setupCarousel('objectivesCarousel', 'objectiveDots');
+
+    // Level carousel: auto-scroll to current level
+    var levelCarousel = document.getElementById('levelCarousel');
+    if (levelCarousel) {
+      var currentIdx = parseInt(levelCarousel.dataset.currentLevel) || 0;
+      var levelCards = levelCarousel.querySelectorAll('.carousel__card');
+      if (currentIdx > 0 && currentIdx < levelCards.length) {
+        requestAnimationFrame(function() {
+          var target = levelCards[currentIdx];
+          levelCarousel.scrollTo({ left: target.offsetLeft - levelCarousel.offsetLeft, behavior: 'auto' });
+        });
+      }
+      setupCarousel('levelCarousel', 'levelDots');
+    }
+  }
+
+  // Smooth scroll: "Ver tu plan" button
+  function initScrollToPlan() {
+    var scrollBtn = document.getElementById('scrollToPlan');
+    if (scrollBtn) {
+      if (scrollBtn.dataset.bound) return;
+      scrollBtn.dataset.bound = '1';
+      scrollBtn.addEventListener('click', function() {
+        var actionSection = document.querySelector('.home-section');
+        if (actionSection) {
+          actionSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    }
   }
 
   // Init on turbo:load and DOMContentLoaded
-  document.addEventListener('turbo:load', initHomeCarousels);
-  if (document.readyState !== 'loading') {
+  function initAll() {
     initHomeCarousels();
+    initScrollToPlan();
+  }
+  document.addEventListener('turbo:load', initAll);
+  if (document.readyState !== 'loading') {
+    initAll();
   } else {
-    document.addEventListener('DOMContentLoaded', initHomeCarousels);
+    document.addEventListener('DOMContentLoaded', initAll);
   }
 })();
 </script>

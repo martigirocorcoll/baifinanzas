@@ -7,6 +7,8 @@ class ProfilesController < ApplicationController
     @financial_level_key = current_user.financial_health_level_key
     @has_pyg = current_user.pyg_completed?
     @has_balance = current_user.balance_completed?
+    @needs_objectives = current_user.can_invest_in_objectives?
+    @has_objectives = current_user.objectives.any?
 
     # Profile completion percentage
     @profile_completion = calculate_profile_completion
@@ -57,20 +59,15 @@ class ProfilesController < ApplicationController
   end
 
   def calculate_profile_completion
-    completion = 0
+    needs_objectives = current_user.can_invest_in_objectives?
+    total_steps = needs_objectives ? 4 : 3
+    completed_steps = 0
 
-    # Step 1: Basic user info (25%)
-    completion += 25 if current_user.email.present?
+    completed_steps += 1 if current_user.email.present?
+    completed_steps += 1 if current_user.pyg_completed?
+    completed_steps += 1 if current_user.balance_completed?
+    completed_steps += 1 if needs_objectives && current_user.objectives.any?
 
-    # Step 2: Detailed PyG (25%)
-    completion += 25 if current_user.pyg_completed?
-
-    # Step 3: Detailed Balance (25%)
-    completion += 25 if current_user.balance_completed?
-
-    # Step 4: At least one objective (25%)
-    completion += 25 if current_user.objectives.any?
-
-    completion
+    ((completed_steps.to_f / total_steps) * 100).round
   end
 end

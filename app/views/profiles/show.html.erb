@@ -39,19 +39,69 @@
     <i class="bi bi-arrow-right ms-auto"></i>
   <% end %>
 
-  <%# Profile completion %>
+  <%# Profile completion with checklist %>
   <% if @profile_completion < 100 %>
-    <div class="app-card bg-warning bg-opacity-10 border-warning mb-4">
+    <div class="app-card mb-4" style="border: 2px solid #f59e0b; background: #fffbeb;">
       <div class="d-flex justify-content-between align-items-center mb-2">
-        <span class="fw-semibold"><%= t('profile.completion') %></span>
-        <span class="fw-semibold"><%= @profile_completion %>%</span>
+        <span class="fw-bold" style="color: #92400e;"><%= t('profile.completion') %></span>
+        <span class="fw-bold" style="color: #92400e; font-size: 1.1rem;"><%= @profile_completion %>%</span>
       </div>
-      <div class="progress" style="height: 6px;">
-        <div class="progress-bar bg-warning" style="width: <%= @profile_completion %>%"></div>
+      <div class="progress mb-3" style="height: 8px; background: #fde68a;">
+        <div class="progress-bar" style="width: <%= @profile_completion %>%; background: #f59e0b;"></div>
       </div>
-      <p class="text-muted small mt-2 mb-0">
-        <%= t('profile.complete_for_better_recommendations') %>
-      </p>
+
+      <%# Step 1: Account - always done %>
+      <div class="d-flex align-items-center gap-2 py-2">
+        <i class="bi bi-check-circle-fill text-success"></i>
+        <span class="small" style="color: #166534;"><%= t('profile.step_account', default: 'Cuenta creada') %></span>
+      </div>
+
+      <%# Step 2: PyG %>
+      <% if @has_pyg %>
+        <div class="d-flex align-items-center gap-2 py-2">
+          <i class="bi bi-check-circle-fill text-success"></i>
+          <span class="small" style="color: #166534;"><%= t('profile.income_expenses') %></span>
+        </div>
+      <% else %>
+        <%= link_to edit_pyg_path, class: 'd-flex align-items-center gap-2 py-2 text-decoration-none' do %>
+          <i class="bi bi-circle" style="color: #d97706;"></i>
+          <span class="small fw-semibold" style="color: #92400e;"><%= t('profile.income_expenses') %></span>
+          <span class="badge rounded-pill ms-auto" style="background: #f59e0b; font-size: 0.65rem;"><%= t('profile.step_time_2min', default: '2 min') %></span>
+          <i class="bi bi-chevron-right" style="color: #d97706; font-size: 0.75rem;"></i>
+        <% end %>
+      <% end %>
+
+      <%# Step 3: Balance %>
+      <% if @has_balance %>
+        <div class="d-flex align-items-center gap-2 py-2">
+          <i class="bi bi-check-circle-fill text-success"></i>
+          <span class="small" style="color: #166534;"><%= t('profile.assets_debts') %></span>
+        </div>
+      <% else %>
+        <%= link_to edit_balance_path, class: 'd-flex align-items-center gap-2 py-2 text-decoration-none' do %>
+          <i class="bi bi-circle" style="color: #d97706;"></i>
+          <span class="small fw-semibold" style="color: #92400e;"><%= t('profile.assets_debts') %></span>
+          <span class="badge rounded-pill ms-auto" style="background: #f59e0b; font-size: 0.65rem;"><%= t('profile.step_time_2min', default: '2 min') %></span>
+          <i class="bi bi-chevron-right" style="color: #d97706; font-size: 0.75rem;"></i>
+        <% end %>
+      <% end %>
+
+      <%# Step 4: Objectives (only if level requires it) %>
+      <% if @needs_objectives %>
+        <% if @has_objectives %>
+          <div class="d-flex align-items-center gap-2 py-2">
+            <i class="bi bi-check-circle-fill text-success"></i>
+            <span class="small" style="color: #166534;"><%= t('profile.step_first_objective', default: 'Primer objetivo definido') %></span>
+          </div>
+        <% else %>
+          <%= link_to authenticated_root_path, class: 'd-flex align-items-center gap-2 py-2 text-decoration-none' do %>
+            <i class="bi bi-circle" style="color: #d97706;"></i>
+            <span class="small fw-semibold" style="color: #92400e;"><%= t('profile.step_first_objective', default: 'Primer objetivo definido') %></span>
+            <span class="badge rounded-pill ms-auto" style="background: #f59e0b; font-size: 0.65rem;"><%= t('profile.step_time_1min', default: '1 min') %></span>
+            <i class="bi bi-chevron-right" style="color: #d97706; font-size: 0.75rem;"></i>
+          <% end %>
+        <% end %>
+      <% end %>
     </div>
   <% end %>
 

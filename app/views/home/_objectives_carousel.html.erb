@@ -72,18 +72,18 @@
             <span class="objective-carousel-card__progress-label"><%= progress.round(0) %>%</span>
           </div>
 
-          <%# Current / target amount - tappable row linking to update progress page %>
-          <%= link_to update_progress_objective_path(objective),
-              style: "display: flex; align-items: center; justify-content: space-between; margin-top: 0.375rem; padding: 0.375rem 0.5rem; background: #f3f4f6; border-radius: 6px; text-decoration: none;" do %>
-            <span style="font-size: 0.8125rem; color: #374151; font-weight: 500;">
+          <%# Current / target amount + update button inline %>
+          <div class="objective-carousel-card__amount-row">
+            <span class="objective-carousel-card__amount-text">
               <%= number_to_currency(objective.current_amount, unit: "\u20AC", precision: 0) %>
               <%= t('home.objectives.progress_of') %>
               <%= number_to_currency(objective.target_amount, unit: "\u20AC", precision: 0) %>
             </span>
-            <span style="font-size: 0.6875rem; color: #165668; font-weight: 600;">
-              <i class="bi bi-pencil-square me-1"></i><%= t('home.objectives.update_progress') %>
-            </span>
-          <% end %>
+            <%= link_to update_progress_objective_path(objective), class: 'objective-carousel-card__update-btn' do %>
+              <i class="bi bi-pencil-square"></i>
+              <%= t('home.objectives.update_progress') %>
+            <% end %>
+          </div>
 
           <%# Monthly savings row %>
           <div class="objective-carousel-card__savings">

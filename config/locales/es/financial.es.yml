@@ -3,42 +3,49 @@ es:
     levels:
       critical:
         name: "Situación Crítica"
+        short_name: "Critica"
         icon: "🔴"
         bootstrap_icon: "bi bi-exclamation-circle"
         description: "Actualmente tus gastos igualan o superan tus ingresos, lo que significa que no tienes capacidad de ahorro consistente. Esta situación es más común de lo que piensas y es el primer paso para tomar control de tus finanzas. Cada pequeña mejora en tus hábitos financieros te acercará al siguiente nivel."
         next_step: "Tu prioridad es crear un flujo de caja positivo reduciendo gastos o aumentando ingresos. Revisa tus recomendaciones personalizadas para encontrar las mejores oportunidades de ahorro."
       emergency_fund:
         name: "Creando Fondo de Emergencia"
+        short_name: "Emergencia"
         icon: "🟡"
         bootstrap_icon: "bi bi-shield-plus"
         description: "¡Excelente progreso! Has logrado tener capacidad de ahorro mensual consistente. Tus ingresos superan tus gastos y puedes destinar dinero cada mes para mejorar tu situación. Ahora necesitas crear un colchón de seguridad que te proteja ante imprevistos."
         next_step: "Construye tu fondo de emergencia de al menos 4 meses de gastos. Este colchón te dará tranquilidad para tomar mejores decisiones financieras."
       paying_debt:
         name: "Eliminando Deudas Caras"
+        short_name: "Deudas"
         icon: "🟠"
         bootstrap_icon: "bi bi-credit-card-2-back"
         description: "Tienes capacidad de ahorro y un colchón de emergencia básico, lo cual demuestra disciplina. Sin embargo, las deudas caras (tarjetas de crédito, préstamos personales) están limitando tu potencial de crecimiento. Esta es la fase más desafiante pero también la más transformadora."
         next_step: "Elimina o reduce significativamente tus deudas caras. Prioriza pagar las deudas con mayor interés primero. Cada euro que destines es una inversión con retorno garantizado."
       stable:
         name: "Situación Estable"
+        short_name: "Estable"
         icon: "🟢"
         bootstrap_icon: "bi bi-check-circle"
         description: "¡Enhorabuena! Has alcanzado estabilidad financiera que solo el 15% de la población logra. Tienes capacidad de ahorro consistente, un fondo de emergencia sólido y tus deudas están bajo control. Desde aquí puedes planificar objetivos financieros específicos como una casa, inversiones o proyectos personales."
         next_step: "Ahora puedes enfocarte en hacer crecer tu patrimonio. Define objetivos financieros específicos y comienza a invertir de forma inteligente."
       growth:
         name: "Crecimiento Patrimonial"
+        short_name: "Crecimiento"
         icon: "💎"
         bootstrap_icon: "bi bi-gem"
         description: "¡Extraordinario logro! Te encuentras en el 5% superior de la población. Has acumulado un patrimonio neto equivalente a al menos 2 años de ingresos, mantienes tus deudas bajo control y tienes sólida capacidad de ahorro e inversión. Puedes considerar estrategias más sofisticadas de inversión y optimización fiscal."
         next_step: "Tu objetivo final está al alcance: lograr que tus inversiones generen ingresos pasivos superiores a tus gastos mensuales. Optimiza tu cartera y considera estrategias avanzadas."
       financial_freedom:
         name: "Libertad Financiera"
+        short_name: "Libertad"
         icon: "👑"
         bootstrap_icon: "bi bi-trophy-fill"
         description: "¡Felicidades por este logro excepcional! Has alcanzado la verdadera libertad financiera, un estatus que menos del 2% de la población logra. Tus inversiones generan ingresos pasivos suficientes para cubrir todos tus gastos mensuales. Puedes elegir cómo invertir tu tiempo basándote en tus pasiones, no en necesidades económicas."
         next_step: "Enfócate en optimizar y preservar tu patrimonio, mientras exploras oportunidades de inversión especializadas o proyectos de impacto social."
       unknown:
         name: "Estado Desconocido"
+        short_name: "Desconocido"
         icon: "❓"
         bootstrap_icon: "bi bi-question-circle"
         description: "No hemos podido determinar tu estado financiero actual. Para ofrecerte el análisis más preciso necesitamos una visión completa de tu situación financiera."
@@ -60,7 +67,7 @@ es:
         cta: "Ver Depositos"
         icon: "bi-shield-check"
       debt_optimization:
-        title: "Reduce tus deudas caras"
+        title: "Optimiza tus deudas"
         nav_title: "Deudas"
         benefit: "Reduce el peso de tus deudas"
         description: "Elimina las deudas que estan frenando tu progreso financiero"
@@ -143,7 +150,8 @@ es:
 
     next_level:
       positive_cash_flow: "Flujo positivo"
-      emergency_2_months: "Colchón 2 meses"
+      emergency_2_months: "Colchon 2 meses"
+      emergency_4_months: "Colchon 4 meses"
       expensive_debt_under_40: "Deuda cara < 40% patrimonio"
       net_worth_2_years: "Patrimonio ≥ 2 años ingresos"
       investment_income_covers_expenses: "Ingresos inversión ≥ gastos"

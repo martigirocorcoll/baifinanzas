@@ -79,6 +79,43 @@
           </div>
         </div>
       <% end %>
+
+      <%# Level-up card when all tasks completed %>
+      <% if @all_completed && @next_level %>
+        <div class="carousel__card action-card action-card--level-up">
+          <div class="action-card__step-pill">
+            <i class="bi bi-trophy-fill"></i>
+            <i class="bi bi-arrow-up-circle"></i>
+          </div>
+
+          <h3 class="action-card__title"><%= t('home.level_up_card.title') %></h3>
+          <p class="action-card__description"><%= t('home.level_up_card.message') %></p>
+          <p class="action-card__description" style="font-size: 0.85rem; opacity: 0.85;"><%= t('home.level_up_card.explanation') %></p>
+
+          <div class="action-card__requirement">
+            <span style="font-weight: 600; font-size: 0.85rem;"><%= t('home.level_up_card.next_requirement') %></span>
+            <div style="margin-top: 0.25rem;">
+              <span class="badge bg-white text-dark" style="font-size: 0.85rem;">
+                <i class="bi bi-arrow-right"></i>
+                <%= @next_level[:name] %>: <%= @next_level[:requirements].first[:text] %>
+              </span>
+            </div>
+          </div>
+
+          <p class="action-card__description" style="font-size: 0.8rem; opacity: 0.75; margin-top: 0.75rem;"><%= t('home.level_up_card.patience_note') %></p>
+
+          <div class="action-card__ctas">
+            <%= link_to edit_pyg_path,
+                class: 'btn-app btn-app--primary btn-app--sm action-card__cta-primary' do %>
+              <%= t('home.level_up_card.update_pyg') %>
+            <% end %>
+            <%= link_to edit_balance_path,
+                class: 'btn-app btn-app--outline btn-app--sm action-card__cta-secondary' do %>
+              <%= t('home.level_up_card.update_balance') %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
     </div>
 
     <%# Dot indicators %>
@@ -87,6 +124,12 @@
         <button class="carousel__dot <%= 'carousel__dot--completed' if action[:completed] %>"
                 data-index="<%= index %>"
                 aria-label="<%= t('home.action_carousel.step_of', step: index + 1, total: @total_count) %>">
+        </button>
+      <% end %>
+      <% if @all_completed && @next_level %>
+        <button class="carousel__dot carousel__dot--completed"
+                data-index="<%= @carousel_actions.length %>"
+                aria-label="<%= t('home.level_up_card.title') %>">
         </button>
       <% end %>
     </div>

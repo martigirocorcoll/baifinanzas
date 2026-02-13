@@ -1,30 +1,104 @@
-<%# Home Hero - Full width, compact %>
-<div class="home-hero teal-section" id="homeHero">
-  <%# Level badge + info button %>
-  <div class="home-hero__top">
-    <span class="level-badge level-badge--pill level-badge--<%= @financial_level[:number] %>">
-      <i class="<%= @financial_level[:icon] %>"></i>
-      <%= @financial_level[:name] %>
+<%# Home Hero - Level Carousel %>
+<div class="home-hero" id="homeHero">
+  <div class="home-section__header">
+    <h2 class="home-section__title">
+      <i class="bi bi-mountain"></i>
+      <%= t('home.financial_level.title') %>
+    </h2>
+    <span class="home-section__counter">
+      <%= t('home.financial_level.level_x_of_6', level: @financial_level[:number]) %>
     </span>
-    <%= link_to level_guide_path, class: 'text-brand', aria: { label: t('home.financial_level.see_requirements') } do %>
-      <i class="bi bi-info-circle" style="font-size: 1.25rem;"></i>
-    <% end %>
   </div>
 
-  <%# Level progress bar + label %>
-  <div class="progress-level">
-    <div class="progress-level__bar progress-level__bar--<%= @financial_level[:number] %>"
-         style="width: <%= (@financial_level[:number] / 6.0 * 100).round %>%">
+  <div class="carousel-wrap">
+    <div class="carousel" id="levelCarousel" data-current-level="<%= @financial_level[:number] - 1 %>">
+      <% @levels.each_with_index do |level, index| %>
+        <% is_current = @financial_level[:number] == level[:number] %>
+        <% is_past = @financial_level[:number] > level[:number] %>
+        <% is_future = @financial_level[:number] < level[:number] %>
+
+        <div class="carousel__card level-card
+                    <%= 'level-card--current' if is_current %>
+                    <%= 'level-card--past' if is_past %>
+                    <%= 'level-card--future' if is_future %>">
+
+          <%# Mini progress indicator - 6 dots, THIS card's level highlighted %>
+          <div class="level-card__progress">
+            <% @levels.each do |l| %>
+              <span class="level-card__dot
+                           <%= 'level-card__dot--active' if l[:number] == level[:number] %>
+                           <%= 'level-card__dot--past' if l[:number] < level[:number] %>">
+                <%= l[:number] %>
+              </span>
+            <% end %>
+          </div>
+
+          <%# Level pill %>
+          <div class="level-card__pill-row">
+            <span class="level-badge level-badge--pill level-badge--<%= level[:number] %>">
+              <i class="<%= level[:icon] %>"></i>
+              <%= level[:name] %>
+            </span>
+            <% if is_current %>
+              <span class="level-card__you-badge"><%= t('home.stepper.your_level') %></span>
+            <% elsif is_past %>
+              <span class="level-card__passed-badge">
+                <i class="bi bi-check-circle-fill"></i>
+                <%= t('home.stepper.level_passed') %>
+              </span>
+            <% end %>
+          </div>
+
+          <%# Description %>
+          <p class="level-card__desc"><%= level[:description] %></p>
+
+          <% if is_current %>
+            <%# Current level: tip + next level info + CTA %>
+            <div class="level-card__tip">
+              <i class="bi bi-lightbulb"></i>
+              <span><%= level[:next_step] %></span>
+            </div>
+
+            <% if @next_level %>
+              <div class="level-card__next">
+                <div class="level-card__next-label">
+                  <i class="bi bi-arrow-up-circle"></i>
+                  <strong><%= t('home.financial_level.next') %> <%= @next_level[:name] %></strong>
+                </div>
+                <div class="level-card__next-req">
+                  <span><%= t('home.stepper.requirement') %></span>
+                  <%= @next_level[:requirements].first[:text] %>
+                </div>
+              </div>
+              <button class="level-card__see-plan" id="scrollToPlan" type="button">
+                <span><%= t('home.stepper.see_plan') %></span>
+                <i class="bi bi-arrow-down"></i>
+              </button>
+            <% else %>
+              <%# Max level (6) - no next level, show congrats %>
+              <div class="level-card__max-level">
+                <i class="bi bi-trophy-fill"></i>
+                <span><%= t('home.stepper.max_level_reached') %></span>
+              </div>
+              <%= link_to level_guide_path, class: "level-card__see-plan" do %>
+                <span><%= t('home.stepper.see_level_guide') %></span>
+                <i class="bi bi-arrow-right"></i>
+              <% end %>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
     </div>
-  </div>
-  <div class="d-flex justify-content-between mt-2">
-    <small class="text-muted">
-      <%= t('home.financial_level.level_x_of_6', level: @financial_level[:number]) %>
-    </small>
-    <% if @next_level %>
-      <small class="text-muted">
-        <%= t('home.financial_level.next') %> <%= @next_level[:name] %>
-      </small>
-    <% end %>
+
+    <%# Dot indicators %>
+    <div class="carousel__dots" id="levelDots">
+      <% @levels.each_with_index do |level, index| %>
+        <% is_past = @financial_level[:number] > level[:number] %>
+        <button class="carousel__dot <%= 'carousel__dot--completed' if is_past %>"
+                data-index="<%= index %>"
+                aria-label="<%= t('home.financial_level.level_x_of_6', level: level[:number]) %>">
+        </button>
+      <% end %>
+    </div>
   </div>
 </div>
