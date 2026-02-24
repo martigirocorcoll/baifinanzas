@@ -1,11 +1,11 @@
 en:
   # General
-  app_name: "BaiFinanzas"
+  app_name: "Finex"
 
   # Navigation
   navigation:
     navbar:
-      brand: "BaiFinanzas"
+      brand: "Finex"
       greeting: "Hello %{email}"
       manage_influencers: "Manage Influencers"
       logout: "Log out"
@@ -15,7 +15,7 @@ en:
       spanish: "Español"
       english: "English"
     footer:
-      copyright: "© %{year} BaiFinanzas. All rights reserved."
+      copyright: "© %{year} Finex. All rights reserved."
       platform: "Web Platform"
       secure: "100% Secure"
       terms: "Terms of Use"

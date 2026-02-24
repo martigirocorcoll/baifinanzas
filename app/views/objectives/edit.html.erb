@@ -58,13 +58,17 @@
           </p>
         </div>
 
-        <div style="display: flex; gap: 0.75rem; margin-top: 1.5rem;">
-          <%= link_to home_path, class: 'btn btn-light', style: 'flex: 1; text-align: center;' do %>
-            <%= t('common.cancel') %>
-          <% end %>
-          <%= f.submit t('objectives.edit.save', default: 'Guardar cambios'), class: 'btn btn-primary', style: 'flex: 1;' %>
-        </div>
+        <%= f.submit t('objectives.edit.save', default: 'Guardar cambios'),
+            class: 'btn-app btn-app--primary btn-app--block',
+            style: 'margin-top: 1.5rem;' %>
       <% end %>
+
+      <%= button_to t('objectives.show.delete'),
+          objective_path(@objective),
+          method: :delete,
+          class: 'btn-app btn-app--danger-outline btn-app--block',
+          style: 'margin-top: 0.75rem;',
+          data: { turbo_confirm: t('objectives.confirm_delete') } %>
     </div>
   </div>
 </div>

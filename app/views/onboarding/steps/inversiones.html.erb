@@ -1,0 +1,66 @@
+<%= render 'onboarding/step_layout',
+    step_number: @step_number,
+    total_steps: @total_steps,
+    progress: @progress,
+    title: t('onboarding.steps.inversiones.title'),
+    subtitle: t('onboarding.steps.inversiones.subtitle') do %>
+
+  <%= form_tag onboarding_step_path(step_name: 'inversiones'), method: :post, class: 'onboarding-form' do %>
+    <%= hidden_field_tag :from, @from %>
+
+    <%# Yes/No toggle %>
+    <div class="onboarding-toggle" id="investToggle">
+      <button type="button" class="onboarding-toggle__btn <%= 'onboarding-toggle__btn--active' if @toggle == 'yes' %>" data-value="yes">
+        <%= t('onboarding.yes') %>
+      </button>
+      <button type="button" class="onboarding-toggle__btn <%= 'onboarding-toggle__btn--active' if @toggle == 'no' %>" data-value="no">
+        <%= t('onboarding.no') %>
+      </button>
+      <%= hidden_field_tag :toggle, @toggle, id: 'toggleField' %>
+    </div>
+
+    <%# Amount input (shown when yes) %>
+    <div class="onboarding-input-group onboarding-expandable" id="investAmount" style="<%= 'display: none;' unless @toggle == 'yes' %>">
+      <div class="onboarding-input-wrap onboarding-input-wrap--euro">
+        <span class="onboarding-input-wrap__prefix">EUR</span>
+        <%= number_field_tag :value, @value, class: 'onboarding-input', placeholder: '10.000', min: 0, step: 500, inputmode: 'numeric' %>
+      </div>
+      <span class="onboarding-input-hint"><%= t('onboarding.steps.inversiones.hint') %></span>
+    </div>
+
+    <button type="submit" class="btn-app btn-app--primary btn-app--block onboarding-submit">
+      <%= t('onboarding.next') %>
+    </button>
+  <% end %>
+
+<% end %>
+
+<script>
+(function() {
+  function initToggle() {
+    var toggleBtns = document.querySelectorAll('#investToggle .onboarding-toggle__btn');
+    var toggleField = document.getElementById('toggleField');
+    var amountDiv = document.getElementById('investAmount');
+    if (!toggleBtns.length) return;
+
+    toggleBtns.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        toggleBtns.forEach(function(b) { b.classList.remove('onboarding-toggle__btn--active'); });
+        btn.classList.add('onboarding-toggle__btn--active');
+        toggleField.value = btn.dataset.value;
+
+        if (btn.dataset.value === 'yes') {
+          amountDiv.style.display = '';
+          var input = amountDiv.querySelector('input');
+          if (input) input.focus();
+        } else {
+          amountDiv.style.display = 'none';
+        }
+      });
+    });
+  }
+  document.addEventListener('turbo:load', initToggle);
+  if (document.readyState !== 'loading') { initToggle(); }
+  else { document.addEventListener('DOMContentLoaded', initToggle); }
+})();
+</script>

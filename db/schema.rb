@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_02_08_102349) do
+ActiveRecord::Schema[7.2].define(version: 2026_02_23_091611) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -95,6 +95,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_08_102349) do
     t.string "video_mortgage"
     t.string "video_diposit"
     t.bigint "user_id"
+    t.string "youtube_channel_id"
     t.index ["ac_compte"], name: "index_influencers_on_ac_compte"
     t.index ["code"], name: "index_influencers_on_code", unique: true
     t.index ["default"], name: "index_influencers_on_default"
@@ -170,6 +171,22 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_08_102349) do
     t.index ["role"], name: "index_users_on_role"
   end
 
+  create_table "youtube_videos", force: :cascade do |t|
+    t.string "youtube_video_id", null: false
+    t.bigint "influencer_id", null: false
+    t.string "title", null: false
+    t.string "thumbnail_url"
+    t.string "channel_title"
+    t.integer "duration_seconds", default: 0
+    t.datetime "published_at"
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["influencer_id", "published_at"], name: "index_youtube_videos_on_influencer_id_and_published_at"
+    t.index ["influencer_id"], name: "index_youtube_videos_on_influencer_id"
+    t.index ["youtube_video_id"], name: "index_youtube_videos_on_youtube_video_id", unique: true
+  end
+
   add_foreign_key "balances", "users"
   add_foreign_key "objectives", "users"
   add_foreign_key "pygs", "users"
@@ -177,4 +194,5 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_08_102349) do
   add_foreign_key "users", "balances"
   add_foreign_key "users", "influencers"
   add_foreign_key "users", "pygs"
+  add_foreign_key "youtube_videos", "influencers"
 end

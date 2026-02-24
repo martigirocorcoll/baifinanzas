@@ -5,26 +5,18 @@ class HomeController < ApplicationController
 
   def index
     @user = current_user
-    @pyg = current_user.pyg
-    @balance = current_user.balance
-    @objectives = current_user.objectives.order(:target_date)
+    @profile_complete = current_user.profile_complete?
+
+    return unless @profile_complete
 
     # Financial health data
     load_financial_health_data
 
-    # Action plan data
+    # Action plan data (recommendations + objectives in one carousel)
     load_action_plan_data
 
-    # Objectives data
-    load_objectives_data
-
-    # Chart data
-    load_chart_data
-
-    # Profile completion flags
-    @pyg_completed = current_user.pyg_completed?
-    @balance_completed = current_user.balance_completed?
-    @profile_complete = current_user.profile_complete?
+    # For inline create objective form
+    @new_objective = current_user.objectives.new
   end
 
   def level_guide
@@ -34,9 +26,8 @@ class HomeController < ApplicationController
   private
 
   def check_onboarding
-    # Redirect to onboarding if user hasn't completed basic data
     unless current_user.has_basic_financial_data?
-      redirect_to onboarding_basic_path and return
+      redirect_to onboarding_welcome_path and return
     end
   end
 
@@ -52,7 +43,7 @@ class HomeController < ApplicationController
     @monthly_cash_flow = current_user.monthly_cash_flow
     @net_worth = current_user.net_worth
 
-    # All levels for stepper
+    # All levels for level guide
     @levels = [
       { number: 1, key: :critical },
       { number: 2, key: :emergency_fund },
@@ -78,37 +69,19 @@ class HomeController < ApplicationController
     full_plan = current_user.action_plan
     @recommendation_actions = full_plan.select { |a| a[:type] == 'recommendation' }
 
-    # Carousel: completed first (left), then uncompleted (right)
-    completed = @recommendation_actions.select { |a| a[:completed] }
-    uncompleted = @recommendation_actions.reject { |a| a[:completed] }
+    # All actions for carousel (recommendations + objectives + create_objective)
+    all_actions = full_plan
+
+    # Sort: completed first (left), then uncompleted (right)
+    completed = all_actions.select { |a| a[:completed] }
+    uncompleted = all_actions.reject { |a| a[:completed] }
     @carousel_actions = completed + uncompleted
     @first_uncompleted_index = completed.length
 
-    @completed_count = completed.length
-    @total_count = @recommendation_actions.count
-    @progress_percentage = @total_count > 0 ? ((@completed_count.to_f / @total_count) * 100).round(0) : 0
-    @all_completed = @completed_count == @total_count && @total_count > 0
-    @can_invest = current_user.can_invest_in_objectives?
-  end
-
-  def load_objectives_data
-    @active_objectives = current_user.objectives.order(:target_date).select(&:valid_for_display?)
-    @new_objective = current_user.objectives.build
-
-    # Calculate savings capacity
-    total_committed = @active_objectives.sum { |obj| obj.monthly_savings_needed }
-    @savings_capacity = {
-      available: @monthly_cash_flow,
-      committed: total_committed,
-      remaining: @monthly_cash_flow - total_committed
-    }
-  end
-
-  def load_chart_data
-    @income = current_user.monthly_income
-    @expenses = current_user.monthly_expenses
-    @total_assets = current_user.total_assets
-    @total_debts = current_user.total_debt
+    @completed_count = @recommendation_actions.count { |a| a[:completed] }
+    @total_count = all_actions.count
+    @progress_percentage = @total_count > 0 ? ((@completed_count.to_f / @recommendation_actions.count) * 100).round(0) : 0
+    @all_completed = @recommendation_actions.all? { |a| a[:completed] } && @recommendation_actions.any?
   end
 
   def calculate_next_level_info

@@ -1,0 +1,22 @@
+<%= render 'onboarding/step_layout',
+    step_number: @step_number,
+    total_steps: @total_steps,
+    progress: @progress,
+    title: t('onboarding.steps.ingresos.title'),
+    subtitle: t('onboarding.steps.ingresos.subtitle') do %>
+
+  <%= form_tag onboarding_step_path(step_name: 'ingresos'), method: :post, class: 'onboarding-form' do %>
+    <%= hidden_field_tag :from, @from %>
+    <div class="onboarding-input-group">
+      <div class="onboarding-input-wrap onboarding-input-wrap--euro">
+        <span class="onboarding-input-wrap__prefix">EUR</span>
+        <%= number_field_tag :value, @value, class: 'onboarding-input', placeholder: '2.500', min: 0, step: 50, inputmode: 'numeric', autofocus: true %>
+      </div>
+      <span class="onboarding-input-hint"><%= t('onboarding.steps.ingresos.hint') %></span>
+    </div>
+    <button type="submit" class="btn-app btn-app--primary btn-app--block onboarding-submit" id="submitBtn">
+      <%= t('onboarding.next') %>
+    </button>
+  <% end %>
+
+<% end %>

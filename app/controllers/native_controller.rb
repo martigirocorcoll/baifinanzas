@@ -78,7 +78,7 @@ class NativeController < ApplicationController
         {
           patterns: ["/onboarding/.*"],
           properties: {
-            context: "modal",
+            context: "default",
             pull_to_refresh_enabled: false
           }
         },

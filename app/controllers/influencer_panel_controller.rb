@@ -60,6 +60,7 @@ class InfluencerPanelController < ApplicationController
 
   def video_params
     params.require(:influencer).permit(
+      :youtube_url,
       :video_compte, :video_cdiposit, :video_diposit, :video_saving, :video_deute,
       :video_mortgage, :video_curt, :video_llarg, :video_jubil, :video_portfolio, :video_fiscal
     )

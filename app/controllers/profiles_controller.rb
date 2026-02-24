@@ -3,22 +3,22 @@ class ProfilesController < ApplicationController
 
   def show
     @user = current_user
-    @financial_level = current_user.financial_health_level_number
     @financial_level_key = current_user.financial_health_level_key
-    @has_pyg = current_user.pyg_completed?
-    @has_balance = current_user.balance_completed?
-    @needs_objectives = current_user.can_invest_in_objectives?
-    @has_objectives = current_user.objectives.any?
-
-    # Profile completion percentage
-    @profile_completion = calculate_profile_completion
-
-    # Stats for profile
-    plan = current_user.action_plan.select { |a| a[:type] == 'recommendation' }
-    @actions_completed = plan.count { |a| a[:completed] }
-    @actions_total = plan.count
-    @objectives_count = current_user.objectives.count
+    @financial_level_number = current_user.financial_health_level_number
+    @profile_complete = current_user.profile_complete?
     @member_since = current_user.created_at
+
+    # Financial summary data
+    @income = current_user.monthly_income
+    @expenses = current_user.monthly_expenses
+    @cash_flow = current_user.monthly_cash_flow
+    @total_assets = current_user.total_assets
+    @total_debts = current_user.total_debt
+    @net_worth = current_user.net_worth
+
+    # For chart bar widths
+    @max_income_expense = [@income, @expenses].max
+    @max_asset_debt = [@total_assets, @total_debts].max
   end
 
   def edit
@@ -56,18 +56,5 @@ class ProfilesController < ApplicationController
 
   def user_params
     params.require(:user).permit(:email, :password, :password_confirmation)
-  end
-
-  def calculate_profile_completion
-    needs_objectives = current_user.can_invest_in_objectives?
-    total_steps = needs_objectives ? 4 : 3
-    completed_steps = 0
-
-    completed_steps += 1 if current_user.email.present?
-    completed_steps += 1 if current_user.pyg_completed?
-    completed_steps += 1 if current_user.balance_completed?
-    completed_steps += 1 if needs_objectives && current_user.objectives.any?
-
-    ((completed_steps.to_f / total_steps) * 100).round
   end
 end

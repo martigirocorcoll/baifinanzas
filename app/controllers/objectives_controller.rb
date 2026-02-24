@@ -7,8 +7,10 @@ class ObjectivesController < ApplicationController
     @objectives = Objective.all
   end
 
-  # GET /objectives/1 or /objectives/1.json
+  # GET /objectives/1 - redirect to recommendation page with objective context
   def show
+    inv_slug = @objective.investment_recommendation.dasherize
+    redirect_to recommendation_path(inv_slug, objetivo_id: @objective.id)
   end
 
   # GET /objectives/new
@@ -24,14 +26,14 @@ class ObjectivesController < ApplicationController
   def create
     # Extraer parámetros de fecha antes de crear el objetivo
     objective_attrs = objective_params.except(:target_date_month, :target_date_year)
-    
+
     # Convertir mes y año en fecha si están presentes
     if params[:objective][:target_date_month].present? && params[:objective][:target_date_year].present?
       month = params[:objective][:target_date_month].to_i
       year = params[:objective][:target_date_year].to_i
       objective_attrs[:target_date] = Date.new(year, month, 1).end_of_month
     end
-    
+
     @objective = current_user.objectives.new(objective_attrs)
 
     respond_to do |format|

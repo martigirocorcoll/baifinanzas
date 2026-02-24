@@ -4,12 +4,14 @@ class DiscoveryController < ApplicationController
   def index
     @influencer = current_user.influencer || Influencer.find_by(default: true) || Influencer.first
 
-    # Load content for the feed
-    @videos = load_influencer_videos
+    # Load videos from DB (synced daily by SyncYoutubeVideosJob)
+    @videos = load_videos
+
+    # Load articles and news from DB
     @articles = load_articles
     @news = load_app_news
 
-    # Merge and sort all content by date (most recent first)
+    # Merge all content sorted by date
     @feed_items = build_feed_items
   end
 
@@ -20,9 +22,30 @@ class DiscoveryController < ApplicationController
 
   private
 
-  def load_influencer_videos
+  def load_videos
     return [] unless @influencer.present?
 
+    # YouTube videos from DB
+    db_videos = YoutubeVideo.active.for_influencer(@influencer).recent.limit(20).map do |video|
+      {
+        type: 'video',
+        url: video.url,
+        embed_url: video.embed_url,
+        title: video.title,
+        thumbnail: video.thumbnail_url,
+        influencer_name: video.channel_title || @influencer.name,
+        published_at: video.published_at,
+        source: 'youtube'
+      }
+    end
+
+    return db_videos if db_videos.any?
+
+    # Fallback: manual video URLs from influencer fields
+    load_influencer_videos
+  end
+
+  def load_influencer_videos
     videos = []
 
     video_fields = [
@@ -44,7 +67,8 @@ class DiscoveryController < ApplicationController
           url: url,
           title: video_title_for(field[:type]),
           influencer_name: @influencer.name || @influencer.email,
-          published_at: @influencer.updated_at
+          published_at: @influencer.updated_at,
+          source: 'influencer'
         }
       end
     end
@@ -82,10 +106,8 @@ class DiscoveryController < ApplicationController
   end
 
   def build_feed_items
-    # Articles + news mixed by date, videos always at the end
-    content = (@articles + @news).sort_by { |item| item[:published_at] }.reverse
-    videos = @videos.sort_by { |v| v[:published_at] }.reverse
-    content + videos
+    all = @videos + @articles + @news
+    all.sort_by { |item| item[:published_at] || Time.at(0) }.reverse
   end
 
   def video_title_for(video_type)

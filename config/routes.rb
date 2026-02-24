@@ -84,10 +84,10 @@ Rails.application.routes.draw do
     post "dashboard/complete_action", to: "dashboard#complete_action", as: :complete_action
     post "dashboard/uncomplete_action", to: "dashboard#uncomplete_action", as: :uncomplete_action
 
-    # Onboarding flow
+    # Onboarding flow (conversational, 1 question per screen)
     get "onboarding/welcome", to: "onboarding#welcome", as: :onboarding_welcome
-    get "onboarding/basic", to: "onboarding#basic", as: :onboarding_basic
-    post "onboarding/basic", to: "onboarding#save_basic"
+    get "onboarding/step/:step_name", to: "onboarding#step", as: :onboarding_step
+    post "onboarding/step/:step_name", to: "onboarding#save_step"
     get "onboarding/processing", to: "onboarding#processing", as: :onboarding_processing
     get "onboarding/complete", to: "onboarding#complete", as: :onboarding_complete
 

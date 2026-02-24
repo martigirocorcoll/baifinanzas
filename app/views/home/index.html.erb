@@ -1,133 +1,45 @@
 <% content_for :title, t('home.nav_title', default: 'Inicio') %>
-<%# Hero: full-width, outside app-container %>
-<%= render 'home/hero' %>
 
-<div class="app-container">
-  <% unless @profile_complete %>
-    <%# ============================================ %>
-    <%# PROFILE INCOMPLETE: Big CTA + locked sections %>
-    <%# ============================================ %>
-    <div class="mb-3" style="background: #fff; border: 2px solid #f59e0b; border-radius: 16px; padding: 1.25rem; box-shadow: 0 2px 12px rgba(245,158,11,0.12);">
-      <%# Header %>
-      <div class="d-flex align-items-center gap-3 mb-3">
-        <div style="background: #fef3c7; border-radius: 50%; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-          <i class="bi bi-shield-exclamation" style="color: #d97706; font-size: 1.4rem;"></i>
-        </div>
-        <div>
-          <h4 class="mb-0" style="font-size: 1.05rem; font-weight: 700; color: #1a1a1a;">
-            <%= t('home.profile_banner.title', default: 'Completa tu perfil para un analisis preciso') %>
-          </h4>
-        </div>
+<% unless @profile_complete %>
+  <%# ============================================ %>
+  <%# NO ONBOARDING: Single CTA card %>
+  <%# ============================================ %>
+  <div class="app-container">
+    <div class="home-onboarding-cta">
+      <div class="home-onboarding-cta__icon">
+        <i class="bi bi-graph-up-arrow"></i>
       </div>
-
-      <p style="font-size: 0.9rem; color: #6b7280; line-height: 1.5; margin-bottom: 1rem;">
-        <%= t('home.profile_banner.description', default: 'Tu nivel financiero se basa en datos aproximados del onboarding. Rellena los formularios detallados para recibir consejos personalizados.') %>
-      </p>
-
-      <%# Action buttons %>
-      <div class="d-flex flex-column gap-2">
-        <% unless @pyg_completed %>
-          <%= link_to edit_pyg_path, style: "display: flex; align-items: center; gap: 0.75rem; padding: 0.85rem 1rem; background: #fffbeb; border: 1.5px solid #fcd34d; border-radius: 12px; text-decoration: none; transition: background 0.15s;" do %>
-            <div style="background: #fef3c7; border-radius: 10px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-              <i class="bi bi-cash-stack" style="color: #d97706; font-size: 1.1rem;"></i>
-            </div>
-            <div style="flex: 1;">
-              <span style="font-weight: 600; font-size: 0.9rem; color: #92400e; display: block;"><%= t('home.profile_banner.complete_pyg', default: 'Detallar ingresos y gastos') %></span>
-              <span style="font-size: 0.78rem; color: #b45309;"><%= t('home.profile_banner.pyg_time', default: '2 min - 13 categorias') %></span>
-            </div>
-            <i class="bi bi-chevron-right" style="color: #d97706; font-size: 1rem;"></i>
-          <% end %>
-        <% else %>
-          <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.85rem 1rem; background: #f0fdf4; border: 1.5px solid #bbf7d0; border-radius: 12px;">
-            <div style="background: #dcfce7; border-radius: 10px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-              <i class="bi bi-check-lg" style="color: #16a34a; font-size: 1.1rem;"></i>
-            </div>
-            <span style="font-weight: 600; font-size: 0.9rem; color: #166534;"><%= t('home.profile_banner.pyg_done', default: 'Ingresos y gastos completados') %></span>
-          </div>
-        <% end %>
-
-        <% unless @balance_completed %>
-          <%= link_to edit_balance_path, style: "display: flex; align-items: center; gap: 0.75rem; padding: 0.85rem 1rem; background: #fffbeb; border: 1.5px solid #fcd34d; border-radius: 12px; text-decoration: none; transition: background 0.15s;" do %>
-            <div style="background: #fef3c7; border-radius: 10px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-              <i class="bi bi-bank" style="color: #d97706; font-size: 1.1rem;"></i>
-            </div>
-            <div style="flex: 1;">
-              <span style="font-weight: 600; font-size: 0.9rem; color: #92400e; display: block;"><%= t('home.profile_banner.complete_balance', default: 'Detallar activos y deudas') %></span>
-              <span style="font-size: 0.78rem; color: #b45309;"><%= t('home.profile_banner.balance_time', default: '2 min - 12 categorias') %></span>
-            </div>
-            <i class="bi bi-chevron-right" style="color: #d97706; font-size: 1rem;"></i>
-          <% end %>
-        <% else %>
-          <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.85rem 1rem; background: #f0fdf4; border: 1.5px solid #bbf7d0; border-radius: 12px;">
-            <div style="background: #dcfce7; border-radius: 10px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-              <i class="bi bi-check-lg" style="color: #16a34a; font-size: 1.1rem;"></i>
-            </div>
-            <span style="font-weight: 600; font-size: 0.9rem; color: #166534;"><%= t('home.profile_banner.balance_done', default: 'Activos y deudas completados') %></span>
-          </div>
-        <% end %>
-      </div>
-    </div>
-
-    <%# Action Plan placeholder (locked) %>
-    <div class="home-section">
-      <div class="d-flex justify-content-between align-items-center mb-2">
-        <h3 class="home-section__title mb-0" style="opacity: 0.5;">
-          <i class="bi bi-lock-fill me-1" style="font-size: 0.85rem;"></i>
-          <%= t('home.action_plan.title', default: 'Tu plan de accion') %>
-        </h3>
-      </div>
-      <div style="background: #f3f4f6; border-radius: 12px; padding: 2rem 1.25rem; text-center; text-align: center;">
-        <i class="bi bi-list-check" style="font-size: 2.5rem; color: #d1d5db;"></i>
-        <p style="color: #9ca3af; font-size: 0.9rem; margin-top: 0.75rem; margin-bottom: 0;">
-          <%= t('home.profile_banner.plan_locked', default: 'Tu plan de accion personalizado se desbloqueara cuando completes tu perfil financiero.') %>
-        </p>
-      </div>
-    </div>
-
-    <%# Objectives placeholder (locked) %>
-    <div class="home-section">
-      <div class="d-flex justify-content-between align-items-center mb-2">
-        <h3 class="home-section__title mb-0" style="opacity: 0.5;">
-          <i class="bi bi-lock-fill me-1" style="font-size: 0.85rem;"></i>
-          <%= t('home.objectives.title', default: 'Objetivos') %>
-        </h3>
-      </div>
-      <div style="background: #f3f4f6; border-radius: 12px; padding: 2rem 1.25rem; text-align: center;">
-        <i class="bi bi-bullseye" style="font-size: 2.5rem; color: #d1d5db;"></i>
-        <p style="color: #9ca3af; font-size: 0.9rem; margin-top: 0.75rem; margin-bottom: 0;">
-          <%= t('home.profile_banner.objectives_locked', default: 'Los objetivos financieros se desbloquean al completar tu perfil.') %>
-        </p>
-      </div>
-    </div>
-
-  <% else %>
-    <%# ============================================ %>
-    <%# PROFILE COMPLETE: Full experience %>
-    <%# ============================================ %>
-
-    <%# Action Plan Carousel %>
-    <div class="home-section">
-      <%= render 'home/action_carousel' %>
-    </div>
-
-    <% if @can_invest %>
-      <%# Objectives Carousel %>
-      <div class="home-section">
-        <%= render 'home/objectives_carousel' %>
-      </div>
-    <% end %>
-  <% end %>
-</div>
-
-<% if @profile_complete %>
-  <%# Bottom teal section: savings + metrics + charts %>
-  <div class="teal-section home-bottom-section">
-    <div class="app-container" style="animation: none;">
-      <% if @can_invest %>
-        <%= render 'home/savings_inline' %>
-        <div style="margin-bottom: 1rem;"></div>
+      <h2 class="home-onboarding-cta__title"><%= t('home.incomplete.title', default: 'Descubre tu plan financiero') %></h2>
+      <p class="home-onboarding-cta__desc"><%= t('home.incomplete.description', default: 'Responde unas preguntas sencillas y te diremos como mejorar tu situacion economica.') %></p>
+      <%= link_to onboarding_step_path(step_name: 'ingresos'), class: 'btn-app btn-app--primary btn-app--lg btn-app--block' do %>
+        <%= t('home.incomplete.cta', default: 'Completar mis datos') %>
+        <i class="bi bi-arrow-right ms-1"></i>
       <% end %>
-      <%= render 'home/financial_charts' %>
+    </div>
+  </div>
+
+<% else %>
+  <%# ============================================ %>
+  <%# FULLSCREEN HOME LAYOUT %>
+  <%# ============================================ %>
+  <div class="home-fullscreen">
+    <%# COMPACT LEVEL INDICATOR %>
+    <div class="home-level-compact">
+      <div class="home-level-compact__content">
+        <span class="home-level-compact__pill"><%= @financial_level[:number] %>/6</span>
+        <span class="home-level-compact__name"><%= @financial_level[:name] %></span>
+        <%= link_to level_guide_path, class: 'home-level-compact__help' do %>
+          <i class="bi bi-question-circle"></i>
+        <% end %>
+      </div>
+      <div class="home-level-compact__progress">
+        <div class="home-level-compact__progress-fill" style="width: <%= (@financial_level[:number] / 6.0 * 100).round %>%"></div>
+      </div>
+    </div>
+
+    <%# UNIFIED ACTION CAROUSEL - fills remaining space %>
+    <div class="home-fullscreen__carousel">
+      <%= render 'home/action_carousel' %>
     </div>
   </div>
 <% end %>
@@ -144,53 +56,38 @@
       var dots = dotsContainer.querySelectorAll('.carousel__dot');
       if (cards.length === 0) return;
 
-      // Auto-scroll to first uncompleted (action carousel only)
-      if (carouselId === 'actionCarousel') {
-        var firstIdx = parseInt(carousel.dataset.firstUncompleted) || 0;
-        if (firstIdx > 0 && firstIdx < cards.length) {
-          requestAnimationFrame(function() {
-            var target = cards[firstIdx];
-            carousel.scrollTo({ left: target.offsetLeft - carousel.offsetLeft, behavior: 'smooth' });
-          });
-        }
+      // Auto-scroll to first uncompleted
+      var firstIdx = parseInt(carousel.dataset.firstUncompleted) || 0;
+      if (firstIdx > 0 && firstIdx < cards.length) {
+        requestAnimationFrame(function() {
+          var target = cards[firstIdx];
+          carousel.scrollTo({ left: target.offsetLeft - carousel.offsetLeft, behavior: 'smooth' });
+        });
       }
 
-      // Activate first dot
       if (dots.length > 0) {
         dots[0].classList.add('carousel__dot--active');
       }
 
-      // Disconnect previous observer if any
       var observerKey = '_observer_' + carouselId;
-      if (window[observerKey]) {
-        window[observerKey].disconnect();
-      }
+      if (window[observerKey]) { window[observerKey].disconnect(); }
 
-      // IntersectionObserver for dot updates
       if ('IntersectionObserver' in window) {
         var observer = new IntersectionObserver(function(entries) {
           entries.forEach(function(entry) {
             if (entry.isIntersecting) {
               var idx = Array.prototype.indexOf.call(cards, entry.target);
               dots.forEach(function(d, i) {
-                if (i === idx) {
-                  d.classList.add('carousel__dot--active');
-                } else {
-                  d.classList.remove('carousel__dot--active');
-                }
+                d.classList.toggle('carousel__dot--active', i === idx);
               });
             }
           });
-        }, {
-          root: carousel,
-          threshold: 0.5
-        });
+        }, { root: carousel, threshold: 0.5 });
 
         window[observerKey] = observer;
         cards.forEach(function(card) { observer.observe(card); });
       }
 
-      // Click dot to scroll (with guard)
       dots.forEach(function(dot) {
         if (dot.dataset.bound) return;
         dot.dataset.bound = '1';
@@ -204,48 +101,23 @@
     }
 
     setupCarousel('actionCarousel', 'actionDots');
-    setupCarousel('objectivesCarousel', 'objectiveDots');
-
-    // Level carousel: auto-scroll to current level
-    var levelCarousel = document.getElementById('levelCarousel');
-    if (levelCarousel) {
-      var currentIdx = parseInt(levelCarousel.dataset.currentLevel) || 0;
-      var levelCards = levelCarousel.querySelectorAll('.carousel__card');
-      if (currentIdx > 0 && currentIdx < levelCards.length) {
-        requestAnimationFrame(function() {
-          var target = levelCards[currentIdx];
-          levelCarousel.scrollTo({ left: target.offsetLeft - levelCarousel.offsetLeft, behavior: 'auto' });
-        });
-      }
-      setupCarousel('levelCarousel', 'levelDots');
-    }
   }
 
-  // Smooth scroll: "Ver tu plan" button
-  function initScrollToPlan() {
-    var scrollBtn = document.getElementById('scrollToPlan');
-    if (scrollBtn) {
-      if (scrollBtn.dataset.bound) return;
-      scrollBtn.dataset.bound = '1';
-      scrollBtn.addEventListener('click', function() {
-        var actionSection = document.querySelector('.home-section');
-        if (actionSection) {
-          actionSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  function initPresetChips() {
+    document.querySelectorAll('.action-card-v2__preset').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var input = document.getElementById('objective_title_input');
+        if (input) {
+          input.value = this.dataset.presetTitle;
+          input.focus();
         }
       });
-    }
+    });
   }
 
-  // Init on turbo:load and DOMContentLoaded
-  function initAll() {
-    initHomeCarousels();
-    initScrollToPlan();
-  }
+  function initAll() { initHomeCarousels(); initPresetChips(); }
   document.addEventListener('turbo:load', initAll);
-  if (document.readyState !== 'loading') {
-    initAll();
-  } else {
-    document.addEventListener('DOMContentLoaded', initAll);
-  }
+  if (document.readyState !== 'loading') { initAll(); }
+  else { document.addEventListener('DOMContentLoaded', initAll); }
 })();
 </script>

@@ -1,0 +1,36 @@
+<% content_for :title, t('onboarding.nav_title', default: 'Onboarding') %>
+<div class="onboarding-step" data-step="<%= step_number %>">
+  <%# Progress bar %>
+  <div class="onboarding-progress">
+    <div class="onboarding-progress__bar">
+      <div class="onboarding-progress__fill" style="width: <%= progress %>%"></div>
+    </div>
+    <span class="onboarding-progress__text">
+      <%= t('onboarding.step_of', step: step_number, total: total_steps) %>
+    </span>
+  </div>
+
+  <%# Back button %>
+  <div class="onboarding-step__nav">
+    <% if step_number > 1 %>
+      <% prev_step = OnboardingController::STEPS[step_number - 2] %>
+      <%= link_to onboarding_step_path(step_name: prev_step, from: @from), class: 'onboarding-back' do %>
+        <i class="bi bi-arrow-left"></i>
+        <%= t('common.back') %>
+      <% end %>
+    <% else %>
+      <%= link_to onboarding_welcome_path, class: 'onboarding-back' do %>
+        <i class="bi bi-arrow-left"></i>
+        <%= t('common.back') %>
+      <% end %>
+    <% end %>
+  </div>
+
+  <%# Content %>
+  <div class="onboarding-step__content">
+    <h1 class="onboarding-step__title"><%= title %></h1>
+    <p class="onboarding-step__subtitle"><%= subtitle %></p>
+
+    <%= yield %>
+  </div>
+</div>

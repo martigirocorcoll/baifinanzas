@@ -1,10 +1,138 @@
-<p style="color: green"><%= notice %></p>
+<% content_for :title, @objective.title %>
 
-<%= render @objective %>
+<div class="objective-detail">
+  <%# Header with icon and title %>
+  <div class="objective-detail__header">
+    <div class="objective-detail__icon">
+      <i class="bi <%= @objective.objective_icon %>"></i>
+    </div>
+    <h2 class="objective-detail__title"><%= @objective.title %></h2>
+    <span class="objective-detail__badge">
+      <%= t("home.objectives.placeholder_#{@objective.investment_recommendation.sub('ac_', '')}", default: @objective.investment_recommendation.humanize) %>
+    </span>
+  </div>
 
-<div>
-  <%= link_to "Edit this objective", edit_objective_path(@objective) %> |
-  <%= link_to "Back to objectives", objectives_path %>
+  <%# Progress section %>
+  <div class="objective-detail__progress">
+    <div class="objective-detail__progress-bar">
+      <div class="objective-detail__progress-fill" style="width: <%= @objective.current_progress_percentage %>%"></div>
+    </div>
+    <div class="objective-detail__progress-labels">
+      <span><%= number_to_currency(@objective.current_amount, unit: "\u20AC", precision: 0) %></span>
+      <span><%= number_to_currency(@objective.target_amount, unit: "\u20AC", precision: 0) %></span>
+    </div>
+  </div>
 
-  <%= button_to "Destroy this objective", @objective, method: :delete %>
+  <%# Key metrics %>
+  <div class="objective-detail__metrics">
+    <div class="objective-detail__metric">
+      <span class="objective-detail__metric-label"><%= t('objectives.show.remaining') %></span>
+      <span class="objective-detail__metric-value"><%= number_to_currency(@objective.remaining_amount, unit: "\u20AC", precision: 0) %></span>
+    </div>
+    <div class="objective-detail__metric">
+      <span class="objective-detail__metric-label"><%= t('objectives.show.monthly_savings') %></span>
+      <span class="objective-detail__metric-value"><%= number_to_currency(@objective.monthly_savings_needed, unit: "\u20AC", precision: 0) %><%= t('home.objectives.per_month') %></span>
+    </div>
+    <div class="objective-detail__metric">
+      <span class="objective-detail__metric-label"><%= t('objectives.show.target_date') %></span>
+      <span class="objective-detail__metric-value"><%= l(@objective.target_date, format: :long) %></span>
+    </div>
+    <div class="objective-detail__metric">
+      <span class="objective-detail__metric-label"><%= t('objectives.show.time_left') %></span>
+      <span class="objective-detail__metric-value">
+        <% months = @objective.months_to_target %>
+        <% if months >= 12 %>
+          <%= (months / 12.0).round(1) %> <%= t('objectives.show.years') %>
+        <% else %>
+          <%= months %> <%= t('objectives.show.months') %>
+        <% end %>
+      </span>
+    </div>
+    <div class="objective-detail__metric">
+      <span class="objective-detail__metric-label"><%= t('objectives.show.expected_return') %></span>
+      <span class="objective-detail__metric-value"><%= (@objective.annual_return_rate * 100).round(1) %>%</span>
+    </div>
+  </div>
+
+  <%# Investment recommendation link %>
+  <% inv_slug = @objective.investment_recommendation.dasherize %>
+  <%= link_to recommendation_path(inv_slug),
+      class: 'btn-app btn-app--primary btn-app--block objective-detail__cta' do %>
+    <i class="bi bi-graph-up-arrow me-1"></i>
+    <%= t('home.objectives.see_investment_plan') %>
+  <% end %>
+
+  <%# Edit form (collapsible) %>
+  <div class="objective-detail__section">
+    <button class="objective-detail__section-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#editObjectiveForm" aria-expanded="false">
+      <i class="bi bi-pencil me-2"></i>
+      <%= t('objectives.show.edit_data') %>
+      <i class="bi bi-chevron-down ms-auto"></i>
+    </button>
+
+    <div class="collapse" id="editObjectiveForm">
+      <div class="objective-detail__form">
+        <%= simple_form_for @objective,
+            url: objective_path(@objective),
+            html: { method: :patch } do |f| %>
+
+          <div class="app-form__group">
+            <%= f.label :title, t('objectives.form.title'), class: 'app-form__label' %>
+            <%= f.text_field :title,
+                class: 'app-form__input',
+                placeholder: t('objectives.form.title_placeholder'),
+                required: true %>
+          </div>
+
+          <div class="app-form__group">
+            <%= f.label :target_amount, t('objectives.form.amount'), class: 'app-form__label' %>
+            <div class="app-form__input-group">
+              <span class="app-form__input-prefix">&euro;</span>
+              <%= f.number_field :target_amount,
+                  class: 'app-form__input',
+                  min: 100,
+                  step: 100,
+                  required: true %>
+            </div>
+          </div>
+
+          <div class="app-form__group">
+            <%= f.label :current_amount, t('objectives.form.current_amount'), class: 'app-form__label' %>
+            <div class="app-form__input-group">
+              <span class="app-form__input-prefix">&euro;</span>
+              <%= f.number_field :current_amount,
+                  class: 'app-form__input',
+                  min: 0,
+                  step: 100 %>
+            </div>
+            <p class="app-form__hint"><%= t('objectives.form.current_amount_hint') %></p>
+          </div>
+
+          <div class="app-form__group">
+            <%= f.label :target_date, t('objectives.form.date'), class: 'app-form__label' %>
+            <%= f.date_field :target_date,
+                class: 'app-form__input',
+                min: Date.tomorrow.to_s,
+                required: true %>
+            <p class="app-form__hint"><%= t('objectives.form.date_hint') %></p>
+          </div>
+
+          <%= f.submit t('objectives.edit.save', default: 'Save changes'),
+              class: 'btn-app btn-app--primary btn-app--block',
+              style: 'margin-top: 1rem;' %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <%# Delete section %>
+  <div class="objective-detail__delete">
+    <%= button_to objective_path(@objective),
+        method: :delete,
+        class: 'objective-detail__delete-btn',
+        data: { turbo_confirm: t('objectives.confirm_delete') } do %>
+      <i class="bi bi-trash3 me-1"></i>
+      <%= t('objectives.show.delete') %>
+    <% end %>
+  </div>
 </div>

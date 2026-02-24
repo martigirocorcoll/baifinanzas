@@ -77,7 +77,7 @@ module Admin
 
     def influencer_params
       params.require(:influencer).permit(
-        :name, :email, :password, :password_confirmation,
+        :name, :email, :password, :password_confirmation, :youtube_url,
         :ac_compte, :ac_cdiposit, :ac_saving, :ac_deute, :ac_mortgage,
         :ac_curt, :ac_llarg, :ac_jubil, :ac_portfolio, :ac_fiscal,
         :video_compte, :video_cdiposit, :video_diposit, :video_saving, :video_deute, :video_mortgage,

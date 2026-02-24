@@ -2,7 +2,7 @@ es:
   # Navigation
   navigation:
     navbar:
-      brand: "BaiFinanzas"
+      brand: "Finex"
       greeting: "Hola, %{email}"
       manage_influencers: "Gestionar Influencers"
       logout: "Cerrar sesión"
@@ -108,10 +108,10 @@ es:
           title: "100% Seguro"
           description: "Datos protegidos y encriptados"
         suggestions:
-          title: "¿Tienes ideas para mejorar BaiFinanzas?"
+          title: "¿Tienes ideas para mejorar Finex?"
           description: "Tu feedback es muy valioso para nosotros. Comparte tus sugerencias y ayúdanos a crear la mejor plataforma financiera."
           button: "Enviar Sugerencia"
-          email_subject: "Sugerencia de mejora para BaiFinanzas"
+          email_subject: "Sugerencia de mejora para Finex"
           email_body: "Hola,%0A%0AMe gustaría sugerir la siguiente mejora para la plataforma:%0A%0A[Escribe aquí tu sugerencia]%0A%0AGracias por vuestro trabajo!"
         links:
           terms: "Términos de Uso"
@@ -346,7 +346,7 @@ es:
 
     # Dashboard
     dashboard:
-      title: "Dashboard - Baifinanzas"
+      title: "Dashboard - Finex"
       # New User State
       new_user:
         welcome: "¡Hola, %{name}!"
@@ -695,9 +695,9 @@ es:
 
       # Legal & Completion
       legal_info_title: "Información legal"
-      legal_affiliate_disclosure: "Los enlaces de esta página pueden contener códigos de afiliación. Si contratas un producto a través de estos enlaces, BaiFinanzas puede recibir una comisión sin coste adicional para ti. Esto nos ayuda a mantener el servicio gratuito y seguir ofreciéndote las mejores recomendaciones personalizadas. Todas las recomendaciones se basan en tu situación financiera real y en productos que consideramos óptimos para tus objetivos."
+      legal_affiliate_disclosure: "Los enlaces de esta página pueden contener códigos de afiliación. Si contratas un producto a través de estos enlaces, Finex puede recibir una comisión sin coste adicional para ti. Esto nos ayuda a mantener el servicio gratuito y seguir ofreciéndote las mejores recomendaciones personalizadas. Todas las recomendaciones se basan en tu situación financiera real y en productos que consideramos óptimos para tus objetivos."
       important: "Importante"
-      legal_disclaimer: "Esta no es asesoría financiera profesional. Te recomendamos consultar con un asesor certificado para decisiones de inversión importantes. BaiFinanzas es una herramienta educativa y de planificación financiera personal."
+      legal_disclaimer: "Esta no es asesoría financiera profesional. Te recomendamos consultar con un asesor certificado para decisiones de inversión importantes. Finex es una herramienta educativa y de planificación financiera personal."
       completed_action: "He completado esta acción"
       completed_action_description: "Marca esta casilla cuando hayas ejecutado esta recomendación para actualizar tu progreso en el dashboard."
 

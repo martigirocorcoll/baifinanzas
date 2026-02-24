@@ -1,158 +1,118 @@
 <% content_for :title, t('profile.nav_title', default: 'Perfil') %>
 <div class="app-container">
-  <%# User info header %>
+  <%# User header %>
   <% user_name = @user.email.split('@').first.capitalize %>
   <% initials = user_name[0..1].upcase %>
-  <div class="text-center mb-4">
-    <div class="profile-avatar profile-avatar--initials mb-3">
+  <div class="profile-header">
+    <div class="profile-header__avatar">
       <span><%= initials %></span>
     </div>
-    <h2 class="h5 mb-1"><%= user_name %></h2>
-    <p class="text-muted small mb-2"><%= @user.email %></p>
-    <span class="level-badge level-badge--pill level-badge--<%= @financial_level %>">
-      <%= t("financial.levels.#{@financial_level_key}.name") %>
-    </span>
-  </div>
-
-  <%# Level + stats summary %>
-  <div class="profile-stats">
-    <div class="profile-stats__item">
-      <span class="profile-stats__value"><%= @actions_completed %>/<%= @actions_total %></span>
-      <span class="profile-stats__label"><%= t('profile.actions_completed') %></span>
-    </div>
-    <div class="profile-stats__divider"></div>
-    <div class="profile-stats__item">
-      <span class="profile-stats__value"><%= @objectives_count %></span>
-      <span class="profile-stats__label"><%= t('profile.objectives_created') %></span>
-    </div>
-    <div class="profile-stats__divider"></div>
-    <div class="profile-stats__item">
-      <span class="profile-stats__value"><%= @member_since.strftime('%b %y') %></span>
-      <span class="profile-stats__label"><%= t('profile.member_since') %></span>
+    <div class="profile-header__info">
+      <h2 class="profile-header__name"><%= user_name %></h2>
+      <p class="profile-header__email"><%= @user.email %></p>
+      <span class="profile-header__meta">
+        <%= t("financial.levels.#{@financial_level_key}.short_name") %>
+        &middot;
+        <%= t('profile.since', default: 'Desde') %> <%= @member_since.strftime('%b %Y') %>
+      </span>
     </div>
   </div>
 
-  <%# Go to plan link %>
-  <%= link_to authenticated_root_path, class: 'profile-plan-link' do %>
-    <i class="bi bi-list-check"></i>
-    <span><%= t('profile.go_to_plan') %></span>
-    <i class="bi bi-arrow-right ms-auto"></i>
-  <% end %>
+  <% if @profile_complete %>
+    <%# Financial Summary %>
+    <div class="profile-summary">
+      <h3 class="profile-summary__title"><%= t('profile.your_summary', default: 'Tu resumen') %></h3>
 
-  <%# Profile completion with checklist %>
-  <% if @profile_completion < 100 %>
-    <div class="app-card mb-4" style="border: 2px solid #f59e0b; background: #fffbeb;">
-      <div class="d-flex justify-content-between align-items-center mb-2">
-        <span class="fw-bold" style="color: #92400e;"><%= t('profile.completion') %></span>
-        <span class="fw-bold" style="color: #92400e; font-size: 1.1rem;"><%= @profile_completion %>%</span>
+      <div class="profile-summary__row">
+        <span class="profile-summary__row-label"><%= t('profile.summary.earn', default: 'Ganas') %></span>
+        <span class="profile-summary__row-value"><%= format_currency(@income) %><%= t('profile.summary.per_month', default: '/mes') %></span>
       </div>
-      <div class="progress mb-3" style="height: 8px; background: #fde68a;">
-        <div class="progress-bar" style="width: <%= @profile_completion %>%; background: #f59e0b;"></div>
+      <div class="profile-summary__row">
+        <span class="profile-summary__row-label"><%= t('profile.summary.spend', default: 'Gastas') %></span>
+        <span class="profile-summary__row-value"><%= format_currency(@expenses) %><%= t('profile.summary.per_month', default: '/mes') %></span>
       </div>
-
-      <%# Step 1: Account - always done %>
-      <div class="d-flex align-items-center gap-2 py-2">
-        <i class="bi bi-check-circle-fill text-success"></i>
-        <span class="small" style="color: #166534;"><%= t('profile.step_account', default: 'Cuenta creada') %></span>
+      <div class="profile-summary__divider"></div>
+      <div class="profile-summary__row">
+        <span class="profile-summary__row-label"><%= t('profile.summary.left_over', default: 'Te sobra') %></span>
+        <span class="profile-summary__row-value <%= @cash_flow >= 0 ? 'profile-summary__row-value--positive' : 'profile-summary__row-value--negative' %>">
+          <%= format_currency(@cash_flow) %><%= t('profile.summary.per_month', default: '/mes') %>
+        </span>
       </div>
 
-      <%# Step 2: PyG %>
-      <% if @has_pyg %>
-        <div class="d-flex align-items-center gap-2 py-2">
-          <i class="bi bi-check-circle-fill text-success"></i>
-          <span class="small" style="color: #166534;"><%= t('profile.income_expenses') %></span>
-        </div>
-      <% else %>
-        <%= link_to edit_pyg_path, class: 'd-flex align-items-center gap-2 py-2 text-decoration-none' do %>
-          <i class="bi bi-circle" style="color: #d97706;"></i>
-          <span class="small fw-semibold" style="color: #92400e;"><%= t('profile.income_expenses') %></span>
-          <span class="badge rounded-pill ms-auto" style="background: #f59e0b; font-size: 0.65rem;"><%= t('profile.step_time_2min', default: '2 min') %></span>
-          <i class="bi bi-chevron-right" style="color: #d97706; font-size: 0.75rem;"></i>
-        <% end %>
-      <% end %>
+      <div class="profile-summary__divider" style="margin: 0.5rem 0;"></div>
 
-      <%# Step 3: Balance %>
-      <% if @has_balance %>
-        <div class="d-flex align-items-center gap-2 py-2">
-          <i class="bi bi-check-circle-fill text-success"></i>
-          <span class="small" style="color: #166534;"><%= t('profile.assets_debts') %></span>
-        </div>
-      <% else %>
-        <%= link_to edit_balance_path, class: 'd-flex align-items-center gap-2 py-2 text-decoration-none' do %>
-          <i class="bi bi-circle" style="color: #d97706;"></i>
-          <span class="small fw-semibold" style="color: #92400e;"><%= t('profile.assets_debts') %></span>
-          <span class="badge rounded-pill ms-auto" style="background: #f59e0b; font-size: 0.65rem;"><%= t('profile.step_time_2min', default: '2 min') %></span>
-          <i class="bi bi-chevron-right" style="color: #d97706; font-size: 0.75rem;"></i>
-        <% end %>
-      <% end %>
+      <div class="profile-summary__row">
+        <span class="profile-summary__row-label"><%= t('profile.summary.what_you_have', default: 'Lo que tienes') %></span>
+        <span class="profile-summary__row-value"><%= format_currency(@total_assets) %></span>
+      </div>
+      <div class="profile-summary__row">
+        <span class="profile-summary__row-label"><%= t('profile.summary.what_you_owe', default: 'Lo que debes') %></span>
+        <span class="profile-summary__row-value"><%= format_currency(@total_debts) %></span>
+      </div>
+    </div>
 
-      <%# Step 4: Objectives (only if level requires it) %>
-      <% if @needs_objectives %>
-        <% if @has_objectives %>
-          <div class="d-flex align-items-center gap-2 py-2">
-            <i class="bi bi-check-circle-fill text-success"></i>
-            <span class="small" style="color: #166534;"><%= t('profile.step_first_objective', default: 'Primer objetivo definido') %></span>
+    <%# Update data button %>
+    <%= link_to onboarding_step_path(step_name: 'ingresos', from: 'profile'),
+        class: 'btn-app btn-app--primary btn-app--block mb-4' do %>
+      <i class="bi bi-arrow-repeat me-1"></i>
+      <%= t('profile.update_data', default: 'Actualizar mis datos') %>
+    <% end %>
+
+    <%# Charts %>
+    <% if @max_income_expense > 0 %>
+      <div class="profile-chart">
+        <h4 class="profile-chart__title"><%= t('profile.chart.income_vs_expenses', default: 'Ingresos vs Gastos') %></h4>
+        <div class="profile-chart__bar-row">
+          <span class="profile-chart__bar-label"><%= t('profile.chart.income', default: 'Ingresos') %></span>
+          <div class="profile-chart__bar-track">
+            <div class="profile-chart__bar-fill" style="width: <%= (@income.to_f / @max_income_expense * 100).round %>%; background: #10b981;"></div>
           </div>
-        <% else %>
-          <%= link_to authenticated_root_path, class: 'd-flex align-items-center gap-2 py-2 text-decoration-none' do %>
-            <i class="bi bi-circle" style="color: #d97706;"></i>
-            <span class="small fw-semibold" style="color: #92400e;"><%= t('profile.step_first_objective', default: 'Primer objetivo definido') %></span>
-            <span class="badge rounded-pill ms-auto" style="background: #f59e0b; font-size: 0.65rem;"><%= t('profile.step_time_1min', default: '1 min') %></span>
-            <i class="bi bi-chevron-right" style="color: #d97706; font-size: 0.75rem;"></i>
-          <% end %>
-        <% end %>
+          <span class="profile-chart__bar-amount"><%= format_currency(@income) %></span>
+        </div>
+        <div class="profile-chart__bar-row">
+          <span class="profile-chart__bar-label"><%= t('profile.chart.expenses', default: 'Gastos') %></span>
+          <div class="profile-chart__bar-track">
+            <div class="profile-chart__bar-fill" style="width: <%= (@expenses.to_f / @max_income_expense * 100).round %>%; background: #ef4444;"></div>
+          </div>
+          <span class="profile-chart__bar-amount"><%= format_currency(@expenses) %></span>
+        </div>
+      </div>
+    <% end %>
+
+    <% if @max_asset_debt > 0 %>
+      <div class="profile-chart">
+        <h4 class="profile-chart__title"><%= t('profile.chart.assets_vs_debts', default: 'Lo que tienes vs lo que debes') %></h4>
+        <div class="profile-chart__bar-row">
+          <span class="profile-chart__bar-label"><%= t('profile.chart.assets', default: 'Tienes') %></span>
+          <div class="profile-chart__bar-track">
+            <div class="profile-chart__bar-fill" style="width: <%= (@total_assets.to_f / @max_asset_debt * 100).round %>%; background: #10b981;"></div>
+          </div>
+          <span class="profile-chart__bar-amount"><%= format_currency(@total_assets) %></span>
+        </div>
+        <div class="profile-chart__bar-row">
+          <span class="profile-chart__bar-label"><%= t('profile.chart.debts', default: 'Debes') %></span>
+          <div class="profile-chart__bar-track">
+            <div class="profile-chart__bar-fill" style="width: <%= (@total_debts.to_f / @max_asset_debt * 100).round %>%; background: #ef4444;"></div>
+          </div>
+          <span class="profile-chart__bar-amount"><%= format_currency(@total_debts) %></span>
+        </div>
+      </div>
+    <% end %>
+  <% else %>
+    <%# Incomplete profile %>
+    <div class="profile-incomplete-cta">
+      <i class="bi bi-graph-up-arrow"></i>
+      <p><%= t('profile.incomplete_message', default: 'Completa tus datos para ver tu resumen financiero.') %></p>
+      <%= link_to onboarding_step_path(step_name: 'ingresos', from: 'profile'),
+          class: 'btn-app btn-app--primary btn-app--block' do %>
+        <%= t('profile.update_data', default: 'Actualizar mis datos') %>
       <% end %>
     </div>
   <% end %>
 
-  <%# Menu sections %>
-  <div class="app-section">
-    <h3 class="app-section__title"><%= t('profile.financial_data') %></h3>
-
-    <%= link_to edit_pyg_path, class: 'profile-menu-item' do %>
-      <div class="profile-menu-item__icon-wrap">
-        <i class="bi bi-cash-stack text-brand"></i>
-      </div>
-      <div class="profile-menu-item__content">
-        <h4 class="profile-menu-item__title"><%= t('profile.income_expenses', default: 'Ingresos y gastos') %></h4>
-        <% if @has_pyg %>
-          <p class="profile-menu-item__subtitle text-success mb-0"><i class="bi bi-check-circle me-1"></i><%= t('profile.completed', default: 'Completado') %></p>
-        <% else %>
-          <p class="profile-menu-item__subtitle mb-0"><%= t('profile.pending', default: 'Pendiente') %></p>
-        <% end %>
-      </div>
-      <i class="bi bi-chevron-right profile-menu-item__arrow"></i>
-    <% end %>
-
-    <%= link_to edit_balance_path, class: 'profile-menu-item' do %>
-      <div class="profile-menu-item__icon-wrap">
-        <i class="bi bi-bank text-brand"></i>
-      </div>
-      <div class="profile-menu-item__content">
-        <h4 class="profile-menu-item__title"><%= t('profile.assets_debts', default: 'Activos y deudas') %></h4>
-        <% if @has_balance %>
-          <p class="profile-menu-item__subtitle text-success mb-0"><i class="bi bi-check-circle me-1"></i><%= t('profile.completed', default: 'Completado') %></p>
-        <% else %>
-          <p class="profile-menu-item__subtitle mb-0"><%= t('profile.pending', default: 'Pendiente') %></p>
-        <% end %>
-      </div>
-      <i class="bi bi-chevron-right profile-menu-item__arrow"></i>
-    <% end %>
-  </div>
-
-  <div class="app-section">
+  <%# Account section %>
+  <div class="app-section mt-4">
     <h3 class="app-section__title"><%= t('profile.account', default: 'Cuenta') %></h3>
-
-    <%= link_to edit_profile_path, class: 'profile-menu-item' do %>
-      <div class="profile-menu-item__icon-wrap">
-        <i class="bi bi-person-gear text-brand"></i>
-      </div>
-      <div class="profile-menu-item__content">
-        <h4 class="profile-menu-item__title"><%= t('profile.personal_data', default: 'Datos personales') %></h4>
-        <p class="profile-menu-item__subtitle mb-0"><%= t('profile.name_email_password', default: 'Nombre, email, contrasena') %></p>
-      </div>
-      <i class="bi bi-chevron-right profile-menu-item__arrow"></i>
-    <% end %>
 
     <%= link_to profile_settings_path, class: 'profile-menu-item' do %>
       <div class="profile-menu-item__icon-wrap">
@@ -177,8 +137,7 @@
     <% end %>
   </div>
 
-  <%# Version info %>
   <p class="text-center text-muted small mt-4">
-    BaiFinanzas v1.0.0
+    Finex v2.0.0
   </p>
 </div>

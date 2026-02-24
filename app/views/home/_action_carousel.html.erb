@@ -1,124 +1,7 @@
-<%# Action Plan Carousel %>
-<div class="home-section__header">
-  <h2 class="home-section__title">
-    <i class="bi bi-list-check"></i>
-    <%= t('home.action_plan.title') %>
-  </h2>
-  <span class="home-section__counter"><%= @completed_count %>/<%= @total_count %></span>
-</div>
-
-<%# Progress bar %>
-<div class="progress mb-3" style="height: 6px;">
-  <div class="progress-bar bg-success" role="progressbar"
-       style="width: <%= @progress_percentage %>%"
-       aria-valuenow="<%= @progress_percentage %>"
-       aria-valuemin="0"
-       aria-valuemax="100">
-  </div>
-</div>
-
+<%# Unified Action Carousel - Full-screen cards %>
 <% if @carousel_actions.any? %>
-  <div class="carousel-wrap">
-    <div class="carousel" id="actionCarousel" data-first-uncompleted="<%= @first_uncompleted_index %>">
-      <% @carousel_actions.each_with_index do |action, index| %>
-        <% is_completed = action[:completed] %>
-
-        <div class="carousel__card action-card <%= 'action-card--completed' if is_completed %>">
-          <%# Toggle checkbox - top right %>
-          <%= button_to is_completed ? uncomplete_action_path : complete_action_path,
-              method: :post,
-              params: { action_type: action[:type], action_key: action[:key] },
-              class: "toggle-check #{is_completed ? 'toggle-check--done' : 'toggle-check--pending'}",
-              data: { turbo: false } do %>
-            <i class="bi <%= is_completed ? 'bi-check-circle-fill' : 'bi-circle' %>"></i>
-            <%= is_completed ? t('home.action_carousel.done') : t('home.action_carousel.pending') %>
-          <% end %>
-
-          <%# Step pill + Title (context first) %>
-          <div class="action-card__step-pill">
-            <% if is_completed %>
-              <i class="bi bi-check-circle-fill"></i>
-            <% else %>
-              <span class="action-card__step-num"><%= index + 1 %></span>
-            <% end %>
-            <%= t('home.action_carousel.step_of', step: index + 1, total: @total_count) %>
-          </div>
-
-          <h3 class="action-card__title"><%= action[:title] %></h3>
-
-          <%# Video %>
-          <% if action[:video_url].present? %>
-            <div class="action-card__video">
-              <iframe src="<%= action[:video_url] %>"
-                      title="<%= action[:title] %>"
-                      frameborder="0"
-                      loading="lazy"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowfullscreen>
-              </iframe>
-            </div>
-          <% end %>
-
-          <%# CTAs %>
-          <div class="action-card__ctas">
-            <% affiliate_link = current_user.get_affiliate_link(action[:key]) %>
-            <% cta_href = affiliate_link.present? ? affiliate_link : (action[:slug].present? ? recommendation_path(action[:slug]) : '#') %>
-            <% cta_label = t("home.action_carousel.cta.#{action[:key]}", default: t('home.action_carousel.take_action')) %>
-            <%= link_to cta_href,
-                class: 'btn-app btn-app--primary btn-app--sm action-card__cta-primary',
-                target: affiliate_link.present? ? '_blank' : nil do %>
-              <%= cta_label %>
-            <% end %>
-
-            <% if action[:slug].present? %>
-              <%= link_to recommendation_path(action[:slug]),
-                  class: 'btn-app btn-app--outline btn-app--sm action-card__cta-secondary' do %>
-                <%= t('home.action_carousel.see_detail') %>
-              <% end %>
-            <% end %>
-          </div>
-        </div>
-      <% end %>
-
-      <%# Level-up card when all tasks completed %>
-      <% if @all_completed && @next_level %>
-        <div class="carousel__card action-card action-card--level-up">
-          <div class="action-card__step-pill">
-            <i class="bi bi-trophy-fill"></i>
-            <i class="bi bi-arrow-up-circle"></i>
-          </div>
-
-          <h3 class="action-card__title"><%= t('home.level_up_card.title') %></h3>
-          <p class="action-card__description"><%= t('home.level_up_card.message') %></p>
-          <p class="action-card__description" style="font-size: 0.85rem; opacity: 0.85;"><%= t('home.level_up_card.explanation') %></p>
-
-          <div class="action-card__requirement">
-            <span style="font-weight: 600; font-size: 0.85rem;"><%= t('home.level_up_card.next_requirement') %></span>
-            <div style="margin-top: 0.25rem;">
-              <span class="badge bg-white text-dark" style="font-size: 0.85rem;">
-                <i class="bi bi-arrow-right"></i>
-                <%= @next_level[:name] %>: <%= @next_level[:requirements].first[:text] %>
-              </span>
-            </div>
-          </div>
-
-          <p class="action-card__description" style="font-size: 0.8rem; opacity: 0.75; margin-top: 0.75rem;"><%= t('home.level_up_card.patience_note') %></p>
-
-          <div class="action-card__ctas">
-            <%= link_to edit_pyg_path,
-                class: 'btn-app btn-app--primary btn-app--sm action-card__cta-primary' do %>
-              <%= t('home.level_up_card.update_pyg') %>
-            <% end %>
-            <%= link_to edit_balance_path,
-                class: 'btn-app btn-app--outline btn-app--sm action-card__cta-secondary' do %>
-              <%= t('home.level_up_card.update_balance') %>
-            <% end %>
-          </div>
-        </div>
-      <% end %>
-    </div>
-
-    <%# Dot indicators %>
+  <div class="carousel-wrap carousel-wrap--fullscreen">
+    <%# Dot indicators (above cards) %>
     <div class="carousel__dots" id="actionDots">
       <% @carousel_actions.each_with_index do |action, index| %>
         <button class="carousel__dot <%= 'carousel__dot--completed' if action[:completed] %>"
@@ -133,9 +16,204 @@
         </button>
       <% end %>
     </div>
+
+    <div class="carousel carousel--fullscreen" id="actionCarousel" data-first-uncompleted="<%= @first_uncompleted_index %>">
+      <% @carousel_actions.each_with_index do |action, index| %>
+        <% is_completed = action[:completed] %>
+
+        <div class="carousel__card carousel__card--fullscreen action-card-v2 <%= 'action-card-v2--completed' if is_completed %>">
+          <%# Step indicator + toggle pill %>
+          <div class="action-card-v2__step">
+            <div class="action-card-v2__step-left">
+              <% if is_completed %>
+                <i class="bi bi-check-circle-fill" style="color: #10b981;"></i>
+              <% else %>
+                <span class="action-card-v2__step-num"><%= index + 1 %></span>
+              <% end %>
+              <%= t('home.action_carousel.step_of', step: index + 1, total: @total_count) %>
+            </div>
+            <% if action[:type] == 'recommendation' %>
+              <%= button_to is_completed ? uncomplete_action_path : complete_action_path,
+                  method: :post,
+                  params: { action_type: action[:type], action_key: action[:key] },
+                  class: "action-card-v2__done-pill #{is_completed ? 'action-card-v2__done-pill--active' : ''}",
+                  data: { turbo: false } do %>
+                <i class="bi <%= is_completed ? 'bi-check-circle-fill' : 'bi-circle' %>"></i>
+                <%= is_completed ? t('home.action_carousel.done') : t('home.action_carousel.mark_done') %>
+              <% end %>
+            <% elsif action[:type] == 'objective' %>
+              <%= link_to edit_objective_path(action[:objective][:id]),
+                  class: 'action-card-v2__edit-pill' do %>
+                <i class="bi bi-pencil"></i>
+                <%= t('common.edit') %>
+              <% end %>
+            <% end %>
+          </div>
+
+          <%# Icon + Title %>
+          <div class="action-card-v2__header">
+            <div class="action-card-v2__icon">
+              <i class="bi <%= action[:icon] %>"></i>
+            </div>
+            <h3 class="action-card-v2__title"><%= action[:title] %></h3>
+          </div>
+
+          <%# Benefit text %>
+          <p class="action-card-v2__benefit"><%= action[:benefit_text] %></p>
+
+          <%# Video embed if available %>
+          <% video_url = action[:video_url] %>
+          <% if video_url.present? %>
+            <% yt_id = video_url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([^&?\/ ]+)/)&.[](1) %>
+            <% if yt_id %>
+              <div class="action-card-v2__video">
+                <div class="ratio ratio-16x9">
+                  <iframe src="https://www.youtube.com/embed/<%= yt_id %>"
+                          title="<%= action[:title] %>"
+                          frameborder="0"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowfullscreen loading="lazy">
+                  </iframe>
+                </div>
+              </div>
+            <% end %>
+          <% end %>
+
+          <%# CTAs %>
+          <div class="action-card-v2__actions">
+            <% if action[:type] == 'recommendation' %>
+              <% affiliate_link = current_user.get_affiliate_link(action[:key]) %>
+              <% cta_label = t("home.action_carousel.cta.#{action[:key]}", default: t('home.action_carousel.take_action')) %>
+
+              <%# Primary CTA: affiliate link (or recommendation page as fallback) %>
+              <% primary_href = affiliate_link.present? ? affiliate_link : (action[:slug].present? ? recommendation_path(action[:slug]) : '#') %>
+              <%= link_to primary_href,
+                  class: 'btn-app btn-app--primary btn-app--block action-card-v2__cta',
+                  target: affiliate_link.present? ? '_blank' : nil do %>
+                <%= cta_label %>
+                <i class="bi bi-arrow-right ms-1"></i>
+              <% end %>
+
+              <%# Secondary: more info link %>
+              <% if action[:slug].present? %>
+                <%= link_to recommendation_path(action[:slug]),
+                    class: 'action-card-v2__info-link' do %>
+                  <i class="bi bi-info-circle me-1"></i>
+                  <%= t('home.action_carousel.more_info', default: 'Mas informacion') %>
+                <% end %>
+              <% end %>
+            <% elsif action[:type] == 'objective' %>
+              <% obj = action[:objective] %>
+              <% inv_slug = obj[:investment_recommendation].dasherize %>
+              <% obj_rec_path = recommendation_path(inv_slug, objetivo_id: obj[:id]) %>
+              <%= link_to obj_rec_path,
+                  class: 'btn-app btn-app--primary btn-app--block action-card-v2__cta' do %>
+                <%= t('home.objectives.see_investment_plan') %>
+                <i class="bi bi-arrow-right ms-1"></i>
+              <% end %>
+              <%= link_to obj_rec_path,
+                  class: 'action-card-v2__info-link' do %>
+                <i class="bi bi-info-circle me-1"></i>
+                <%= t('home.action_carousel.more_info', default: 'More info') %>
+              <% end %>
+            <% elsif action[:type] == 'create_objective' %>
+              <%# Preset chips %>
+              <div class="action-card-v2__presets">
+                <button type="button" class="action-card-v2__preset" data-preset-title="<%= t('objectives.form.example_car_title') %>">
+                  <i class="bi bi-car-front"></i> <%= t('objectives.form.example_car') %>
+                </button>
+                <button type="button" class="action-card-v2__preset" data-preset-title="<%= t('objectives.form.example_travel_title') %>">
+                  <i class="bi bi-airplane"></i> <%= t('objectives.form.example_travel') %>
+                </button>
+                <button type="button" class="action-card-v2__preset" data-preset-title="<%= t('objectives.form.example_house_title') %>">
+                  <i class="bi bi-house-heart"></i> <%= t('objectives.form.example_house') %>
+                </button>
+                <button type="button" class="action-card-v2__preset" data-preset-title="<%= t('objectives.form.example_retirement_title') %>">
+                  <i class="bi bi-piggy-bank"></i> <%= t('objectives.form.example_retirement') %>
+                </button>
+                <button type="button" class="action-card-v2__preset" data-preset-title="<%= t('objectives.form.example_emergency_title') %>">
+                  <i class="bi bi-shield-check"></i> <%= t('objectives.form.example_emergency') %>
+                </button>
+              </div>
+
+              <%# Inline create objective form %>
+              <%= simple_form_for @new_objective,
+                  url: objectives_path,
+                  html: { method: :post, class: 'action-card-v2__inline-form' } do |f| %>
+
+                <div class="app-form__group">
+                  <%= f.label :title, t('objectives.form.title'), class: 'app-form__label' %>
+                  <%= f.text_field :title,
+                      class: 'app-form__input',
+                      id: 'objective_title_input',
+                      placeholder: t('objectives.form.title_placeholder'),
+                      required: true %>
+                </div>
+
+                <div class="app-form__group">
+                  <%= f.label :target_amount, t('objectives.form.amount'), class: 'app-form__label' %>
+                  <div class="app-form__input-group">
+                    <span class="app-form__input-prefix">&euro;</span>
+                    <%= f.number_field :target_amount,
+                        class: 'app-form__input',
+                        min: 100,
+                        step: 100,
+                        placeholder: '10.000',
+                        required: true %>
+                  </div>
+                </div>
+
+                <div class="app-form__group">
+                  <%= f.label :target_date, t('objectives.form.date'), class: 'app-form__label' %>
+                  <%= f.date_field :target_date,
+                      class: 'app-form__input',
+                      min: Date.tomorrow.to_s,
+                      required: true %>
+                </div>
+
+                <%= f.submit t('objectives.form.create'),
+                    class: 'btn-app btn-app--primary btn-app--block' %>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+
+      <%# Level-up card when all tasks completed %>
+      <% if @all_completed && @next_level %>
+        <div class="carousel__card carousel__card--fullscreen action-card-v2 action-card-v2--levelup">
+          <div class="action-card-v2__step">
+            <i class="bi bi-trophy-fill" style="color: #f59e0b;"></i>
+            <%= t('home.level_up_card.title') %>
+          </div>
+
+          <div class="action-card-v2__header">
+            <div class="action-card-v2__icon action-card-v2__icon--success">
+              <i class="bi bi-trophy-fill"></i>
+            </div>
+            <h3 class="action-card-v2__title"><%= t('home.level_up_card.message') %></h3>
+          </div>
+          <p class="action-card-v2__benefit"><%= t('home.level_up_card.explanation') %></p>
+
+          <div class="action-card-v2__requirement">
+            <span><%= t('home.level_up_card.next_requirement') %></span>
+            <strong><%= @next_level[:name] %>: <%= @next_level[:requirements].first[:text] %></strong>
+          </div>
+
+          <div class="action-card-v2__actions">
+            <%= link_to onboarding_step_path(step_name: 'ingresos', from: 'home'),
+                class: 'btn-app btn-app--primary btn-app--block action-card-v2__cta' do %>
+              <%= t('home.level_up_card.update_data') %>
+              <i class="bi bi-arrow-right ms-1"></i>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
   </div>
+
 <% else %>
-  <%# All completed state %>
   <div class="empty-state py-4">
     <i class="bi bi-trophy empty-state__icon text-warning" style="font-size: 2.5rem;"></i>
     <h4 class="empty-state__title mt-2">

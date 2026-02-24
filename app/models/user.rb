@@ -316,11 +316,17 @@ class User < ApplicationRecord
     update(influencer: influencer) if influencer
   end
 
-  # Obtener URL del video según el slug de la recomendación
+  # Obtener URL del video segun el slug de la recomendacion
   def get_video_url(slug)
-    inf = influencer || Influencer.default_influencer
-    return nil unless inf
+    # Try user's referral influencer first, then fall back to default
+    [influencer, Influencer.default_influencer].compact.uniq.each do |inf|
+      url = video_url_from_influencer(inf, slug)
+      return url if url.present?
+    end
+    nil
+  end
 
+  def video_url_from_influencer(inf, slug)
     case slug
     when "better-bank-account"
       inf.video_compte

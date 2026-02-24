@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="<%= I18n.locale %>">
   <head>
-    <title><%= content_for(:title) || "BaiFinanzas" %></title>
+    <title><%= content_for(:title) || "Finex" %></title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -42,5 +42,44 @@
     <% unless turbo_native_app? %>
       <%= render "shared/bottom_nav" %>
     <% end %>
+
+    <%# Tooltip system %>
+    <script>
+    (function() {
+      function initTooltips() {
+        document.addEventListener('click', function(e) {
+          var trigger = e.target.closest('.tooltip-trigger');
+          if (trigger) {
+            e.preventDefault();
+            e.stopPropagation();
+            closeTooltip();
+            var text = trigger.dataset.tooltip;
+            if (!text) return;
+            var overlay = document.createElement('div');
+            overlay.className = 'tooltip-overlay';
+            overlay.addEventListener('click', closeTooltip);
+            var popup = document.createElement('div');
+            popup.className = 'tooltip-popup';
+            popup.innerHTML = '<p class="tooltip-popup__text">' + text + '</p>' +
+              '<button class="tooltip-popup__close" type="button"><%= j t("common.understood", default: "Entendido") %></button>';
+            popup.querySelector('.tooltip-popup__close').addEventListener('click', closeTooltip);
+            document.body.appendChild(overlay);
+            document.body.appendChild(popup);
+            trigger.classList.add('active');
+          }
+        });
+      }
+      function closeTooltip() {
+        var overlay = document.querySelector('.tooltip-overlay');
+        var popup = document.querySelector('.tooltip-popup');
+        var active = document.querySelector('.tooltip-trigger.active');
+        if (overlay) overlay.remove();
+        if (popup) popup.remove();
+        if (active) active.classList.remove('active');
+      }
+      document.addEventListener('turbo:load', initTooltips);
+      if (document.readyState !== 'loading') { initTooltips(); }
+    })();
+    </script>
   </body>
 </html>

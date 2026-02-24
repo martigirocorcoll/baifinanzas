@@ -1126,7 +1126,137 @@
     <% end %>
   </div>
 
-  <!-- 7. COMPLETED -->
+  <!-- 7. OBJECTIVE MANAGEMENT (if accessed from an objective) -->
+  <% if @objective.present? %>
+    <div class="rec-divider"></div>
+
+    <div class="objective-detail" id="objectiveDetail">
+      <%# Progress %>
+      <div class="objective-detail__header" style="text-align: left;">
+        <h3 style="font-size: 1rem; font-weight: 700; color: #1a1a1a; margin: 0 0 0.75rem;">
+          <i class="bi <%= @objective.objective_icon %> me-1"></i>
+          <%= @objective.title %>
+        </h3>
+      </div>
+
+      <div class="objective-detail__progress">
+        <div class="objective-detail__progress-bar">
+          <div class="objective-detail__progress-fill" style="width: <%= @objective.current_progress_percentage %>%"></div>
+        </div>
+        <div class="objective-detail__progress-labels">
+          <span><%= number_to_currency(@objective.current_amount, unit: "\u20AC", precision: 0) %></span>
+          <span><%= number_to_currency(@objective.target_amount, unit: "\u20AC", precision: 0) %></span>
+        </div>
+      </div>
+
+      <%# Key metrics %>
+      <div class="objective-detail__metrics">
+        <div class="objective-detail__metric">
+          <span class="objective-detail__metric-label"><%= t('objectives.show.remaining') %></span>
+          <span class="objective-detail__metric-value"><%= number_to_currency(@objective.remaining_amount, unit: "\u20AC", precision: 0) %></span>
+        </div>
+        <div class="objective-detail__metric">
+          <span class="objective-detail__metric-label"><%= t('objectives.show.monthly_savings') %></span>
+          <span class="objective-detail__metric-value"><%= number_to_currency(@objective.monthly_savings_needed, unit: "\u20AC", precision: 0) %><%= t('home.objectives.per_month') %></span>
+        </div>
+        <div class="objective-detail__metric">
+          <span class="objective-detail__metric-label"><%= t('objectives.show.target_date') %></span>
+          <span class="objective-detail__metric-value"><%= l(@objective.target_date, format: :long) %></span>
+        </div>
+        <div class="objective-detail__metric">
+          <span class="objective-detail__metric-label"><%= t('objectives.show.time_left') %></span>
+          <span class="objective-detail__metric-value">
+            <% months = @objective.months_to_target %>
+            <% if months >= 12 %>
+              <%= (months / 12.0).round(1) %> <%= t('objectives.show.years') %>
+            <% else %>
+              <%= months %> <%= t('objectives.show.months') %>
+            <% end %>
+          </span>
+        </div>
+        <div class="objective-detail__metric">
+          <span class="objective-detail__metric-label"><%= t('objectives.show.expected_return') %></span>
+          <span class="objective-detail__metric-value"><%= (@objective.annual_return_rate * 100).round(1) %>%</span>
+        </div>
+      </div>
+
+      <%# Edit form (collapsible) %>
+      <div class="objective-detail__section">
+        <button class="objective-detail__section-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#editObjectiveForm" aria-expanded="false">
+          <i class="bi bi-pencil me-2"></i>
+          <%= t('objectives.show.edit_data') %>
+          <i class="bi bi-chevron-down ms-auto"></i>
+        </button>
+
+        <div class="collapse" id="editObjectiveForm">
+          <div class="objective-detail__form">
+            <%= simple_form_for @objective,
+                url: objective_path(@objective),
+                html: { method: :patch } do |f| %>
+
+              <div class="app-form__group">
+                <%= f.label :title, t('objectives.form.title'), class: 'app-form__label' %>
+                <%= f.text_field :title,
+                    class: 'app-form__input',
+                    placeholder: t('objectives.form.title_placeholder'),
+                    required: true %>
+              </div>
+
+              <div class="app-form__group">
+                <%= f.label :target_amount, t('objectives.form.amount'), class: 'app-form__label' %>
+                <div class="app-form__input-group">
+                  <span class="app-form__input-prefix">&euro;</span>
+                  <%= f.number_field :target_amount,
+                      class: 'app-form__input',
+                      min: 100,
+                      step: 100,
+                      required: true %>
+                </div>
+              </div>
+
+              <div class="app-form__group">
+                <%= f.label :current_amount, t('objectives.form.current_amount'), class: 'app-form__label' %>
+                <div class="app-form__input-group">
+                  <span class="app-form__input-prefix">&euro;</span>
+                  <%= f.number_field :current_amount,
+                      class: 'app-form__input',
+                      min: 0,
+                      step: 100 %>
+                </div>
+                <p class="app-form__hint"><%= t('objectives.form.current_amount_hint') %></p>
+              </div>
+
+              <div class="app-form__group">
+                <%= f.label :target_date, t('objectives.form.date'), class: 'app-form__label' %>
+                <%= f.date_field :target_date,
+                    class: 'app-form__input',
+                    min: Date.tomorrow.to_s,
+                    required: true %>
+                <p class="app-form__hint"><%= t('objectives.form.date_hint') %></p>
+              </div>
+
+              <%= f.submit t('objectives.edit.save'),
+                  class: 'btn-app btn-app--primary btn-app--block',
+                  style: 'margin-top: 1rem;' %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <%# Delete %>
+      <div class="objective-detail__delete">
+        <%= button_to objective_path(@objective),
+            method: :delete,
+            class: 'objective-detail__delete-btn',
+            data: { turbo_confirm: t('objectives.confirm_delete') } do %>
+          <i class="bi bi-trash3 me-1"></i>
+          <%= t('objectives.show.delete') %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- 8. COMPLETED -->
   <label class="rec-completed" for="markCompleted">
     <input class="form-check-input rec-completed__checkbox" type="checkbox" id="markCompleted"
            data-recommendation="<%= @recommendation.slug.underscore.gsub('-', '_') %>">

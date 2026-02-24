@@ -2,7 +2,7 @@ en:
   # Navigation
   navigation:
     navbar:
-      brand: "BaiFinanzas"
+      brand: "Finex"
       greeting: "Hello, %{email}"
       manage_influencers: "Manage Influencers"
       logout: "Log out"
@@ -108,10 +108,10 @@ en:
           title: "100% Secure"
           description: "Protected and encrypted data"
         suggestions:
-          title: "Have ideas to improve BaiFinanzas?"
+          title: "Have ideas to improve Finex?"
           description: "Your feedback is very valuable to us. Share your suggestions and help us create the best financial platform."
           button: "Send Suggestion"
-          email_subject: "Suggestion for BaiFinanzas"
+          email_subject: "Suggestion for Finex"
           email_body: "Hello,%0A%0AI would like to suggest the following improvement for the platform:%0A%0A[Write your suggestion here]%0A%0AThank you for your work!"
         links:
           terms: "Terms of Use"
@@ -346,7 +346,7 @@ en:
 
     # Dashboard
     dashboard:
-      title: "Dashboard - Baifinanzas"
+      title: "Dashboard - Finex"
       # New User State
       new_user:
         welcome: "Hello, %{name}!"
@@ -695,9 +695,9 @@ en:
 
       # Legal & Completion
       legal_info_title: "Legal information"
-      legal_affiliate_disclosure: "The links on this page may contain affiliate codes. If you purchase a product through these links, BaiFinanzas may receive a commission at no additional cost to you. This helps us keep the service free and continue offering you the best personalized recommendations. All recommendations are based on your real financial situation and products we consider optimal for your goals."
+      legal_affiliate_disclosure: "The links on this page may contain affiliate codes. If you purchase a product through these links, Finex may receive a commission at no additional cost to you. This helps us keep the service free and continue offering you the best personalized recommendations. All recommendations are based on your real financial situation and products we consider optimal for your goals."
       important: "Important"
-      legal_disclaimer: "This is not professional financial advice. We recommend consulting with a certified advisor for important investment decisions. BaiFinanzas is an educational and personal financial planning tool."
+      legal_disclaimer: "This is not professional financial advice. We recommend consulting with a certified advisor for important investment decisions. Finex is an educational and personal financial planning tool."
       completed_action: "I have completed this action"
       completed_action_description: "Check this box when you have executed this recommendation to update your progress in the dashboard."
 

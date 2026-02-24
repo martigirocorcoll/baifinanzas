@@ -158,6 +158,7 @@
 				DEVELOPMENT_TEAM = Y44KB2XHRA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = BaiFinanzas/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Finex;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -167,7 +168,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = martigiro.BaiFinanzas;
+				PRODUCT_BUNDLE_IDENTIFIER = martigiro.Finex;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -190,6 +191,7 @@
 				DEVELOPMENT_TEAM = Y44KB2XHRA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = BaiFinanzas/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Finex;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -199,7 +201,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = martigiro.BaiFinanzas;
+				PRODUCT_BUNDLE_IDENTIFIER = martigiro.Finex;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
