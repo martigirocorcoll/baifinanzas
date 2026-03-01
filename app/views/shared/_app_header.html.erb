@@ -21,7 +21,9 @@
     <% if local_assigns[:actions] %>
       <%= actions %>
     <% else %>
-      <div></div>
+      <%= link_to profile_path, class: "app-header__profile-link", style: "color: #165668; font-size: 1.4rem; text-decoration: none;" do %>
+        <i class="bi bi-person-circle"></i>
+      <% end %>
     <% end %>
   </div>
 </header>

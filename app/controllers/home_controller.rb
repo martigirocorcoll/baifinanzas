@@ -4,23 +4,17 @@ class HomeController < ApplicationController
   before_action :check_onboarding
 
   def index
+    if session.delete(:objective_processing)
+      return render 'objectives/processing'
+    end
+
     @user = current_user
-    @profile_complete = current_user.profile_complete?
+    @objective = current_user.objectives.first
+    @new_objective = current_user.objectives.new unless @objective
 
-    return unless @profile_complete
-
-    # Financial health data
-    load_financial_health_data
-
-    # Action plan data (recommendations + objectives in one carousel)
-    load_action_plan_data
-
-    # For inline create objective form
-    @new_objective = current_user.objectives.new
-  end
-
-  def level_guide
-    load_financial_health_data
+    if @objective
+      load_objective_data
+    end
   end
 
   private
@@ -31,123 +25,36 @@ class HomeController < ApplicationController
     end
   end
 
-  def load_financial_health_data
-    @financial_level = {
-      key: current_user.financial_health_level_key,
-      number: current_user.financial_health_level_number,
-      name: t("financial.levels.#{current_user.financial_health_level_key}.name"),
-      icon: t("financial.levels.#{current_user.financial_health_level_key}.bootstrap_icon"),
-      description: t("financial.levels.#{current_user.financial_health_level_key}.description")
-    }
+  def load_objective_data
+    @inv_recommendation = @objective.investment_recommendation
+    @inv_slug = @inv_recommendation.dasherize
+    @annual_return = @objective.annual_return_rate
+    @monthly_needed = @objective.monthly_savings_needed
+    @progress_pct = @objective.current_progress_percentage
 
-    @monthly_cash_flow = current_user.monthly_cash_flow
-    @net_worth = current_user.net_worth
+    # Investment recommendation display info
+    @inv_display = investment_display_info(@inv_recommendation)
 
-    # All levels for level guide
-    @levels = [
-      { number: 1, key: :critical },
-      { number: 2, key: :emergency_fund },
-      { number: 3, key: :paying_debt },
-      { number: 4, key: :stable },
-      { number: 5, key: :growth },
-      { number: 6, key: :financial_freedom }
-    ].map do |level|
-      level.merge(
-        name: t("financial.levels.#{level[:key]}.name"),
-        short_name: t("financial.levels.#{level[:key]}.short_name"),
-        description: t("financial.levels.#{level[:key]}.description"),
-        next_step: t("financial.levels.#{level[:key]}.next_step"),
-        icon: t("financial.levels.#{level[:key]}.bootstrap_icon")
-      )
-    end
+    # Video from influencer
+    influencer = current_user.influencer || Influencer.find_by(default: true) || Influencer.first
+    @video_url = current_user.get_video_url(@inv_slug) if influencer
 
-    # Progress to next level
-    @next_level = calculate_next_level_info
+    # Affiliate link
+    @affiliate_link = current_user.get_affiliate_link(@inv_recommendation.gsub('ac_', ''))
   end
 
-  def load_action_plan_data
-    full_plan = current_user.action_plan
-    @recommendation_actions = full_plan.select { |a| a[:type] == 'recommendation' }
-
-    # All actions for carousel (recommendations + objectives + create_objective)
-    all_actions = full_plan
-
-    # Sort: completed first (left), then uncompleted (right)
-    completed = all_actions.select { |a| a[:completed] }
-    uncompleted = all_actions.reject { |a| a[:completed] }
-    @carousel_actions = completed + uncompleted
-    @first_uncompleted_index = completed.length
-
-    @completed_count = @recommendation_actions.count { |a| a[:completed] }
-    @total_count = all_actions.count
-    @progress_percentage = @total_count > 0 ? ((@completed_count.to_f / @recommendation_actions.count) * 100).round(0) : 0
-    @all_completed = @recommendation_actions.all? { |a| a[:completed] } && @recommendation_actions.any?
-  end
-
-  def calculate_next_level_info
-    level_key = current_user.financial_health_level_key
-
-    next_level_map = {
-      critical: :emergency_fund,
-      emergency_fund: :paying_debt,
-      paying_debt: :stable,
-      stable: :growth,
-      growth: :financial_freedom,
-      financial_freedom: nil
-    }
-
-    next_level_key = next_level_map[level_key]
-
-    # Skip paying_debt level if user has no expensive debt
-    if level_key == :emergency_fund && !current_user.has_expensive_debt?
-      next_level_key = :stable
-    end
-
-    return nil if next_level_key.nil?
-
-    {
-      key: next_level_key,
-      name: t("financial.levels.#{next_level_key}.name"),
-      requirements: get_level_requirements(level_key)
-    }
-  end
-
-  def get_level_requirements(current_level_key)
-    case current_level_key
-    when :critical
-      [{
-        text: t('financial.next_level.positive_cash_flow'),
-        completed: @monthly_cash_flow > 0
-      }]
-    when :emergency_fund
-      if current_user.has_expensive_debt?
-        [{
-          text: t('financial.next_level.emergency_2_months'),
-          completed: current_user.has_partial_emergency_fund?
-        }]
-      else
-        [{
-          text: t('financial.next_level.emergency_4_months'),
-          completed: current_user.has_emergency_fund?
-        }]
-      end
-    when :paying_debt
-      [{
-        text: t('financial.next_level.expensive_debt_under_40'),
-        completed: current_user.expensive_debt_ratio < 0.4
-      }]
-    when :stable
-      [{
-        text: t('financial.next_level.net_worth_2_years'),
-        completed: @net_worth >= (current_user.annual_income * 2)
-      }]
-    when :growth
-      [{
-        text: t('financial.next_level.investment_income_covers_expenses'),
-        completed: current_user.has_financial_freedom?
-      }]
+  def investment_display_info(rec_key)
+    case rec_key
+    when "ac_diposit"
+      { icon: "bi-piggy-bank", return_label: "~1.5%" }
+    when "ac_curt"
+      { icon: "bi-graph-up", return_label: "~3%" }
+    when "ac_llarg"
+      { icon: "bi-graph-up-arrow", return_label: "~8%" }
+    when "ac_jubil"
+      { icon: "bi-piggy-bank-fill", return_label: "~8%" }
     else
-      []
+      { icon: "bi-graph-up", return_label: "" }
     end
   end
 end

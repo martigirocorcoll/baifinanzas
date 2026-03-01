@@ -3,7 +3,8 @@ es:
   navigation:
     bottom_nav:
       label: "Navegacion principal"
-      home: "Inicio"
+      objetivo: "Objetivo"
+      plan: "Plan"
       discovery: "Discovery"
       calculators: "Calculadoras"
       profile: "Perfil"
@@ -19,9 +20,21 @@ es:
     understood: "Entendido"
     loading: "Cargando..."
 
-  # Home
+  # Home (Objetivo)
   home:
-    nav_title: "Inicio"
+    nav_title: "Objetivo"
+    objetivo:
+      empty_title: "Cual es tu objetivo financiero?"
+      empty_subtitle: "Elige uno y te diremos como conseguirlo."
+      create_btn: "Crear mi objetivo"
+      monthly_needed: "Necesitas ahorrar %{amount} EUR/mes"
+      investment_title: "Inversion recomendada"
+      annual_return: "anual"
+      open_account: "Abrir cuenta"
+      take_action: "Tomar accion"
+      see_more: "Ver mas informacion"
+      delete: "Eliminar objetivo"
+      delete_confirm: "Eliminar este objetivo?"
     hero:
       monthly_savings: "Ahorro mensual"
       see_details: "Ver detalles"
@@ -379,6 +392,13 @@ es:
         below_inflation: "Tu inversion gana algo, pero no supera la inflacion. En la practica, estas perdiendo poder de compra."
         negative_returns: "Tu inversion tiene numeros rojos. Estas perdiendo dinero."
 
+  # Plan (Nivel + Recomendaciones)
+  plan:
+    nav_title: "Plan"
+    recommendations_title: "Lo que la gente en tu nivel hace para mejorar:"
+    next_level_title: "Para llegar a %{level}:"
+    update_data: "Actualizar mis datos"
+
   # Discovery
   discovery:
     nav_title: "Explora"
@@ -507,8 +527,8 @@ es:
   onboarding:
     nav_title: "Tu plan"
     next: "Siguiente"
-    yes: "Si"
-    no: "No"
+    "yes": "Si"
+    "no": "No"
     step_of: "Paso %{step} de %{total}"
     finish: "Ver mi resultado"
     save_error: "Error al guardar tus datos. Por favor, intentalo de nuevo."
@@ -549,6 +569,18 @@ es:
         title: "Tienes deudas con interes alto?"
         subtitle: "Tarjetas de credito, prestamos personales, minicréditos..."
         hint: "No incluyas la hipoteca, esa ya la pusiste antes"
+      riesgo:
+        title: "Que nivel de riesgo aceptas?"
+        subtitle: "No hay respuesta correcta. Esto nos ayuda a recomendarte mejor."
+        low:
+          label: "Bajo"
+          description: "Prefiero no perder dinero aunque gane menos"
+        medium:
+          label: "Medio"
+          description: "Acepto fluctuaciones moderadas por mayor rentabilidad"
+        high:
+          label: "Alto"
+          description: "Acepto alta volatilidad por maximo crecimiento"
 
     processing:
       title: "Analizando tu situacion"
@@ -569,6 +601,12 @@ es:
 
   # Objectives
   objectives:
+    processing:
+      title: "Analizando tu objetivo"
+      description: "Preparando tu plan personalizado..."
+      step_1: "Calculando ahorro necesario"
+      step_2: "Buscando la mejor inversion"
+      step_3: "Generando tu plan de accion"
     confirm_delete: "Eliminar este objetivo?"
     show:
       remaining: "Te falta"

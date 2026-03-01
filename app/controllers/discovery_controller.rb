@@ -13,6 +13,9 @@ class DiscoveryController < ApplicationController
 
     # Merge all content sorted by date
     @feed_items = build_feed_items
+  rescue ActiveRecord::StatementInvalid, ActiveRecord::ConnectionNotEstablished => e
+    Rails.logger.error("Discovery error: #{e.message}")
+    @videos, @articles, @news, @feed_items = [], [], [], []
   end
 
   def show_article
@@ -91,6 +94,9 @@ class DiscoveryController < ApplicationController
         published_at: article.published_at
       }
     end
+  rescue => e
+    Rails.logger.error("Discovery load_articles error: #{e.message}")
+    []
   end
 
   def load_app_news
@@ -103,6 +109,9 @@ class DiscoveryController < ApplicationController
         published_at: news.published_at
       }
     end
+  rescue => e
+    Rails.logger.error("Discovery load_app_news error: #{e.message}")
+    []
   end
 
   def build_feed_items

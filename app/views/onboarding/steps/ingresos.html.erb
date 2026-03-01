@@ -10,7 +10,7 @@
     <div class="onboarding-input-group">
       <div class="onboarding-input-wrap onboarding-input-wrap--euro">
         <span class="onboarding-input-wrap__prefix">EUR</span>
-        <%= number_field_tag :value, @value, class: 'onboarding-input', placeholder: '2.500', min: 0, step: 50, inputmode: 'numeric', autofocus: true %>
+        <%= number_field_tag :value, @value, class: 'onboarding-input', placeholder: '2.500', min: 0, step: 1, inputmode: 'numeric', autofocus: true %>
       </div>
       <span class="onboarding-input-hint"><%= t('onboarding.steps.ingresos.hint') %></span>
     </div>

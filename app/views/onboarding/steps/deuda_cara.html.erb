@@ -21,13 +21,13 @@
     <div class="onboarding-input-group onboarding-expandable" id="debtAmount" style="<%= 'display: none;' unless @toggle == 'yes' %>">
       <div class="onboarding-input-wrap onboarding-input-wrap--euro">
         <span class="onboarding-input-wrap__prefix">EUR</span>
-        <%= number_field_tag :value, @value, class: 'onboarding-input', placeholder: '3.000', min: 0, step: 100, inputmode: 'numeric' %>
+        <%= number_field_tag :value, @value, class: 'onboarding-input', placeholder: '3.000', min: 0, step: 1, inputmode: 'numeric' %>
       </div>
       <span class="onboarding-input-hint"><%= t('onboarding.steps.deuda_cara.hint') %></span>
     </div>
 
     <button type="submit" class="btn-app btn-app--primary btn-app--block onboarding-submit">
-      <%= t('onboarding.finish') %>
+      <%= t('onboarding.next') %>
     </button>
   <% end %>
 

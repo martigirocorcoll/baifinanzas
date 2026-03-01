@@ -34,14 +34,20 @@ class Objective < ApplicationRecord
   end
 
   def investment_recommendation
+    risk = user&.risk_profile || 2 # Default: medium
+
     if is_retirement_objective?
-      "ac_jubil"
+      risk >= 2 ? "ac_jubil" : "ac_curt"
     elsif years_to_target <= 2
-      "ac_diposit"
+      risk >= 3 ? "ac_curt" : "ac_diposit"
     elsif years_to_target <= 5
-      "ac_curt"
+      case risk
+      when 1 then "ac_diposit"
+      when 2 then "ac_curt"
+      else "ac_llarg"
+      end
     else
-      "ac_llarg"
+      risk <= 1 ? "ac_curt" : "ac_llarg"
     end
   end
 

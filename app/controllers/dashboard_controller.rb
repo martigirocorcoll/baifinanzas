@@ -28,7 +28,7 @@ class DashboardController < ApplicationController
     action_key = params[:action_key]   # rec_key o objective_id
 
     if action_type.blank? || action_key.blank?
-      redirect_to home_path, alert: t('flash.invalid_params') and return
+      redirect_back fallback_location: home_path, alert: t('flash.invalid_params') and return
     end
 
     # Toggle: marcar o desmarcar según el estado actual
@@ -50,8 +50,7 @@ class DashboardController < ApplicationController
       end
     end
 
-    # Redirigir de vuelta al home
-    redirect_to home_path
+    redirect_back fallback_location: home_path
   end
 
   # Desmarcar una acción/recomendación como completada
@@ -60,7 +59,7 @@ class DashboardController < ApplicationController
     action_key = params[:action_key]
 
     if action_type.blank? || action_key.blank?
-      redirect_to home_path, alert: t('flash.invalid_params') and return
+      redirect_back fallback_location: home_path, alert: t('flash.invalid_params') and return
     end
 
     # Desmarcar
@@ -72,7 +71,7 @@ class DashboardController < ApplicationController
       flash[:success] = t('flash.objective_unmarked')
     end
 
-    redirect_to home_path
+    redirect_back fallback_location: home_path
   end
 
   private

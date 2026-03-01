@@ -1,7 +1,8 @@
 class NativeController < ApplicationController
   skip_before_action :authenticate_user!
+  skip_around_action :switch_locale
 
-  def config
+  def app_config
     render json: {
       min_version: "1.0.0",
       current_version: "1.0.0",
@@ -13,8 +14,8 @@ class NativeController < ApplicationController
         onboarding: true
       },
       urls: {
-        privacy: privacy_url,
-        terms: terms_url
+        privacy: privacy_url(locale: :es),
+        terms: terms_url(locale: :es)
       }
     }
   end
@@ -55,7 +56,15 @@ class NativeController < ApplicationController
           }
         },
         {
-          patterns: ["/home/level-guide"],
+          patterns: ["/plan$"],
+          properties: {
+            context: "default",
+            presentation: "replace_root",
+            pull_to_refresh_enabled: true
+          }
+        },
+        {
+          patterns: ["/plan/level-guide"],
           properties: {
             context: "modal",
             pull_to_refresh_enabled: false
@@ -104,10 +113,16 @@ class NativeController < ApplicationController
     render json: {
       tabs: [
         {
-          title: t("navigation.bottom_nav.home", default: "Inicio"),
+          title: t("navigation.bottom_nav.objetivo", default: "Objetivo"),
           path: home_path,
-          icon: "house",
-          icon_active: "house.fill"
+          icon: "scope",
+          icon_active: "scope"
+        },
+        {
+          title: t("navigation.bottom_nav.plan", default: "Plan"),
+          path: plan_path,
+          icon: "list.bullet",
+          icon_active: "list.bullet"
         },
         {
           title: t("navigation.bottom_nav.discovery", default: "Discovery"),
@@ -120,12 +135,6 @@ class NativeController < ApplicationController
           path: calculators_path,
           icon: "function",
           icon_active: "function"
-        },
-        {
-          title: t("navigation.bottom_nav.profile", default: "Perfil"),
-          path: profile_path,
-          icon: "person",
-          icon_active: "person.fill"
         }
       ]
     }

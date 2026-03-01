@@ -23,7 +23,7 @@
     <div class="onboarding-input-group onboarding-expandable" id="investAmount" style="<%= 'display: none;' unless @toggle == 'yes' %>">
       <div class="onboarding-input-wrap onboarding-input-wrap--euro">
         <span class="onboarding-input-wrap__prefix">EUR</span>
-        <%= number_field_tag :value, @value, class: 'onboarding-input', placeholder: '10.000', min: 0, step: 500, inputmode: 'numeric' %>
+        <%= number_field_tag :value, @value, class: 'onboarding-input', placeholder: '10.000', min: 0, step: 1, inputmode: 'numeric' %>
       </div>
       <span class="onboarding-input-hint"><%= t('onboarding.steps.inversiones.hint') %></span>
     </div>

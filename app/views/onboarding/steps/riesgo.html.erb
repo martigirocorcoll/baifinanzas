@@ -1,0 +1,85 @@
+<%= render 'onboarding/step_layout',
+    step_number: @step_number,
+    total_steps: @total_steps,
+    progress: @progress,
+    title: t('onboarding.steps.riesgo.title'),
+    subtitle: t('onboarding.steps.riesgo.subtitle') do %>
+
+  <%= form_tag onboarding_step_path(step_name: 'riesgo'), method: :post, class: 'onboarding-form' do %>
+    <%= hidden_field_tag :from, @from %>
+
+    <div class="onboarding-risk-options">
+      <label class="onboarding-risk-card">
+        <input type="radio" name="value" value="1" class="visually-hidden" <%= 'checked' if @value.to_s == '1' %>>
+        <i class="bi bi-shield-check" style="font-size: 1.5rem; color: #10b981;"></i>
+        <div class="onboarding-risk-card__text">
+          <strong><%= t('onboarding.steps.riesgo.low.label') %></strong>
+          <span class="onboarding-risk-card__desc"><%= t('onboarding.steps.riesgo.low.description') %></span>
+        </div>
+      </label>
+
+      <label class="onboarding-risk-card">
+        <input type="radio" name="value" value="2" class="visually-hidden" <%= 'checked' if @value.to_s == '2' %>>
+        <i class="bi bi-balance-scale" style="font-size: 1.5rem; color: #f59e0b;"></i>
+        <div class="onboarding-risk-card__text">
+          <strong><%= t('onboarding.steps.riesgo.medium.label') %></strong>
+          <span class="onboarding-risk-card__desc"><%= t('onboarding.steps.riesgo.medium.description') %></span>
+        </div>
+      </label>
+
+      <label class="onboarding-risk-card">
+        <input type="radio" name="value" value="3" class="visually-hidden" <%= 'checked' if @value.to_s == '3' %>>
+        <i class="bi bi-rocket-takeoff" style="font-size: 1.5rem; color: #ef4444;"></i>
+        <div class="onboarding-risk-card__text">
+          <strong><%= t('onboarding.steps.riesgo.high.label') %></strong>
+          <span class="onboarding-risk-card__desc"><%= t('onboarding.steps.riesgo.high.description') %></span>
+        </div>
+      </label>
+    </div>
+
+    <button type="submit" class="btn-app btn-app--primary btn-app--block onboarding-submit">
+      <%= t('onboarding.finish') %>
+    </button>
+  <% end %>
+
+<% end %>
+
+<style>
+  .onboarding-risk-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .onboarding-risk-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-align: left;
+    gap: 14px;
+    padding: 14px 16px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    background: #fff;
+    cursor: pointer;
+    transition: border-color 0.2s, background-color 0.2s;
+  }
+  .onboarding-risk-card:has(input:checked) {
+    border-color: #165668;
+    background-color: #f0f9fb;
+  }
+  .onboarding-risk-card__text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .onboarding-risk-card strong {
+    font-size: 1rem;
+    color: #1a1a1a;
+  }
+  .onboarding-risk-card__desc {
+    font-size: 0.8rem;
+    color: #6b7280;
+    line-height: 1.3;
+  }
+</style>

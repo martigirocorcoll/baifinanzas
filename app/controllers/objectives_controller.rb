@@ -24,6 +24,12 @@ class ObjectivesController < ApplicationController
 
   # POST /objectives or /objectives.json
   def create
+    # Limit to 1 objective
+    if current_user.objectives.any?
+      redirect_to home_path, alert: t('controllers.objectives.only_one_allowed', default: 'Solo puedes tener un objetivo activo.')
+      return
+    end
+
     # Extraer parámetros de fecha antes de crear el objetivo
     objective_attrs = objective_params.except(:target_date_month, :target_date_year)
 
@@ -38,7 +44,8 @@ class ObjectivesController < ApplicationController
 
     respond_to do |format|
       if @objective.save
-        format.html { redirect_to home_path, notice: t('controllers.objectives.created') }
+        session[:objective_processing] = true
+        format.html { redirect_to home_path }
         format.json { render :show, status: :created, location: @objective }
       else
         format.html { redirect_to home_path, alert: @objective.errors.full_messages.join(', ') }
@@ -61,7 +68,8 @@ class ObjectivesController < ApplicationController
 
     respond_to do |format|
       if @objective.update(objective_attrs)
-        format.html { redirect_to home_path, notice: t('controllers.objectives.updated') }
+        session[:objective_processing] = true
+        format.html { redirect_to home_path }
         format.json { render :show, status: :ok, location: @objective }
       else
         format.html { redirect_to home_path, alert: @objective.errors.full_messages.join(', ') }
@@ -79,6 +87,10 @@ class ObjectivesController < ApplicationController
       @objective.update_column(:current_amount, [amount, 0].max)
       redirect_to home_path, notice: t('controllers.objectives.progress_updated')
     end
+  end
+
+  # GET /objectives/processing
+  def processing
   end
 
   # DELETE /objectives/1 or /objectives/1.json

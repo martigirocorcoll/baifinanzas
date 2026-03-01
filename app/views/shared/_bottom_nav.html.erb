@@ -1,16 +1,22 @@
 <%# Bottom Navigation - Tab Bar for App Layout %>
-<%# 4 tabs: Home, Discovery, Calculadoras, Perfil %>
+<%# 4 tabs: Objetivo, Plan, Discovery, Calculadoras %>
 
 <% home_active = current_page?(home_path) || current_page?(authenticated_root_path) %>
+<% plan_active = request.path.include?('/plan') %>
 <% discovery_active = current_page?(discovery_path) %>
 <% calcs_active = request.path.start_with?('/calculators') || request.path.start_with?("/#{I18n.locale}/calculators") %>
-<% profile_active = request.path.include?('profile') %>
 
 <nav class="bottom-nav" aria-label="<%= t('navigation.bottom_nav.label', default: 'Main navigation') %>">
   <%= link_to home_path,
       class: "bottom-nav__item #{home_active ? 'bottom-nav__item--active' : ''}" do %>
-    <i class="bi bi-house<%= '-fill' if home_active %> bottom-nav__icon"></i>
-    <span class="bottom-nav__label"><%= t('navigation.bottom_nav.home', default: 'Inicio') %></span>
+    <i class="bi bi-bullseye bottom-nav__icon"></i>
+    <span class="bottom-nav__label"><%= t('navigation.bottom_nav.objetivo', default: 'Objetivo') %></span>
+  <% end %>
+
+  <%= link_to plan_path,
+      class: "bottom-nav__item #{plan_active ? 'bottom-nav__item--active' : ''}" do %>
+    <i class="bi bi-list-check bottom-nav__icon"></i>
+    <span class="bottom-nav__label"><%= t('navigation.bottom_nav.plan', default: 'Plan') %></span>
   <% end %>
 
   <%= link_to discovery_path,
@@ -23,11 +29,5 @@
       class: "bottom-nav__item #{calcs_active ? 'bottom-nav__item--active' : ''}" do %>
     <i class="bi bi-calculator<%= '-fill' if calcs_active %> bottom-nav__icon"></i>
     <span class="bottom-nav__label"><%= t('navigation.bottom_nav.calculators', default: 'Calculadoras') %></span>
-  <% end %>
-
-  <%= link_to profile_path,
-      class: "bottom-nav__item #{profile_active ? 'bottom-nav__item--active' : ''}" do %>
-    <i class="bi bi-person<%= '-fill' if profile_active %> bottom-nav__icon"></i>
-    <span class="bottom-nav__label"><%= t('navigation.bottom_nav.profile', default: 'Perfil') %></span>
   <% end %>
 </nav>

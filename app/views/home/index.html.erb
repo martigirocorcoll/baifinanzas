@@ -1,123 +1,386 @@
-<% content_for :title, t('home.nav_title', default: 'Inicio') %>
+<% content_for :title, t('home.nav_title', default: 'Objetivo') %>
 
-<% unless @profile_complete %>
+<% if @objective.nil? %>
   <%# ============================================ %>
-  <%# NO ONBOARDING: Single CTA card %>
+  <%# EMPTY STATE: No objective yet %>
   <%# ============================================ %>
-  <div class="app-container">
-    <div class="home-onboarding-cta">
-      <div class="home-onboarding-cta__icon">
-        <i class="bi bi-graph-up-arrow"></i>
+  <div class="objetivo-page objetivo-page--empty">
+    <div class="objetivo-page__empty-content">
+      <i class="bi bi-bullseye" style="font-size: 3rem; color: #165668;"></i>
+      <h2 style="font-size: 1.25rem; font-weight: 700; color: #1a1a1a; margin: 12px 0 6px;">
+        <%= t('home.objetivo.empty_title', default: 'Cual es tu objetivo financiero?') %>
+      </h2>
+      <p style="font-size: 0.875rem; color: #6b7280; margin: 0 0 20px;">
+        <%= t('home.objetivo.empty_subtitle', default: 'Elige uno y te diremos como conseguirlo.') %>
+      </p>
+
+      <%# Preset chips %>
+      <div class="objetivo-presets">
+        <button type="button" class="objetivo-preset" data-preset-title="<%= t('objectives.form.example_house_title', default: 'Comprar casa') %>">
+          <i class="bi bi-house-heart"></i> <%= t('objectives.form.example_house', default: 'Comprar casa') %>
+        </button>
+        <button type="button" class="objetivo-preset" data-preset-title="<%= t('objectives.form.example_retirement_title', default: 'Jubilacion') %>">
+          <i class="bi bi-piggy-bank"></i> <%= t('objectives.form.example_retirement', default: 'Jubilacion') %>
+        </button>
+        <button type="button" class="objetivo-preset" data-preset-title="<%= t('objectives.form.example_travel_title', default: 'Viaje') %>">
+          <i class="bi bi-airplane"></i> <%= t('objectives.form.example_travel', default: 'Viaje') %>
+        </button>
+        <button type="button" class="objetivo-preset" data-preset-title="<%= t('objectives.form.example_emergency_title', default: 'Fondo de emergencia') %>">
+          <i class="bi bi-shield-check"></i> <%= t('objectives.form.example_emergency', default: 'Emergencia') %>
+        </button>
+        <button type="button" class="objetivo-preset" data-preset-title="<%= t('objectives.form.example_car_title', default: 'Coche nuevo') %>">
+          <i class="bi bi-car-front"></i> <%= t('objectives.form.example_car', default: 'Coche') %>
+        </button>
       </div>
-      <h2 class="home-onboarding-cta__title"><%= t('home.incomplete.title', default: 'Descubre tu plan financiero') %></h2>
-      <p class="home-onboarding-cta__desc"><%= t('home.incomplete.description', default: 'Responde unas preguntas sencillas y te diremos como mejorar tu situacion economica.') %></p>
-      <%= link_to onboarding_step_path(step_name: 'ingresos'), class: 'btn-app btn-app--primary btn-app--lg btn-app--block' do %>
-        <%= t('home.incomplete.cta', default: 'Completar mis datos') %>
-        <i class="bi bi-arrow-right ms-1"></i>
+
+      <%# Create objective form %>
+      <%= simple_form_for @new_objective,
+          url: objectives_path,
+          html: { method: :post, class: 'objetivo-form' } do |f| %>
+
+        <div class="app-form__group">
+          <%= f.label :title, t('objectives.form.title', default: 'Titulo'), class: 'app-form__label' %>
+          <%= f.text_field :title,
+              class: 'app-form__input',
+              id: 'objective_title_input',
+              placeholder: t('objectives.form.title_placeholder', default: 'Ej: Comprar casa'),
+              required: true %>
+        </div>
+
+        <div class="app-form__group">
+          <%= f.label :target_amount, t('objectives.form.amount', default: 'Cantidad'), class: 'app-form__label' %>
+          <div class="app-form__input-group">
+            <span class="app-form__input-prefix">&euro;</span>
+            <%= f.number_field :target_amount,
+                class: 'app-form__input',
+                min: 100,
+                step: 100,
+                placeholder: '10.000',
+                required: true %>
+          </div>
+        </div>
+
+        <div class="app-form__group">
+          <%= f.label :target_date, t('objectives.form.date', default: 'Fecha objetivo'), class: 'app-form__label' %>
+          <%= f.date_field :target_date,
+              class: 'app-form__input',
+              min: Date.tomorrow.to_s,
+              required: true %>
+        </div>
+
+        <%= f.submit t('home.objetivo.create_btn', default: 'Crear mi objetivo'),
+            class: 'btn-app btn-app--primary btn-app--block' %>
       <% end %>
     </div>
   </div>
 
 <% else %>
   <%# ============================================ %>
-  <%# FULLSCREEN HOME LAYOUT %>
+  <%# OBJECTIVE EXISTS: Unified dashboard %>
   <%# ============================================ %>
-  <div class="home-fullscreen">
-    <%# COMPACT LEVEL INDICATOR %>
-    <div class="home-level-compact">
-      <div class="home-level-compact__content">
-        <span class="home-level-compact__pill"><%= @financial_level[:number] %>/6</span>
-        <span class="home-level-compact__name"><%= @financial_level[:name] %></span>
-        <%= link_to level_guide_path, class: 'home-level-compact__help' do %>
-          <i class="bi bi-question-circle"></i>
+  <div class="objetivo-page">
+
+    <%# === OBJECTIVE SECTION === %>
+    <div class="objetivo-page__objective">
+      <div class="objetivo-page__icon">
+        <i class="bi <%= @objective.objective_icon %>"></i>
+      </div>
+      <div class="objetivo-page__title-row">
+        <h2 class="objetivo-page__title"><%= @objective.title %></h2>
+        <%= link_to edit_objective_path(@objective), class: 'objetivo-page__edit-btn' do %>
+          <i class="bi bi-pencil"></i>
         <% end %>
       </div>
-      <div class="home-level-compact__progress">
-        <div class="home-level-compact__progress-fill" style="width: <%= (@financial_level[:number] / 6.0 * 100).round %>%"></div>
+      <p class="objetivo-page__meta">
+        <%= number_to_currency(@objective.target_amount, unit: 'EUR ', precision: 0, delimiter: '.') %>
+        &middot;
+        <%= I18n.l(@objective.target_date, format: '%b %Y') rescue @objective.target_date.strftime('%b %Y') %>
+      </p>
+
+      <div class="objetivo-page__progress">
+        <div class="objetivo-page__progress-track">
+          <div class="objetivo-page__progress-fill" style="width: <%= @progress_pct.round %>%"></div>
+        </div>
+        <span class="objetivo-page__progress-pct"><%= @progress_pct.round %>%</span>
       </div>
+      <p class="objetivo-page__savings">
+        <%= t('home.objetivo.monthly_needed',
+            amount: number_to_currency(@monthly_needed, unit: '', precision: 0, delimiter: '.'),
+            default: 'Necesitas ahorrar %{amount} EUR/mes') %>
+      </p>
     </div>
 
-    <%# UNIFIED ACTION CAROUSEL - fills remaining space %>
-    <div class="home-fullscreen__carousel">
-      <%= render 'home/action_carousel' %>
+    <%# === DIVIDER === %>
+    <div class="objetivo-page__divider"></div>
+
+    <%# === RECOMMENDATION SECTION === %>
+    <div class="objetivo-page__rec">
+      <span class="objetivo-page__rec-label">
+        <i class="bi <%= @inv_display[:icon] %> me-1"></i>
+        <%= t('home.objetivo.investment_title', default: 'Inversion recomendada') %>
+      </span>
+      <h3 class="objetivo-page__rec-title">
+        <%= t("financial.recommendations.#{@inv_recommendation}.title", default: @inv_recommendation.humanize) %>
+      </h3>
+      <span class="objetivo-page__rec-return"><%= @inv_display[:return_label] %> <%= t('home.objetivo.annual_return', default: 'anual') %></span>
+
+      <%# Video embed %>
+      <% if @video_url.present? %>
+        <% yt_id = @video_url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([^&?\/ ]+)/)&.[](1) %>
+        <% if yt_id %>
+          <div class="objetivo-page__video">
+            <div class="ratio ratio-16x9">
+              <iframe src="https://www.youtube.com/embed/<%= yt_id %>"
+                      title="<%= @objective.title %>"
+                      frameborder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowfullscreen loading="lazy">
+              </iframe>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
     </div>
+
+    <%# === CTAs === %>
+    <div class="objetivo-page__ctas">
+      <% cta_url = @affiliate_link.presence || recommendation_path(@inv_slug, objetivo_id: @objective.id) %>
+      <%= link_to cta_url,
+          class: 'btn-app btn-app--primary btn-app--block',
+          target: (@affiliate_link.present? ? '_blank' : nil) do %>
+        <%= t('home.objetivo.take_action', default: 'Tomar accion') %>
+        <i class="bi bi-box-arrow-up-right ms-1"></i>
+      <% end %>
+      <%= link_to recommendation_path(@inv_slug, objetivo_id: @objective.id),
+          class: 'btn-app btn-app--outline btn-app--block' do %>
+        <%= t('home.objetivo.see_more', default: 'Ver mas informacion') %>
+        <i class="bi bi-arrow-right ms-1"></i>
+      <% end %>
+    </div>
+
+
   </div>
 <% end %>
 
+<style>
+/* ===========================
+   Objetivo Page - Full height
+   =========================== */
+.objetivo-page {
+  display: flex;
+  flex-direction: column;
+  min-height: var(--app-content-height, 100dvh);
+  padding: 1.5rem 1.25rem;
+  background: #f9fafb;
+}
+
+/* Empty state: center content vertically */
+.objetivo-page--empty {
+  justify-content: center;
+  align-items: center;
+}
+.objetivo-page__empty-content {
+  text-align: center;
+  width: 100%;
+  max-width: 400px;
+}
+
+/* ===========================
+   Objective section (top)
+   =========================== */
+.objetivo-page__objective {
+  text-align: center;
+  padding-bottom: 20px;
+}
+.objetivo-page__icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: #165668;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  margin-bottom: 10px;
+}
+.objetivo-page__title-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.objetivo-page__edit-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #e5e7eb;
+  color: #4b5563;
+  font-size: 0.85rem;
+  transition: background 0.2s, color 0.2s;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.objetivo-page__edit-btn:hover,
+.objetivo-page__edit-btn:active {
+  background: rgba(22, 86, 104, 0.15);
+  color: #165668;
+}
+.objetivo-page__title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 4px;
+}
+.objetivo-page__meta {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0 0 16px;
+}
+
+/* Progress bar */
+.objetivo-page__progress {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+.objetivo-page__progress-track {
+  flex: 1;
+  height: 8px;
+  background: #e5e7eb;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.objetivo-page__progress-fill {
+  height: 100%;
+  background: #165668;
+  border-radius: 4px;
+  transition: width 0.3s;
+}
+.objetivo-page__progress-pct {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #165668;
+  flex-shrink: 0;
+  min-width: 36px;
+  text-align: right;
+}
+.objetivo-page__savings {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0;
+  text-align: center;
+}
+
+/* ===========================
+   Divider
+   =========================== */
+.objetivo-page__divider {
+  height: 1px;
+  background: #e5e7eb;
+  margin: 4px 0 20px;
+}
+
+/* ===========================
+   Recommendation section
+   =========================== */
+.objetivo-page__rec {
+  text-align: center;
+  margin-bottom: 20px;
+}
+.objetivo-page__rec-label {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+.objetivo-page__rec-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 4px 0 2px;
+}
+.objetivo-page__rec-return {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #165668;
+}
+.objetivo-page__video {
+  margin-top: 16px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* ===========================
+   CTAs
+   =========================== */
+.objetivo-page__ctas {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+/* ===========================
+   Empty state reused styles
+   =========================== */
+.objetivo-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+.objetivo-preset {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 20px;
+  background: #fff;
+  font-size: 0.8125rem;
+  color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+.objetivo-preset:hover, .objetivo-preset--active {
+  border-color: #165668;
+  background: rgba(22, 86, 104, 0.04);
+}
+.objetivo-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  text-align: left;
+}
+</style>
+
 <script>
 (function() {
-  function initHomeCarousels() {
-    function setupCarousel(carouselId, dotsId) {
-      var carousel = document.getElementById(carouselId);
-      var dotsContainer = document.getElementById(dotsId);
-      if (!carousel || !dotsContainer) return;
-
-      var cards = carousel.querySelectorAll('.carousel__card');
-      var dots = dotsContainer.querySelectorAll('.carousel__dot');
-      if (cards.length === 0) return;
-
-      // Auto-scroll to first uncompleted
-      var firstIdx = parseInt(carousel.dataset.firstUncompleted) || 0;
-      if (firstIdx > 0 && firstIdx < cards.length) {
-        requestAnimationFrame(function() {
-          var target = cards[firstIdx];
-          carousel.scrollTo({ left: target.offsetLeft - carousel.offsetLeft, behavior: 'smooth' });
-        });
-      }
-
-      if (dots.length > 0) {
-        dots[0].classList.add('carousel__dot--active');
-      }
-
-      var observerKey = '_observer_' + carouselId;
-      if (window[observerKey]) { window[observerKey].disconnect(); }
-
-      if ('IntersectionObserver' in window) {
-        var observer = new IntersectionObserver(function(entries) {
-          entries.forEach(function(entry) {
-            if (entry.isIntersecting) {
-              var idx = Array.prototype.indexOf.call(cards, entry.target);
-              dots.forEach(function(d, i) {
-                d.classList.toggle('carousel__dot--active', i === idx);
-              });
-            }
-          });
-        }, { root: carousel, threshold: 0.5 });
-
-        window[observerKey] = observer;
-        cards.forEach(function(card) { observer.observe(card); });
-      }
-
-      dots.forEach(function(dot) {
-        if (dot.dataset.bound) return;
-        dot.dataset.bound = '1';
-        dot.addEventListener('click', function() {
-          var idx = parseInt(dot.dataset.index);
-          if (cards[idx]) {
-            cards[idx].scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
-          }
-        });
-      });
-    }
-
-    setupCarousel('actionCarousel', 'actionDots');
-  }
-
   function initPresetChips() {
-    document.querySelectorAll('.action-card-v2__preset').forEach(function(btn) {
+    document.querySelectorAll('.objetivo-preset').forEach(function(btn) {
       btn.addEventListener('click', function() {
         var input = document.getElementById('objective_title_input');
         if (input) {
           input.value = this.dataset.presetTitle;
           input.focus();
+          // Highlight active chip
+          document.querySelectorAll('.objetivo-preset').forEach(function(b) {
+            b.classList.remove('objetivo-preset--active');
+          });
+          this.classList.add('objetivo-preset--active');
         }
       });
     });
   }
-
-  function initAll() { initHomeCarousels(); initPresetChips(); }
-  document.addEventListener('turbo:load', initAll);
-  if (document.readyState !== 'loading') { initAll(); }
-  else { document.addEventListener('DOMContentLoaded', initAll); }
+  document.addEventListener('turbo:load', initPresetChips);
+  if (document.readyState !== 'loading') { initPresetChips(); }
+  else { document.addEventListener('DOMContentLoaded', initPresetChips); }
 })();
 </script>

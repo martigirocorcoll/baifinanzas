@@ -257,30 +257,24 @@ class User < ApplicationRecord
 
     case financial_health_level_key
     when :critical
-      # Priority: Create cash flow, optimize bank, review debts
       recommendations = ["saving_advice", "better_bank_account"]
       recommendations << "debt_optimization" if total_debt > 0
       recommendations << "mortgage_optimization" if has_mortgage?
     when :emergency_fund
-      # Priority: Build emergency fund, optimize bank
       recommendations = ["emergency_deposit", "better_bank_account"]
       recommendations << "debt_optimization" if total_debt > 0
       recommendations << "mortgage_optimization" if has_mortgage?
     when :paying_debt
-      # Priority: Pay off expensive debt, maintain emergency fund
       recommendations = ["debt_optimization", "emergency_deposit", "better_bank_account"]
       recommendations << "mortgage_optimization" if has_mortgage?
     when :stable
-      # Priority: Maintain stability, optimize assets
-      recommendations = ["better_bank_account", "emergency_deposit"]
+      recommendations = ["emergency_deposit"]
       recommendations << "mortgage_optimization" if has_mortgage?
     when :growth
-      # Priority: Grow wealth through investments
-      recommendations = ["portfolio_optimization", "better_bank_account", "emergency_deposit"]
+      recommendations = ["portfolio_optimization"]
       recommendations << "mortgage_optimization" if has_mortgage?
     when :financial_freedom
-      # Priority: Preserve wealth, optimize taxes
-      recommendations = ["tax_advisory", "portfolio_optimization", "better_bank_account", "emergency_deposit"]
+      recommendations = ["tax_advisory", "portfolio_optimization"]
       recommendations << "mortgage_optimization" if has_mortgage?
     else
       recommendations = []

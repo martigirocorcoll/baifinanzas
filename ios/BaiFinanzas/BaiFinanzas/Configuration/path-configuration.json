@@ -33,7 +33,15 @@
       }
     },
     {
-      "patterns": ["/home/level-guide"],
+      "patterns": ["/plan$"],
+      "properties": {
+        "context": "default",
+        "presentation": "replace_root",
+        "pull_to_refresh_enabled": true
+      }
+    },
+    {
+      "patterns": ["/plan/level-guide"],
       "properties": {
         "context": "modal",
         "pull_to_refresh_enabled": false

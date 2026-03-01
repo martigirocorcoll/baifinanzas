@@ -1,7 +1,7 @@
 class OnboardingController < ApplicationController
   layout 'app'
 
-  STEPS = %w[ingresos gastos ahorros inversiones inmuebles hipoteca deuda_cara].freeze
+  STEPS = %w[ingresos gastos ahorros inversiones inmuebles hipoteca deuda_cara riesgo].freeze
   TOTAL_STEPS = STEPS.length
 
   before_action :redirect_if_completed, only: [:welcome]
@@ -50,6 +50,12 @@ class OnboardingController < ApplicationController
       session[:onboarding][@step_name] = params[:value].to_i
     elsif params[:toggle] == 'no'
       session[:onboarding][@step_name] = 0
+    end
+
+    # Validate: riesgo requires a selection
+    if @step_name == 'riesgo' && params[:value].blank?
+      flash[:alert] = t('onboarding.steps.riesgo.select_one', default: 'Selecciona un nivel de riesgo')
+      return redirect_to onboarding_step_path(step_name: 'riesgo', from: session.dig(:onboarding, 'from'))
     end
 
     # Navigate to next step or save
@@ -119,6 +125,8 @@ class OnboardingController < ApplicationController
         @value = total if total > 0
         @toggle = total > 0 ? 'yes' : 'no'
       end
+    when 'riesgo'
+      @value = current_user.risk_profile if current_user.risk_profile.present?
     end
   end
 
@@ -195,6 +203,11 @@ class OnboardingController < ApplicationController
     balance.valor_otros_activos ||= 0
     balance.prestamos_coches ||= 0
     balance.otras_deudas ||= 0
+
+    # Save risk profile
+    if data[:riesgo].present?
+      current_user.update_column(:risk_profile, data[:riesgo].to_i.clamp(1, 3))
+    end
 
     if pyg.save && balance.save
       session.delete(:onboarding)

@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   get  "manifest",       to: "rails/pwa#manifest",        as: :pwa_manifest
 
   # Native app endpoints (sin locale)
-  get "native/config",             to: "native#config",             as: :native_config
+  get "native/config",             to: "native#app_config",          as: :native_config
   get "native/tabs",               to: "native#tabs",               as: :native_tabs
   get "native/path-configuration", to: "native#path_configuration", as: :native_path_configuration
 
@@ -41,9 +41,12 @@ Rails.application.routes.draw do
     # ============================================
     # APP NAVIGATION (Tab Bar routes)
     # ============================================
-    # Home (Dashboard + Plan + Objectives)
+    # Home (Objetivo unico)
     get "home", to: "home#index", as: :home
-    get "home/level-guide", to: "home#level_guide", as: :level_guide
+
+    # Plan (Nivel financiero + recomendaciones)
+    get "plan", to: "plan#index", as: :plan
+    get "plan/level-guide", to: "plan#level_guide", as: :level_guide
 
     # Discovery (Content feed: videos, articles, news)
     get "discovery", to: "discovery#index", as: :discovery
@@ -123,6 +126,9 @@ Rails.application.routes.draw do
       member do
         get :update_progress
         patch :update_progress
+      end
+      collection do
+        get :processing
       end
     end
   end

@@ -11,13 +11,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private var isAuthenticated = false
 
     private let tabConfigs: [(title: String, icon: String, iconActive: String, path: String)] = [
-        ("Inicio",        "house",       "house.fill",       "/es/home"),
+        ("Objetivo",      "scope",       "scope",            "/es/home"),
+        ("Plan",          "list.bullet", "list.bullet",      "/es/plan"),
         ("Discovery",     "play.circle", "play.circle.fill", "/es/discovery"),
-        ("Calculadoras",  "function",    "function",         "/es/calculators"),
-        ("Perfil",        "person",      "person.fill",      "/es/profile")
+        ("Calculadoras",  "function",    "function",         "/es/calculators")
     ]
 
-    private let tabPaths = ["/home", "/discovery", "/calculators", "/profile"]
+    private let tabPaths = ["/home", "/plan", "/discovery", "/calculators"]
 
     func scene(
         _ scene: UIScene,
@@ -47,6 +47,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 if nav.viewControllers.count > 1, let top = nav.viewControllers.last {
                     nav.setViewControllers([top], animated: false)
                 }
+                // Add profile button to all tabs
+                self.addProfileButtonToAllTabs()
             }
         }
         NotificationCenter.default.addObserver(forName: TabBarBridge.hide, object: nil, queue: .main) { [weak self] _ in
@@ -68,6 +70,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         let teal = UIColor(red: 22/255, green: 86/255, blue: 104/255, alpha: 1) // #165668
         tabBarController.tabBar.tintColor = teal
+        tabBarController.tabBar.isTranslucent = false
         tabBarController.tabBar.standardAppearance = appearance
         tabBarController.tabBar.scrollEdgeAppearance = appearance
 
@@ -121,6 +124,35 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard index < tabStarted.count, !tabStarted[index] else { return }
         navigators[index].start()
         tabStarted[index] = true
+    }
+
+    private func addProfileButtonToAllTabs() {
+        for navigator in navigators {
+            navigator.rootViewController.delegate = self
+            // Set on current top VC
+            addProfileButton(to: navigator.rootViewController.topViewController)
+        }
+    }
+
+    private func addProfileButton(to viewController: UIViewController?) {
+        guard let vc = viewController,
+              vc.navigationItem.rightBarButtonItem == nil else { return }
+
+        // Don't add on profile page itself
+        let button = UIBarButtonItem(
+            image: UIImage(systemName: "person"),
+            style: .plain,
+            target: self,
+            action: #selector(profileButtonTapped)
+        )
+        vc.navigationItem.rightBarButtonItem = button
+    }
+
+    @objc private func profileButtonTapped() {
+        let profileURL = Server.url(path: "/es/profile")
+        let currentIndex = tabBarController.selectedIndex
+        guard currentIndex < navigators.count else { return }
+        navigators[currentIndex].route(profileURL)
     }
 }
 
@@ -183,5 +215,20 @@ extension SceneDelegate: NavigatorDelegate {
         }
 
         return .accept
+    }
+}
+
+// MARK: - UINavigationControllerDelegate
+
+extension SceneDelegate: UINavigationControllerDelegate {
+
+    func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
+        // Prevent webview from extending behind native bars — set BEFORE display
+        viewController.edgesForExtendedLayout = []
+    }
+
+    func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
+        guard isAuthenticated else { return }
+        addProfileButton(to: viewController)
     }
 }

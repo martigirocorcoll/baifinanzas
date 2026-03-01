@@ -21,7 +21,7 @@
     <div class="onboarding-input-group onboarding-expandable" id="propertyAmount" style="<%= 'display: none;' unless @toggle == 'yes' %>">
       <div class="onboarding-input-wrap onboarding-input-wrap--euro">
         <span class="onboarding-input-wrap__prefix">EUR</span>
-        <%= number_field_tag :value, @value, class: 'onboarding-input', placeholder: '200.000', min: 0, step: 5000, inputmode: 'numeric' %>
+        <%= number_field_tag :value, @value, class: 'onboarding-input', placeholder: '200.000', min: 0, step: 1, inputmode: 'numeric' %>
       </div>
       <span class="onboarding-input-hint"><%= t('onboarding.steps.inmuebles.hint') %></span>
     </div>

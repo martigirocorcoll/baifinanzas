@@ -1,0 +1,107 @@
+<% content_for :title, t('home.level_guide.title', default: 'Niveles financieros') %>
+
+<%
+  levels = [
+    { number: 1, key: :critical, icon: 'bi-exclamation-triangle' },
+    { number: 2, key: :emergency_fund, icon: 'bi-shield' },
+    { number: 3, key: :paying_debt, icon: 'bi-credit-card' },
+    { number: 4, key: :stable, icon: 'bi-check-circle' },
+    { number: 5, key: :growth, icon: 'bi-graph-up-arrow' },
+    { number: 6, key: :financial_freedom, icon: 'bi-sun' }
+  ]
+%>
+
+<div style="padding: 1rem;">
+  <div class="app-card">
+    <div class="app-card__header">
+      <h2 class="app-card__title">
+        <i class="bi bi-mountain"></i>
+        <%= t('home.level_guide.title', default: 'Niveles financieros') %>
+      </h2>
+    </div>
+    <div class="app-card__body">
+      <p class="text-muted mb-4" style="font-size: 0.875rem;">
+        <%= t('home.level_guide.description',
+            default: 'Tu nivel financiero indica en que etapa de tu camino hacia la libertad financiera te encuentras.') %>
+      </p>
+
+      <% levels.each do |level| %>
+        <% is_current = @financial_level[:number] == level[:number] %>
+        <% is_past = @financial_level[:number] > level[:number] %>
+        <div class="level-guide-item <%= 'level-guide-item--current' if is_current %> <%= 'level-guide-item--past' if is_past %> <%= level == levels.last ? '' : 'mb-3' %>">
+          <div class="level-guide-item__number">
+            <% if is_past %>
+              <i class="bi bi-check-lg"></i>
+            <% else %>
+              <%= level[:number] %>
+            <% end %>
+          </div>
+          <div class="level-guide-item__content">
+            <h6 class="level-guide-item__title"><%= t("financial.levels.#{level[:key]}.name") %></h6>
+            <p class="level-guide-item__description"><%= t("financial.levels.#{level[:key]}.description") %></p>
+          </div>
+        </div>
+      <% end %>
+
+      <div style="margin-top: 1.5rem;">
+        <%= link_to plan_path, class: 'btn-app btn-app--primary btn-app--block' do %>
+          <%= t('common.understood', default: 'Entendido') %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.level-guide-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-radius: 8px;
+  background: #f9fafb;
+  border: 1px solid transparent;
+}
+
+.level-guide-item--current {
+  background: rgba(22, 86, 104, 0.06);
+  border-color: rgba(22, 86, 104, 0.2);
+}
+
+.level-guide-item--past {
+  opacity: 0.55;
+}
+
+.level-guide-item__number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #165668;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+}
+
+.level-guide-item--past .level-guide-item__number {
+  background: #d1d5db;
+}
+
+.level-guide-item__title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 0.25rem;
+}
+
+.level-guide-item__description {
+  font-size: 0.8125rem;
+  color: #6b7280;
+  line-height: 1.5;
+  margin: 0;
+}
+</style>

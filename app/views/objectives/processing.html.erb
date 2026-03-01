@@ -1,33 +1,28 @@
-<% content_for :title, t('onboarding.processing.title', default: 'Analizando...') %>
-<% redirect_path = @from == 'profile' ? profile_path : home_path %>
+<% content_for :title, t('objectives.processing.title', default: 'Calculando...') %>
 
 <div class="onboarding-processing">
   <div class="onboarding-processing__content">
     <div class="processing-icon-container">
-      <i class="bi bi-graph-up-arrow processing-icon"></i>
+      <i class="bi bi-bullseye processing-icon"></i>
       <div class="processing-ring"></div>
       <div class="processing-ring-2"></div>
     </div>
 
-    <h1 class="onboarding-processing__title"><%= t('onboarding.processing.title', default: 'Analizando tu situacion') %></h1>
-    <p class="onboarding-processing__desc"><%= t('onboarding.processing.description', default: 'Calculando tu plan personalizado...') %></p>
+    <h1 class="onboarding-processing__title"><%= t('objectives.processing.title', default: 'Analizando tu objetivo') %></h1>
+    <p class="onboarding-processing__desc"><%= t('objectives.processing.description', default: 'Preparando tu plan personalizado...') %></p>
 
     <div class="processing-steps">
       <div class="processing-step" id="step-1">
         <i class="bi bi-check-circle-fill"></i>
-        <span><%= t('onboarding.processing.step_1', default: 'Analizando ingresos y gastos') %></span>
+        <span><%= t('objectives.processing.step_1', default: 'Calculando ahorro necesario') %></span>
       </div>
       <div class="processing-step" id="step-2">
         <i class="bi bi-check-circle-fill"></i>
-        <span><%= t('onboarding.processing.step_2', default: 'Calculando tu patrimonio') %></span>
+        <span><%= t('objectives.processing.step_2', default: 'Buscando la mejor inversion') %></span>
       </div>
       <div class="processing-step" id="step-3">
         <i class="bi bi-check-circle-fill"></i>
-        <span><%= t('onboarding.processing.step_3', default: 'Determinando tu nivel') %></span>
-      </div>
-      <div class="processing-step" id="step-4">
-        <i class="bi bi-check-circle-fill"></i>
-        <span><%= t('onboarding.processing.step_4', default: 'Generando recomendaciones') %></span>
+        <span><%= t('objectives.processing.step_3', default: 'Generando tu plan de accion') %></span>
       </div>
     </div>
 
@@ -63,28 +58,34 @@
 </style>
 
 <script>
-document.addEventListener('turbo:load', function() {
-  var steps = ['step-1', 'step-2', 'step-3', 'step-4'];
-  var progressBar = document.getElementById('progress-bar');
-  if (!progressBar) return;
-  var currentStep = 0;
+(function() {
+  function initProcessing() {
+    var steps = ['step-1', 'step-2', 'step-3'];
+    var progressBar = document.getElementById('progress-bar');
+    if (!progressBar) return;
+    var currentStep = 0;
 
-  function activateStep(index) {
-    if (index < steps.length) {
-      var stepEl = document.getElementById(steps[index]);
-      if (stepEl) stepEl.classList.add('active');
-      progressBar.style.width = ((index + 1) / steps.length * 100) + '%';
-      currentStep++;
-      if (currentStep < steps.length) {
-        setTimeout(function() { activateStep(currentStep); }, 1000);
-      } else {
-        setTimeout(function() {
-          window.location.href = '<%= redirect_path %>';
-        }, 500);
+    function activateStep(index) {
+      if (index < steps.length) {
+        var stepEl = document.getElementById(steps[index]);
+        if (stepEl) stepEl.classList.add('active');
+        progressBar.style.width = ((index + 1) / steps.length * 100) + '%';
+        currentStep++;
+        if (currentStep < steps.length) {
+          setTimeout(function() { activateStep(currentStep); }, 1000);
+        } else {
+          setTimeout(function() {
+            window.location.href = '<%= home_path %>';
+          }, 500);
+        }
       }
     }
+
+    setTimeout(function() { activateStep(0); }, 300);
   }
 
-  setTimeout(function() { activateStep(0); }, 300);
-});
+  document.addEventListener('turbo:load', initProcessing);
+  if (document.readyState !== 'loading') { initProcessing(); }
+  else { document.addEventListener('DOMContentLoaded', initProcessing); }
+})();
 </script>

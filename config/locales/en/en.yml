@@ -40,6 +40,7 @@ en:
       updated: "Goal updated successfully."
       deleted: "Goal deleted successfully."
       progress_updated: "Progress updated."
+      only_one_allowed: "You can only have one active goal. Delete the current one to create a new one."
     pygs:
       created: "Excellent! Step 1 completed. Now let's move on to your balance sheet."
       updated: "Income & expenses updated successfully."
@@ -74,8 +75,8 @@ en:
     submit: "Submit"
     loading: "Loading..."
     confirm_delete: "Are you sure you want to delete this?"
-    yes: "Yes"
-    no: "No"
+    "yes": "Yes"
+    "no": "No"
     or: "or"
     and: "and"
 

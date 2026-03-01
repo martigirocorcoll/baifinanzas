@@ -1,0 +1,129 @@
+class PlanController < ApplicationController
+  layout 'app'
+
+  before_action :check_onboarding
+
+  def index
+    @user = current_user
+    load_financial_health_data
+    load_recommendation_data
+  end
+
+  def level_guide
+    load_financial_health_data
+  end
+
+  private
+
+  def check_onboarding
+    unless current_user.has_basic_financial_data?
+      redirect_to onboarding_welcome_path and return
+    end
+  end
+
+  def load_financial_health_data
+    @financial_level = {
+      key: current_user.financial_health_level_key,
+      number: current_user.financial_health_level_number,
+      name: t("financial.levels.#{current_user.financial_health_level_key}.name"),
+      icon: t("financial.levels.#{current_user.financial_health_level_key}.bootstrap_icon"),
+      description: t("financial.levels.#{current_user.financial_health_level_key}.description")
+    }
+
+    @monthly_cash_flow = current_user.monthly_cash_flow
+    @net_worth = current_user.net_worth
+
+    @levels = [
+      { number: 1, key: :critical },
+      { number: 2, key: :emergency_fund },
+      { number: 3, key: :paying_debt },
+      { number: 4, key: :stable },
+      { number: 5, key: :growth },
+      { number: 6, key: :financial_freedom }
+    ].map do |level|
+      level.merge(
+        name: t("financial.levels.#{level[:key]}.name"),
+        short_name: t("financial.levels.#{level[:key]}.short_name"),
+        description: t("financial.levels.#{level[:key]}.description"),
+        next_step: t("financial.levels.#{level[:key]}.next_step"),
+        icon: t("financial.levels.#{level[:key]}.bootstrap_icon")
+      )
+    end
+
+    @next_level = calculate_next_level_info
+  end
+
+  def load_recommendation_data
+    full_plan = current_user.action_plan
+    @recommendations = full_plan.select { |a| a[:type] == 'recommendation' }
+    @completed_count = @recommendations.count { |a| a[:completed] }
+    @total_count = @recommendations.count
+    @progress_percentage = @total_count > 0 ? ((@completed_count.to_f / @total_count) * 100).round(0) : 0
+  end
+
+  def calculate_next_level_info
+    level_key = current_user.financial_health_level_key
+
+    next_level_map = {
+      critical: :emergency_fund,
+      emergency_fund: :paying_debt,
+      paying_debt: :stable,
+      stable: :growth,
+      growth: :financial_freedom,
+      financial_freedom: nil
+    }
+
+    next_level_key = next_level_map[level_key]
+
+    if level_key == :emergency_fund && !current_user.has_expensive_debt?
+      next_level_key = :stable
+    end
+
+    return nil if next_level_key.nil?
+
+    {
+      key: next_level_key,
+      name: t("financial.levels.#{next_level_key}.name"),
+      requirements: get_level_requirements(level_key)
+    }
+  end
+
+  def get_level_requirements(current_level_key)
+    case current_level_key
+    when :critical
+      [{
+        text: t('financial.next_level.positive_cash_flow'),
+        completed: @monthly_cash_flow > 0
+      }]
+    when :emergency_fund
+      if current_user.has_expensive_debt?
+        [{
+          text: t('financial.next_level.emergency_2_months'),
+          completed: current_user.has_partial_emergency_fund?
+        }]
+      else
+        [{
+          text: t('financial.next_level.emergency_4_months'),
+          completed: current_user.has_emergency_fund?
+        }]
+      end
+    when :paying_debt
+      [{
+        text: t('financial.next_level.expensive_debt_under_40'),
+        completed: current_user.expensive_debt_ratio < 0.4
+      }]
+    when :stable
+      [{
+        text: t('financial.next_level.net_worth_2_years'),
+        completed: @net_worth >= (current_user.annual_income * 2)
+      }]
+    when :growth
+      [{
+        text: t('financial.next_level.investment_income_covers_expenses'),
+        completed: current_user.has_financial_freedom?
+      }]
+    else
+      []
+    end
+  end
+end

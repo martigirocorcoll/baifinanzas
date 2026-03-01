@@ -40,6 +40,7 @@ es:
       updated: "Objetivo actualizado correctamente."
       deleted: "Objetivo eliminado correctamente."
       progress_updated: "Progreso actualizado."
+      only_one_allowed: "Solo puedes tener un objetivo activo. Elimina el actual para crear uno nuevo."
     pygs:
       created: "¡Excelente! Paso 1 completado. Ahora vamos con tu balance patrimonial."
       updated: "PYG actualizado correctamente."
@@ -74,8 +75,8 @@ es:
     submit: "Enviar"
     loading: "Cargando..."
     confirm_delete: "¿Estás seguro de que quieres eliminar esto?"
-    yes: "Sí"
-    no: "No"
+    "yes": "Sí"
+    "no": "No"
     or: "o"
     and: "y"
 

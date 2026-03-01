@@ -69,6 +69,7 @@ html * {
 
 // App body - no padding when using app layout
 body.app-layout {
+  --app-content-height: calc(100dvh - 60px); // web: viewport minus bottom nav
   padding-top: 0;
   padding-bottom: calc(60px + env(safe-area-inset-bottom)); // Bottom nav height + safe area
   background-color: $bg-primary;
@@ -84,8 +85,10 @@ body.app-layout {
   }
 }
 
-// Turbo Native: no web bottom nav, native app handles safe areas
+// Turbo Native: no web bottom nav, webview fills space between native bars
 body.turbo-native.app-layout {
+  --app-content-height: calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+  padding-top: env(safe-area-inset-top, 0px);
   padding-bottom: 0;
 }
 
@@ -1119,9 +1122,8 @@ body.turbo-native.app-layout {
   width: 100%;
 }
 
-// Turbo Native: push content below native nav bar, no bottom padding needed
+// Turbo Native: webview sits between native bars
 .turbo-native .app-main {
-  padding-top: env(safe-area-inset-top);
   padding-bottom: 0;
 }
 
@@ -3043,7 +3045,7 @@ body.turbo-native.app-layout {
 
 .discovery-page {
   background-color: $bg-primary;
-  min-height: 100vh;
+  min-height: var(--app-content-height, 100dvh);
   padding-bottom: 2rem;
 
   .filter-chip {
@@ -3142,7 +3144,7 @@ body.turbo-native.app-layout {
 
 .calculators-page {
   background-color: $bg-primary;
-  min-height: 100vh;
+  min-height: var(--app-content-height, 100dvh);
   padding-bottom: 2rem;
 }
 
@@ -3222,7 +3224,7 @@ body.turbo-native.app-layout {
 // ============================================
 
 .onboarding-welcome {
-  min-height: 100vh;
+  min-height: var(--app-content-height, 100dvh);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3286,7 +3288,7 @@ body.turbo-native.app-layout {
 }
 
 .onboarding-step {
-  min-height: 100vh;
+  min-height: var(--app-content-height, 100dvh);
   display: flex;
   flex-direction: column;
   padding: 1.25rem 1.25rem 2rem;
@@ -3784,9 +3786,9 @@ body.turbo-native.app-layout {
   overflow: hidden;
   background: $bg-secondary;
 
-  // Turbo Native: visible area between native nav bar and tab bar
+  // Turbo Native: webview already fills space between native bars
   .turbo-native & {
-    height: calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    height: 100dvh;
   }
 
   .home-level-compact {
