@@ -32,7 +32,7 @@
           </div>
           <div class="mb-3">
             <%= f.label :youtube_url, "Canal de YouTube", class: "form-label fw-semibold" %>
-            <%= f.text_field :youtube_url, class: "form-control", placeholder: "https://www.youtube.com/@BaiJavier", value: @influencer.youtube_channel_id.present? ? "Canal conectado (#{@influencer.youtube_channel_id})" : "" %>
+            <%= f.text_field :youtube_url, class: "form-control", placeholder: "https://www.youtube.com/@BaiJavier", value: @influencer.youtube_channel_id.present? ? "https://www.youtube.com/channel/#{@influencer.youtube_channel_id}" : "" %>
             <div class="form-text">Pega la URL del canal (ej: https://www.youtube.com/@NombreCanal). Se resuelve automaticamente.</div>
           </div>
         </div>

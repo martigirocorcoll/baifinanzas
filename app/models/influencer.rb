@@ -54,6 +54,8 @@ class Influencer < ApplicationRecord
     channel_id = service.resolve_channel_id(youtube_url)
     if channel_id.present?
       self.youtube_channel_id = channel_id
+    elsif youtube_channel_id.present? && youtube_url.include?(youtube_channel_id)
+      # Already resolved, no change needed
     else
       errors.add(:youtube_url, "no se ha podido encontrar el canal de YouTube")
     end
