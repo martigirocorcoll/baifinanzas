@@ -396,7 +396,7 @@ en:
   plan:
     nav_title: "Plan"
     recommendations_title: "What people at your level do to improve:"
-    next_level_title: "To reach %{level}:"
+    next_level_prefix: "To reach"
     update_data: "Update my data"
 
   # Discovery
@@ -416,8 +416,7 @@ en:
     filters:
       all: "All"
       videos: "Videos"
-      articles: "Articles"
-      news: "News"
+      text_content: "Articles"
     no_content: "No content"
     no_content_description: "Educational content will be available soon."
     by: "By"

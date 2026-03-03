@@ -65,8 +65,9 @@
   <%# NEXT LEVEL %>
   <% if @next_level %>
     <div class="plan-next-level" style="margin-top: 1.5rem;">
-      <h3 class="plan-section-title">
-        <%= t('plan.next_level_title', level: @next_level[:name], default: 'Para llegar a %{level}:') %>
+      <h3 class="plan-section-title" style="font-weight: 400;">
+        <%= t('plan.next_level_prefix', default: 'Para llegar a') %>
+        <strong><%= @next_level[:number] %>/6 <%= @next_level[:name] %>:</strong>
       </h3>
       <% @next_level[:requirements].each do |req| %>
         <div class="plan-next-level__req">

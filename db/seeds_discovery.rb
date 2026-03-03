@@ -35,7 +35,7 @@ articles_data = [
       </ol>
 
       <h5>Cuanto puedo ganar?</h5>
-      <p>Historicamente, el S&P 500 ha dado una rentabilidad media del 10% anual. Sin embargo, hay anos de subidas del 20-30% y anos de caidas del 10-20%. La clave es mantener la inversion a largo plazo (minimo 5-10 anos).</p>
+      <p>Historicamente, el S&P 500 ha dado una rentabilidad media del 10% anual. Sin embargo, hay años de subidas del 20-30% y años de caidas del 10-20%. La clave es mantener la inversion a largo plazo (minimo 5-10 años).</p>
 
       <div class="app-disclaimer mt-3">
         <small><i class="bi bi-info-circle me-1"></i> Rentabilidades pasadas no garantizan resultados futuros. Invertir conlleva riesgo de perdida.</small>
@@ -57,22 +57,22 @@ articles_data = [
       <h5>Un ejemplo practico</h5>
       <p>Imagina que inviertes 200 euros al mes con una rentabilidad del 8% anual:</p>
       <ul>
-        <li><strong>En 10 anos:</strong> habras aportado 24.000 euros y tendras unos 36.600 euros.</li>
-        <li><strong>En 20 anos:</strong> habras aportado 48.000 euros y tendras unos 117.800 euros.</li>
-        <li><strong>En 30 anos:</strong> habras aportado 72.000 euros y tendras unos 298.000 euros.</li>
+        <li><strong>En 10 años:</strong> habras aportado 24.000 euros y tendras unos 36.600 euros.</li>
+        <li><strong>En 20 años:</strong> habras aportado 48.000 euros y tendras unos 117.800 euros.</li>
+        <li><strong>En 30 años:</strong> habras aportado 72.000 euros y tendras unos 298.000 euros.</li>
       </ul>
-      <p>Fijate que en los ultimos 10 anos es donde se genera la mayor parte de las ganancias. Eso es el efecto del interes compuesto.</p>
+      <p>Fijate que en los ultimos 10 años es donde se genera la mayor parte de las ganancias. Eso es el efecto del interes compuesto.</p>
 
       <h5>La regla del 72</h5>
       <p>Hay un truco sencillo para saber cuanto tarda en duplicarse tu dinero: divide 72 entre la rentabilidad anual.</p>
       <ul>
-        <li>Al 4%: tu dinero se duplica en 18 anos.</li>
-        <li>Al 8%: tu dinero se duplica en 9 anos.</li>
-        <li>Al 12%: tu dinero se duplica en 6 anos.</li>
+        <li>Al 4%: tu dinero se duplica en 18 años.</li>
+        <li>Al 8%: tu dinero se duplica en 9 años.</li>
+        <li>Al 12%: tu dinero se duplica en 6 años.</li>
       </ul>
 
       <h5>El factor mas importante: el tiempo</h5>
-      <p>Cuanto antes empieces a invertir, mas tiempo tiene el interes compuesto para trabajar. Empezar 10 anos antes puede suponer el doble de capital final, incluso aportando la misma cantidad mensual.</p>
+      <p>Cuanto antes empieces a invertir, mas tiempo tiene el interes compuesto para trabajar. Empezar 10 años antes puede suponer el doble de capital final, incluso aportando la misma cantidad mensual.</p>
 
       <div class="app-disclaimer mt-3">
         <small><i class="bi bi-calculator me-1"></i> Usa nuestra calculadora de interes compuesto para ver cuanto podrias acumular.</small>
@@ -182,7 +182,7 @@ articles_data = [
       </ul>
 
       <h5>Cuanto te cuesta realmente la deuda?</h5>
-      <p>Una tarjeta de credito al 20% TAE convierte una compra de 1.000 euros en 1.200 euros si tardas un ano en pagarla. Si tardas 2 anos, puede llegar a 1.440 euros. Los intereses se acumulan rapidamente.</p>
+      <p>Una tarjeta de credito al 20% TAE convierte una compra de 1.000 euros en 1.200 euros si tardas un año en pagarla. Si tardas 2 años, puede llegar a 1.440 euros. Los intereses se acumulan rapidamente.</p>
 
       <h5>Plan de accion</h5>
       <ol>
@@ -216,14 +216,14 @@ articles_data = [
         <li><strong>Un fondo de emergencia completo</strong> (3-6 meses de gastos).</li>
         <li><strong>Sin deudas caras</strong> (tarjetas de credito, prestamos al consumo).</li>
         <li><strong>Un presupuesto controlado</strong> (sabes cuanto ganas, gastas y ahorras).</li>
-        <li><strong>Dinero que no vas a necesitar</strong> en al menos 5 anos.</li>
+        <li><strong>Dinero que no vas a necesitar</strong> en al menos 5 años.</li>
       </ol>
 
       <h5>Opciones para empezar</h5>
       <p>De menor a mayor riesgo y rentabilidad esperada:</p>
       <ul>
-        <li><strong>Depositos:</strong> Seguro, rentabilidad baja (1-3%). Ideal para dinero que necesitaras en 1-2 anos.</li>
-        <li><strong>Fondos indexados:</strong> Diversificado, rentabilidad historica del 7-10%. Para plazos de 5+ anos.</li>
+        <li><strong>Depositos:</strong> Seguro, rentabilidad baja (1-3%). Ideal para dinero que necesitaras en 1-2 años.</li>
+        <li><strong>Fondos indexados:</strong> Diversificado, rentabilidad historica del 7-10%. Para plazos de 5+ años.</li>
         <li><strong>Acciones individuales:</strong> Mayor riesgo, requiere conocimiento. Solo para dinero que te puedes permitir perder.</li>
       </ul>
 
@@ -274,13 +274,13 @@ articles_data = [
     published_at: 5.weeks.ago,
     body: <<~HTML
       <h5>Que es una hipoteca?</h5>
-      <p>Una hipoteca es un prestamo que te da un banco para comprar una vivienda. La vivienda queda como garantia: si no pagas, el banco puede quedarsela. Las hipotecas suelen ser de 15 a 30 anos.</p>
+      <p>Una hipoteca es un prestamo que te da un banco para comprar una vivienda. La vivienda queda como garantia: si no pagas, el banco puede quedarsela. Las hipotecas suelen ser de 15 a 30 años.</p>
 
       <h5>Los tres tipos de hipoteca</h5>
       <ul>
         <li><strong>Tipo fijo:</strong> La cuota no cambia nunca. Sabes exactamente cuanto pagaras cada mes durante toda la vida del prestamo. Suele tener un interes algo mas alto que el variable al principio.</li>
         <li><strong>Tipo variable:</strong> La cuota se revisa cada 6 o 12 meses segun el Euribor. Si el Euribor sube, tu cuota sube. Si baja, tu cuota baja.</li>
-        <li><strong>Tipo mixto:</strong> Los primeros anos (3-10) tienes un tipo fijo, y despues pasa a variable. Es un punto intermedio entre seguridad y posible ahorro.</li>
+        <li><strong>Tipo mixto:</strong> Los primeros años (3-10) tienes un tipo fijo, y despues pasa a variable. Es un punto intermedio entre seguridad y posible ahorro.</li>
       </ul>
 
       <h5>Que es el Euribor?</h5>

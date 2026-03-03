@@ -1,4 +1,7 @@
 <% content_for :title, t('home.nav_title', default: 'Objetivo') %>
+<% content_for :head do %>
+  <meta name="turbo-cache-control" content="no-cache">
+<% end %>
 
 <% if @objective.nil? %>
   <%# ============================================ %>
@@ -38,10 +41,18 @@
           url: objectives_path,
           html: { method: :post, class: 'objetivo-form' } do |f| %>
 
+        <% if @new_objective.errors.any? %>
+          <div class="app-form__errors">
+            <% @new_objective.errors.full_messages.each do |msg| %>
+              <p class="app-form__error-msg"><i class="bi bi-exclamation-circle"></i> <%= msg %></p>
+            <% end %>
+          </div>
+        <% end %>
+
         <div class="app-form__group">
           <%= f.label :title, t('objectives.form.title', default: 'Titulo'), class: 'app-form__label' %>
           <%= f.text_field :title,
-              class: 'app-form__input',
+              class: "app-form__input #{'is-invalid' if @new_objective.errors[:title].any?}",
               id: 'objective_title_input',
               placeholder: t('objectives.form.title_placeholder', default: 'Ej: Comprar casa'),
               required: true %>
@@ -52,7 +63,7 @@
           <div class="app-form__input-group">
             <span class="app-form__input-prefix">&euro;</span>
             <%= f.number_field :target_amount,
-                class: 'app-form__input',
+                class: "app-form__input #{'is-invalid' if @new_objective.errors[:target_amount].any?}",
                 min: 100,
                 step: 100,
                 placeholder: '10.000',
@@ -63,7 +74,7 @@
         <div class="app-form__group">
           <%= f.label :target_date, t('objectives.form.date', default: 'Fecha objetivo'), class: 'app-form__label' %>
           <%= f.date_field :target_date,
-              class: 'app-form__input',
+              class: "app-form__input #{'is-invalid' if @new_objective.errors[:target_date].any?}",
               min: Date.tomorrow.to_s,
               required: true %>
         </div>
@@ -358,6 +369,26 @@
   flex-direction: column;
   gap: 16px;
   text-align: left;
+}
+
+/* Inline validation errors */
+.app-form__errors {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+.app-form__error-msg {
+  font-size: 0.8125rem;
+  color: #dc2626;
+  margin: 0;
+  padding: 2px 0;
+}
+.app-form__error-msg i {
+  margin-right: 4px;
+}
+.app-form__input.is-invalid {
+  border-color: #ef4444;
 }
 </style>
 

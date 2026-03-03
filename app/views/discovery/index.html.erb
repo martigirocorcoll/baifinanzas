@@ -1,20 +1,23 @@
 <% content_for :title, t('discovery.nav_title', default: 'Explora') %>
 <div class="discovery-page">
   <div class="app-container" style="animation: none;">
-    <%# Filter chips %>
+    <%# Filter chips - only show filters that have content %>
+    <% has_videos = @feed_items.any? { |i| i[:type] == 'video' } %>
+    <% has_text = @feed_items.any? { |i| i[:type] == 'article' || i[:type] == 'news' } %>
     <div class="discovery-filters" style="padding-top: 0.5rem;">
       <button class="filter-chip active" data-filter="all">
         <%= t('discovery.filters.all') %>
       </button>
-      <button class="filter-chip" data-filter="video">
-        <%= t('discovery.filters.videos') %>
-      </button>
-      <button class="filter-chip" data-filter="article">
-        <%= t('discovery.filters.articles') %>
-      </button>
-      <button class="filter-chip" data-filter="news">
-        <%= t('discovery.filters.news') %>
-      </button>
+      <% if has_videos %>
+        <button class="filter-chip" data-filter="video">
+          <%= t('discovery.filters.videos') %>
+        </button>
+      <% end %>
+      <% if has_text %>
+        <button class="filter-chip" data-filter="text">
+          <%= t('discovery.filters.text_content', default: 'Articulos') %>
+        </button>
+      <% end %>
     </div>
 
     <%# Feed %>
@@ -113,11 +116,11 @@ function initDiscoveryFilters() {
 
       var filter = this.dataset.filter;
       feedItems.forEach(function(item) {
-        if (filter === 'all' || item.dataset.type === filter) {
-          item.style.display = 'block';
-        } else {
-          item.style.display = 'none';
-        }
+        var type = item.dataset.type;
+        var show = filter === 'all' ||
+                   filter === type ||
+                   (filter === 'text' && (type === 'article' || type === 'news'));
+        item.style.display = show ? 'block' : 'none';
       });
     });
   });

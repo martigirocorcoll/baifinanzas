@@ -22,14 +22,14 @@
         <span class="badge rounded-pill me-2 mt-1" style="background: #6b7280; min-width: 24px;">1</span>
         <div>
           <strong><%= t('calculators.early_repayment.scenario_base', default: 'No hacer nada') %></strong>
-          <p class="text-muted mb-0 small"><%= t('calculators.early_repayment.explain_base', default: 'Pagas tu cuota mensual normal durante todos los anos restantes. Es tu referencia.') %></p>
+          <p class="text-muted mb-0 small"><%= t('calculators.early_repayment.explain_base', default: 'Pagas tu cuota mensual normal durante todos los años restantes. Es tu referencia.') %></p>
         </div>
       </div>
       <div class="d-flex align-items-start mb-3">
         <span class="badge rounded-pill me-2 mt-1" style="background: #10b981; min-width: 24px;">2</span>
         <div>
           <strong><%= t('calculators.early_repayment.scenario_amortize', default: 'Amortizar') %></strong>
-          <p class="text-muted mb-0 small"><%= t('calculators.early_repayment.explain_amortize', default: 'Cada ano haces un pago extra que reduce el capital. Ahorras intereses y acabas antes.') %></p>
+          <p class="text-muted mb-0 small"><%= t('calculators.early_repayment.explain_amortize', default: 'Cada año haces un pago extra que reduce el capital. Ahorras intereses y acabas antes.') %></p>
         </div>
       </div>
       <div class="d-flex align-items-start">
@@ -53,8 +53,8 @@
 
   <div class="app-form__group">
     <label class="app-form__label">
-      <%= t('calculators.early_repayment.remaining_years', default: 'Anos restantes') %>
-      <span class="text-brand fw-semibold ms-2" id="yearsDisplay">20 anos</span>
+      <%= t('calculators.early_repayment.remaining_years', default: 'Años restantes') %>
+      <span class="text-brand fw-semibold ms-2" id="yearsDisplay">20 años</span>
     </label>
     <div class="app-slider">
       <input type="range" class="app-slider__input" id="remainingYears" min="1" max="35" value="20">
@@ -100,19 +100,19 @@
     <div class="scenario-comparison__col">
       <span class="scenario-comparison__label"><%= t('calculators.early_repayment.scenario_base', default: 'No hacer nada') %></span>
       <span class="scenario-comparison__value" id="baseYears">20</span>
-      <span class="scenario-comparison__unit"><%= t('calculators.early_repayment.years_to_finish', default: 'anos para acabar') %></span>
+      <span class="scenario-comparison__unit"><%= t('calculators.early_repayment.years_to_finish', default: 'años para acabar') %></span>
       <span class="scenario-comparison__sub" id="baseFinishYear">2046</span>
     </div>
     <div class="scenario-comparison__col scenario-comparison__col--highlight">
       <span class="scenario-comparison__label"><%= t('calculators.early_repayment.scenario_amortize', default: 'Amortizar') %></span>
       <span class="scenario-comparison__value text-success" id="amortizeYears">14</span>
-      <span class="scenario-comparison__unit"><%= t('calculators.early_repayment.years_to_finish', default: 'anos para acabar') %></span>
+      <span class="scenario-comparison__unit"><%= t('calculators.early_repayment.years_to_finish', default: 'años para acabar') %></span>
       <span class="scenario-comparison__sub" id="amortizeFinishYear">2040</span>
     </div>
     <div class="scenario-comparison__col">
       <span class="scenario-comparison__label"><%= t('calculators.early_repayment.scenario_invest', default: 'Invertir') %></span>
       <span class="scenario-comparison__value text-brand" id="investYears">16</span>
-      <span class="scenario-comparison__unit"><%= t('calculators.early_repayment.years_to_finish', default: 'anos para acabar') %></span>
+      <span class="scenario-comparison__unit"><%= t('calculators.early_repayment.years_to_finish', default: 'años para acabar') %></span>
       <span class="scenario-comparison__sub" id="investFinishYear">2042</span>
     </div>
   </div>
@@ -157,8 +157,8 @@
       <%= t('calculators.early_repayment.scenario_amortize', default: 'Amortizar') %>
     </h4>
     <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
-      <span class="text-muted"><%= t('calculators.early_repayment.years_saved', default: 'Anos ahorrados') %></span>
-      <strong class="text-success" id="yearsSaved">6 anos</strong>
+      <span class="text-muted"><%= t('calculators.early_repayment.years_saved', default: 'Años ahorrados') %></span>
+      <strong class="text-success" id="yearsSaved">6 años</strong>
     </div>
     <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
       <span class="text-muted"><%= t('calculators.early_repayment.interest_saved', default: 'Intereses ahorrados') %></span>
@@ -223,9 +223,9 @@ function initEarlyRepayment() {
   }
 
   var i18n = {
-    yearsSuffix: '<%= j t("calculators.early_repayment.js.years_suffix", default: " anos") %>',
-    yearSuffix: '<%= j t("calculators.early_repayment.js.year_suffix", default: " ano") %>',
-    year: '<%= j t("calculators.early_repayment.js.year_label", default: "Ano") %>',
+    yearsSuffix: '<%= j t("calculators.early_repayment.js.years_suffix", default: " años") %>',
+    yearSuffix: '<%= j t("calculators.early_repayment.js.year_suffix", default: " año") %>',
+    year: '<%= j t("calculators.early_repayment.js.year_label", default: "Año") %>',
     baseLabel: '<%= j t("calculators.early_repayment.js.chart_base", default: "Hipoteca") %>',
     amortizeLabel: '<%= j t("calculators.early_repayment.js.chart_amortize", default: "Amortizar") %>',
     investLabel: '<%= j t("calculators.early_repayment.js.chart_invest", default: "Invertir") %>',

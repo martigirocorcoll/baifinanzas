@@ -48,8 +48,11 @@ class ObjectivesController < ApplicationController
         format.html { redirect_to home_path }
         format.json { render :show, status: :created, location: @objective }
       else
-        format.html { redirect_to home_path, alert: @objective.errors.full_messages.join(', ') }
-        format.json { render json: @objective.errors, status: :unprocessable_entity }
+        @user = current_user
+        @new_objective = @objective
+        @objective = nil
+        format.html { render 'home/index', status: :unprocessable_entity }
+        format.json { render json: @new_objective.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -72,7 +75,7 @@ class ObjectivesController < ApplicationController
         format.html { redirect_to home_path }
         format.json { render :show, status: :ok, location: @objective }
       else
-        format.html { redirect_to home_path, alert: @objective.errors.full_messages.join(', ') }
+        format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @objective.errors, status: :unprocessable_entity }
       end
     end

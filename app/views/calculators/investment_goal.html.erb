@@ -49,7 +49,7 @@
       <i class="bi bi-cash-coin me-1"></i> <%= t('calculators.investment_goal.mode_contribution', default: 'Cuanto invertir/mes') %>
     </button>
     <button type="button" class="btn btn-outline-primary flex-fill mode-option" data-mode="time">
-      <i class="bi bi-clock me-1"></i> <%= t('calculators.investment_goal.mode_time', default: 'Cuantos anos') %>
+      <i class="bi bi-clock me-1"></i> <%= t('calculators.investment_goal.mode_time', default: 'Cuantos años') %>
     </button>
   </div>
 
@@ -58,7 +58,7 @@
     <div class="app-form__group">
       <label class="app-form__label">
         <%= t('calculators.investment_goal.desired_term', default: 'Plazo deseado') %>
-        <span class="text-brand fw-semibold ms-2" id="yearsDisplay">15 anos</span>
+        <span class="text-brand fw-semibold ms-2" id="yearsDisplay">15 años</span>
       </label>
       <div class="app-slider">
         <input type="range" class="app-slider__input" id="desiredYears" min="1" max="40" value="15">
@@ -119,13 +119,13 @@
 <script>
 function initInvestmentGoal() {
   var i18n = {
-    yearsSuffix: '<%= j t("calculators.investment_goal.js.years_suffix", default: " anos") %>',
+    yearsSuffix: '<%= j t("calculators.investment_goal.js.years_suffix", default: " años") %>',
     monthsSuffix: '<%= j t("calculators.investment_goal.js.months_suffix", default: " meses") %>',
     and: '<%= j t("calculators.investment_goal.js.and", default: " y ") %>',
     monthlyContributionNeeded: '<%= j t("calculators.investment_goal.js.monthly_contribution_needed", default: "Aportacion mensual necesaria") %>',
     timeNeeded: '<%= j t("calculators.investment_goal.js.time_needed", default: "Tiempo necesario") %>',
     alreadyReached: '<%= j t("calculators.investment_goal.js.already_reached", default: "Ya tienes tu objetivo!") %>',
-    moreThan50Years: '<%= j t("calculators.investment_goal.js.more_than_50_years", default: "Mas de 50 anos") %>'
+    moreThan50Years: '<%= j t("calculators.investment_goal.js.more_than_50_years", default: "Mas de 50 años") %>'
   };
 
   var targetEl = document.getElementById('targetCapital');

@@ -50,7 +50,7 @@
       <div class="app-form__group">
         <label class="app-form__label">
           <%= t('calculators.mortgage.term', default: 'Plazo') %>
-          <span class="text-brand fw-semibold ms-2" id="fixedYearsDisplay">25 anos</span>
+          <span class="text-brand fw-semibold ms-2" id="fixedYearsDisplay">25 años</span>
         </label>
         <div class="app-slider">
           <input type="range" class="app-slider__input" id="fixedYears" min="5" max="40" value="25">
@@ -116,7 +116,7 @@
       <div class="app-form__group">
         <label class="app-form__label">
           <%= t('calculators.mortgage.term', default: 'Plazo') %>
-          <span class="text-brand fw-semibold ms-2" id="mixedYearsDisplay">25 anos</span>
+          <span class="text-brand fw-semibold ms-2" id="mixedYearsDisplay">25 años</span>
         </label>
         <div class="app-slider">
           <input type="range" class="app-slider__input" id="mixedYears" min="5" max="40" value="25">
@@ -126,8 +126,8 @@
 
       <div class="app-form__group">
         <label class="app-form__label">
-          <%= t('calculators.mortgage.fixed_years', default: 'Anos a tipo fijo') %>
-          <span class="text-brand fw-semibold ms-2" id="mixedFixedYearsDisplay">10 anos</span>
+          <%= t('calculators.mortgage.fixed_years', default: 'Años a tipo fijo') %>
+          <span class="text-brand fw-semibold ms-2" id="mixedFixedYearsDisplay">10 años</span>
         </label>
         <div class="app-slider">
           <input type="range" class="app-slider__input" id="mixedFixedYears" min="1" max="20" value="10">
@@ -184,7 +184,7 @@
         </div>
         <div class="d-flex justify-content-between align-items-center py-2">
           <span class="text-muted"><%= t('calculators.mortgage.period_duration', default: 'Duracion') %></span>
-          <span id="mixedFixedPeriodYears">Anos 1-10</span>
+          <span id="mixedFixedPeriodYears">Años 1-10</span>
         </div>
       </div>
 
@@ -203,7 +203,7 @@
         </div>
         <div class="d-flex justify-content-between align-items-center py-2">
           <span class="text-muted"><%= t('calculators.mortgage.period_duration', default: 'Duracion') %></span>
-          <span id="mixedVariablePeriodYears">Anos 11-25</span>
+          <span id="mixedVariablePeriodYears">Años 11-25</span>
         </div>
       </div>
 
@@ -252,7 +252,7 @@
       <div class="app-form__group">
         <label class="app-form__label">
           <%= t('calculators.mortgage.term', default: 'Plazo') %>
-          <span class="text-brand fw-semibold ms-2" id="varYearsDisplay">25 anos</span>
+          <span class="text-brand fw-semibold ms-2" id="varYearsDisplay">25 años</span>
         </label>
         <div class="app-slider">
           <input type="range" class="app-slider__input" id="varYears" min="5" max="40" value="25">
@@ -338,7 +338,7 @@
           </div>
         </div>
 
-        <h5 class="mb-3"><%= t('calculators.mortgage.impact_by_year', default: 'Impacto segun ano de hipoteca') %></h5>
+        <h5 class="mb-3"><%= t('calculators.mortgage.impact_by_year', default: 'Impacto segun año de hipoteca') %></h5>
         <div id="varImpactBars">
           <%# Dynamic bars will be inserted by JS %>
         </div>
@@ -361,9 +361,9 @@
 <script>
 function initMortgage() {
   var i18n = {
-    yearsSuffix: '<%= j t("calculators.mortgage.js.years_suffix", default: " anos") %>',
-    yearsPrefix: '<%= j t("calculators.mortgage.js.years_prefix", default: "Anos ") %>',
-    yearPrefix: '<%= j t("calculators.mortgage.js.year_prefix", default: "Ano ") %>'
+    yearsSuffix: '<%= j t("calculators.mortgage.js.years_suffix", default: " años") %>',
+    yearsPrefix: '<%= j t("calculators.mortgage.js.years_prefix", default: "Años ") %>',
+    yearPrefix: '<%= j t("calculators.mortgage.js.year_prefix", default: "Año ") %>'
   };
 
   function formatCurrency(value) {

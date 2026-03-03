@@ -34,7 +34,7 @@ es:
         short_name: "Crecimiento"
         icon: "💎"
         bootstrap_icon: "bi bi-gem"
-        description: "Increible! Tienes ahorrado mas de 2 veces lo que ganas al ano. Tus inversiones van bien y tus deudas estan controladas. Estas en el 5% de la gente."
+        description: "Increible! Tienes ahorrado mas de 2 veces lo que ganas al año. Tus inversiones van bien y tus deudas estan controladas. Estas en el 5% de la gente."
         next_step: "Tu meta final esta cerca: que tus inversiones te den suficiente dinero para vivir sin depender del trabajo."
       financial_freedom:
         name: "Libertad total"
@@ -111,7 +111,7 @@ es:
         title: "Invierte a medio plazo"
         nav_title: "Medio Plazo"
         benefit: "Haz crecer tu dinero a medio plazo"
-        description: "Haz crecer tu dinero con inversiones a medio plazo (2-5 anos) con un balance entre rentabilidad y seguridad"
+        description: "Haz crecer tu dinero con inversiones a medio plazo (2-5 años) con un balance entre rentabilidad y seguridad"
         cta: "Ver Opciones"
         icon: "bi-bar-chart"
       ac_llarg:
@@ -153,7 +153,7 @@ es:
       emergency_2_months: "Tener 2 meses de gastos ahorrados"
       emergency_4_months: "Tener 4 meses de gastos ahorrados"
       expensive_debt_under_40: "Reducir tus deudas con interes alto"
-      net_worth_2_years: "Tener ahorrado 2 veces lo que ganas al ano"
+      net_worth_2_years: "Tener ahorrado 2 veces lo que ganas al año"
       investment_income_covers_expenses: "Que tus inversiones paguen tus gastos"
 
     action_plan:
@@ -167,10 +167,10 @@ es:
     cash_flow: "Tus ingresos menos tus gastos. Lo que te sobra (o falta) al mes"
     emergency_fund: "Dinero apartado por si pasa algo inesperado: una averia, perder el trabajo..."
     early_repayment: "Hacer pagos extra para acabar antes y pagar menos intereses"
-    roi: "El porcentaje que ganas cada ano con tu inversion"
+    roi: "El porcentaje que ganas cada año con tu inversion"
     compound_interest: "Los intereses generan mas intereses, como una bola de nieve que crece sola"
     financial_freedom: "Cuando tus inversiones te dan suficiente dinero para vivir sin trabajar"
     expensive_debt: "Tarjetas de credito, prestamos rapidos... cobran mucho interes"
     assets: "Tu dinero, propiedades, inversiones... todo lo que tienes"
     debts: "Hipoteca, prestamos, lo que falta por pagar"
-    inflation: "Los precios suben cada ano. Si tu dinero no crece al menos igual, pierdes poder de compra"
+    inflation: "Los precios suben cada año. Si tu dinero no crece al menos igual, pierdes poder de compra"

@@ -1,15 +1,12 @@
 <% content_for :title, t('profile.nav_title', default: 'Perfil') %>
 <div class="app-container">
   <%# User header %>
-  <% user_name = @user.email.split('@').first.capitalize %>
-  <% initials = user_name[0..1].upcase %>
   <div class="profile-header">
     <div class="profile-header__avatar">
-      <span><%= initials %></span>
+      <span><i class="bi bi-person"></i></span>
     </div>
     <div class="profile-header__info">
-      <h2 class="profile-header__name"><%= user_name %></h2>
-      <p class="profile-header__email"><%= @user.email %></p>
+      <h2 class="profile-header__name"><%= @user.email %></h2>
       <span class="profile-header__meta">
         <%= t("financial.levels.#{@financial_level_key}.short_name") %>
         &middot;

@@ -658,7 +658,7 @@ es:
           title: "Cuanto puedes ahorrar en tu hipoteca"
           current_payment: "Cuota actual"
           current_rate: "Tipo actual"
-          years_remaining: "Anos restantes"
+          years_remaining: "Años restantes"
           new_rate: "Tipo nuevo"
           new_payment: "Nueva cuota"
           monthly_savings: "Ahorras al mes"

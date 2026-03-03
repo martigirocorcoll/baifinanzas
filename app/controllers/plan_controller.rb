@@ -81,8 +81,11 @@ class PlanController < ApplicationController
 
     return nil if next_level_key.nil?
 
+    level_numbers = { critical: 1, emergency_fund: 2, paying_debt: 3, stable: 4, growth: 5, financial_freedom: 6 }
+
     {
       key: next_level_key,
+      number: level_numbers[next_level_key],
       name: t("financial.levels.#{next_level_key}.name"),
       requirements: get_level_requirements(level_key)
     }

@@ -1,5 +1,9 @@
 <% content_for :title, t('onboarding.processing.title', default: 'Analizando...') %>
-<% redirect_path = @from == 'profile' ? profile_path : home_path %>
+<% redirect_path = case @from
+                     when 'profile' then profile_path
+                     when 'plan' then plan_path
+                     else home_path
+                     end %>
 
 <div class="onboarding-processing">
   <div class="onboarding-processing__content">
