@@ -40,7 +40,7 @@ class HomeController < ApplicationController
     @video_url = current_user.get_video_url(@inv_slug) if influencer
 
     # Affiliate link
-    @affiliate_link = current_user.get_affiliate_link(@inv_recommendation.gsub('ac_', ''))
+    @affiliate_link = current_user.get_affiliate_link(@inv_recommendation)
   end
 
   def investment_display_info(rec_key)
