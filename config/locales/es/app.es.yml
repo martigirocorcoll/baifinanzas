@@ -5,7 +5,7 @@ es:
       label: "Navegacion principal"
       objetivo: "Objetivo"
       plan: "Plan"
-      discovery: "Discovery"
+      radar: "Radar"
       calculators: "Calculadoras"
       profile: "Perfil"
 
@@ -28,7 +28,7 @@ es:
       empty_subtitle: "Elige uno y te diremos como conseguirlo."
       create_btn: "Crear mi objetivo"
       monthly_needed: "Necesitas ahorrar %{amount} EUR/mes"
-      investment_title: "Inversion recomendada"
+      investment_title: "Mejor opcion"
       annual_return: "anual"
       open_account: "Abrir cuenta"
       take_action: "Tomar accion"
@@ -75,7 +75,7 @@ es:
 
     action_plan:
       title: "Tu plan de accion"
-      description: "Basado en tu situacion, estos son los pasos que te recomendamos."
+      description: "Basado en tu situacion, estos son los pasos que la mayoria sigue."
       current_step: "Paso actual"
       see_how: "Ver como hacerlo"
       mark_completed: "Completado"
@@ -392,18 +392,18 @@ es:
         below_inflation: "Tu inversion gana algo, pero no supera la inflacion. En la practica, estas perdiendo poder de compra."
         negative_returns: "Tu inversion tiene numeros rojos. Estas perdiendo dinero."
 
-  # Plan (Nivel + Recomendaciones)
+  # Plan (Nivel + Opciones)
   plan:
     nav_title: "Plan"
     recommendations_title: "Lo que la gente en tu nivel hace para mejorar:"
     next_level_prefix: "Para llegar a"
     update_data: "Actualizar mis datos"
 
-  # Discovery
-  discovery:
-    nav_title: "Explora"
-    title: "Discovery"
-    back_to_feed: "Discovery"
+  # Radar
+  radar:
+    nav_title: "Radar"
+    title: "Radar"
+    back_to_feed: "Radar"
     badges:
       article: "ARTICULO"
       news: "NOVEDAD"
@@ -570,7 +570,7 @@ es:
         hint: "No incluyas la hipoteca, esa ya la pusiste antes"
       riesgo:
         title: "Que nivel de riesgo aceptas?"
-        subtitle: "No hay respuesta correcta. Esto nos ayuda a recomendarte mejor."
+        subtitle: "No hay respuesta correcta. Esto nos ayuda a ajustar mejor tu plan."
         low:
           label: "Bajo"
           description: "Prefiero no perder dinero aunque gane menos"
@@ -587,7 +587,7 @@ es:
       step_1: "Analizando ingresos y gastos"
       step_2: "Calculando lo que tienes y debes"
       step_3: "Determinando tu nivel"
-      step_4: "Preparando recomendaciones"
+      step_4: "Preparando tu plan"
 
     complete:
       title: "Tu plan esta listo!"

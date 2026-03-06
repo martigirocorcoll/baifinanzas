@@ -32,7 +32,7 @@ es:
       monthly_savings: "Ahorro mensual necesario"
       target_date: "Fecha objetivo"
       target_amount: "Cantidad objetivo"
-      recommended_product: "Producto recomendado"
+      recommended_product: "Mejor opcion"
       expected_return: "Rentabilidad esperada"
 
     savings_capacity:
@@ -71,7 +71,7 @@ es:
       discover: "Descubre tu salud financiera en solo 2 minutos"
       step1: "Análisis de flujo de caja"
       step2: "Ranking personalizado"
-      step3: "Recomendaciones"
+      step3: "Opciones"
       start_button: "Descubrir mi Salud Financiera"
 
     loading:

@@ -5,7 +5,7 @@ en:
       label: "Main navigation"
       objetivo: "Goal"
       plan: "Plan"
-      discovery: "Discovery"
+      radar: "Radar"
       calculators: "Calculators"
       profile: "Profile"
 
@@ -28,7 +28,7 @@ en:
       empty_subtitle: "Pick one and we'll tell you how to achieve it."
       create_btn: "Create my goal"
       monthly_needed: "You need to save %{amount} EUR/mo"
-      investment_title: "Recommended investment"
+      investment_title: "Best option"
       annual_return: "annual"
       open_account: "Open account"
       take_action: "Take action"
@@ -75,7 +75,7 @@ en:
 
     action_plan:
       title: "Your action plan"
-      description: "Based on your situation, these are the steps we recommend."
+      description: "Based on your situation, these are the steps most people follow."
       current_step: "Current step"
       see_how: "See how to do it"
       mark_completed: "Completed"
@@ -392,18 +392,18 @@ en:
         below_inflation: "Your investment is gaining but not beating inflation. In practice, you're losing purchasing power."
         negative_returns: "Your investment is in the red. You're losing money."
 
-  # Plan (Level + Recommendations)
+  # Plan (Level + Options)
   plan:
     nav_title: "Plan"
     recommendations_title: "What people at your level do to improve:"
     next_level_prefix: "To reach"
     update_data: "Update my data"
 
-  # Discovery
-  discovery:
-    nav_title: "Explore"
-    title: "Discovery"
-    back_to_feed: "Discovery"
+  # Radar
+  radar:
+    nav_title: "Radar"
+    title: "Radar"
+    back_to_feed: "Radar"
     badges:
       article: "ARTICLE"
       news: "NEWS"
@@ -570,7 +570,7 @@ en:
         hint: "Don't include the mortgage, you already entered that"
       riesgo:
         title: "What level of risk do you accept?"
-        subtitle: "There's no right answer. This helps us recommend better."
+        subtitle: "There's no right answer. This helps us tailor your plan."
         low:
           label: "Low"
           description: "I prefer not to lose money even if I earn less"
@@ -587,7 +587,7 @@ en:
       step_1: "Analyzing income and expenses"
       step_2: "Calculating what you have and owe"
       step_3: "Determining your level"
-      step_4: "Preparing recommendations"
+      step_4: "Preparing your plan"
 
     complete:
       title: "Your plan is ready!"

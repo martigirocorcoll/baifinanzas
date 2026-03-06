@@ -1,5 +1,6 @@
 class ProfilesController < ApplicationController
   layout 'app'
+  before_action :set_no_cache
 
   def show
     @user = current_user

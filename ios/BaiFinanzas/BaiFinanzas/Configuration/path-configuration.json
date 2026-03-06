@@ -19,7 +19,7 @@
       }
     },
     {
-      "patterns": ["/discovery/articles/.*"],
+      "patterns": ["/radar/articles/.*"],
       "properties": {
         "context": "modal",
         "pull_to_refresh_enabled": false

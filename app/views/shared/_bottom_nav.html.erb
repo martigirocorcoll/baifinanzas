@@ -1,9 +1,9 @@
 <%# Bottom Navigation - Tab Bar for App Layout %>
-<%# 4 tabs: Objetivo, Plan, Discovery, Calculadoras %>
+<%# 4 tabs: Objetivo, Plan, Radar, Calculadoras %>
 
 <% home_active = current_page?(home_path) || current_page?(authenticated_root_path) %>
 <% plan_active = request.path.include?('/plan') %>
-<% discovery_active = current_page?(discovery_path) %>
+<% radar_active = current_page?(radar_path) %>
 <% calcs_active = request.path.start_with?('/calculators') || request.path.start_with?("/#{I18n.locale}/calculators") %>
 
 <nav class="bottom-nav" aria-label="<%= t('navigation.bottom_nav.label', default: 'Main navigation') %>">
@@ -19,10 +19,10 @@
     <span class="bottom-nav__label"><%= t('navigation.bottom_nav.plan', default: 'Plan') %></span>
   <% end %>
 
-  <%= link_to discovery_path,
-      class: "bottom-nav__item #{discovery_active ? 'bottom-nav__item--active' : ''}" do %>
-    <i class="bi bi-play-circle<%= '-fill' if discovery_active %> bottom-nav__icon"></i>
-    <span class="bottom-nav__label"><%= t('navigation.bottom_nav.discovery', default: 'Discovery') %></span>
+  <%= link_to radar_path,
+      class: "bottom-nav__item #{radar_active ? 'bottom-nav__item--active' : ''}" do %>
+    <i class="bi bi-play-circle<%= '-fill' if radar_active %> bottom-nav__icon"></i>
+    <span class="bottom-nav__label"><%= t('navigation.bottom_nav.radar', default: 'Radar') %></span>
   <% end %>
 
   <%= link_to calculators_path,

@@ -52,7 +52,7 @@ es:
             description: "Analizamos tu Balance Mensual y Patrimonio para calcular tu nivel de salud financiera actual y saber desde dónde partes."
           plan:
             title: "Obten un plan financiero personalizado"
-            description: "Basado en tus objetivos específicos, calculamos tu plan de inversión con interés compuesto y recomendaciones adaptadas a ti."
+            description: "Basado en tus objetivos específicos, calculamos tu plan de inversión con interés compuesto y opciones adaptadas a ti."
           tools:
             title: "Accede a herramientas que simplifican tus decisiones"
             description: "Calculadoras de cuota hipotecaria, simuladores de inversión y herramientas prácticas para tomar decisiones financieras informadas."
@@ -74,11 +74,11 @@ es:
         q1:
           question: "¿Cómo calcula la app mi salud financiera?"
           answer_1: "Nuestra app analiza tu situación financiera completa usando una metodología propia. Evaluamos tu cash flow mensual, tu fondo de emergencia, tus deudas, y tu patrimonio neto para determinar tu nivel actual de salud financiera."
-          answer_2: "Hay 6 niveles y cada uno tiene recomendaciones específicas adaptadas a tu situación personal. Toda la información se mantiene privada y segura."
+          answer_2: "Hay 6 niveles y cada uno tiene opciones específicas adaptadas a tu situación personal. Toda la información se mantiene privada y segura."
         q2:
-          question: "¿Las recomendaciones son realmente personalizadas?"
-          answer_1: "Sí, absolutamente. Cada recomendación se genera específicamente para tu situación financiera única."
-          answer_2: "Por ejemplo, si tienes deudas de tarjetas de crédito, te recomendaremos productos para consolidar deudas. Si ya tienes un fondo de emergencia, te sugeriremos inversiones apropiadas."
+          question: "¿Los resultados son realmente personalizados?"
+          answer_1: "Sí, absolutamente. Cada resultado se genera específicamente para tu situación financiera única."
+          answer_2: "Por ejemplo, si tienes deudas de tarjetas de crédito, te mostraremos productos que otros usan para consolidar deudas. Si ya tienes un fondo de emergencia, te mostraremos las inversiones más habituales."
         q3:
           question: "¿Cómo funcionan los cálculos de objetivos?"
           answer_1: "Usamos fórmulas de interés compuesto para calcular cuánto necesitas ahorrar mensualmente para alcanzar tus objetivos. Los rendimientos esperados varían según el plazo y tu nivel de aversión riesgo."
@@ -86,7 +86,7 @@ es:
         q4:
           question: "¿Es realmente gratuita la app?"
           answer_1: "Sí, la app es 100% gratuita para todos los usuarios. No hay costes ocultos, no hay suscripciones premium, y no hay comisiones por usar nuestros servicios. Nunca te pediremos que pagues por acceder a tu plan financiero personalizado."
-          answer_2: "Nos financiamos únicamente a través de comisiones de afiliados cuando decides contratar productos recomendados, pero esto no afecta el precio que pagas ni influye en nuestras recomendaciones."
+          answer_2: "Nos financiamos únicamente a través de comisiones de afiliados cuando decides contratar productos destacados, pero esto no afecta el precio que pagas ni influye en los resultados que ves."
         q5:
           question: "¿Qué pasa con mis datos personales?"
           answer_1: "Tu privacidad es nuestra prioridad. Todos tus datos financieros se almacenan de forma segura y encriptada. Nunca compartimos tu información personal con terceros, y solo tú tienes acceso a tu plan financiero personalizado."
@@ -94,7 +94,7 @@ es:
         q6:
           question: "¿Puedo cambiar mis objetivos financieros?"
           answer_1: "Por supuesto. Entendemos que las circunstancias cambian, y tu plan financiero debe adaptarse a tu vida. Puedes modificar, eliminar o añadir cualquier objetivo desde tu dashboard en cualquier momento."
-          answer_2: "Cuando cambies un objetivo, la app recalculará automáticamente tu plan y te proporcionará nuevas recomendaciones adaptadas a tus nuevas metas financieras."
+          answer_2: "Cuando cambies un objetivo, la app recalculará automáticamente tu plan y te proporcionará nuevas opciones adaptadas a tus nuevas metas financieras."
       cta_final:
         prompt: "¿Listo para comenzar tu viaje hacia la libertad financiera?"
         button: "Descargar app gratis"
@@ -131,7 +131,7 @@ es:
             name: "Marc Blanc"
             job: "Enfermero"
           carlos:
-            quote: "Lo que más me gusta es que todo está adaptado a mi situación específica. Mis recomendaciones de inversión son completamente diferentes a las de mi hermano."
+            quote: "Lo que más me gusta es que todo está adaptado a mi situación específica. Mis opciones de inversión son completamente diferentes a las de mi hermano."
             name: "Carlos Sastre"
             job: "Ingeniero"
           ana:
@@ -158,7 +158,7 @@ es:
             description: "Establece metas claras como comprar una casa, jubilación, educación de hijos, o cualquier objetivo que quieras alcanzar."
           step4:
             title: "Recibe tu plan personalizado"
-            description: "Obtén tu nivel de salud financiera, recomendaciones de inversión y un plan detallado para alcanzar tus objetivos."
+            description: "Obtén tu nivel de salud financiera, opciones de inversión y un plan detallado para alcanzar tus objetivos."
       # Goal examples section
       goal_examples:
         title: "Ejemplos de objetivos que puedes alcanzar"
@@ -292,7 +292,7 @@ es:
         retirement: "Jubilación"
       info:
         title: "¿Qué pasa al crear el objetivo?"
-        description: "Se creará una recomendación nueva personalizada donde te explicamos paso a paso cómo conseguir tu objetivo, cuánto debes ahorrar mensualmente y qué producto de inversión te recomendamos."
+        description: "Se creará una guía personalizada donde te explicamos paso a paso cómo conseguir tu objetivo, cuánto debes ahorrar mensualmente y qué producto de inversión es el más habitual para tu plazo."
 
     # Investment types
     investment_types:
@@ -359,7 +359,7 @@ es:
             title: "Ranking personalizado"
             description: "Compárate con otros ahorradores"
           recommendations:
-            title: "Recomendaciones"
+            title: "Opciones"
             description: "Productos financieros ideales para ti"
         form:
           title: "Completa tu Análisis de Ingresos y Gastos"
@@ -451,7 +451,7 @@ es:
           delete: "Eliminar objetivo"
           delete_confirm: "¿Estás seguro de que quieres eliminar este objetivo? Esta acción no se puede deshacer."
           create_title: "Crea tu Objetivo Financiero"
-          create_description: "Define una meta financiera concreta y te ayudaremos a alcanzarla. Te calcularemos cuánto debes ahorrar cada mes y te recomendaremos el mejor producto de inversión según tu plazo."
+          create_description: "Define una meta financiera concreta y te ayudaremos a alcanzarla. Te calcularemos cuánto debes ahorrar cada mes y te mostraremos el producto de inversión más habitual según tu plazo."
           examples_title: "EJEMPLOS DE OBJETIVOS"
           example_car: "Comprar coche"
           example_house: "Entrada vivienda"
@@ -465,7 +465,7 @@ es:
           create_button: "Crear Objetivo"
           cancel: "Cancelar"
           info_title: "¿Qué pasa al crear el objetivo?"
-          info_description: "Se creará una recomendación nueva personalizada donde te explicamos paso a paso cómo conseguir tu objetivo, cuánto debes ahorrar mensualmente y qué producto de inversión te recomendamos."
+          info_description: "Se creará una guía personalizada donde te explicamos paso a paso cómo conseguir tu objetivo, cuánto debes ahorrar mensualmente y qué producto de inversión es el más habitual para tu plazo."
           reached_level: "Has alcanzado un nivel donde puedes crear objetivos personalizados para hacer crecer tu patrimonio."
           create_first: "Crear mi primer objetivo"
           reach_goal: "Alcanza %{title}"
@@ -474,7 +474,7 @@ es:
           new_deadline: "Nuevo plazo"
           save: "Guardar"
           view_full_plan: "Ver plan de inversión completo"
-          objective_description: "Para alcanzar <strong>%{title}</strong> en %{months} meses, te recomendamos invertir en <strong>%{product}</strong>. Necesitarás ahorrar <strong>€%{monthly}/mes</strong> para llegar a tu meta de <strong>€%{target}</strong>."
+          objective_description: "Para alcanzar <strong>%{title}</strong> en %{months} meses, la opción más habitual es invertir en <strong>%{product}</strong>. Necesitarás ahorrar <strong>€%{monthly}/mes</strong> para llegar a tu meta de <strong>€%{target}</strong>."
           goal_summary: "Meta: €%{amount} | Plazo: %{months} meses"
           edit_goal_title: "Editar meta y plazo"
         financial_situation:
@@ -571,7 +571,7 @@ es:
       faq_title: "Preguntas frecuentes"
       steps_section_title: "Cómo ejecutarlo paso a paso"
       your_monthly_expenses: "Tus gastos mensuales"
-      recommended_months: "Meses recomendados"
+      recommended_months: "Meses ideales"
       months_unit: "meses"
       your_target: "Tu objetivo"
       four_months_explanation: "Calculamos 4 meses de tus gastos esenciales como el equilibrio óptimo entre seguridad y oportunidad. Es suficiente para cubrir la mayoría de imprevistos sin tener dinero parado innecesariamente."
@@ -629,7 +629,7 @@ es:
       # CTA buttons
       ctas:
         better_bank_account: "Abrir cuenta sin comisiones"
-        emergency_deposit: "Ver depósitos recomendados"
+        emergency_deposit: "Ver mejores depósitos"
         debt_optimization: "Consigue salir de deudas"
         saving_advice: "Descubre como ahorrar"
         ac_diposit: "Abrir deposito a corto plazo"
@@ -639,7 +639,7 @@ es:
         tax_advisory: "Solicitar consultoría gratuita"
         portfolio_optimization: "Solicitar análisis gratuito"
         mortgage_optimization: "Comparar ofertas de hipoteca"
-        default: "Ver producto recomendado"
+        default: "Ver mejor opción"
 
       # Inline simulator labels
       simulators:
@@ -695,11 +695,11 @@ es:
 
       # Legal & Completion
       legal_info_title: "Información legal"
-      legal_affiliate_disclosure: "Los enlaces de esta página pueden contener códigos de afiliación. Si contratas un producto a través de estos enlaces, Finex puede recibir una comisión sin coste adicional para ti. Esto nos ayuda a mantener el servicio gratuito y seguir ofreciéndote las mejores recomendaciones personalizadas. Todas las recomendaciones se basan en tu situación financiera real y en productos que consideramos óptimos para tus objetivos."
+      legal_affiliate_disclosure: "Los enlaces de esta página pueden contener códigos de afiliación. Si contratas un producto a través de estos enlaces, Finex puede recibir una comisión sin coste adicional para ti. Esto nos ayuda a mantener el servicio gratuito y seguir mostrándote las mejores opciones. Todos los resultados se basan en tu situación financiera real y en productos que consideramos óptimos para tus objetivos."
       important: "Importante"
-      legal_disclaimer: "Esta no es asesoría financiera profesional. Te recomendamos consultar con un asesor certificado para decisiones de inversión importantes. Finex es una herramienta educativa y de planificación financiera personal."
+      legal_disclaimer: "Esta no es asesoría financiera profesional. Es aconsejable consultar con un asesor certificado para decisiones de inversión importantes. Finex es una herramienta educativa y de planificación financiera personal."
       completed_action: "He completado esta acción"
-      completed_action_description: "Marca esta casilla cuando hayas ejecutado esta recomendación para actualizar tu progreso en el dashboard."
+      completed_action_description: "Marca esta casilla cuando hayas completado este paso para actualizar tu progreso."
 
       # Page-specific content
       pages:
@@ -1101,7 +1101,7 @@ es:
                   description: "El asesor te entrega el plan por escrito y le explicas a tu gestor actual qué debe hacer (cambiar estructura a SL, aplicar deducciones específicas, hacer traspasos de fondos, etc.). Tu gestor ejecuta las acciones técnicas (contabilidad, declaraciones, presentaciones). <strong>Mantienes tu gestor, solo añades supervisión estratégica del asesor</strong>."
                 - title: "Opción B: El asesor te recomienda a alguien de confianza"
                   description: "Si tu gestor actual no puede o no quiere ejecutar el plan (por falta de experiencia o por complejidad), el asesor fiscal te recomendará a un gestor/abogado de su red que sí pueda hacerlo. Cambias solo si es necesario."
-            - title: "Revisión anual (opcional pero recomendado)"
+            - title: "Revisión anual (opcional pero aconsejable)"
               description: "Tu situación fiscal cambia cada año (cambios de ingresos, legislación, patrimonio). Puedes contratar revisiones anuales con el asesor fiscal para ajustar la estrategia. Muchos asesores ofrecen paquetes de consultoría + seguimiento anual. Cada año que optimizas, ahorras. Cada año que no revisas, pueden aparecer nuevas oportunidades no aprovechadas."
           faq:
             items:
@@ -1209,8 +1209,8 @@ es:
                 - "<strong>Diversificación:</strong> Comprueba si estás bien diversificado o concentrado en exceso"
                 - "<strong>Alineación con objetivos:</strong> Valora si tu estrategia actual te llevará a tus metas financieras"
               info_alert_html: "<strong><i class=\"bi bi-info-circle me-2\"></i>Al final del análisis sabrás:</strong> ¿Tu cartera está bien? ¿Hay problemas? ¿Qué se puede mejorar y cómo?"
-            - title: "Recomendaciones de mejora"
-              description: "Basándose en el análisis, el asesor te dará recomendaciones concretas:"
+            - title: "Propuestas de mejora"
+              description: "Basándose en el análisis, el asesor te dará propuestas concretas:"
               improvement_list:
                 title: "Posibles mejoras identificadas:"
                 items:
@@ -1381,7 +1381,7 @@ es:
             timing_risk_text: "No dependes de \"acertar\" el mejor momento para entrar. Compras en máximos, en mínimos, y en todo lo intermedio. A largo plazo, el precio se promedia."
             dips_advantage_title: "Aprovechas las bajadas"
             dips_advantage_text: "Cuando el mercado baja, tus €300 mensuales compran más participaciones. Cuando sube, compras menos pero lo que ya tienes vale más. Las crisis se convierten en oportunidades."
-            recommended_strategy_html: "<strong>Estrategia recomendada:</strong> Automatiza la aportación mensual y olvídate. El mercado sube y baja, pero tú sigues aportando sin pensar. En 10 años, el ruido desaparece y solo queda el crecimiento."
+            recommended_strategy_html: "<strong>Estrategia más habitual:</strong> Automatiza la aportación mensual y olvídate. El mercado sube y baja, pero tú sigues aportando sin pensar. En 10 años, el ruido desaparece y solo queda el crecimiento."
             disinvestment_title: "Desinversión progresiva: Aumenta la seguridad al acercarte al objetivo"
             disinvestment_intro_html: "A medida que te acercas a la fecha en la que necesitarás el dinero, <strong>reduce gradualmente el riesgo moviendo parte de tu inversión a productos más seguros</strong> (depósitos o fondos conservadores)."
             example_10years: "Ejemplo práctico: Objetivo a 10 años"
@@ -1434,7 +1434,7 @@ es:
                   description: "Invierte de golpe el dinero que ya tienes ahorrado. Empieza a trabajar inmediatamente. Útil si tienes €5.000-10.000 parados en cuenta corriente perdiendo valor por inflación."
                 - type: "monthly"
                   icon: "bi-arrow-repeat"
-                  title: "Aportación mensual (recomendado)"
+                  title: "Aportación mensual (más habitual)"
                   description: "Configura transferencia automática mensual. Dollar Cost Averaging: compras en máximos, en mínimos, y todo lo intermedio. Reduces riesgo de timing y aprovechas bajadas."
               conclusion_html: "<strong>Lo ideal:</strong> Aportación inicial (si tienes) + aportación mensual recurrente. Así maximizas tiempo en mercado Y sigues alimentando la inversión cada mes."
             - title: "Automatiza y olvídate"
@@ -1502,7 +1502,7 @@ es:
               - icon: "bi-graph-up"
                 title: "Interés compuesto acumulativo"
                 text: "Cada aportación mensual genera intereses. Esos intereses generan más intereses. Aunque al 3% el efecto es menor que al 8%, sigue siendo significativo en 3-5 años."
-            recommended_strategy_html: "<strong>Estrategia recomendada:</strong> Configura una transferencia automática mensual. Olvídate del timing del mercado. Deja que el tiempo y la consistencia trabajen para ti."
+            recommended_strategy_html: "<strong>Estrategia más habitual:</strong> Configura una transferencia automática mensual. Olvídate del timing del mercado. Deja que el tiempo y la consistencia trabajen para ti."
             final_message_html: "Si tienes un objetivo entre 2 y 5 años, <strong>la renta fija es tu mejor opción para equilibrar seguridad y rentabilidad</strong>. No asumas más riesgo del necesario, pero tampoco dejes tu dinero parado perdiendo contra la inflación."
           cta2_description: "Fondos de renta fija diversificados. Rentabilidad moderada (≈3% anual) con volatilidad mínima. El equilibrio perfecto para objetivos a 2-5 años. Abre tu cuenta, configura aportaciones automáticas y olvídate. Sin mínimos, sin permanencia."
           cta3_title: "Tu objetivo está más cerca de lo que piensas."
@@ -1540,7 +1540,7 @@ es:
                   description: "Invierte de golpe el dinero que ya tienes. Empieza a generar rentabilidad inmediatamente. Útil si tienes €3.000-10.000 ahorrados para un objetivo concreto."
                 - type: "monthly"
                   icon: "bi-arrow-repeat"
-                  title: "Aportación mensual (recomendado)"
+                  title: "Aportación mensual (más habitual)"
                   description: "Configura transferencia automática mensual. Vas construyendo tu objetivo mes a mes con disciplina. Ideal para objetivos de €5.000-20.000 en 2-5 años."
               ideal_note_html: "<strong>Lo ideal:</strong> Aportación inicial (si tienes) + aportación mensual recurrente. Así maximizas tiempo generando rentabilidad Y sigues alimentando la inversión cada mes."
             - title: "Automatiza y monitorea anualmente"
@@ -1643,7 +1643,7 @@ es:
             items:
               - question: "¿Plan de pensiones o fondos indexados? ¿Cuál es mejor para mí?"
                 answer_html: "<p class=\"mb-2\">Depende de tu situación fiscal y si te preocupa la liquidez:</p><p class=\"mb-2\"><strong>Plan de pensiones:</strong> Ideal SOLO si tienes tipo impositivo alto (>37%) Y no te preocupa tener el dinero bloqueado hasta la jubilación. Puedes deducir hasta €8.000/año, lo que supone un ahorro fiscal inmediato significativo. Pero ese dinero queda bloqueado (salvo excepciones como enfermedad grave).</p><p class=\"mb-0\"><strong>Fondos indexados:</strong> Recomendados para casi todo el mundo. Tienes liquidez total (puedes sacar el dinero cuando quieras), comisiones igualmente bajas, y no pierdes flexibilidad. Ideal si quieres libertad financiera antes de los 65 años o simplemente prefieres tener control sobre tu dinero. No tienes ventaja fiscal inmediata, pero pagas impuestos solo sobre beneficios cuando vendes.</p>"
-              - question: "¿Qué pasa si no puedo aportar la cantidad recomendada?"
+              - question: "¿Qué pasa si no puedo aportar la cantidad indicada?"
                 answer: "Empieza con lo que puedas, aunque sean €50-100/mes. Lo crítico no es la cantidad inicial sino la consistencia y el tiempo. Es mejor aportar €100/mes durante 30 años que intentar aportar €500/mes, no poder mantenerlo, y abandonar a los 6 meses. Además, puedes ir aumentando la aportación gradualmente cuando tu situación mejore (aumentos de salario, reducción de gastos, eliminación de deudas). Muchas personas empiezan con €100/mes y acaban aportando €300-500/mes unos años después."
               - question: "¿Es seguro invertir en fondos indexados? ¿Puedo perder dinero?"
                 answer: "A corto plazo (1-3 años) sí hay volatilidad y puedes tener pérdidas temporales. Si inviertes €10.000 hoy, dentro de 1 año podrías tener €9.000 (crisis) o €11.000 (mercado alcista). Es impredecible a corto plazo. PERO históricamente, en periodos de más de 12 años, los índices globales diversificados (como MSCI World o S&P 500) han sido positivos el 99% de las veces. El tiempo reduce el riesgo dramáticamente. Por eso esta estrategia es SOLO para dinero que no necesitas tocar en 12+ años. Si lo necesitas antes, mejor un depósito o cuenta remunerada (aunque ganes menos)."

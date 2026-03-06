@@ -1,4 +1,4 @@
-<% content_for :title, t('discovery.nav_title', default: 'Explora') %>
+<% content_for :title, t('radar.nav_title', default: 'Explora') %>
 <div class="discovery-page">
   <div class="app-container" style="animation: none;">
     <%# Filter chips - only show filters that have content %>
@@ -6,16 +6,16 @@
     <% has_text = @feed_items.any? { |i| i[:type] == 'article' || i[:type] == 'news' } %>
     <div class="discovery-filters" style="padding-top: 0.5rem;">
       <button class="filter-chip active" data-filter="all">
-        <%= t('discovery.filters.all') %>
+        <%= t('radar.filters.all') %>
       </button>
       <% if has_videos %>
         <button class="filter-chip" data-filter="video">
-          <%= t('discovery.filters.videos') %>
+          <%= t('radar.filters.videos') %>
         </button>
       <% end %>
       <% if has_text %>
         <button class="filter-chip" data-filter="text">
-          <%= t('discovery.filters.text_content', default: 'Articulos') %>
+          <%= t('radar.filters.text_content', default: 'Articulos') %>
         </button>
       <% end %>
     </div>
@@ -48,7 +48,7 @@
                 <% else %>
                   <a href="<%= item[:url] %>" target="_blank" class="btn-app btn-app--secondary btn-app--sm" style="margin-top: 0.5rem;">
                     <i class="bi bi-play-circle"></i>
-                    <%= t('discovery.watch_video') %>
+                    <%= t('radar.watch_video') %>
                   </a>
                 <% end %>
               <% end %>
@@ -56,16 +56,16 @@
 
           <% when 'article' %>
             <% category_label = case item[:category]
-                when 'inversion' then t('discovery.categories.investment')
-                when 'ahorro' then t('discovery.categories.savings')
-                when 'deudas' then t('discovery.categories.debt')
-                when 'presupuesto' then t('discovery.categories.budget')
-                when 'conceptos' then t('discovery.categories.concepts')
+                when 'inversion' then t('radar.categories.investment')
+                when 'ahorro' then t('radar.categories.savings')
+                when 'deudas' then t('radar.categories.debt')
+                when 'presupuesto' then t('radar.categories.budget')
+                when 'conceptos' then t('radar.categories.concepts')
                 else item[:category]&.capitalize
               end %>
-            <%= link_to discovery_article_path(slug: item[:slug]), class: "discovery-card", style: "text-decoration: none;" do %>
+            <%= link_to radar_article_path(slug: item[:slug]), class: "discovery-card", style: "text-decoration: none;" do %>
               <div class="discovery-card__topline">
-                <span class="discovery-card__badge"><%= t('discovery.badges.article') %></span>
+                <span class="discovery-card__badge"><%= t('radar.badges.article') %></span>
                 <span class="discovery-card__meta"><%= category_label %> &middot; <%= item[:read_time] %> min</span>
               </div>
               <h6 class="discovery-card__title"><%= item[:title] %></h6>
@@ -75,7 +75,7 @@
           <% when 'news' %>
             <div class="discovery-card">
               <div class="discovery-card__topline">
-                <span class="discovery-card__badge"><%= t('discovery.badges.news') %></span>
+                <span class="discovery-card__badge"><%= t('radar.badges.news') %></span>
                 <span class="discovery-card__meta"><%= time_ago_in_words(item[:published_at]) %></span>
               </div>
               <h6 class="discovery-card__title"><%= item[:title] %></h6>
@@ -89,10 +89,10 @@
         <div class="empty-state">
           <i class="bi bi-collection-play empty-state__icon"></i>
           <h4 class="empty-state__title">
-            <%= t('discovery.no_content') %>
+            <%= t('radar.no_content') %>
           </h4>
           <p class="empty-state__description">
-            <%= t('discovery.no_content_description') %>
+            <%= t('radar.no_content_description') %>
           </p>
         </div>
       <% end %>

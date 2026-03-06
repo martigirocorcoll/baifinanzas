@@ -13,11 +13,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private let tabConfigs: [(title: String, icon: String, iconActive: String, path: String)] = [
         ("Objetivo",      "scope",       "scope",            "/es/home"),
         ("Plan",          "list.bullet", "list.bullet",      "/es/plan"),
-        ("Discovery",     "play.circle", "play.circle.fill", "/es/discovery"),
+        ("Radar",         "play.circle", "play.circle.fill", "/es/radar"),
         ("Calculadoras",  "function",    "function",         "/es/calculators")
     ]
 
-    private let tabPaths = ["/home", "/plan", "/discovery", "/calculators"]
+    private let tabPaths = ["/home", "/plan", "/radar", "/calculators"]
 
     func scene(
         _ scene: UIScene,

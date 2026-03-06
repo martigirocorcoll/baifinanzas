@@ -1,7 +1,5 @@
 <% content_for :title, t('home.nav_title', default: 'Objetivo') %>
-<% content_for :head do %>
-  <meta name="turbo-cache-control" content="no-cache">
-<% end %>
+<% content_for :turbo_cache_control, "no-cache" %>
 
 <% if @objective.nil? %>
   <%# ============================================ %>

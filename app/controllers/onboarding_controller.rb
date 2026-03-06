@@ -4,6 +4,7 @@ class OnboardingController < ApplicationController
   STEPS = %w[ingresos gastos ahorros inversiones inmuebles hipoteca deuda_cara riesgo].freeze
   TOTAL_STEPS = STEPS.length
 
+  before_action :set_no_cache
   before_action :redirect_if_completed, only: [:welcome]
 
   def welcome

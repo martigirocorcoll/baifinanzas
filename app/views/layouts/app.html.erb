@@ -14,6 +14,9 @@
     <% if turbo_native_app? %>
       <meta name="turbo-native" content="true">
     <% end %>
+    <% if content_for?(:turbo_cache_control) %>
+      <meta name="turbo-cache-control" content="<%= yield :turbo_cache_control %>">
+    <% end %>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 

@@ -19,6 +19,29 @@ class YoutubeService
     fetch_videos(channel_id, max_results)
   end
 
+  def playlist_videos(playlist_id, max_results: 50)
+    return [] unless available? && playlist_id.present?
+
+    fetch_playlist_videos(playlist_id, max_results)
+  end
+
+  # Extract playlist ID from a YouTube playlist URL or raw ID
+  def self.extract_playlist_id(input)
+    return nil unless input.present?
+
+    input = input.strip
+
+    # Already a playlist ID (starts with PL)
+    return input if input.match?(/\APL[\w-]+\z/)
+
+    # Extract from URL: youtube.com/playlist?list=PLxxxx
+    if input.match?(/[?&]list=(PL[\w-]+)/)
+      return input[/[?&]list=(PL[\w-]+)/, 1]
+    end
+
+    nil
+  end
+
   # Resolve a YouTube URL or handle to a channel ID
   # Accepts: @handle, youtube.com/@handle, youtube.com/channel/UCxxx
   def resolve_channel_id(input)
@@ -48,6 +71,51 @@ class YoutubeService
   end
 
   private
+
+  def fetch_playlist_videos(playlist_id, max_results)
+    data = api_get("/playlistItems", part: "snippet", playlistId: playlist_id, maxResults: [max_results, 50].min)
+    return [] unless data
+
+    items = data["items"] || []
+    video_ids = items.filter_map { |item| item.dig("snippet", "resourceId", "videoId") }
+
+    # Fetch real publish dates from /videos endpoint
+    real_dates = fetch_video_publish_dates(video_ids)
+
+    items.map do |item|
+      snippet = item["snippet"]
+      video_id = snippet.dig("resourceId", "videoId")
+      next unless video_id
+
+      {
+        id: video_id,
+        title: snippet["title"],
+        thumbnail: snippet.dig("thumbnails", "high", "url") || snippet.dig("thumbnails", "medium", "url") || snippet.dig("thumbnails", "default", "url"),
+        published_at: real_dates[video_id] || Time.parse(snippet["publishedAt"]),
+        url: "https://www.youtube.com/watch?v=#{video_id}",
+        embed_url: "https://www.youtube.com/embed/#{video_id}",
+        channel_title: snippet["videoOwnerChannelTitle"],
+        duration_seconds: 0
+      }
+    end.compact
+  rescue StandardError => e
+    Rails.logger.error("YoutubeService playlist error: #{e.message}")
+    []
+  end
+
+  def fetch_video_publish_dates(video_ids)
+    return {} if video_ids.empty?
+
+    data = api_get("/videos", part: "snippet", id: video_ids.join(","))
+    return {} unless data
+
+    (data["items"] || []).each_with_object({}) do |item, hash|
+      hash[item["id"]] = Time.parse(item.dig("snippet", "publishedAt"))
+    end
+  rescue StandardError => e
+    Rails.logger.error("YoutubeService publish dates error: #{e.message}")
+    {}
+  end
 
   def resolve_handle(handle)
     data = api_get("/channels", part: "id", forHandle: "@#{handle}")

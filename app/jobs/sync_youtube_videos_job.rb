@@ -6,9 +6,9 @@ class SyncYoutubeVideosJob < ApplicationJob
     return unless youtube.available?
 
     influencers = if influencer_id
-      Influencer.where(id: influencer_id).where.not(youtube_channel_id: [nil, ""])
+      Influencer.where(id: influencer_id).where.not(youtube_playlist_id: [nil, ""])
     else
-      Influencer.where.not(youtube_channel_id: [nil, ""])
+      Influencer.where.not(youtube_playlist_id: [nil, ""])
     end
 
     influencers.find_each do |influencer|
@@ -19,7 +19,7 @@ class SyncYoutubeVideosJob < ApplicationJob
   private
 
   def sync_for_influencer(youtube, influencer)
-    videos = youtube.latest_videos(influencer.youtube_channel_id, max_results: 20)
+    videos = youtube.playlist_videos(influencer.youtube_playlist_id, max_results: 50)
 
     videos.each do |video_data|
       record = YoutubeVideo.find_or_initialize_by(youtube_video_id: video_data[:id])
@@ -34,7 +34,13 @@ class SyncYoutubeVideosJob < ApplicationJob
       record.save! if record.new_record? || record.changed?
     end
 
-    Rails.logger.info("SyncYoutubeVideosJob: synced #{videos.count} videos for #{influencer.name}")
+    # Remove videos no longer in the playlist
+    playlist_video_ids = videos.map { |v| v[:id] }
+    if playlist_video_ids.any?
+      influencer.youtube_videos.where.not(youtube_video_id: playlist_video_ids).destroy_all
+    end
+
+    Rails.logger.info("SyncYoutubeVideosJob: synced #{videos.count} playlist videos for #{influencer.name}")
   rescue StandardError => e
     Rails.logger.error("SyncYoutubeVideosJob error for #{influencer.name}: #{e.message}")
   end

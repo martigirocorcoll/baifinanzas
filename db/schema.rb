@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_02_23_091611) do
+ActiveRecord::Schema[7.2].define(version: 2026_03_06_120441) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -96,6 +96,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_23_091611) do
     t.string "video_diposit"
     t.bigint "user_id"
     t.string "youtube_channel_id"
+    t.string "youtube_playlist_id"
     t.index ["ac_compte"], name: "index_influencers_on_ac_compte"
     t.index ["code"], name: "index_influencers_on_code", unique: true
     t.index ["default"], name: "index_influencers_on_default"

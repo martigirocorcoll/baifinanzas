@@ -32,7 +32,7 @@ en:
       monthly_savings: "Monthly savings needed"
       target_date: "Target date"
       target_amount: "Target amount"
-      recommended_product: "Recommended product"
+      recommended_product: "Best option"
       expected_return: "Expected return"
 
     savings_capacity:
@@ -71,7 +71,7 @@ en:
       discover: "Discover your financial health in just 2 minutes"
       step1: "Cash flow analysis"
       step2: "Personalized ranking"
-      step3: "Recommendations"
+      step3: "Options"
       start_button: "Discover my Financial Health"
 
     loading:

@@ -5,11 +5,11 @@ class Influencer < ApplicationRecord
   # Referred users: users who signed up with this influencer's code
   has_many :users
 
-  # YouTube videos synced from their channel
+  # YouTube videos synced from their playlist
   has_many :youtube_videos, dependent: :destroy
 
-  # Virtual attribute: influencer pastes their YouTube URL/handle
-  attr_accessor :youtube_url
+  # Virtual attributes: influencer pastes their YouTube URLs
+  attr_accessor :youtube_url, :youtube_playlist_url
 
   # Validations
   validates :name, presence: true
@@ -17,7 +17,8 @@ class Influencer < ApplicationRecord
   # Callbacks
   after_create :generate_unique_code
   before_validation :resolve_youtube_url, if: -> { youtube_url.present? }
-  after_save :sync_youtube_videos, if: -> { saved_change_to_youtube_channel_id? && youtube_channel_id.present? }
+  before_validation :resolve_youtube_playlist_url, if: -> { youtube_playlist_url.present? }
+  after_save :sync_youtube_videos, if: -> { saved_change_to_youtube_playlist_id? && youtube_playlist_id.present? }
 
   # Class method to get default influencer
   def self.default_influencer
@@ -58,6 +59,15 @@ class Influencer < ApplicationRecord
       # Already resolved, no change needed
     else
       errors.add(:youtube_url, "no se ha podido encontrar el canal de YouTube")
+    end
+  end
+
+  def resolve_youtube_playlist_url
+    playlist_id = YoutubeService.extract_playlist_id(youtube_playlist_url)
+    if playlist_id.present?
+      self.youtube_playlist_id = playlist_id
+    else
+      errors.add(:youtube_playlist_url, "no se ha podido extraer el ID de la playlist")
     end
   end
 end

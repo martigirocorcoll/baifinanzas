@@ -142,9 +142,9 @@ es:
         cta: "Contactar Asesor"
         icon: "bi-calculator"
       default:
-        title: "Recomendacion"
+        title: "Informacion"
         benefit: "Mejora tu situacion financiera"
-        description: "Recomendacion personalizada para tu situacion"
+        description: "Informacion personalizada para tu situacion"
         cta: "Ver Detalles"
         icon: "bi-check-circle"
 

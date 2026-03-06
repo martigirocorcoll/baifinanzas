@@ -34,3 +34,57 @@
     <%= yield %>
   </div>
 </div>
+
+<script data-turbo-step="<%= step_number %>">
+(function() {
+  function validateOnboardingForm() {
+    var form = document.querySelector('.onboarding-form');
+    if (!form) return;
+
+    var submitBtn = form.querySelector('.onboarding-submit');
+    if (!submitBtn) return;
+
+    function checkValidity() {
+      var toggle = form.querySelector('#toggleField');
+      var numberInput = form.querySelector('input[type="number"][name="value"]');
+      var radioInputs = form.querySelectorAll('input[type="radio"][name="value"]');
+
+      // Case 1: Toggle (Sí/No) steps
+      if (toggle) {
+        if (!toggle.value) { submitBtn.disabled = true; return; }
+        if (toggle.value === 'no') { submitBtn.disabled = false; return; }
+        // toggle === 'yes': check the conditional amount field
+        if (numberInput && (!numberInput.value || Number(numberInput.value) <= 0)) {
+          submitBtn.disabled = true; return;
+        }
+        submitBtn.disabled = false;
+        return;
+      }
+
+      // Case 2: Radio card steps (riesgo)
+      if (radioInputs.length > 0) {
+        var anyChecked = Array.prototype.some.call(radioInputs, function(r) { return r.checked; });
+        submitBtn.disabled = !anyChecked;
+        return;
+      }
+
+      // Case 3: Simple number input steps
+      if (numberInput) {
+        submitBtn.disabled = !numberInput.value || Number(numberInput.value) <= 0;
+        return;
+      }
+    }
+
+    // Initial state
+    checkValidity();
+
+    // Listen to all relevant events (toggle scripts dispatch 'change' on #toggleField)
+    form.addEventListener('input', checkValidity);
+    form.addEventListener('change', checkValidity);
+  }
+
+  document.addEventListener('turbo:load', validateOnboardingForm);
+  if (document.readyState !== 'loading') { validateOnboardingForm(); }
+  else { document.addEventListener('DOMContentLoaded', validateOnboardingForm); }
+})();
+</script>

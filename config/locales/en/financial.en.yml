@@ -142,9 +142,9 @@ en:
         cta: "Contact Advisor"
         icon: "bi-calculator"
       default:
-        title: "Recommendation"
+        title: "Information"
         benefit: "Improve your financial situation"
-        description: "Personalized recommendation for your situation"
+        description: "Personalized information for your situation"
         cta: "View Details"
         icon: "bi-check-circle"
 

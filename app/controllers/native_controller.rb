@@ -9,7 +9,7 @@ class NativeController < ApplicationController
       force_update: false,
       features: {
         calculators: true,
-        discovery: true,
+        radar: true,
         objectives: true,
         onboarding: true
       },
@@ -42,7 +42,7 @@ class NativeController < ApplicationController
           }
         },
         {
-          patterns: ["/discovery/articles/.*"],
+          patterns: ["/radar/articles/.*"],
           properties: {
             context: "modal",
             pull_to_refresh_enabled: false
@@ -125,8 +125,8 @@ class NativeController < ApplicationController
           icon_active: "list.bullet"
         },
         {
-          title: t("navigation.bottom_nav.discovery", default: "Discovery"),
-          path: discovery_path,
+          title: t("navigation.bottom_nav.radar", default: "Radar"),
+          path: radar_path,
           icon: "play.circle",
           icon_active: "play.circle.fill"
         },

@@ -1,5 +1,6 @@
 class ObjectivesController < ApplicationController
   layout 'app'
+  before_action :set_no_cache
   before_action :set_objective, only: %i[ show edit update destroy update_progress ]
 
   # GET /objectives or /objectives.json

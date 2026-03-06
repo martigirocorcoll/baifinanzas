@@ -7,6 +7,14 @@ class ApplicationController < ActionController::Base
   helper_method :turbo_native_app?
   layout :layout_for_devise
 
+  private
+
+  def set_no_cache
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+  end
+
   # Include locale in all generated URLs
   def default_url_options
     { locale: I18n.locale }

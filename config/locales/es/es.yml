@@ -36,7 +36,7 @@ es:
     dashboard:
       invalid_params: "Parámetros inválidos"
     objectives:
-      created: "Objetivo creado correctamente. Ya puedes ver tu recomendación personalizada."
+      created: "Objetivo creado correctamente. Ya puedes ver tu guía personalizada."
       updated: "Objetivo actualizado correctamente."
       deleted: "Objetivo eliminado correctamente."
       progress_updated: "Progreso actualizado."
@@ -57,11 +57,11 @@ es:
       no_permission_profile: "No tienes permisos para acceder a este perfil."
       no_permission_page: "No tienes permisos para acceder a esta página."
     recommendations:
-      not_found: "Recomendación no encontrada"
+      not_found: "Información no encontrada"
     api:
       user_actions:
-        marked_complete: "Recomendación marcada como completada"
-        unmarked: "Recomendación desmarcada"
+        marked_complete: "Paso marcado como completado"
+        unmarked: "Paso desmarcado"
 
   # Common
   common:

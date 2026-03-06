@@ -48,9 +48,9 @@ Rails.application.routes.draw do
     get "plan", to: "plan#index", as: :plan
     get "plan/level-guide", to: "plan#level_guide", as: :level_guide
 
-    # Discovery (Content feed: videos, articles, news)
-    get "discovery", to: "discovery#index", as: :discovery
-    get "discovery/articles/:slug", to: "discovery#show_article", as: :discovery_article
+    # Radar (Content feed: videos, articles, news)
+    get "radar", to: "radar#index", as: :radar
+    get "radar/articles/:slug", to: "radar#show_article", as: :radar_article
 
     # Calculators (Financial tools)
     get "calculators", to: "calculators#index", as: :calculators

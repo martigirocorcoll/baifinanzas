@@ -48,6 +48,7 @@
         toggleBtns.forEach(function(b) { b.classList.remove('onboarding-toggle__btn--active'); });
         btn.classList.add('onboarding-toggle__btn--active');
         toggleField.value = btn.dataset.value;
+        toggleField.dispatchEvent(new Event('change', { bubbles: true }));
 
         if (btn.dataset.value === 'yes') {
           amountDiv.style.display = '';

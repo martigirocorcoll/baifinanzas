@@ -2,6 +2,7 @@ class HomeController < ApplicationController
   layout 'app'
 
   before_action :check_onboarding
+  before_action :set_no_cache
 
   def index
     if session.delete(:objective_processing)

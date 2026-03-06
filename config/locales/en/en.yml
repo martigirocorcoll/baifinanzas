@@ -36,7 +36,7 @@ en:
     dashboard:
       invalid_params: "Invalid parameters"
     objectives:
-      created: "Goal created successfully. You can now see your personalized recommendation."
+      created: "Goal created successfully. You can now see your personalized guide."
       updated: "Goal updated successfully."
       deleted: "Goal deleted successfully."
       progress_updated: "Progress updated."
@@ -57,11 +57,11 @@ en:
       no_permission_profile: "You don't have permission to access this profile."
       no_permission_page: "You don't have permission to access this page."
     recommendations:
-      not_found: "Recommendation not found"
+      not_found: "Information not found"
     api:
       user_actions:
-        marked_complete: "Recommendation marked as completed"
-        unmarked: "Recommendation unmarked"
+        marked_complete: "Step marked as completed"
+        unmarked: "Step unmarked"
 
   # Common
   common:

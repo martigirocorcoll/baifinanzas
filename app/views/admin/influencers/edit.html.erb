@@ -35,6 +35,11 @@
             <%= f.text_field :youtube_url, class: "form-control", placeholder: "https://www.youtube.com/@BaiJavier", value: @influencer.youtube_channel_id.present? ? "https://www.youtube.com/channel/#{@influencer.youtube_channel_id}" : "" %>
             <div class="form-text">Pega la URL del canal (ej: https://www.youtube.com/@NombreCanal). Se resuelve automaticamente.</div>
           </div>
+          <div class="mb-3">
+            <%= f.label :youtube_playlist_url, "Playlist de YouTube", class: "form-label fw-semibold" %>
+            <%= f.text_field :youtube_playlist_url, class: "form-control", placeholder: "https://youtube.com/playlist?list=PLxxxxxx", value: @influencer.youtube_playlist_id.present? ? "https://youtube.com/playlist?list=#{@influencer.youtube_playlist_id}" : "" %>
+            <div class="form-text">Los videos de esta playlist apareceran en Radar para los usuarios de este influencer.</div>
+          </div>
         </div>
       </div>
 

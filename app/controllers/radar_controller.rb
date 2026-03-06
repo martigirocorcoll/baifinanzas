@@ -1,4 +1,4 @@
-class DiscoveryController < ApplicationController
+class RadarController < ApplicationController
   layout 'app'
 
   def index
@@ -14,13 +14,13 @@ class DiscoveryController < ApplicationController
     # Merge all content sorted by date
     @feed_items = build_feed_items
   rescue ActiveRecord::StatementInvalid, ActiveRecord::ConnectionNotEstablished => e
-    Rails.logger.error("Discovery error: #{e.message}")
+    Rails.logger.error("Radar error: #{e.message}")
     @videos, @articles, @news, @feed_items = [], [], [], []
   end
 
   def show_article
     @article = Article.published.find_by(slug: params[:slug])
-    redirect_to discovery_path unless @article
+    redirect_to radar_path unless @article
   end
 
   private
@@ -95,7 +95,7 @@ class DiscoveryController < ApplicationController
       }
     end
   rescue => e
-    Rails.logger.error("Discovery load_articles error: #{e.message}")
+    Rails.logger.error("Radar load_articles error: #{e.message}")
     []
   end
 
@@ -110,7 +110,7 @@ class DiscoveryController < ApplicationController
       }
     end
   rescue => e
-    Rails.logger.error("Discovery load_app_news error: #{e.message}")
+    Rails.logger.error("Radar load_app_news error: #{e.message}")
     []
   end
 
@@ -122,23 +122,23 @@ class DiscoveryController < ApplicationController
   def video_title_for(video_type)
     case video_type
     when 'ac_compte'
-      t('discovery.video_titles.bank_account', default: 'Mejores cuentas bancarias')
+      t('radar.video_titles.bank_account', default: 'Mejores cuentas bancarias')
     when 'ac_cdiposit'
-      t('discovery.video_titles.deposits', default: 'Depositos a plazo fijo')
+      t('radar.video_titles.deposits', default: 'Depositos a plazo fijo')
     when 'ac_curt'
-      t('discovery.video_titles.short_term', default: 'Inversiones a corto plazo')
+      t('radar.video_titles.short_term', default: 'Inversiones a corto plazo')
     when 'ac_llarg'
-      t('discovery.video_titles.long_term', default: 'Invertir a largo plazo')
+      t('radar.video_titles.long_term', default: 'Invertir a largo plazo')
     when 'ac_deute'
-      t('discovery.video_titles.debt', default: 'Gestion de deudas')
+      t('radar.video_titles.debt', default: 'Gestion de deudas')
     when 'ac_jubil'
-      t('discovery.video_titles.retirement', default: 'Planificar la jubilacion')
+      t('radar.video_titles.retirement', default: 'Planificar la jubilacion')
     when 'ac_fiscal'
-      t('discovery.video_titles.taxes', default: 'Optimizacion fiscal')
+      t('radar.video_titles.taxes', default: 'Optimizacion fiscal')
     when 'ac_portfolio'
-      t('discovery.video_titles.portfolio', default: 'Gestion de cartera')
+      t('radar.video_titles.portfolio', default: 'Gestion de cartera')
     else
-      t('discovery.video_titles.default', default: 'Consejos financieros')
+      t('radar.video_titles.default', default: 'Consejos financieros')
     end
   end
 end
